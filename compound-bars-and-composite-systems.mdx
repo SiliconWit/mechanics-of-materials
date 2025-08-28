@@ -153,98 +153,165 @@ This is fundamentally different from single-material systems where stress is uni
 
 Let's solve a realistic compound rod problem step by step.
 
-### Problem Setup
+:::note[Problem Statement]
+**Industrial Linear Actuator Rod Analysis**
 
-**System:** Industrial linear actuator  
-**Configuration:** Steel section connected to aluminum section  
-**Loading:** 20,000 N tensile force applied
+**What we need to determine:**
+1. **Load distribution** between steel and aluminum sections
+2. **Stress levels** in each material section
+3. **Total system deformation** under applied load
+4. **Safety factors** for both materials and design optimization
 
-**Steel Section:**
-- Length: L₁ = 200 mm
-- Diameter: d₁ = 25 mm
-- Material: Steel 1045 (E₁ = 200 GPa)
+**Key Question:** How does a 20,000 N tensile force split between the steel and aluminum sections, and what are the resulting stresses and deformations?
+:::
 
-**Aluminum Section:**
-- Length: L₂ = 300 mm
-- Diameter: d₂ = 30 mm  
-- Material: Aluminum 6061-T6 (E₂ = 70 GPa)
+<hr />
+
+**System Parameters:**
+- Industrial linear actuator rod (compound steel-aluminum system)
+- Applied force: **`F`** = 20,000 N (tensile)
+- **Steel Section:** Length L₁ = 200 mm, Diameter d₁ = 25 mm, Material: Steel 1045 (E₁ = 200 GPa, σ_yield = 530 MPa)
+- **Aluminum Section:** Length L₂ = 300 mm, Diameter d₂ = 30 mm, Material: Aluminum 6061-T6 (E₂ = 70 GPa, σ_yield = 270 MPa)
+- **`Safety factor`**: 3.0
+
+<hr />
 
 ### Step 1: Calculate Cross-Sectional Areas
 
-**Steel section:**
-$$A_1 = \frac{\pi d_1^2}{4} = \frac{\pi (25 \times 10^{-3})^2}{4} = 4.91 \times 10^{-4} \text{ m}^2$$
+<details>
+<summary>**Click to reveal cross-sectional area calculations**</summary>
 
-**Aluminum section:**
-$$A_2 = \frac{\pi d_2^2}{4} = \frac{\pi (30 \times 10^{-3})^2}{4} = 7.07 \times 10^{-4} \text{ m}^2$$
+<Steps>
+
+1. **Steel section area:**
+   
+   $$A_1 = \frac{\pi d_1^2}{4} = \frac{\pi (25 \times 10^{-3})^2}{4} = 4.91 \times 10^{-4} \text{ m}^2$$
+
+2. **Aluminum section area:**
+   
+   $$A_2 = \frac{\pi d_2^2}{4} = \frac{\pi (30 \times 10^{-3})^2}{4} = 7.07 \times 10^{-4} \text{ m}^2$$
+
+</Steps>
+
+</details>
 
 ### Step 2: Calculate Axial Stiffnesses
 
-**Steel section stiffness:**
-$$k_1 = \frac{A_1 E_1}{L_1} = \frac{4.91 \times 10^{-4} \times 200 \times 10^9}{200 \times 10^{-3}} = 4.91 \times 10^8 \text{ N/m}$$
+<details>
+<summary>**Click to reveal axial stiffness calculations**</summary>
 
-**Aluminum section stiffness:**
-$$k_2 = \frac{A_2 E_2}{L_2} = \frac{7.07 \times 10^{-4} \times 70 \times 10^9}{300 \times 10^{-3}} = 1.65 \times 10^8 \text{ N/m}$$
+<Steps>
+
+1. **Steel section stiffness:**
+   
+   $$k_1 = \frac{A_1 E_1}{L_1} = \frac{4.91 \times 10^{-4} \times 200 \times 10^9}{200 \times 10^{-3}} = 4.91 \times 10^8 \text{ N/m}$$
+
+2. **Aluminum section stiffness:**
+   
+   $$k_2 = \frac{A_2 E_2}{L_2} = \frac{7.07 \times 10^{-4} \times 70 \times 10^9}{300 \times 10^{-3}} = 1.65 \times 10^8 \text{ N/m}$$
+
+3. **Stiffness ratio:**
+   
+   Steel section is 4.91/1.65 = 2.98× stiffer than aluminum section
+
+</Steps>
+
+</details>
 
 ### Step 3: Determine Load Distribution
 
-**Load in steel section:**
-$$F_1 = F_{applied} \times \frac{k_1}{k_1 + k_2} = 20,000 \times \frac{4.91 \times 10^8}{4.91 \times 10^8 + 1.65 \times 10^8} = 14,939 \text{ N}$$
+<details>
+<summary>**Click to reveal load distribution calculations**</summary>
 
-**Load in aluminum section:**
-$$F_2 = F_{applied} - F_1 = 20,000 - 14,939 = 5,061 \text{ N}$$
+<Steps>
 
-:::caution[Counter-Intuitive Result]
-**The steel section carries 75% of the total load** despite being only 40% of the total length!
+1. **Load in steel section:**
+   
+   $$F_1 = F_{applied} \times \frac{k_1}{k_1 + k_2} = 20,000 \times \frac{4.91 \times 10^8}{4.91 \times 10^8 + 1.65 \times 10^8} = 14,939 \text{ N}$$
 
-**Why?** <Badge text="Stiffness dominance" variant="caution" />  
-- Steel: k₁ = 491 MN/m  
-- Aluminum: k₂ = 165 MN/m  
-- Ratio: k₁/k₂ = 2.98× higher stiffness
+2. **Load in aluminum section:**
+   
+   $$F_2 = F_{applied} - F_1 = 20,000 - 14,939 = 5,061 \text{ N}$$
 
-**Lesson:** Load distribution depends on stiffness, not geometry alone.
-:::
+3. **Load distribution analysis:**
+   
+   - Steel section: 14,939 N (74.7% of total load)
+   - Aluminum section: 5,061 N (25.3% of total load)
+   - Counter-intuitive: Steel carries 75% despite being only 40% of total length!
 
-### Step 4: Calculate Stresses
+</Steps>
 
-**Steel section stress:**
-$$\sigma_1 = \frac{F_1}{A_1} = \frac{14,939}{4.91 \times 10^{-4}} = 30.4 \text{ MPa}$$
+</details>
 
-**Aluminum section stress:**
-$$\sigma_2 = \frac{F_2}{A_2} = \frac{5,061}{7.07 \times 10^{-4}} = 7.16 \text{ MPa}$$
+### Step 4: Calculate Stresses and Safety Factors
+
+<details>
+<summary>**Click to reveal stress and safety factor calculations**</summary>
+
+<Steps>
+
+1. **Steel section stress:**
+   
+   $$\sigma_1 = \frac{F_1}{A_1} = \frac{14,939}{4.91 \times 10^{-4}} = 30.4 \text{ MPa}$$
+
+2. **Aluminum section stress:**
+   
+   $$\sigma_2 = \frac{F_2}{A_2} = \frac{5,061}{7.07 \times 10^{-4}} = 7.16 \text{ MPa}$$
+
+3. **Safety factor assessment:**
+   
+   - Steel: SF = 530/30.4 = 17.4 ✅ Very conservative
+   - Aluminum: SF = 270/7.16 = 37.7 ✅ Over-designed
+   - Both exceed required SF = 3.0
+
+</Steps>
+
+</details>
 
 ### Step 5: Calculate Total Deformation
 
-Using either section (they must be equal):
+<details>
+<summary>**Click to reveal total deformation calculations**</summary>
 
-$$\delta_{total} = \frac{F_1 L_1}{A_1 E_1} = \frac{14,939 \times 200 \times 10^{-3}}{4.91 \times 10^{-4} \times 200 \times 10^9} = 0.0304 \text{ mm}$$
+<Steps>
 
-**Verification using aluminum section:**
-$$\delta_{total} = \frac{F_2 L_2}{A_2 E_2} = \frac{5,061 \times 300 \times 10^{-3}}{7.07 \times 10^{-4} \times 70 \times 10^9} = 0.0307 \text{ mm}$$
+1. **Deformation using steel section:**
+   
+   $$\delta_{total} = \frac{F_1 L_1}{A_1 E_1} = \frac{14,939 \times 200 \times 10^{-3}}{4.91 \times 10^{-4} \times 200 \times 10^9} = 0.0304 \text{ mm}$$
 
-✅ **Results match** (small difference due to rounding)
+2. **Verification using aluminum section:**
+   
+   $$\delta_{total} = \frac{F_2 L_2}{A_2 E_2} = \frac{5,061 \times 300 \times 10^{-3}}{7.07 \times 10^{-4} \times 70 \times 10^9} = 0.0307 \text{ mm}$$
 
-:::tip[Verification Strategy]
-**Always verify deformation compatibility** by calculating deflection using both sections:
-- If results match → Analysis is correct ✅
-- If results differ → Check calculations ❌
+3. **Compatibility verification:**
+   
+   ✅ Results match (0.0304 ≈ 0.0307 mm) - small difference due to rounding
+   This confirms deformation compatibility is satisfied
 
-This serves as a built-in error check for compound bar problems.
-:::
+</Steps>
 
-## 📊 Design Analysis and Safety Check
+</details>
+
+## 📊 Design Analysis Summary
 
 <CardGrid>
-  <Card title="Steel Section Analysis">
+  <Card title="Steel Section Analysis" icon="approve">
     **Load Carried:** 14,939 N (75%)  
     **Stress:** 30.4 MPa  
-    **Safety Factor:** 530/30.4 = 17.4  
-    **Status:** ✅ Very safe design
+    **Safety Factor:** 17.4  
+    **Status:** <Badge text="Conservative design" variant="success" />
   </Card>
-  <Card title="Aluminum Section Analysis">
+  <Card title="Aluminum Section Analysis" icon="approve">
     **Load Carried:** 5,061 N (25%)  
     **Stress:** 7.16 MPa  
-    **Safety Factor:** 270/7.16 = 37.7  
-    **Status:** ✅ Over-designed
+    **Safety Factor:** 37.7  
+    **Status:** <Badge text="Over-designed" variant="tip" />
+  </Card>
+  <Card title="Load Distribution" icon="information">
+    **Steel dominance:** Carries 75% of load  
+    **Stiffness ratio:** 2.98× stiffer  
+    **Total deformation:** 0.030 mm  
+    **Status:** <Badge text="Stiffness-controlled" variant="note" />
   </Card>
 </CardGrid>
 

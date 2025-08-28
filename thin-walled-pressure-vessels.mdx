@@ -161,28 +161,40 @@ Longitudinal stress is **exactly half** the hoop stress in cylindrical vessels. 
 
 Let's design a pneumatic actuator casing for an industrial automation system.
 
-### Problem Setup
+:::note[Problem Statement]
+**Industrial Pneumatic Actuator Casing Design**
 
-:::info[Design Requirements]
-**Industrial Pneumatic Actuator**
+**What we need to determine:**
+1. **Minimum wall thickness** based on hoop and longitudinal stress
+2. **Actual safety factors** with selected standard thickness
+3. **Stress concentration effects** around ports and fittings
+4. **Fatigue life assessment** for cyclic pressure loading
 
-**Operating Conditions:**
-- Working pressure: 6 bar = 600 kPa = 0.6 MPa
-- Internal diameter: 100 mm (radius = 50 mm)
-- Material: Aluminum 6061-T6 (σ_yield = 270 MPa)
-- Required safety factor: 4.0
-- Pressure cycles: 10⁶ cycles (fatigue consideration)
-
-**Design Standards:**
-- ASME Boiler & Pressure Vessel Code
-- ISO 4393 (Pneumatic cylinders)
+**Key Question:** What minimum wall thickness is required for a 100 mm diameter pneumatic actuator casing operating at 6 bar pressure with SF = 4.0?
 :::
 
+<hr />
+
+**System Parameters:**
+- Industrial pneumatic actuator casing (cylindrical pressure vessel)
+- Working pressure: **`p`** = 6 bar = 0.6 MPa
+- Internal diameter: 100 mm (radius **`r`** = 50 mm)
+- Material: Aluminum 6061-T6 (**`σ_yield`** = 270 MPa)
+- **`Safety factor`**: 4.0
+- Pressure cycles: 10⁶ cycles (fatigue consideration)
+- Design standards: ASME Boiler & Pressure Vessel Code, ISO 4393
+
+<hr />
+
 ### Step 1: Calculate Required Wall Thickness
+
+<details>
+<summary>**Click to reveal wall thickness calculations**</summary>
 
 <Steps>
 
 1. **Determine allowable stress:**
+   
    $$\sigma_{allowable} = \frac{\sigma_{yield}}{SF} = \frac{270}{4.0} = 67.5 \text{ MPa}$$
 
 2. **Calculate minimum thickness from hoop stress:**
@@ -191,77 +203,100 @@ Let's design a pneumatic actuator casing for an industrial automation system.
    $$t_{min} = \frac{pr}{\sigma_{allowable}} = \frac{0.6 \times 10^6 \times 0.05}{67.5 \times 10^6} = 0.444 \times 10^{-3} \text{ m} = 0.44 \text{ mm}$$
 
 3. **Check longitudinal stress:**
+   
    $$\sigma_l = \frac{pr}{2t} = \frac{0.6 \times 10^6 \times 0.05}{2 \times 0.44 \times 10^{-3}} = 34.1 \text{ MPa}$$
    
-   Since σ_l < σ_allowable ✅, hoop stress governs the design.
+   Since σ_l < σ_allowable ✅, hoop stress governs the design
 
 4. **Select standard thickness:**
-   **Design thickness: 3.0 mm** (standard aluminum sheet thickness with safety margin)
+   
+   **Design thickness: 3.0 mm** (standard aluminum sheet with safety margin)
 
 </Steps>
 
+</details>
+
 ### Step 2: Verify Design with Selected Thickness
 
-**Actual stresses with t = 3.0 mm:**
+<details>
+<summary>**Click to reveal design verification calculations**</summary>
 
-**Hoop stress:**
-$$\sigma_h = \frac{pr}{t} = \frac{0.6 \times 10^6 \times 0.05}{3.0 \times 10^{-3}} = 10.0 \text{ MPa}$$
+<Steps>
 
-**Longitudinal stress:**
-$$\sigma_l = \frac{pr}{2t} = \frac{0.6 \times 10^6 \times 0.05}{2 \times 3.0 \times 10^{-3}} = 5.0 \text{ MPa}$$
+1. **Actual hoop stress with t = 3.0 mm:**
+   
+   $$\sigma_h = \frac{pr}{t} = \frac{0.6 \times 10^6 \times 0.05}{3.0 \times 10^{-3}} = 10.0 \text{ MPa}$$
 
-**Actual safety factors:**
-- Hoop stress: SF = 270/10.0 = **27.0** 
-- Longitudinal stress: SF = 270/5.0 = **54.0**
+2. **Actual longitudinal stress:**
+   
+   $$\sigma_l = \frac{pr}{2t} = \frac{0.6 \times 10^6 \times 0.05}{2 \times 3.0 \times 10^{-3}} = 5.0 \text{ MPa}$$
 
-:::tip[Design Assessment]
-The selected 3.0 mm thickness provides **very conservative** safety margins, which is appropriate for:
-- **Personnel safety** (pressurized systems)
-- **Unknown dynamic loads** during operation  
-- **Stress concentrations** around ports and fittings
-- **Manufacturing variations** and corrosion allowance
-:::
+3. **Actual safety factors:**
+   
+   - Hoop stress: SF = 270/10.0 = **27.0** 
+   - Longitudinal stress: SF = 270/5.0 = **54.0**
+   - Both exceed required SF = 4.0 by large margins
 
-### Step 3: Consider Stress Concentrations
+4. **Design assessment:**
+   
+   Very conservative design appropriate for personnel safety, stress concentrations, and manufacturing variations
 
-Real pressure vessels have **stress concentrations** around:
-- **Ports and fittings** (pressure inlet/outlet)
-- **Mounting holes** (attachment points)
-- **Welds and joints** (manufacturing connections)
+</Steps>
 
-**Stress concentration factors** typically range from 2-4, meaning local stresses can be 2-4× the nominal values.
+</details>
 
-**Design approach:**
-- **Use higher safety factors** around discontinuities
-- **Add reinforcement** around openings
-- **Round all corners** to minimize stress concentrations
-- **Consider fatigue** for cyclic loading
+### Step 3: Stress Concentration and Fatigue Assessment
 
-## 📊 Design Optimization Analysis
+<details>
+<summary>**Click to reveal stress concentration and fatigue analysis**</summary>
+
+<Steps>
+
+1. **Stress concentration factors:**
+   
+   - Ports and fittings: Kt = 2-4
+   - Mounting holes: Kt = 2.5-3.5
+   - Welds and joints: Kt = 1.5-2.5
+   - Local stresses can be 2-4× nominal values
+
+2. **Fatigue life assessment:**
+   
+   - Pressure cycles: 0 to 6 bar (fully reversed)
+   - Stress amplitude: σa = (10.0 - 0)/2 = 5.0 MPa
+   - Aluminum endurance limit ≈ 110 MPa
+   - Fatigue safety factor: 110/5.0 = 22 ✅ Excellent
+
+3. **Design recommendations:**
+   
+   - Round all corners to minimize stress concentrations
+   - Add reinforcement around openings
+   - Use higher local safety factors near discontinuities
+   - Consider dynamic pressure effects (up to 150% static)
+
+</Steps>
+
+</details>
+
+## 📊 Pressure Vessel Design Summary
 
 <CardGrid>
-  <Card title="Material Comparison" icon="list">
-    **Aluminum 6061-T6:**
-    - Required thickness: 0.44 mm
-    - Actual thickness: 3.0 mm  
-    - Weight: Light
-    - Cost: Moderate
-    - **Status:** <Badge text="Selected" variant="success" />
+  <Card title="Stress Analysis" icon="approve">
+    **Hoop stress:** 10.0 MPa  
+    **Longitudinal stress:** 5.0 MPa  
+    **Safety factors:** 27.0 / 54.0  
+    **Status:** <Badge text="Very conservative design" variant="success" />
   </Card>
-  <Card title="Steel Alternative" icon="list">
-    **Steel 1045:**
-    - σ_yield = 530 MPa  
-    - Required thickness: 0.23 mm
-    - Actual thickness: 2.0 mm (thinner possible)
-    - Weight: Heavy
-    - **Status:** <Badge text="Stronger but heavier" variant="note" />
+  <Card title="Wall Thickness" icon="information">
+    **Minimum required:** 0.44 mm  
+    **Selected thickness:** 3.0 mm  
+    **Margin:** 6.8× minimum  
+    **Status:** <Badge text="Standard thickness with margin" variant="tip" />
   </Card>
-  <Card title="Cost Analysis" icon="list">
-    **3mm Aluminum:**
-    - Material cost: Moderate
-    - Machining: Easy
-    - Corrosion resistance: Excellent
-    - **Overall:** <Badge text="Cost effective" variant="success" />
+  <Card title="Fatigue Assessment" icon="approve">
+    **Stress amplitude:** 5.0 MPa  
+    **Endurance limit:** 110 MPa  
+    **Fatigue SF:** 22.0  
+    **Status:** <Badge text="Excellent fatigue life" variant="success" />
   </Card>
 </CardGrid>
 

@@ -165,9 +165,7 @@ This allows analysis of complex loading by combining standard cases.
 
 Let's analyze a realistic CNC spindle configuration step by step.
 
-### Problem Setup
-
-:::info[🎯 Problem Statement]
+:::note[Problem Statement]
 **High-Speed CNC Spindle Deflection Analysis**
 
 **What we need to determine:**
@@ -179,51 +177,49 @@ Let's analyze a realistic CNC spindle configuration step by step.
 **Key Question:** Does this CNC spindle meet the precision requirement of δ < 0.005 mm under cutting loads, and if not, what changes are needed?
 :::
 
+<hr />
+
 **System Parameters:**
+- High-speed CNC spindle system
 - Spindle diameter: 80 mm (hollow, wall thickness 15 mm)
 - Bearing span: L = 300 mm (between bearing supports)
 - Tool overhang: 100 mm beyond front bearing
 - Material: Steel (E = 200 GPa)
-- Radial cutting force: 2000 N at tool tip
+- Radial cutting force: **`F`** = 2000 N at tool tip
 - Tool weight: 50 N (distributed along overhang)
 - Operating speed: 15,000 RPM
-- Tolerance requirement: δ < 0.005 mm
+- **`Tolerance requirement`**: δ < 0.005 mm
+
+<hr />
 
 ### Step 1: Calculate Section Properties
+
+<details>
+<summary>**Click to reveal section property calculations**</summary>
 
 <Steps>
 
 1. **Hollow circular cross-section:**
    
-   <details>
-   <summary>**Click to reveal cross-section dimensions**</summary>
-   
    - Outer diameter: D = 80 mm
    - Inner diameter: d = 50 mm (wall thickness = 15 mm)
-   
-   </details>
 
 2. **Second moment of area:**
    
-   <details>
-   <summary>**Click to reveal second moment calculation**</summary>
-   
    $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(80^4 - 50^4)}{64} = 2.3 \times 10^{-6} \text{ m}^4$$
-   
-   </details>
 
 3. **Cross-sectional area:**
    
-   <details>
-   <summary>**Click to reveal area calculation**</summary>
-   
    $$A = \frac{\pi(D^2 - d^2)}{4} = \frac{\pi(80^2 - 50^2)}{4} = 2.945 \times 10^{-3} \text{ m}^2$$
-   
-   </details>
 
 </Steps>
 
+</details>
+
 ### Step 2: Analyze Spindle as Beam System
+
+<details>
+<summary>**Click to reveal beam system analysis**</summary>
 
 The spindle can be modeled as:
 - **Main span:** Simply supported beam (300 mm between bearings)
@@ -233,38 +229,30 @@ The spindle can be modeled as:
 - Point load at tool tip: P = 2000 N
 - Distributed tool weight: w = 50/0.1 = 500 N/m over overhang
 
+</details>
+
 ### Step 3: Calculate Overhang Deflections
+
+<details>
+<summary>**Click to reveal overhang deflection calculations**</summary>
 
 <Steps>
 
 1. **Deflection from point load at tip:**
    
-   <details>
-   <summary>**Click to reveal point load deflection calculation**</summary>
-   
    $$\delta_1 = \frac{PL^3}{3EI} = \frac{2000 \times 0.1^3}{3 \times 200 \times 10^9 \times 2.3 \times 10^{-6}} = 0.0145 \text{ mm}$$
-   
-   </details>
 
 2. **Deflection from distributed tool weight:**
    
-   <details>
-   <summary>**Click to reveal distributed load deflection calculation**</summary>
-   
    $$\delta_2 = \frac{wL^4}{8EI} = \frac{500 \times 0.1^4}{8 \times 200 \times 10^9 \times 2.3 \times 10^{-6}} = 0.00136 \text{ mm}$$
-   
-   </details>
 
 3. **Total overhang deflection:**
    
-   <details>
-   <summary>**Click to reveal total overhang deflection**</summary>
-   
    $$\delta_{overhang} = \delta_1 + \delta_2 = 0.0145 + 0.00136 = 0.0159 \text{ mm}$$
-   
-   </details>
 
 </Steps>
+
+</details>
 
 ### Step 4: Analyze Main Spindle Deflection
 
@@ -278,15 +266,32 @@ For simply supported beam with load at distance 'a' from one support:
 
 **Main span deflection:** Approximately 0.002 mm (detailed calculation omitted for brevity)
 
-### Step 5: Total System Deflection
+### Step 4: Total System Assessment
 
-$$\delta_{total} = \delta_{overhang} + \delta_{main} = 0.0159 + 0.002 = 0.018 \text{ mm}$$
+<details>
+<summary>**Click to reveal total system deflection**</summary>
+
+<Steps>
+
+1. **Main spindle deflection:**
+   
+   The overhang load creates reaction at the front bearing, which loads the main spindle span.
+   Reaction force at front bearing: R = 2000 + 50 = 2050 N
+   Main span deflection: approximately 0.002 mm (detailed calculation omitted for brevity)
+
+2. **Total system deflection:**
+   
+   $$\delta_{total} = \delta_{overhang} + \delta_{main} = 0.0159 + 0.002 = 0.018 \text{ mm}$$
+
+</Steps>
 
 :::caution[Design Assessment]
 **Total deflection = 0.018 mm** exceeds the required tolerance of 0.005 mm by 3.6×!
 
 The spindle system requires significant stiffening to meet precision requirements.
 :::
+
+</details>
 
 ## 📊 Design Optimization Analysis
 

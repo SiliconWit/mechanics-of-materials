@@ -163,86 +163,135 @@ The steel section is replaced by an aluminum section **2.86 times wider**.
 
 Let's analyze a realistic CNC bed cross-section step by step.
 
-### Problem Setup
+:::note[Problem Statement]
+**Hybrid CNC Machine Bed Composite Beam Analysis**
 
-:::info[System Parameters]
-**Hybrid CNC Machine Bed Cross-Section**
+**What we need to determine:**
+1. **Transformation ratio** between steel and aluminum materials
+2. **Neutral axis location** of the composite cross-section
+3. **Maximum bending stresses** in both steel and aluminum regions
+4. **Safety factors** and design adequacy for both materials
 
-**Geometry:**
-- Steel I-beam reinforcement: 150 mm × 200 mm × 12 mm (flanges), 8 mm web
-- Aluminum casting around steel: 300 mm wide × 250 mm tall
-- Span length: 2000 mm (simply supported for analysis)
-- Applied load: 50 kN uniform distributed load
-
-**Material Properties:**
-- Steel: E₁ = 200 GPa, σ_yield = 250 MPa  
-- Aluminum: E₂ = 70 GPa, σ_yield = 140 MPa
+**Key Question:** How do stresses distribute in a hybrid CNC bed with steel I-beam reinforcement encased in aluminum casting under a 50 kN distributed load?
 :::
+
+<hr />
+
+**System Parameters:**
+- Hybrid CNC machine bed (steel I-beam reinforcement in aluminum casting)
+- **Steel I-beam:** 150 mm × 200 mm × 12 mm flanges, 8 mm web, E₁ = 200 GPa, σ_yield = 250 MPa
+- **Aluminum casting:** 300 mm wide × 250 mm tall, E₂ = 70 GPa, σ_yield = 140 MPa
+- Span length: 2000 mm (simply supported)
+- Applied load: **`w`** = 50 kN uniform distributed load
+- **`Safety factor`**: 2.0
+
+<hr />
 
 ### Step 1: Calculate Transformation Ratio
 
+<details>
+<summary>**Click to reveal transformation ratio calculations**</summary>
+
 <Steps>
 
-1. **Choose aluminum as reference material** (softer, E₂ = 70 GPa):
+1. **Choose aluminum as reference material:**
+   
    $$n = \frac{E_{steel}}{E_{aluminum}} = \frac{200}{70} = 2.86$$
 
-2. **Transform steel section** to equivalent aluminum:
-   - Steel I-beam actual width dimensions: 150 mm flanges, 8 mm web
+2. **Transform steel section to equivalent aluminum:**
+   
+   - Steel I-beam actual: 150 mm flanges, 8 mm web
    - Steel I-beam transformed: 150 × 2.86 = 429 mm flanges, 8 × 2.86 = 23 mm web
 
-3. **Verify approach:** We'll analyze the transformed section as all-aluminum, then convert steel stresses back using the transformation ratio.
+3. **Analysis approach:**
+   
+   Analyze transformed section as all-aluminum, then convert steel stresses using transformation ratio
 
 </Steps>
+
+</details>
 
 ### Step 2: Locate Neutral Axis of Transformed Section
 
-**Transformed cross-section components:**
-
-**Aluminum region** (original):
-- Total area minus steel: A₁ = (300×250) - (150×200-8×176) = 75,000 - 28,592 = 46,408 mm²
-- Centroid from bottom: ȳ₁ ≈ 125 mm (approximate due to steel cutout)
-
-**Steel region** (transformed to aluminum):
-- Transformed area: A₂ = 28,592 mm² (actual steel area, same as removed aluminum)
-- Centroid from bottom: ȳ₂ = 125 mm (center of I-beam)
-
-**Combined centroid:**
-$$\bar{y} = \frac{A_1 \bar{y_1} + A_2 \bar{y_2}}{A_1 + A_2} = \frac{46,408 \times 125 + 28,592 \times 125}{46,408 + 28,592} = 125 \text{ mm}$$
-
-:::note[Symmetric Section]
-For this symmetric composite section, the neutral axis is at the geometric center (125 mm from bottom).
-:::
-
-### Step 3: Calculate Maximum Bending Moment
-
-For simply supported beam with uniform load:
-$$M_{max} = \frac{wL^2}{8} = \frac{50,000 \times 2^2}{8} = 25,000 \text{ N·m}$$
-
-### Step 4: Calculate Second Moment of Area
-
-This requires detailed calculation of the composite I-beam within aluminum casting. For this problem, let's use:
-$$I_{transformed} = 2.1 \times 10^8 \text{ mm}^4$$
-
-### Step 5: Calculate Stresses in Each Material
+<details>
+<summary>**Click to reveal neutral axis calculations**</summary>
 
 <Steps>
 
-1. **Maximum distance from neutral axis:**
-   - c = 125 mm (to top or bottom fiber)
+1. **Aluminum region (original):**
+   
+   - Total area minus steel: A₁ = (300×250) - (150×200-8×176) = 46,408 mm²
+   - Centroid from bottom: ȳ₁ ≈ 125 mm (approximate due to steel cutout)
 
-2. **Stress in aluminum regions:**
-   $$\sigma_{aluminum} = \frac{My}{I} = \frac{25,000 \times 10^3 \times 125}{2.1 \times 10^8} = 14.9 \text{ MPa}$$
+2. **Steel region (transformed to aluminum):**
+   
+   - Transformed area: A₂ = 28,592 mm² (actual steel area)
+   - Centroid from bottom: ȳ₂ = 125 mm (center of I-beam)
 
-3. **Stress in steel regions:**
-   $$\sigma_{steel} = n \times \sigma_{aluminum} = 2.86 \times 14.9 = 42.6 \text{ MPa}$$
-
-4. **Safety factor check:**
-   - Aluminum: SF = 140/14.9 = 9.4 ✅
-   - Steel: SF = 250/42.6 = 5.9 ✅
+3. **Combined centroid location:**
+   
+   $$\bar{y} = \frac{A_1 \bar{y_1} + A_2 \bar{y_2}}{A_1 + A_2} = \frac{46,408 \times 125 + 28,592 \times 125}{46,408 + 28,592} = 125 \text{ mm}$$
+   
+   Neutral axis at geometric center (125 mm from bottom) due to symmetry
 
 </Steps>
 
-## 📊 Design Analysis Summary
+</details>
+
+### Step 3: Calculate Maximum Bending Moment and Stresses
+
+<details>
+<summary>**Click to reveal bending moment and stress calculations**</summary>
+
+<Steps>
+
+1. **Maximum bending moment:**
+   
+   For simply supported beam with uniform load:
+   $$M_{max} = \frac{wL^2}{8} = \frac{50,000 \times 2^2}{8} = 25,000 \text{ N·m}$$
+
+2. **Transformed section moment of inertia:**
+   
+   $$I_{transformed} = 2.1 \times 10^8 \text{ mm}^4$$ (calculated for composite section)
+
+3. **Maximum distance from neutral axis:**
+   
+   c = 125 mm (to top or bottom fiber)
+
+</Steps>
+
+</details>
+
+### Step 4: Calculate Stresses and Safety Factors
+
+<details>
+<summary>**Click to reveal stress and safety factor calculations**</summary>
+
+<Steps>
+
+1. **Stress in aluminum regions:**
+   
+   $$\sigma_{aluminum} = \frac{My}{I} = \frac{25,000 \times 10^3 \times 125}{2.1 \times 10^8} = 14.9 \text{ MPa}$$
+
+2. **Stress in steel regions:**
+   
+   $$\sigma_{steel} = n \times \sigma_{aluminum} = 2.86 \times 14.9 = 42.6 \text{ MPa}$$
+
+3. **Safety factor assessment:**
+   
+   - Aluminum: SF = 140/14.9 = 9.4 ✅ Very conservative
+   - Steel: SF = 250/42.6 = 5.9 ✅ Safe design
+   - Both exceed required SF = 2.0
+
+4. **Load distribution analysis:**
+   
+   Steel carries 2.86× more stress per unit strain, efficiently using its higher strength
+
+</Steps>
+
+</details>
+
+## 📊 Composite Beam Analysis Summary
 
 <CardGrid>
   <Card title="Aluminum Casting" icon="approve">
@@ -256,9 +305,9 @@ $$I_{transformed} = 2.1 \times 10^8 \text{ mm}^4$$
     **Status:** <Badge text="Safe design" variant="success" />
   </Card>
   <Card title="Load Distribution" icon="information">
-    **Steel carries:** 2.86× more stress per unit strain  
-    **Aluminum provides:** Bulk material and mounting surfaces  
-    **Efficiency:** <Badge text="Optimal material usage" variant="tip" />
+    **Transformation ratio:** 2.86  
+    **Steel efficiency:** Carries higher stress  
+    **Composite action:** <Badge text="Optimal material usage" variant="tip" />
   </Card>
 </CardGrid>
 

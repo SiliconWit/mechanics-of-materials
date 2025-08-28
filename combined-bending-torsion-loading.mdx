@@ -168,9 +168,7 @@ $$\sigma_{eq} = 2\tau_{max} = \sigma_1 - \sigma_2$$
 
 Let's analyze a realistic wrist joint under combined loading.
 
-### Problem Setup
-
-:::info[🎯 Problem Statement]
+:::note[Problem Statement]
 **Industrial Robot Wrist Joint Analysis**
 
 **What we need to determine:**
@@ -182,149 +180,114 @@ Let's analyze a realistic wrist joint under combined loading.
 **Key Question:** Can this wrist joint safely handle the combined bending moment of 150 N·m and torque of 200 N·m simultaneously without failure?
 :::
 
+<hr />
+
 **System Parameters:**
-- Wrist shaft: Hollow circular, D = 60 mm, d = 40 mm
+- Industrial robot wrist joint (hollow circular shaft)
+- Wrist shaft: D = 60 mm (outer), d = 40 mm (inner)
 - Critical section length: 100 mm
-- Material: Steel 4140 (σ_yield = 415 MPa, τ_yield = 240 MPa)
-- Safety factor: 2.5
-- Bending moment: M = 150 N·m (from tool weight and cutting forces)
-- Torsional moment: T = 200 N·m (from joint rotation)
-- Axial force: P = 1000 N (from joint preload)
+- Material: Steel 4140 (**`σ_yield`** = 415 MPa, **`τ_yield`** = 240 MPa)
+- **`Safety factor`**: 2.5
+- Bending moment: **`M`** = 150 N·m (from tool weight and cutting forces)
+- Torsional moment: **`T`** = 200 N·m (from joint rotation)
+- Axial force: **`P`** = 1000 N (from joint preload)
+
+<hr />
 
 ### Step 1: Calculate Section Properties
+
+<details>
+<summary>**Click to reveal section property calculations**</summary>
 
 <Steps>
 
 1. **Cross-sectional area:**
    
-   <details>
-   <summary>**Click to reveal area calculation**</summary>
-   
    $$A = \frac{\pi(D^2 - d^2)}{4} = \frac{\pi(60^2 - 40^2)}{4} = 1571 \text{ mm}^2$$
-   
-   </details>
 
 2. **Second moment of area:**
    
-   <details>
-   <summary>**Click to reveal second moment calculation**</summary>
-   
    $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(60^4 - 40^4)}{64} = 8.95 \times 10^5 \text{ mm}^4$$
-   
-   </details>
 
 3. **Polar moment of inertia:**
    
-   <details>
-   <summary>**Click to reveal polar moment calculation**</summary>
-   
    $$J = \frac{\pi(D^4 - d^4)}{32} = \frac{\pi(60^4 - 40^4)}{32} = 1.79 \times 10^6 \text{ mm}^4$$
-   
-   </details>
 
 </Steps>
 
+</details>
+
 ### Step 2: Calculate Individual Stress Components
+
+<details>
+<summary>**Click to reveal individual stress calculations**</summary>
 
 <Steps>
 
 1. **Axial stress from preload:**
    
-   <details>
-   <summary>**Click to reveal axial stress calculation**</summary>
-   
    $$\sigma_{axial} = \frac{P}{A} = \frac{1000}{1571} = 0.64 \text{ MPa}$$
-   
-   </details>
 
 2. **Bending stress at outer fiber:**
    
-   <details>
-   <summary>**Click to reveal bending stress calculation**</summary>
-   
    $$\sigma_{bending} = \frac{Mc}{I} = \frac{150 \times 10^3 \times 30}{8.95 \times 10^5} = 50.3 \text{ MPa}$$
-   
-   </details>
 
 3. **Combined normal stress:**
    
-   <details>
-   <summary>**Click to reveal combined normal stress**</summary>
-   
    $$\sigma_x = \sigma_{axial} + \sigma_{bending} = 0.64 + 50.3 = 50.9 \text{ MPa}$$
-   
-   </details>
 
 4. **Torsional shear stress:**
    
-   <details>
-   <summary>**Click to reveal torsional shear calculation**</summary>
-   
    $$\tau = \frac{Tr}{J} = \frac{200 \times 10^3 \times 30}{1.79 \times 10^6} = 33.5 \text{ MPa}$$
-   
-   </details>
 
 </Steps>
 
+</details>
+
 ### Step 3: Apply Failure Theories
+
+<details>
+<summary>**Click to reveal failure theory calculations**</summary>
 
 <Steps>
 
 1. **Von Mises equivalent stress:**
    
-   <details>
-   <summary>**Click to reveal von Mises calculation**</summary>
-   
    $$\sigma_{eq} = \sqrt{\sigma_x^2 + 3\tau^2} = \sqrt{50.9^2 + 3(33.5)^2} = \sqrt{2591 + 3368} = 77.2 \text{ MPa}$$
-   
-   </details>
 
 2. **Maximum shear stress theory:**
-   
-   <details>
-   <summary>**Click to reveal Tresca theory calculation**</summary>
    
    For pure shear and normal stress state:
    $$\sigma_1 = \frac{\sigma_x}{2} + \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau^2} = 25.45 + \sqrt{647.5 + 1122.25} = 67.5 \text{ MPa}$$
    $$\sigma_2 = \frac{\sigma_x}{2} - \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau^2} = 25.45 - 42.05 = -16.6 \text{ MPa}$$
    $$\sigma_{eq,Tresca} = \sigma_1 - \sigma_2 = 67.5 - (-16.6) = 84.1 \text{ MPa}$$
-   
-   </details>
 
 </Steps>
 
+</details>
+
 ### Step 4: Safety Factor Assessment
+
+<details>
+<summary>**Click to reveal safety factor analysis**</summary>
 
 <Steps>
 
 1. **Von Mises safety factor:**
    
-   <details>
-   <summary>**Click to reveal von Mises safety factor**</summary>
-   
    $$SF_{vonMises} = \frac{\sigma_{yield}}{\sigma_{eq}} = \frac{415}{77.2} = 5.38$$
-   
-   </details>
 
 2. **Tresca safety factor:**
    
-   <details>
-   <summary>**Click to reveal Tresca safety factor**</summary>
-   
    $$SF_{Tresca} = \frac{\sigma_{yield}}{\sigma_{eq,Tresca}} = \frac{415}{84.1} = 4.93$$
-   
-   </details>
 
 3. **Design assessment:**
    
-   <details>
-   <summary>**Click to reveal design assessment**</summary>
-   
    Both safety factors exceed the required SF = 2.5 ✅
-   
-   </details>
 
 </Steps>
+
+</details>
 
 ## 📊 Stress Analysis Summary
 

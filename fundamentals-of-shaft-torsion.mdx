@@ -179,9 +179,7 @@ $$\theta = \frac{TL}{GJ}$$
 
 Let's analyze a realistic Geneva mechanism crankshaft design.
 
-### Problem Setup
-
-:::info[🎯 Problem Statement]
+:::note[Problem Statement]
 **Geneva Mechanism Crankshaft Torsion Analysis**
 
 **What we need to determine:**
@@ -193,82 +191,100 @@ Let's analyze a realistic Geneva mechanism crankshaft design.
 **Key Questions:** Can this 25 mm crankshaft safely handle 150 N·m peak torque with SF = 3.0, and will the angular twist meet ±0.5° precision requirements?
 :::
 
+<hr />
+
 **System Parameters:**
-- Material: Steel 1045 (G = 80 GPa, τ_allowable = 180 MPa)
+- Geneva mechanism drive system
+- Material: Steel 1045 (G = 80 GPa, **`τ_allowable`** = 180 MPa)
 - Diameter: 25 mm (solid circular)
-- Length: 200 mm
-- Safety factor: 3.0
-- Motor torque: 50 N·m (continuous)
-- Peak torque: 150 N·m (during engagement)
-- Required precision: ±0.5° angular accuracy
+- Length: L = 200 mm
+- **`Safety factor`**: 3.0
+- Motor torque: **`T_continuous`** = 50 N·m (continuous)
+- Peak torque: **`T_peak`** = 150 N·m (during engagement)
+- **`Required precision`**: ±0.5° angular accuracy
+
+<hr />
 
 ### Step 1: Calculate Polar Moment of Inertia
+
+<details>
+<summary>**Click to reveal polar moment calculation**</summary>
 
 For solid circular shaft:
 $$J = \frac{\pi d^4}{32} = \frac{\pi (25 \times 10^{-3})^4}{32} = 3.835 \times 10^{-8} \text{ m}^4$$
 
+</details>
+
 ### Step 2: Analyze Torsional Stress
+
+<details>
+<summary>**Click to reveal torsional stress analysis**</summary>
 
 <Steps>
 
 1. **Continuous operation stress:**
    
-   <details>
-   <summary>**Click to reveal continuous stress calculation**</summary>
-   
    $$\tau_{continuous} = \frac{16 T}{\pi d^3} = \frac{16 \times 50}{\pi (25 \times 10^{-3})^3} = 163.6 \text{ MPa}$$
-   
-   </details>
 
 2. **Peak engagement stress:**
    
-   <details>
-   <summary>**Click to reveal peak stress calculation**</summary>
-   
    $$\tau_{peak} = \frac{16 \times 150}{\pi (25 \times 10^{-3})^3} = 490.9 \text{ MPa}$$
-   
-   </details>
 
 3. **Safety factor check:**
-   
-   <details>
-   <summary>**Click to reveal safety factor analysis**</summary>
    
    - Allowable stress: 180 MPa
    - Continuous operation: SF = 180/163.6 = 1.1 ❌ **Too low!**
    - Peak loading: SF = 180/490.9 = 0.37 ❌ **Failure expected!**
-   
-   </details>
 
 </Steps>
 
 > **Analysis Result:** The 25 mm shaft is undersized for this application!
 
+</details>
+
 ### Step 3: Redesign for Adequate Safety Factor
 
-**Required shaft diameter for SF = 3:**
+<details>
+<summary>**Click to reveal redesign calculations**</summary>
 
-From $\tau_{allowable} = \frac{16 T}{\pi d^3}$, solving for diameter:
+<Steps>
 
-$$d = \left(\frac{16 T}{\pi \tau_{allowable}}\right)^{1/3}$$
+1. **Required shaft diameter for SF = 3:**
+   
+   From $\tau_{allowable} = \frac{16 T}{\pi d^3}$, solving for diameter:
+   $$d = \left(\frac{16 T}{\pi \tau_{allowable}}\right)^{1/3}$$
 
-For peak torque with SF = 3:
-- Allowable stress: $\tau_{allowable} = \frac{180}{3} = 60 \text{ MPa}$
-- Required diameter: $d = \left(\frac{16 \times 150}{\pi \times 60 \times 10^6}\right)^{1/3} = 0.0336 \text{ m} = 33.6 \text{ mm}$
+2. **Calculate for peak torque with SF = 3:**
+   
+   Allowable stress: $\tau_{allowable} = \frac{180}{3} = 60 \text{ MPa}$
+   Required diameter: $d = \left(\frac{16 \times 150}{\pi \times 60 \times 10^6}\right)^{1/3} = 0.0336 \text{ m} = 33.6 \text{ mm}$
+   
+   **Design Decision:** Use **35 mm diameter** shaft for standard sizing.
 
-**Design Decision:** Use **35 mm diameter** shaft for standard sizing.
+</Steps>
+
+</details>
 
 ### Step 4: Verify Angular Deformation
 
-With the redesigned 35 mm shaft:
+<details>
+<summary>**Click to reveal angular deformation analysis**</summary>
 
-$$J_{new} = \frac{\pi (35 \times 10^{-3})^4}{32} = 1.469 \times 10^{-7} \text{ m}^4$$
+<Steps>
 
-**Angle of twist under peak torque:**
-$$\theta = \frac{TL}{GJ} = \frac{150 \times 0.2}{80 \times 10^9 \times 1.469 \times 10^{-7}} = 0.255 \text{ radians}$$
+1. **Calculate new polar moment:**
+   
+   $$J_{new} = \frac{\pi (35 \times 10^{-3})^4}{32} = 1.469 \times 10^{-7} \text{ m}^4$$
 
-**Convert to degrees:**
-$$\theta = 0.255 \times \frac{180}{\pi} = 14.6°$$
+2. **Angle of twist under peak torque:**
+   
+   $$\theta = \frac{TL}{GJ} = \frac{150 \times 0.2}{80 \times 10^9 \times 1.469 \times 10^{-7}} = 0.255 \text{ radians}$$
+   
+   Convert to degrees: $\theta = 0.255 \times \frac{180}{\pi} = 14.6°$
+
+</Steps>
+
+</details>
 
 :::caution[Design Assessment]
 **Angular deformation = 14.6°** exceeds the required precision of ±0.5°. 

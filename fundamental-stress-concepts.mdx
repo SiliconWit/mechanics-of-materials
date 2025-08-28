@@ -171,7 +171,7 @@ $$\nu = -\frac{\epsilon_{lateral}}{\epsilon_{longitudinal}}$$
 - **Critical for** multi-axial stress analysis in complex geometries
 :::
 
-## 🔧 Application: Analyzing the Connecting Rod Under Peak Compression
+## 🔧 Application: Crank-Slider Connecting Rod Analysis
 
 Now let's return to our crank-slider system and apply what we've learned to solve a real engineering problem.
 
@@ -181,19 +181,9 @@ Now let's return to our crank-slider system and apply what we've learned to solv
   </TailwindWrapper>
 </div>
 
-### Problem Setup
+:::note[Problem Statement]
+**Crank-Slider Connecting Rod Stress Analysis**
 
-**System:** Four-stroke engine with crank-slider mechanism  
-**Critical Component:** Steel connecting rod  
-**Loading Condition:** Peak compression during combustion stroke
-
-**Given Data:**
-- Maximum compression force: F = 15,000 N
-- Connecting rod cross-sectional area: A = 500 mm²
-- Connecting rod length: L = 150 mm
-- Material: Steel (E = 200 GPa, σ_yield = 350 MPa)
-
-:::info[🎯 Problem Statement]
 **What we need to determine:**
 1. **Peak compressive stress** in the connecting rod
 2. **Safety factor** against material failure
@@ -202,36 +192,55 @@ Now let's return to our crank-slider system and apply what we've learned to solv
 **Key Question:** Is this connecting rod design safe for the given loading conditions, and how much will it deform?
 :::
 
-### Solution Approach
+<hr />
 
-**Step 1: Calculate Peak Compressive Stress**
+**System Parameters:**
+- Four-stroke engine with crank-slider mechanism
+- Steel connecting rod (critical component)
+- Maximum compression force: F = 15,000 N
+- Connecting rod cross-sectional area: A = 500 mm²
+- Connecting rod length: L = 150 mm
+- Material: Steel (E = 200 GPa, **`σ_yield`** = 350 MPa)
+
+<hr />
+
+### Step 1: Calculate Peak Compressive Stress
 
 <details>
-<summary>**Click to reveal detailed calculations**</summary>
+<summary>**Click to reveal stress calculations**</summary>
 
-Using our stress formula:
-$$\sigma = \frac{F}{A} = \frac{15,000 \text{ N}}{500 \text{ mm}^2}$$
+<Steps>
 
-Converting units: 500 mm² = 500 × 10⁻⁶ m²
-$$\sigma = \frac{15,000}{500 \times 10^{-6}} = 30,000,000 \text{ Pa} = 30 \text{ MPa}$$
+1. **Apply the stress formula:**
+   
+   Using our fundamental stress formula:
+   $$\sigma = \frac{F}{A} = \frac{15,000 \text{ N}}{500 \text{ mm}^2}$$
+   
+   Converting units: 500 mm² = 500 × 10⁻⁶ m²
+   $$\sigma = \frac{15,000}{500 \times 10^{-6}} = 30,000,000 \text{ Pa} = 30 \text{ MPa}$$
+   
+   Peak compressive stress = **30 MPa**
 
-**Result:** Peak compressive stress = **30 MPa**
+</Steps>
 
 </details>
 
----
-
-**Step 2: Check Against Material Limits**
+### Step 2: Check Safety Factor
 
 <details>
 <summary>**Click to reveal safety factor analysis**</summary>
 
-**Safety Factor Analysis:**
-- Applied stress: σ = 30 MPa  
-- Yield strength: σ_yield = 350 MPa
-- Safety factor: SF = 350/30 = 11.7
+<Steps>
 
-✅ **Result**: <Badge text="Safe operation with SF = 11.7" variant="success" />
+1. **Safety factor calculation:**
+   
+   Applied stress: σ = 30 MPa  
+   Yield strength: σ_yield = 350 MPa
+   Safety factor: SF = 350/30 = 11.7
+   
+   ✅ **Safe operation with SF = 11.7**
+
+</Steps>
 
 :::tip[Safety Factor Guidelines]
 - **SF = 2-3**: Well-understood loading and materials
@@ -242,18 +251,22 @@ $$\sigma = \frac{15,000}{500 \times 10^{-6}} = 30,000,000 \text{ Pa} = 30 \text{
 
 </details>
 
----
-
-**Step 3: Calculate Deformation Using Hooke's Law**
+### Step 3: Calculate Deformation
 
 <details>
 <summary>**Click to reveal deformation calculations**</summary>
 
-The rod will compress slightly under this load:
-$$\epsilon = \frac{\sigma}{E} = \frac{30 \times 10^6}{200 \times 10^9} = 0.00015$$
-$$\delta = \epsilon \times L = 0.00015 \times 150 \text{ mm} = 0.0225 \text{ mm}$$
+<Steps>
 
-**Compression**: Only 0.023 mm—negligible for engine operation.
+1. **Calculate strain and deformation:**
+   
+   Strain: $\epsilon = \frac{\sigma}{E} = \frac{30 \times 10^6}{200 \times 10^9} = 0.00015$
+   
+   Deformation: $\delta = \epsilon \times L = 0.00015 \times 150 \text{ mm} = 0.0225 \text{ mm}$
+   
+   **Compression**: Only 0.023 mm—negligible for engine operation.
+
+</Steps>
 
 :::note[Deformation Analysis]
 <Badge text="Elastic deformation" variant="tip" /> is usually **acceptable** in structural components

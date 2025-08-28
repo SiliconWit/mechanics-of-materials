@@ -88,17 +88,22 @@ $$\delta_T = \alpha L \Delta T$$
 **Physical Meaning:** Materials expand linearly with temperature increase. Different materials have different expansion coefficients, leading to differential expansion in assemblies.
 </Card>
 
-Where:
-- $\delta_T$ = Thermal expansion (m)
-- $\alpha$ = Coefficient of thermal expansion (1/°C)  
-- $L$ = Original length (m)
-- $\Delta T$ = Temperature change (°C)
-
 ### Thermal Strain
 
 The thermal strain (dimensionless) is:
 
+<Card title="📏 Thermal Strain Formula" icon="document">
 $$\epsilon_T = \frac{\delta_T}{L} = \alpha \Delta T$$
+
+**Where:**
+- $\epsilon_T$ = Thermal strain (dimensionless)
+- $\delta_T$ = Thermal expansion (m)
+- $L$ = Original length (m)
+- $\alpha$ = Coefficient of thermal expansion (1/°C)
+- $\Delta T$ = Temperature change (°C)
+
+**Physical Meaning:** Thermal strain is the ratio of thermal expansion to original length, representing the fractional change in dimensions due to temperature change.
+</Card>
 
 <Tabs>
   <TabItem label="Material Properties">
@@ -144,92 +149,131 @@ $$\epsilon_T = \frac{\delta_T}{L} = \alpha \Delta T$$
 
 ### Thermal Stress Development
 
-When thermal expansion is **fully prevented** (constrained):
-
+<Card title="🔒 Thermal Stress Formula" icon="document">
+**Fully constrained expansion:**
 $$\sigma_T = E \alpha \Delta T$$
 
-When thermal expansion is **partially constrained**:
-
+**Partially constrained expansion:**
 $$\sigma_T = E \alpha \Delta T \times (1 - \frac{\delta_{allowed}}{\delta_{free}})$$
+
+**Where:**
+- $\sigma_T$ = Thermal stress (Pa)
+- $E$ = Young's modulus (Pa)
+- $\alpha$ = Coefficient of thermal expansion (1/°C)
+- $\Delta T$ = Temperature change (°C)
+
+**Physical Meaning:** When thermal expansion is prevented, materials develop internal stress proportional to their stiffness and expansion tendency.
+</Card>
 
 ## 🔧 Application: Piston-Cylinder Thermal Analysis
 
 Let's analyze our heated extruder system step by step.
 
-### Problem Setup
+:::note[Problem Statement]
+**Heated 3D Printer Extruder Head Thermal Analysis**
 
-:::info[System Parameters]
-**Heated 3D Printer Extruder Head**
+**What we need to determine:**
+1. **Thermal expansion** of aluminum cylinder and steel piston
+2. **Operating clearances** at elevated temperature
+3. **Thermal stress development** if expansion is constrained
+4. **Design recommendations** for reliable thermal operation
 
-**Aluminum Cylinder:**
-- Inner diameter: 20.00 mm (at 20°C)
-- Length: 100 mm
-- Material: Aluminum 6061 (α = 23.6 × 10⁻⁶ /°C, E = 70 GPa)
-
-**Steel Piston:**
-- Outer diameter: 19.95 mm (at 20°C)  
-- Length: 80 mm
-- Material: Steel 1045 (α = 12.0 × 10⁻⁶ /°C, E = 200 GPa)
-
-**Operating Conditions:**
-- Initial temperature: 20°C
-- Operating temperature: 200°C
-- Temperature change: ΔT = 180°C
+**Key Question:** How do clearances change when the piston-cylinder assembly is heated from 20°C to 200°C, and what thermal stresses develop?
 :::
 
+<hr />
+
+**System Parameters:**
+- Heated 3D printer extruder head (aluminum cylinder with steel piston)
+- **Aluminum Cylinder:** Inner diameter 20.00 mm, Length 100 mm, Material: Al 6061 (α = 23.6 × 10⁻⁶ /°C, E = 70 GPa)
+- **Steel Piston:** Outer diameter 19.95 mm, Length 80 mm, Material: Steel 1045 (α = 12.0 × 10⁻⁶ /°C, E = 200 GPa)
+- **Temperature change:** ΔT = 180°C (from 20°C to 200°C)
+- Cold clearance: 0.05 mm
+
+<hr />
+
 ### Step 1: Calculate Free Thermal Expansion
+
+<details>
+<summary>**Click to reveal thermal expansion calculations**</summary>
 
 <Steps>
 
 1. **Aluminum cylinder inner diameter expansion:**
-   $$\Delta D_{Al} = D_0 \alpha_{Al} \Delta T = 20.00 \times 23.6 \times 10^{-6} \times 180$$
-   $$\Delta D_{Al} = 0.0849 \text{ mm}$$
    
-   **New inner diameter:** 20.00 + 0.0849 = **20.0849 mm**
+   $$\Delta D_{Al} = D_0 \alpha_{Al} \Delta T = 20.00 \times 23.6 \times 10^{-6} \times 180 = 0.0849 \text{ mm}$$
+   
+   New inner diameter: 20.00 + 0.0849 = **20.0849 mm**
 
 2. **Steel piston outer diameter expansion:**
-   $$\Delta D_{steel} = D_0 \alpha_{steel} \Delta T = 19.95 \times 12.0 \times 10^{-6} \times 180$$
-   $$\Delta D_{steel} = 0.0431 \text{ mm}$$
    
-   **New outer diameter:** 19.95 + 0.0431 = **19.9931 mm**
+   $$\Delta D_{steel} = D_0 \alpha_{steel} \Delta T = 19.95 \times 12.0 \times 10^{-6} \times 180 = 0.0431 \text{ mm}$$
+   
+   New outer diameter: 19.95 + 0.0431 = **19.9931 mm**
 
 3. **Calculate running clearance at operating temperature:**
+   
    $$\text{Clearance}_{hot} = D_{cylinder} - D_{piston} = 20.0849 - 19.9931 = 0.0918 \text{ mm}$$
+   
+   The clearance **increases** from 0.05 mm (cold) to 0.092 mm (hot)
 
 </Steps>
 
-> **Result:** The clearance **increases** from 0.05 mm (cold) to 0.092 mm (hot) because aluminum expands more than steel.
+</details>
 
 ### Step 2: Analyze Constrained Thermal Stress
 
-Suppose the aluminum cylinder were **fixed** and prevented from expanding:
+<details>
+<summary>**Click to reveal thermal stress calculations**</summary>
 
-**Thermal stress in constrained aluminum:**
-$$\sigma_T = E \alpha \Delta T = 70 \times 10^9 \times 23.6 \times 10^{-6} \times 180$$
-$$\sigma_T = 297 \text{ MPa}$$
+<Steps>
 
-:::caution[Engineering Significance]
-This thermal stress (297 MPa) exceeds the yield strength of aluminum 6061 (270 MPa), meaning the material would yield if fully constrained during heating!
-:::
+1. **Thermal stress in constrained aluminum cylinder:**
+   
+   $$\sigma_T = E \alpha \Delta T = 70 \times 10^9 \times 23.6 \times 10^{-6} \times 180 = 297 \text{ MPa}$$
 
-### Step 3: Design Considerations
+2. **Thermal stress in constrained steel piston:**
+   
+   $$\sigma_T = E \alpha \Delta T = 200 \times 10^9 \times 12.0 \times 10^{-6} \times 180 = 432 \text{ MPa}$$
 
-<CardGrid>
-  <Card title="✅ Good Design Practice" icon="approve">
-    **Allow Free Expansion**
-    - Design clearances for hot operation
-    - Use expansion joints where needed
-    - Select materials with similar α values
-    - **Result:** <Badge text="No thermal stress" variant="success" />
-  </Card>
-  <Card title="❌ Poor Design Practice" icon="error">
-    **Prevent Thermal Expansion**  
-    - Fixed constraints during heating
-    - No accommodation for growth
-    - Mismatched thermal expansion
-    - **Result:** <Badge text="High stress & failure" variant="danger" />
-  </Card>
-</CardGrid>
+3. **Assessment against yield strengths:**
+   
+   - Aluminum: 297 MPa > 270 MPa (yield) → **Would yield if constrained!**
+   - Steel: 432 MPa < 530 MPa (yield) → **Would remain elastic**
+   - Conclusion: Never fully constrain aluminum during heating
+
+</Steps>
+
+</details>
+
+### Step 3: Design Recommendations
+
+<details>
+<summary>**Click to reveal design optimization analysis**</summary>
+
+<Steps>
+
+1. **Optimal cold clearance calculation:**
+   
+   Required hot clearance (minimum): 0.05 mm
+   Differential expansion: 0.0849 - 0.0431 = 0.0418 mm
+   **Required cold clearance:** 0.05 + 0.0418 = 0.092 mm
+
+2. **Thermal stress management:**
+   
+   - Allow free expansion → Zero thermal stress
+   - Design clearances for hot operation
+   - Use materials with similar α when possible
+
+3. **Design validation:**
+   
+   ✅ Hot clearance adequate (0.05 mm minimum)
+   ✅ No thermal stress (free expansion)
+   ✅ Reliable operation across temperature range
+
+</Steps>
+
+</details>
 
 ## 🎯 Advanced Analysis: Bi-Material System
 
@@ -310,37 +354,28 @@ $$F_{Al} + F_{steel} = 0$$ (internal forces balance)
 5. **Assuming room temperature operation** in heated environments
 :::
 
-## 📊 Practical Design Example: Extruder Head Redesign
+## 📊 Thermal Analysis Summary
 
-### Problem Statement
-
-The original design had **seizure issues** due to thermal expansion mismatch. Let's redesign:
-
-**Original Design Issues:**
-- Tight cold clearances (0.02 mm)
-- No thermal compensation
-- Frequent seizures at operating temperature
-
-### Solution Strategy
-
-<Steps>
-
-1. **Calculate hot clearances needed:**
-   - Minimum running clearance: 0.05 mm (hot)
-   - Thermal expansion difference: 0.0418 mm
-   - **Required cold clearance:** 0.05 + 0.0418 = 0.092 mm
-
-2. **Implement thermal compensation:**
-   - Machine cold clearance to 0.092 mm
-   - Add thermal monitoring
-   - Include expansion accommodation
-
-3. **Validate design:**
-   - Hot clearance: 0.092 - 0.0418 = **0.05 mm** ✅
-   - No thermal stress (free expansion) ✅
-   - Reliable operation across temperature range ✅
-
-</Steps>
+<CardGrid>
+  <Card title="Thermal Expansion" icon="information">
+    **Aluminum expansion:** 0.0849 mm  
+    **Steel expansion:** 0.0431 mm  
+    **Differential:** 0.0418 mm  
+    **Status:** <Badge text="Aluminum expands 2× more" variant="note" />
+  </Card>
+  <Card title="Operating Clearances" icon="approve">
+    **Cold clearance:** 0.05 mm  
+    **Hot clearance:** 0.092 mm  
+    **Design clearance:** 0.092 mm cold  
+    **Status:** <Badge text="Adequate clearance maintained" variant="success" />
+  </Card>
+  <Card title="Thermal Stress" icon="error">
+    **Constrained Al stress:** 297 MPa  
+    **Al yield strength:** 270 MPa  
+    **Safety:** Would yield if constrained  
+    **Status:** <Badge text="Must allow free expansion" variant="caution" />
+  </Card>
+</CardGrid>
 
 ## 📋 Summary and Next Steps
 

@@ -145,9 +145,7 @@ For the same cross-sectional area, **tall narrow sections** have much higher ben
 
 Let's analyze a realistic cantilever gripper jaw design step by step.
 
-### Problem Setup
-
-:::info[🎯 Problem Statement]
+:::note[Problem Statement]
 **Industrial Robotic Gripper Jaw Analysis**
 
 **What we need to determine:**
@@ -159,49 +157,46 @@ Let's analyze a realistic cantilever gripper jaw design step by step.
 **Key Question:** Can this gripper jaw safely handle the specified gripping force without exceeding material limits, and if not, what changes are needed?
 :::
 
+<hr />
+
 **System Parameters:**
+- Industrial robotic gripper jaw (cantilever beam)
 - Length: L = 80 mm (cantilever span)
 - Cross-section: Rectangular 15 mm × 8 mm
-- Material: Aluminum 6061-T6 (σ_yield = 270 MPa, E = 70 GPa)
-- Safety factor: 3.0
+- Material: Aluminum 6061-T6 (**`σ_yield`** = 270 MPa, E = 70 GPa)
+- **`Safety factor`**: 3.0
 - Gripping force: F = 500 N (concentrated at tip)
-- Object contact: Additional distributed reaction
-- **Analysis focus:** Maximum stress at fixed support
+- Analysis focus: Maximum stress at fixed support
+
+<hr />
 
 ### Step 1: Calculate Maximum Bending Moment
+
+<details>
+<summary>**Click to reveal moment calculations**</summary>
 
 <Steps>
 
 1. **Identify critical section:**
    
-   <details>
-   <summary>**Click to reveal critical section analysis**</summary>
-   
    The maximum moment occurs at the **fixed support** for a cantilever beam.
-   
-   </details>
 
 2. **Calculate maximum moment:**
    
-   <details>
-   <summary>**Click to reveal moment calculation**</summary>
-   
    $$M_{max} = F \times L = 500 \times 0.08 = 40 \text{ N·m}$$
-   
-   </details>
 
-3. **Verify using Lesson 2.1 knowledge:**
+3. **Verify using beam theory:**
    
-   <details>
-   <summary>**Click to reveal verification**</summary>
-   
-   From shear force and moment diagrams, we know the moment increases linearly from 0 at the tip to maximum at the support. ✅
-   
-   </details>
+   From shear force and moment diagrams, the moment increases linearly from 0 at the tip to maximum at the support. ✅
 
 </Steps>
 
+</details>
+
 ### Step 2: Calculate Section Properties
+
+<details>
+<summary>**Click to reveal calculations**</summary>
 
 **Cross-sectional properties** for rectangular section (15 mm × 8 mm):
 
@@ -214,36 +209,26 @@ $$c = \frac{h}{2} = \frac{8}{2} = 4 \text{ mm} = 4 \times 10^{-3} \text{ m}$$
 **Section modulus:**
 $$S = \frac{I}{c} = \frac{640 \times 10^{-12}}{4 \times 10^{-3}} = 160 \times 10^{-9} \text{ m}^3$$
 
+</details>
+
 ### Step 3: Calculate Maximum Bending Stress
+
+<details>
+<summary>**Click to reveal stress calculations**</summary>
 
 <Steps>
 
 1. **Apply flexural formula:**
    
-   <details>
-   <summary>**Click to reveal flexural formula calculation**</summary>
-   
    $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{40 \times 4 \times 10^{-3}}{640 \times 10^{-12}} = 250 \times 10^6 \text{ Pa} = 250 \text{ MPa}$$
-   
-   </details>
 
-2. **Alternative calculation using section modulus:**
-   
-   <details>
-   <summary>**Click to reveal section modulus method**</summary>
+2. **Alternative using section modulus:**
    
    $$\sigma_{max} = \frac{M}{S} = \frac{40}{160 \times 10^{-9}} = 250 \text{ MPa}$$
-   
-   </details>
 
 3. **Check safety factor:**
    
-   <details>
-   <summary>**Click to reveal safety factor analysis**</summary>
-   
    $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{270}{250} = 1.08$$
-   
-   </details>
 
 </Steps>
 
@@ -253,20 +238,34 @@ $$S = \frac{I}{c} = \frac{640 \times 10^{-12}}{4 \times 10^{-3}} = 160 \times 10
 The gripper jaw is **severely undersized** and likely to fail under the specified load.
 :::
 
+</details>
+
 ### Step 4: Redesign for Adequate Safety Factor
 
-**Required maximum stress** with SF = 3.0:
-$$\sigma_{allowable} = \frac{\sigma_{yield}}{SF} = \frac{270}{3.0} = 90 \text{ MPa}$$
+<details>
+<summary>**Click to reveal redesign calculations**</summary>
 
-**Required section modulus:**
-$$S_{required} = \frac{M}{\sigma_{allowable}} = \frac{40}{90 \times 10^6} = 444 \times 10^{-9} \text{ m}^3$$
+<Steps>
 
-**For rectangular section with width = 15 mm:**
-$$S = \frac{bh^2}{6} = \frac{15 \times h^2}{6} = 444 \times 10^{-9}$$
-$$h^2 = \frac{6 \times 444 \times 10^{-9}}{15 \times 10^{-3}} = 1.78 \times 10^{-4}$$
-$$h = 13.3 \text{ mm}$$
+1. **Required maximum stress with SF = 3.0:**
+   
+   $$\sigma_{allowable} = \frac{\sigma_{yield}}{SF} = \frac{270}{3.0} = 90 \text{ MPa}$$
 
-**Design Decision:** Use **15 mm × 14 mm** cross-section for standard sizing.
+2. **Required section modulus:**
+   
+   $$S_{required} = \frac{M}{\sigma_{allowable}} = \frac{40}{90 \times 10^6} = 444 \times 10^{-9} \text{ m}^3$$
+
+3. **Calculate required height (width = 15 mm):**
+   
+   $$S = \frac{bh^2}{6} = \frac{15 \times h^2}{6} = 444 \times 10^{-9}$$
+   $$h^2 = \frac{6 \times 444 \times 10^{-9}}{15 \times 10^{-3}} = 1.78 \times 10^{-4}$$
+   $$h = 13.3 \text{ mm}$$
+   
+   **Design Decision:** Use **15 mm × 14 mm** cross-section for standard sizing.
+
+</Steps>
+
+</details>
 
 ## 📊 Design Verification Summary
 

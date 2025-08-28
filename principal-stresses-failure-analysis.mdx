@@ -177,94 +177,126 @@ $$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
 
 Let's analyze a critical universal joint pin under complex loading.
 
-### Problem Setup
+:::note[Problem Statement]
+**Heavy-Duty Robotic Universal Joint Pin Analysis**
 
-:::info[System Parameters]
-**Heavy-Duty Robotic Universal Joint**
+**What we need to determine:**
+1. **Individual stress components** from bending, torsion, and contact loading
+2. **Principal stresses** using analytical methods and Mohr's circle
+3. **Critical failure modes** using multiple failure theories
+4. **Design adequacy** and required modifications for safe operation
 
-**Pin Geometry:**
-- Pin diameter: 25 mm (solid circular cross-section)
-- Critical section at bearing contact
-- Material: Steel 4340 (σ_yield = 470 MPa, σ_ultimate = 745 MPa)
-- Surface finish: Ground (good fatigue resistance)
-
-**Loading Conditions:**
-- Applied torque: T = 500 N·m
-- Bending moment: M = 200 N·m (from joint angulation)
-- Contact pressure: 50 MPa (localized bearing load)
-- Operating environment: Industrial (safety factor = 4)
+**Key Question:** Can a 25 mm diameter universal joint pin safely handle 500 N·m torque and 200 N·m bending with SF = 4, and which failure theory governs the design?
 :::
 
+<hr />
+
+**System Parameters:**
+- Heavy-duty robotic universal joint pin (critical drive component)
+- Pin diameter: 25 mm (solid circular cross-section)
+- Material: Steel 4340 (**`σ_yield`** = 470 MPa, σ_ultimate = 745 MPa)
+- Applied torque: **`T`** = 500 N·m
+- Bending moment: **`M`** = 200 N·m (from joint angulation)
+- Contact pressure: 50 MPa (localized bearing load)
+- **`Safety factor`**: 4 (industrial environment)
+
+<hr />
+
 ### Step 1: Calculate Individual Stress Components
+
+<details>
+<summary>**Click to reveal individual stress component calculations**</summary>
 
 <Steps>
 
 1. **Cross-sectional properties:**
+   
    $$A = \frac{\pi d^2}{4} = \frac{\pi (25)^2}{4} = 491 \text{ mm}^2$$
    $$I = \frac{\pi d^4}{64} = \frac{\pi (25)^4}{64} = 19,175 \text{ mm}^4$$
    $$J = \frac{\pi d^4}{32} = \frac{\pi (25)^4}{32} = 38,350 \text{ mm}^4$$
 
 2. **Bending stress at surface:**
+   
    $$\sigma_x = \frac{Mc}{I} = \frac{200 \times 10^3 \times 12.5}{19,175} = 130.4 \text{ MPa}$$
 
 3. **Torsional shear stress:**
+   
    $$\tau_{xy} = \frac{Tr}{J} = \frac{500 \times 10^3 \times 12.5}{38,350} = 163.2 \text{ MPa}$$
 
-4. **Contact stress (localized):**
+4. **Contact stress (localized bearing load):**
+   
    $$\sigma_y = -50 \text{ MPa (compressive)}$$
 
 </Steps>
 
-### Step 2: Construct Mohr's Circle Analysis
+</details>
+
+### Step 2: Principal Stress Analysis Using Mohr's Circle
+
+<details>
+<summary>**Click to reveal Mohr's circle and principal stress calculations**</summary>
 
 <Steps>
 
 1. **Stress state at critical point:**
+   
    - σ_x = 130.4 MPa (tension from bending)
    - σ_y = -50 MPa (compression from contact)
    - τ_xy = 163.2 MPa (from torsion)
 
-2. **Circle parameters:**
+2. **Mohr's circle parameters:**
+   
    $$\sigma_{avg} = \frac{\sigma_x + \sigma_y}{2} = \frac{130.4 + (-50)}{2} = 40.2 \text{ MPa}$$
    
-   $$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2} = \sqrt{\left(\frac{180.4}{2}\right)^2 + 163.2^2} = \sqrt{8136 + 26634} = 186.4 \text{ MPa}$$
+   $$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2} = \sqrt{\left(\frac{180.4}{2}\right)^2 + 163.2^2} = 186.4 \text{ MPa}$$
 
 3. **Principal stresses:**
+   
    $$\sigma_1 = \sigma_{avg} + R = 40.2 + 186.4 = 226.6 \text{ MPa}$$
    $$\sigma_2 = \sigma_{avg} - R = 40.2 - 186.4 = -146.2 \text{ MPa}$$
 
 4. **Maximum shear stress:**
+   
    $$\tau_{max} = \frac{\sigma_1 - \sigma_2}{2} = \frac{226.6 - (-146.2)}{2} = 186.4 \text{ MPa}$$
 
 </Steps>
 
-### Step 3: Apply Failure Theories
+</details>
+
+### Step 3: Apply Failure Theories and Design Assessment
+
+<details>
+<summary>**Click to reveal failure theory analysis**</summary>
 
 <Steps>
 
 1. **Maximum Normal Stress Theory:**
-   $$\sigma_1 = 226.6 \text{ MPa} < \frac{\sigma_{yield}}{SF} = \frac{470}{4} = 117.5 \text{ MPa}$$
-   **Result:** Fails this criterion! ❌
+   
+   $$\sigma_1 = 226.6 \text{ MPa} \text{ vs } \frac{\sigma_{yield}}{SF} = \frac{470}{4} = 117.5 \text{ MPa}$$
+   **Result:** Fails criterion ❌ (226.6 > 117.5 MPa)
 
 2. **Maximum Shear Stress Theory (Tresca):**
-   $$\tau_{max} = 186.4 \text{ MPa} < \frac{\sigma_{yield}}{2 \cdot SF} = \frac{470}{8} = 58.75 \text{ MPa}$$
-   **Result:** Fails this criterion! ❌
+   
+   $$\tau_{max} = 186.4 \text{ MPa} \text{ vs } \frac{\sigma_{yield}}{2 \cdot SF} = \frac{470}{8} = 58.75 \text{ MPa}$$
+   **Result:** Fails criterion ❌ (186.4 > 58.75 MPa)
 
 3. **von Mises Equivalent Stress:**
+   
    $$\sigma_{eq} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2} = \sqrt{226.6^2 - 226.6(-146.2) + (-146.2)^2} = 342.7 \text{ MPa}$$
    
-   $$\sigma_{eq} = 342.7 \text{ MPa} > \frac{\sigma_{yield}}{SF} = 117.5 \text{ MPa}$$
-   **Result:** Fails this criterion! ❌
+   $$\sigma_{eq} = 342.7 \text{ MPa} \text{ vs } \frac{\sigma_{yield}}{SF} = 117.5 \text{ MPa}$$
+   **Result:** Fails criterion ❌ (Actual SF = 1.37)
+
+4. **Critical design assessment:**
+   
+   All failure theories indicate current pin design is inadequate
+   Universal joint pin requires immediate redesign to prevent failure
 
 </Steps>
 
-:::caution[Critical Design Assessment]
-**All failure theories indicate that the current pin design is inadequate** for the applied loading conditions with the required safety factor.
+</details>
 
-The universal joint pin requires immediate redesign to prevent failure.
-:::
-
-## 📊 Failure Analysis Summary
+## 📊 Principal Stress Analysis Summary
 
 <CardGrid>
   <Card title="Principal Stress Analysis" icon="error">
