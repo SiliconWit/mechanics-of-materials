@@ -139,15 +139,19 @@ When a beam is loaded transversely, internal forces develop to maintain equilibr
 
 ### Differential Relationships
 
-The relationship between load, shear, and moment:
+The fundamental relationship between load, shear, and moment:
 
+<Card title="📏 Beam Differential Equations" icon="document">
 $$\frac{dV}{dx} = -w(x)$$
 $$\frac{dM}{dx} = V(x)$$
 
-Where:
+**Where:**
 - $w(x)$ = distributed load intensity (N/m)
 - $V(x)$ = shear force at position x (N)  
 - $M(x)$ = bending moment at position x (N·m)
+
+**Physical Meaning:** These equations show how load affects shear force rate of change, and how shear force affects bending moment rate of change.
+</Card>
 
 :::tip[Key Insights]
 1. **Slope of shear diagram = negative of applied load**
@@ -163,10 +167,19 @@ Let's analyze a realistic robotic arm segment step by step.
 
 ### Problem Setup
 
-:::info[System Parameters]
+:::info[🎯 Problem Statement]
 **Industrial Robot Forearm Analysis**
 
-**Beam Properties:**
+**What we need to determine:**
+1. **Reaction forces** at the fixed support
+2. **Shear force distribution** along the arm length
+3. **Bending moment distribution** along the arm length
+4. **Critical sections** with maximum shear and moment values
+
+**Key Questions:** Where do the maximum shear force and bending moment occur in this robotic arm segment, and what are their values for structural design?
+:::
+
+**System Parameters:**
 - Length: L = 800 mm
 - Self-weight: 50 N/m (uniform distributed load)
 - End-effector weight: 200 N (point load at tip)
@@ -177,23 +190,40 @@ Let's analyze a realistic robotic arm segment step by step.
 - Distributed load: w = -50 N/m (downward)
 - Point load at tip: P = -200 N (downward)  
 - Applied moment at tip: M₀ = +80 N·m (counterclockwise)
-:::
 
 ### Step 1: Calculate Reaction Forces
 
 <Steps>
 
 1. **Sum of vertical forces:**
+   
+   <details>
+   <summary>**Click to reveal force equilibrium calculations**</summary>
+   
    $$\sum F_y = 0: R_y - 50(0.8) - 200 = 0$$
    $$R_y = 40 + 200 = 240 \text{ N}$$
+   
+   </details>
 
 2. **Sum of moments about base:**
+   
+   <details>
+   <summary>**Click to reveal moment equilibrium calculations**</summary>
+   
    $$\sum M_{base} = 0: M_{base} - 50(0.8)(0.4) - 200(0.8) - 80 = 0$$
    $$M_{base} = 16 + 160 + 80 = 256 \text{ N·m}$$
+   
+   </details>
 
 3. **Verify equilibrium:**
+   
+   <details>
+   <summary>**Click to reveal equilibrium verification**</summary>
+   
    - Forces: ↑240 N = ↓(40 + 200) N ✅
    - Moments: 256 N·m = 256 N·m ✅
+   
+   </details>
 
 </Steps>
 
@@ -203,8 +233,16 @@ Let's analyze a realistic robotic arm segment step by step.
 
 **For 0 ≤ x ≤ 0.8 m:**
 
-Shear force equation:
+<Card title="🛡️ Shear Force Equation" icon="document">
 $$V(x) = R_y - w \cdot x = 240 - 50x$$
+
+**Where:**
+- $R_y$ = Reaction force at support (N)
+- $w$ = Distributed load intensity (N/m)
+- $x$ = Distance from fixed support (m)
+
+**Physical Meaning:** Shear force decreases linearly along the beam length due to the cumulative effect of distributed loading.
+</Card>
 
 **Key points:**
 - At x = 0: V(0) = 240 N
@@ -226,9 +264,17 @@ Just after tip: V = 200 - 200 = 0 N ✅
 
 **For 0 ≤ x ≤ 0.8 m:**
 
-Bending moment equation:
+<Card title="⚖️ Bending Moment Equation" icon="document">
 $$M(x) = M_{base} - R_y \cdot x + w \cdot x \cdot \frac{x}{2}$$
 $$M(x) = 256 - 240x + 25x^2$$
+
+**Where:**
+- $M_{base}$ = Reaction moment at fixed support (N·m)
+- Second term = Moment due to reaction force
+- Third term = Moment due to distributed load
+
+**Physical Meaning:** Bending moment varies quadratically due to distributed loading, with contributions from support reactions and applied loads.
+</Card>
 
 **Key points:**
 - At x = 0: M(0) = 256 N·m (reaction moment)
@@ -244,9 +290,19 @@ But at free end, M must = 0, so: M = 80 - 80 = 0 ✅
 <Steps>
 
 1. **Maximum shear location:**
+   
+   <details>
+   <summary>**Click to reveal shear force analysis**</summary>
+   
    Maximum |V| = 240 N at x = 0 (fixed support)
+   
+   </details>
 
 2. **Maximum moment location:**
+   
+   <details>
+   <summary>**Click to reveal moment location analysis**</summary>
+   
    Set $\frac{dM}{dx} = V(x) = 0$ to find maximum:
    $$240 - 50x = 0$$
    $$x = 4.8 \text{ m}$$
@@ -254,6 +310,8 @@ But at free end, M must = 0, so: M = 80 - 80 = 0 ✅
    **Wait!** This is beyond our beam length. Since V(x) > 0 everywhere on the beam, the moment continuously increases, reaching maximum at the support.
    
    **Maximum |M|** = 256 N·m at x = 0 (fixed support)
+   
+   </details>
 
 </Steps>
 

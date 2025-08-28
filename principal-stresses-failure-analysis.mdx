@@ -102,17 +102,26 @@ At any point in a stressed body, the stress state can be described by:
 <Tabs>
   <TabItem label="Principal Stress Equations">
     
+    <Card title="🔱 Principal Stress Equations" icon="document">
     **For 2D stress state:**
     $$\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
     
     **Principal angles:**
     $$\tan(2\theta_p) = \frac{2\tau_{xy}}{\sigma_x - \sigma_y}$$
     
-    Where θ_p gives the orientation of principal planes
+    **Where:**
+    - $\sigma_1, \sigma_2$ = Principal stresses (Pa)
+    - $\sigma_x, \sigma_y$ = Normal stresses on coordinate planes (Pa)
+    - $\tau_{xy}$ = Shear stress on coordinate planes (Pa)
+    - $\theta_p$ = Orientation of principal planes (degrees)
+    
+    **Physical Meaning:** Principal stresses are the maximum and minimum normal stresses at a point, occurring on planes with zero shear stress.
+    </Card>
     
   </TabItem>
   <TabItem label="Maximum Shear Stress">
     
+    <Card title="🌀 Maximum Shear Stress Analysis" icon="document">
     **In-plane maximum shear:**
     $$\tau_{max} = \frac{\sigma_1 - \sigma_2}{2}$$
     
@@ -121,6 +130,9 @@ At any point in a stressed body, the stress state can be described by:
     
     **Associated normal stress:**
     $$\sigma_{avg} = \frac{\sigma_1 + \sigma_2}{2} = \frac{\sigma_x + \sigma_y}{2}$$
+    
+    **Physical Meaning:** Maximum shear stress occurs on planes oriented 45° from the principal planes, with the average normal stress acting on those planes.
+    </Card>
     
   </TabItem>
   <TabItem label="3D Stress State">
@@ -139,9 +151,15 @@ At any point in a stressed body, the stress state can be described by:
 
 Mohr's circle provides a graphical method for stress transformation:
 
-**Circle Parameters:**
-- Center: ((σ_x + σ_y)/2, 0)
-- Radius: √[((σ_x - σ_y)/2)² + τ_xy²]
+<Card title="⭕ Mohr's Circle Parameters" icon="document">
+**Circle Center:**
+$$C = \left(\frac{\sigma_x + \sigma_y}{2}, 0\right)$$
+
+**Circle Radius:**
+$$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
+
+**Physical Meaning:** Mohr's circle graphically represents all possible stress states at a point as the coordinate system is rotated. The circle's diameter equals the difference between principal stresses.
+</Card>
 
 **Key Points on Circle:**
 - Principal stresses: σ₁ and σ₂ (intersections with σ-axis)

@@ -1,7 +1,7 @@
 ---
 title: "Lesson 2: Simple Stress and Strain in Actuator Systems"
 description: "Analyzing axial stress and strain in CNC actuator shafts, including material selection for precision positioning"
-contributors: "sam-macharia,jack-kojiro,new-person6"
+contributors: "sam-macharia,jack-kojiro"
 tags: ["solid-mechanics", "actuator-shaft", "axial-stress", "material-selection", "CNC-systems"]
 excerpt: "Learn axial stress and strain analysis through a CNC actuator shaft system, covering material selection criteria for precision mechatronic applications."
 pubDate: 2025-08-28
@@ -83,26 +83,31 @@ Building on Lesson 1's foundation, let's develop the theory needed to solve our 
 
 When forces act **along** the centerline of a shaft:
 
-$$\sigma_{axial} = \frac{F}{A} = \frac{F}{\pi d^2/4}$$
+<Card title="⚡ Axial Stress Formula" icon="document">
+$$\sigma_{axial} = \frac{F}{A} = \frac{4F}{\pi d^2}$$
 
-For circular cross-sections:
-$$\sigma_{axial} = \frac{4F}{\pi d^2}$$
-
-Where:
+**Where:**
 - $F$ = Axial force (N)
 - $d$ = Shaft diameter (m)
 - $A$ = Cross-sectional area (m²)
+
+**Physical Meaning:** Stress is distributed uniformly across the cross-section when forces act along the centerline.
+</Card>
 
 ### Axial Strain and Deformation
 
 The shaft will elongate (tension) or compress (compression) by:
 
+<Card title="📏 Axial Deformation Formula" icon="document">
 $$\delta = \frac{FL}{AE} = \frac{\sigma L}{E}$$
 
-Where:
+**Where:**
 - $\delta$ = Total deformation (m)
 - $L$ = Shaft length (m)
 - $E$ = Young's modulus (Pa)
+
+**Physical Meaning:** Deformation is proportional to force and length, but inversely proportional to cross-sectional area and material stiffness.
+</Card>
 
 ### Design Criteria for Actuator Systems
 
@@ -110,17 +115,30 @@ Where:
   <TabItem label="Strength Criterion">
     
     **Prevent Material Failure:**
+    
+    <Card title="🔒 Strength Design Criterion" icon="document">
     $$\sigma_{applied} \leq \frac{\sigma_{yield}}{SF}$$
     
-    Where SF = Safety Factor (typically 2-4 for CNC systems)
+    **Where:**
+    - SF = Safety Factor (typically 2-4 for CNC systems)
+    
+    **Purpose:** Ensures the applied stress remains well below the material's yield strength to prevent permanent deformation.
+    </Card>
     
   </TabItem>
   <TabItem label="Stiffness Criterion">
     
     **Limit Deformation:**
+    
+    <Card title="📐 Stiffness Design Criterion" icon="document">
     $$\delta = \frac{FL}{AE} \leq \delta_{allowable}$$
     
-    For precision systems: $\delta_{allowable}$ = 0.01-0.1 mm
+    **Where:**
+    - $\delta_{allowable}$ = Maximum acceptable deformation
+    - For precision systems: $\delta_{allowable}$ = 0.01-0.1 mm
+    
+    **Purpose:** Maintains dimensional accuracy by limiting elastic deformation under load.
+    </Card>
     
   </TabItem>
   <TabItem label="Material Properties">
@@ -142,19 +160,39 @@ Where:
 
 Let's solve the actuator shaft problem step by step using our theoretical foundation.
 
-### Problem Setup
+:::note[Problem Statement]
+**CNC Z-Axis Actuator Shaft Material Selection**
 
-**System:** CNC Z-axis positioning system  
-**Component:** Circular actuator shaft  
-**Loading:** Maximum axial force of 5,000 N (tension)  
-**Requirements:** 
-- Maximum allowable stress with SF = 3
+**What we need to determine:**
+1. **Minimum shaft diameter** required for strength (both materials)
+2. **Stiffness compliance** with deformation limits
+3. **Material selection** based on strength vs. stiffness requirements
+4. **Final design recommendations** considering weight and cost
+
+**Key Question:** Should we use aluminum or steel for this actuator shaft, and what diameter is required to meet both strength and stiffness requirements?
+:::
+
+<hr />
+
+**System Parameters:**
+- CNC Z-axis positioning system
+- Circular actuator shaft
+- Maximum axial force: 5,000 N (tension)
+- **`Safety factor`**: SF = 3
 - Deformation limit: δ ≤ 0.05 mm
 - Shaft length: L = 400 mm
 
 **Material Options:**
 - **Option A:** Aluminum 6061-T6 (E = 70 GPa, σ_yield = 270 MPa)
 - **Option B:** Steel 1045 (E = 200 GPa, σ_yield = 530 MPa)
+
+<hr />
+
+
+### Step 1: Determine Aluminum and Steel Strengths
+
+<details>
+<summary>**Click to reveal strength calculations**</summary>
 
 <Steps>
 
@@ -176,43 +214,67 @@ Let's solve the actuator shaft problem step by step using our theoretical founda
 
 </Steps>
 
-### Step 2: Check Stiffness Requirements
+</details>
 
-Let's check if a **10 mm diameter** shaft meets stiffness requirements:
+### Step 2: Check 10 mm diameter Shaft Stiffness Requirements
 
-**Aluminum shaft (d = 10 mm):**
+<details>
+<summary>**Click to reveal shaft requirements calculations**</summary>
 
-Area: $A = \frac{\pi \times (0.01)^2}{4} = 7.85 \times 10^{-5} \text{ m}^2$
+<Steps>
 
-Deformation: $\delta = \frac{FL}{AE} = \frac{5,000 \times 0.4}{7.85 \times 10^{-5} \times 70 \times 10^9} = 0.364 \text{ mm}$
+1. **Aluminum shaft (d = 10 mm):**
 
-❌ **Fails stiffness requirement** (0.364 mm > 0.05 mm allowable)
+   Area: $A = \frac{\pi \times (0.01)^2}{4} = 7.85 \times 10^{-5} \text{ m}^2$
+
+   Deformation: $\delta = \frac{FL}{AE} = \frac{5,000 \times 0.4}{7.85 \times 10^{-5} \times 70 \times 10^9} = 0.364 \text{ mm}$
+
+   ❌ **Fails stiffness requirement** (0.364 mm > 0.05 mm allowable)
+
+2. **Steel shaft (d = 10 mm):**
+
+   Deformation: $\delta = \frac{5,000 \times 0.4}{7.85 \times 10^{-5} \times 200 \times 10^9} = 0.127 \text{ mm}$
+
+   ❌ **Still fails stiffness requirement** (0.127 mm > 0.05 mm allowable)
+
+</Steps>
 
 :::caution[Stiffness Dominance]
 In precision applications, **stiffness requirements often exceed strength requirements by large margins**. This leads to over-designed components from a strength perspective.
 :::
 
-**Steel shaft (d = 10 mm):**
-
-Deformation: $\delta = \frac{5,000 \times 0.4}{7.85 \times 10^{-5} \times 200 \times 10^9} = 0.127 \text{ mm}$
-
-❌ **Still fails stiffness requirement** (0.127 mm > 0.05 mm allowable)
-
 :::tip[Young's Modulus Impact]
 Steel's <Badge text="2.86× higher E" variant="success" /> compared to aluminum significantly reduces deformation, but still insufficient for this precision requirement.
 :::
 
+</details>
+
+
 ### Step 3: Size for Stiffness Requirements
 
-Required area for aluminum: $A = \frac{FL}{\delta_{allowable} \times E} = \frac{5,000 \times 0.4}{0.05 \times 10^{-3} \times 70 \times 10^9} = 5.71 \times 10^{-4} \text{ m}^2$
+<details>
+<summary>**Click to reveal area and diameter calculations**</summary>
 
-Required diameter: $d = \sqrt{\frac{4 \times 5.71 \times 10^{-4}}{\pi}} = 27.0 \text{ mm}$
+<Steps>
+1. Area and diameter for aluminum
 
-Required area for steel: $A = \frac{5,000 \times 0.4}{0.05 \times 10^{-3} \times 200 \times 10^9} = 2.0 \times 10^{-4} \text{ m}^2$
+   Required area for aluminum: $A = \frac{FL}{\delta_{allowable} \times E} = \frac{5,000 \times 0.4}{0.05 \times 10^{-3} \times 70 \times 10^9} = 5.71 \times 10^{-4} \text{ m}^2$
 
-Required diameter: $d = \sqrt{\frac{4 \times 2.0 \times 10^{-4}}{\pi}} = 16.0 \text{ mm}$
+   Required diameter: $d = \sqrt{\frac{4 \times 5.71 \times 10^{-4}}{\pi}} = 27.0 \text{ mm}$
+   
+2. Area and diameter for steel
+
+   Required area for steel: $A = \frac{5,000 \times 0.4}{0.05 \times 10^{-3} \times 200 \times 10^9} = 2.0 \times 10^{-4} \text{ m}^2$
+
+   Required diameter: $d = \sqrt{\frac{4 \times 2.0 \times 10^{-4}}{\pi}} = 16.0 \text{ mm}$
+</Steps>
+
+</details>
 
 ### Step 4: Final Design Comparison
+
+<details>
+<summary>**Click to reveal design recommendations**</summary>
 
 <CardGrid>
   <Card title="Aluminum 6061-T6 Shaft">
@@ -242,6 +304,8 @@ Required diameter: $d = \sqrt{\frac{4 \times 2.0 \times 10^{-4}}{\pi}} = 16.0 \t
 
 **Trade-off:** Slightly higher material cost for superior performance
 :::
+
+</details>
 
 ## 🎯 Material Selection Guidelines for Mechatronics
 

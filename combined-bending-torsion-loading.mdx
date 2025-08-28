@@ -79,38 +79,57 @@ During industrial operations, the wrist joint simultaneously experiences:
 
 When multiple loads act simultaneously, the stress state becomes more complex:
 
-**Normal Stresses:**
-- From bending: σ_x = My/I
-- From axial load: σ_x = P/A
-- Combined: σ_x = P/A ± My/I
+<Card title="📊 Combined Normal Stress Formula" icon="document">
+**Individual components:**
+- From bending: $\sigma_{bending} = \frac{My}{I}$
+- From axial load: $\sigma_{axial} = \frac{P}{A}$
 
-**Shear Stresses:**
-- From torsion: τ = Tr/J
-- From transverse shear: τ = VQ/(It)
-- Combined: τ_total = τ_torsion + τ_shear
+**Combined normal stress:**
+$$\sigma_x = \frac{P}{A} \pm \frac{My}{I}$$
+
+**Physical Meaning:** Normal stresses from different loading types are algebraically combined, with tension positive and compression negative.
+</Card>
+
+<Card title="🌀 Combined Shear Stress Formula" icon="document">
+**Individual components:**
+- From torsion: $\tau_{torsion} = \frac{Tr}{J}$
+- From transverse shear: $\tau_{shear} = \frac{VQ}{It}$
+
+**Combined shear stress:**
+$$\tau_{total} = \tau_{torsion} + \tau_{shear}$$
+
+**Physical Meaning:** Shear stresses from different sources are vectorially combined at each point in the cross-section.
+</Card>
 
 ### Principal Stress Theory
 
 <Tabs>
   <TabItem label="Principal Stresses">
     
-    For 2D stress state (σ_x, σ_y, τ_xy):
-    
+    <Card title="🔱 Principal Stress Formula" icon="document">
     $$\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
     
-    **Maximum principal stress:** σ₁ (most tensile)
-    **Minimum principal stress:** σ₂ (most compressive)
+    **Where:**
+    - $\sigma_1$ = Maximum principal stress (most tensile)
+    - $\sigma_2$ = Minimum principal stress (most compressive)
+    - $\sigma_x, \sigma_y$ = Normal stresses in x, y directions
+    - $\tau_{xy}$ = Shear stress in xy plane
+    
+    **Physical Meaning:** Principal stresses represent the maximum and minimum normal stresses at a point, occurring on planes with zero shear stress.
+    </Card>
     
   </TabItem>
   <TabItem label="Maximum Shear Stress">
     
+    <Card title="🌀 Maximum Shear Stress" icon="document">
     **In-plane maximum shear:**
     $$\tau_{max} = \frac{\sigma_1 - \sigma_2}{2}$$
     
     **Absolute maximum shear:**
     $$\tau_{abs,max} = \frac{\sigma_{max} - \sigma_{min}}{2}$$
     
-    Including principal stress σ₃ = 0 (if applicable)
+    **Physical Meaning:** Maximum shear stress occurs on planes oriented 45° from the principal stress directions. For 3D analysis, consider all three principal stresses.
+    </Card>
     
   </TabItem>
   <TabItem label="Failure Theories">
@@ -129,14 +148,21 @@ When multiple loads act simultaneously, the stress state becomes more complex:
 
 ### Equivalent Stress Calculations
 
-**Von Mises Equivalent Stress:**
+<Card title="⚙️ Von Mises Equivalent Stress" icon="document">
+**General form:**
 $$\sigma_{eq} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}$$
 
-For combined bending and torsion:
+**For combined bending and torsion:**
 $$\sigma_{eq} = \sqrt{\sigma^2 + 3\tau^2}$$
 
-**Maximum Shear Stress Theory:**
+**Physical Meaning:** Von Mises stress represents the equivalent uniaxial stress that produces the same distortion energy as the actual multi-axis stress state.
+</Card>
+
+<Card title="⚡ Maximum Shear Stress Theory" icon="document">
 $$\sigma_{eq} = 2\tau_{max} = \sigma_1 - \sigma_2$$
+
+**Physical Meaning:** Tresca theory predicts failure when maximum shear stress reaches the shear strength of the material (typically yield strength/2).
+</Card>
 
 ## 🔧 Application: Robotic Wrist Joint Analysis
 
@@ -144,33 +170,57 @@ Let's analyze a realistic wrist joint under combined loading.
 
 ### Problem Setup
 
-:::info[System Parameters]
-**Industrial Robot Wrist Joint**
+:::info[🎯 Problem Statement]
+**Industrial Robot Wrist Joint Analysis**
 
-**Geometry:**
+**What we need to determine:**
+1. **Individual stress components** from bending, torsion, and axial loading
+2. **Equivalent stress** using von Mises and maximum shear stress theories
+3. **Safety factors** for both failure theories
+4. **Design adequacy** for the specified loading conditions
+
+**Key Question:** Can this wrist joint safely handle the combined bending moment of 150 N·m and torque of 200 N·m simultaneously without failure?
+:::
+
+**System Parameters:**
 - Wrist shaft: Hollow circular, D = 60 mm, d = 40 mm
 - Critical section length: 100 mm
 - Material: Steel 4140 (σ_yield = 415 MPa, τ_yield = 240 MPa)
 - Safety factor: 2.5
-
-**Loading Conditions:**
 - Bending moment: M = 150 N·m (from tool weight and cutting forces)
 - Torsional moment: T = 200 N·m (from joint rotation)
 - Axial force: P = 1000 N (from joint preload)
-:::
 
 ### Step 1: Calculate Section Properties
 
 <Steps>
 
 1. **Cross-sectional area:**
+   
+   <details>
+   <summary>**Click to reveal area calculation**</summary>
+   
    $$A = \frac{\pi(D^2 - d^2)}{4} = \frac{\pi(60^2 - 40^2)}{4} = 1571 \text{ mm}^2$$
+   
+   </details>
 
 2. **Second moment of area:**
+   
+   <details>
+   <summary>**Click to reveal second moment calculation**</summary>
+   
    $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(60^4 - 40^4)}{64} = 8.95 \times 10^5 \text{ mm}^4$$
+   
+   </details>
 
 3. **Polar moment of inertia:**
+   
+   <details>
+   <summary>**Click to reveal polar moment calculation**</summary>
+   
    $$J = \frac{\pi(D^4 - d^4)}{32} = \frac{\pi(60^4 - 40^4)}{32} = 1.79 \times 10^6 \text{ mm}^4$$
+   
+   </details>
 
 </Steps>
 
@@ -179,16 +229,40 @@ Let's analyze a realistic wrist joint under combined loading.
 <Steps>
 
 1. **Axial stress from preload:**
+   
+   <details>
+   <summary>**Click to reveal axial stress calculation**</summary>
+   
    $$\sigma_{axial} = \frac{P}{A} = \frac{1000}{1571} = 0.64 \text{ MPa}$$
+   
+   </details>
 
 2. **Bending stress at outer fiber:**
+   
+   <details>
+   <summary>**Click to reveal bending stress calculation**</summary>
+   
    $$\sigma_{bending} = \frac{Mc}{I} = \frac{150 \times 10^3 \times 30}{8.95 \times 10^5} = 50.3 \text{ MPa}$$
+   
+   </details>
 
 3. **Combined normal stress:**
+   
+   <details>
+   <summary>**Click to reveal combined normal stress**</summary>
+   
    $$\sigma_x = \sigma_{axial} + \sigma_{bending} = 0.64 + 50.3 = 50.9 \text{ MPa}$$
+   
+   </details>
 
 4. **Torsional shear stress:**
+   
+   <details>
+   <summary>**Click to reveal torsional shear calculation**</summary>
+   
    $$\tau = \frac{Tr}{J} = \frac{200 \times 10^3 \times 30}{1.79 \times 10^6} = 33.5 \text{ MPa}$$
+   
+   </details>
 
 </Steps>
 
@@ -197,13 +271,25 @@ Let's analyze a realistic wrist joint under combined loading.
 <Steps>
 
 1. **Von Mises equivalent stress:**
+   
+   <details>
+   <summary>**Click to reveal von Mises calculation**</summary>
+   
    $$\sigma_{eq} = \sqrt{\sigma_x^2 + 3\tau^2} = \sqrt{50.9^2 + 3(33.5)^2} = \sqrt{2591 + 3368} = 77.2 \text{ MPa}$$
+   
+   </details>
 
 2. **Maximum shear stress theory:**
+   
+   <details>
+   <summary>**Click to reveal Tresca theory calculation**</summary>
+   
    For pure shear and normal stress state:
    $$\sigma_1 = \frac{\sigma_x}{2} + \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau^2} = 25.45 + \sqrt{647.5 + 1122.25} = 67.5 \text{ MPa}$$
    $$\sigma_2 = \frac{\sigma_x}{2} - \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau^2} = 25.45 - 42.05 = -16.6 \text{ MPa}$$
    $$\sigma_{eq,Tresca} = \sigma_1 - \sigma_2 = 67.5 - (-16.6) = 84.1 \text{ MPa}$$
+   
+   </details>
 
 </Steps>
 
@@ -212,13 +298,31 @@ Let's analyze a realistic wrist joint under combined loading.
 <Steps>
 
 1. **Von Mises safety factor:**
+   
+   <details>
+   <summary>**Click to reveal von Mises safety factor**</summary>
+   
    $$SF_{vonMises} = \frac{\sigma_{yield}}{\sigma_{eq}} = \frac{415}{77.2} = 5.38$$
+   
+   </details>
 
 2. **Tresca safety factor:**
+   
+   <details>
+   <summary>**Click to reveal Tresca safety factor**</summary>
+   
    $$SF_{Tresca} = \frac{\sigma_{yield}}{\sigma_{eq,Tresca}} = \frac{415}{84.1} = 4.93$$
+   
+   </details>
 
 3. **Design assessment:**
+   
+   <details>
+   <summary>**Click to reveal design assessment**</summary>
+   
    Both safety factors exceed the required SF = 2.5 ✅
+   
+   </details>
 
 </Steps>
 

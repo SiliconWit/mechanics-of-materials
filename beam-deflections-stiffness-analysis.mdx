@@ -79,11 +79,21 @@ During machining operations, the CNC spindle experiences:
 
 Beam deflection is governed by the fundamental relationship between curvature and bending moment:
 
+<Card title="📋 Elastic Curve Equation" icon="document">
 $$\frac{1}{\rho} = \frac{M}{EI}$$
 
-For small deflections, curvature ≈ d²y/dx², leading to:
-
+**For small deflections:**
 $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
+
+**Where:**
+- $\rho$ = Radius of curvature (m)
+- $M(x)$ = Bending moment as a function of position (N·m)
+- $E$ = Young's modulus (Pa)
+- $I$ = Second moment of area (m⁴)
+- $y$ = Deflection (m)
+
+**Physical Meaning:** Curvature is directly proportional to bending moment and inversely proportional to flexural rigidity (EI).
+</Card>
 
 ### Double Integration Method
 
@@ -93,10 +103,20 @@ $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
     **Step 1:** Start with moment equation M(x)
     
     **Step 2:** Integrate once to get slope:
+    
+    <Card title="📈 Slope Equation" icon="document">
     $$\frac{dy}{dx} = \int \frac{M(x)}{EI} dx + C_1$$
     
+    **Physical Meaning:** First integration gives the slope of the deflected beam.
+    </Card>
+    
     **Step 3:** Integrate again to get deflection:
+    
+    <Card title="📉 Deflection Equation" icon="document">
     $$y = \int\int \frac{M(x)}{EI} dx \, dx + C_1 x + C_2$$
+    
+    **Physical Meaning:** Second integration gives the actual displacement of the beam.
+    </Card>
     
     **Step 4:** Apply boundary conditions to find C₁ and C₂
     
@@ -117,6 +137,7 @@ $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
   </TabItem>
   <TabItem label="Standard Cases">
     
+    <Card title="🎢 Standard Deflection Formulas" icon="document">
     **Cantilever with end load P:**
     $$\delta_{max} = \frac{PL^3}{3EI}$$
     
@@ -125,6 +146,9 @@ $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
     
     **Cantilever with uniform load w:**
     $$\delta_{max} = \frac{wL^4}{8EI}$$
+    
+    **Physical Meaning:** These formulas show that deflection is proportional to load and length cubed (or fourth power), but inversely proportional to flexural rigidity.
+    </Card>
     
   </TabItem>
 </Tabs>
@@ -143,35 +167,59 @@ Let's analyze a realistic CNC spindle configuration step by step.
 
 ### Problem Setup
 
-:::info[System Parameters]
-**High-Speed CNC Spindle Analysis**
+:::info[🎯 Problem Statement]
+**High-Speed CNC Spindle Deflection Analysis**
 
-**Spindle Geometry:**
+**What we need to determine:**
+1. **Overhang deflection** from cutting forces and tool weight
+2. **Main spindle deflection** from bearing reactions
+3. **Total system deflection** and tolerance compliance
+4. **Design modifications** needed if deflection exceeds limits
+
+**Key Question:** Does this CNC spindle meet the precision requirement of δ < 0.005 mm under cutting loads, and if not, what changes are needed?
+:::
+
+**System Parameters:**
 - Spindle diameter: 80 mm (hollow, wall thickness 15 mm)
 - Bearing span: L = 300 mm (between bearing supports)
 - Tool overhang: 100 mm beyond front bearing
 - Material: Steel (E = 200 GPa)
-
-**Loading Conditions:**
 - Radial cutting force: 2000 N at tool tip
 - Tool weight: 50 N (distributed along overhang)
 - Operating speed: 15,000 RPM
 - Tolerance requirement: δ < 0.005 mm
-:::
 
 ### Step 1: Calculate Section Properties
 
 <Steps>
 
 1. **Hollow circular cross-section:**
+   
+   <details>
+   <summary>**Click to reveal cross-section dimensions**</summary>
+   
    - Outer diameter: D = 80 mm
    - Inner diameter: d = 50 mm (wall thickness = 15 mm)
+   
+   </details>
 
 2. **Second moment of area:**
+   
+   <details>
+   <summary>**Click to reveal second moment calculation**</summary>
+   
    $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(80^4 - 50^4)}{64} = 2.3 \times 10^{-6} \text{ m}^4$$
+   
+   </details>
 
 3. **Cross-sectional area:**
+   
+   <details>
+   <summary>**Click to reveal area calculation**</summary>
+   
    $$A = \frac{\pi(D^2 - d^2)}{4} = \frac{\pi(80^2 - 50^2)}{4} = 2.945 \times 10^{-3} \text{ m}^2$$
+   
+   </details>
 
 </Steps>
 
@@ -190,13 +238,31 @@ The spindle can be modeled as:
 <Steps>
 
 1. **Deflection from point load at tip:**
+   
+   <details>
+   <summary>**Click to reveal point load deflection calculation**</summary>
+   
    $$\delta_1 = \frac{PL^3}{3EI} = \frac{2000 \times 0.1^3}{3 \times 200 \times 10^9 \times 2.3 \times 10^{-6}} = 0.0145 \text{ mm}$$
+   
+   </details>
 
 2. **Deflection from distributed tool weight:**
+   
+   <details>
+   <summary>**Click to reveal distributed load deflection calculation**</summary>
+   
    $$\delta_2 = \frac{wL^4}{8EI} = \frac{500 \times 0.1^4}{8 \times 200 \times 10^9 \times 2.3 \times 10^{-6}} = 0.00136 \text{ mm}$$
+   
+   </details>
 
 3. **Total overhang deflection:**
+   
+   <details>
+   <summary>**Click to reveal total overhang deflection**</summary>
+   
    $$\delta_{overhang} = \delta_1 + \delta_2 = 0.0145 + 0.00136 = 0.0159 \text{ mm}$$
+   
+   </details>
 
 </Steps>
 

@@ -87,13 +87,16 @@ For composite beams with **perfect bonding** between materials:
 
 Since different materials have different elastic moduli, we transform the composite section into an equivalent single-material section:
 
-**Transformation Ratio:**
+<Card title="🔄 Transformation Ratio Formula" icon="document">
 $$n = \frac{E_2}{E_1}$$
 
-Where:
+**Where:**
 - $n$ = Transformation ratio (dimensionless)
 - $E_2$ = Elastic modulus of material to be transformed
 - $E_1$ = Elastic modulus of reference material
+
+**Physical Meaning:** The transformation ratio allows us to convert a composite beam into an equivalent single-material beam by adjusting the width of one material based on stiffness differences.
+</Card>
 
 :::tip[Transformation Strategy]
 **Transform stiffer material to softer:** If steel (E = 200 GPa) and aluminum (E = 70 GPa):
@@ -115,10 +118,16 @@ The steel section is replaced by an aluminum section **2.86 times wider**.
   </TabItem>
   <TabItem label="Step 2: Locate Neutral Axis">
     
-    **Find centroid** of transformed section:
+    <Card title="🎯 Neutral Axis Location" icon="document">
     $$\bar{y} = \frac{\sum A_i y_i}{\sum A_i}$$
     
-    Where Aᵢ are transformed areas
+    **Where:**
+    - $\bar{y}$ = Distance to neutral axis from reference (m)
+    - $A_i$ = Transformed area of each section (m²)
+    - $y_i$ = Distance from reference to centroid of each area (m)
+    
+    **Physical Meaning:** The neutral axis location is found using the weighted average of transformed areas.
+    </Card>
     
   </TabItem>
   <TabItem label="Step 3: Calculate Properties">
@@ -131,9 +140,21 @@ The steel section is replaced by an aluminum section **2.86 times wider**.
   </TabItem>
   <TabItem label="Step 4: Find Stresses">
     
-    **Calculate stresses:**
-    - Reference material: $\sigma_1 = \frac{My}{I_{transformed}}$
-    - Transformed material: $\sigma_2 = n \times \frac{My}{I_{transformed}}$
+    <Card title="⚡ Composite Beam Stress Formulas" icon="document">
+    **Reference material stress:**
+    $$\sigma_1 = \frac{My}{I_{transformed}}$$
+    
+    **Transformed material stress:**
+    $$\sigma_2 = n \times \frac{My}{I_{transformed}}$$
+    
+    **Where:**
+    - $M$ = Applied bending moment (N·m)
+    - $y$ = Distance from neutral axis (m)
+    - $I_{transformed}$ = Moment of inertia of transformed section (m⁴)
+    - $n$ = Transformation ratio
+    
+    **Physical Meaning:** Stresses in composite beams are calculated using the transformed section, with the transformed material stress adjusted by the transformation ratio.
+    </Card>
     
   </TabItem>
 </Tabs>

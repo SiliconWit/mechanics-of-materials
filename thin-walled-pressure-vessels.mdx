@@ -85,13 +85,17 @@ For **thin-walled** pressure vessels, we assume:
 
 Internal pressure creates **hoop stress** that tries to burst the cylinder:
 
+<Card title="🔄 Hoop Stress Formula" icon="document">
 $$\sigma_h = \frac{pr}{t}$$
 
-Where:
+**Where:**
 - $\sigma_h$ = Hoop stress (Pa)
 - $p$ = Internal pressure (Pa)
 - $r$ = Internal radius (m)
 - $t$ = Wall thickness (m)
+
+**Physical Meaning:** Hoop stress acts circumferentially, trying to expand the cylinder radially. This is typically the maximum stress in cylindrical pressure vessels.
+</Card>
 
 :::tip[Physical Understanding]
 Imagine trying to stretch a rubber band - the hoop stress acts similarly, trying to expand the cylinder circumferentially. This is typically the **highest stress** in cylindrical pressure vessels.
@@ -101,7 +105,17 @@ Imagine trying to stretch a rubber band - the hoop stress acts similarly, trying
 
 Pressure acting on the end caps creates **longitudinal stress** in the cylinder walls:
 
+<Card title="↕️ Longitudinal Stress Formula" icon="document">
 $$\sigma_l = \frac{pr}{2t}$$
+
+**Where:**
+- $\sigma_l$ = Longitudinal stress (Pa)
+- $p$ = Internal pressure (Pa)
+- $r$ = Internal radius (m)
+- $t$ = Wall thickness (m)
+
+**Physical Meaning:** Longitudinal stress acts along the cylinder axis due to pressure force on the end caps. Note that it's exactly half the hoop stress.
+</Card>
 
 :::note[Key Insight]
 Longitudinal stress is **exactly half** the hoop stress in cylindrical vessels. This explains why cylindrical pressure vessels typically fail by splitting lengthwise rather than across their width.
@@ -110,13 +124,15 @@ Longitudinal stress is **exactly half** the hoop stress in cylindrical vessels. 
 <Tabs>
   <TabItem label="Stress Comparison">
     
+    <Card title="📊 Pressure Vessel Stress Comparison" icon="document">
     **Hoop Stress:** $\sigma_h = \frac{pr}{t}$
     
     **Longitudinal Stress:** $\sigma_l = \frac{pr}{2t}$
     
     **Stress Ratio:** $\frac{\sigma_h}{\sigma_l} = 2:1$
     
-    **Design Implication:** Hoop stress governs design
+    **Physical Meaning:** Hoop stress is always twice the longitudinal stress in cylindrical pressure vessels, making it the critical design parameter.
+    </Card>
     
   </TabItem>
   <TabItem label="Spherical Vessels">

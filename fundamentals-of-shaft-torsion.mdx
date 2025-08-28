@@ -84,36 +84,57 @@ When a circular shaft is subjected to twisting moment (torque), it experiences:
 
 For circular shafts, the shear stress varies linearly from zero at the center to maximum at the outer surface:
 
+<Card title="🌀 Torsional Shear Stress Formula" icon="document">
 $$\tau = \frac{T \rho}{J}$$
 
-Where:
+**Where:**
 - $\tau$ = Shear stress (Pa)
 - $T$ = Applied torque (N·m)
 - $\rho$ = Radial distance from center (m)
 - $J$ = Polar moment of inertia (m⁴)
 
+**Physical Meaning:** Shear stress varies linearly from zero at the center to maximum at the outer surface due to the radial distance dependency.
+</Card>
+
 **Maximum shear stress** occurs at the outer surface:
+
+<Card title="⚡ Maximum Torsional Shear Stress" icon="document">
 $$\tau_{max} = \frac{T r}{J} = \frac{T d}{2J}$$
+
+**Where:**
+- $r$ = Radius of shaft (m)
+- $d$ = Diameter of shaft (m)
+
+**Physical Meaning:** Maximum stress occurs at the outer fiber where the radial distance is greatest.
+</Card>
 
 <Tabs>
   <TabItem label="Solid Circular Shafts">
     
+    <Card title="⚙️ Solid Shaft Properties" icon="document">
     **Polar Moment of Inertia:**
     $$J = \frac{\pi d^4}{32}$$
     
     **Maximum Shear Stress:**
     $$\tau_{max} = \frac{16 T}{\pi d^3}$$
     
+    **Physical Meaning:** For solid circular shafts, these formulas provide direct relationships between geometry and stress/stiffness properties.
+    </Card>
+    
     **Common Applications:** Small diameter shafts, cost-sensitive designs
     
   </TabItem>
   <TabItem label="Hollow Circular Shafts">
     
+    <Card title="🔘 Hollow Shaft Properties" icon="document">
     **Polar Moment of Inertia:**
     $$J = \frac{\pi (d_o^4 - d_i^4)}{32}$$
     
     **Maximum Shear Stress:**
     $$\tau_{max} = \frac{T d_o}{2J}$$
+    
+    **Physical Meaning:** Hollow shafts remove low-stress material near the center, providing better strength-to-weight ratios.
+    </Card>
     
     **Advantages:** Higher strength-to-weight ratio, material savings
     
@@ -135,14 +156,18 @@ $$\tau_{max} = \frac{T r}{J} = \frac{T d}{2J}$$
 
 The total angular deformation of a shaft under torque:
 
+<Card title="🔄 Angle of Twist Formula" icon="document">
 $$\theta = \frac{TL}{GJ}$$
 
-Where:
+**Where:**
 - $\theta$ = Angle of twist (radians)
 - $T$ = Applied torque (N·m)
 - $L$ = Shaft length (m)  
 - $G$ = Shear modulus (Pa)
 - $J$ = Polar moment of inertia (m⁴)
+
+**Physical Meaning:** Angular deformation is proportional to torque and length, but inversely proportional to material stiffness (G) and geometric stiffness (J).
+</Card>
 
 :::tip[Engineering Units]
 - **Angle in degrees:** $\theta_{degrees} = \theta_{radians} \times \frac{180}{\pi}$
@@ -156,20 +181,26 @@ Let's analyze a realistic Geneva mechanism crankshaft design.
 
 ### Problem Setup
 
-:::info[System Parameters]
-**Geneva Mechanism Drive System**
+:::info[🎯 Problem Statement]
+**Geneva Mechanism Crankshaft Torsion Analysis**
 
-**Crankshaft Specifications:**
+**What we need to determine:**
+1. **Torsional stress** under continuous and peak loading conditions
+2. **Safety factors** for both operating scenarios
+3. **Shaft diameter** required for adequate safety margins
+4. **Angular deformation** and its effect on precision requirements
+
+**Key Questions:** Can this 25 mm crankshaft safely handle 150 N·m peak torque with SF = 3.0, and will the angular twist meet ±0.5° precision requirements?
+:::
+
+**System Parameters:**
 - Material: Steel 1045 (G = 80 GPa, τ_allowable = 180 MPa)
 - Diameter: 25 mm (solid circular)
 - Length: 200 mm
 - Safety factor: 3.0
-
-**Operating Conditions:**
 - Motor torque: 50 N·m (continuous)
 - Peak torque: 150 N·m (during engagement)
 - Required precision: ±0.5° angular accuracy
-:::
 
 ### Step 1: Calculate Polar Moment of Inertia
 
@@ -181,15 +212,33 @@ $$J = \frac{\pi d^4}{32} = \frac{\pi (25 \times 10^{-3})^4}{32} = 3.835 \times 1
 <Steps>
 
 1. **Continuous operation stress:**
+   
+   <details>
+   <summary>**Click to reveal continuous stress calculation**</summary>
+   
    $$\tau_{continuous} = \frac{16 T}{\pi d^3} = \frac{16 \times 50}{\pi (25 \times 10^{-3})^3} = 163.6 \text{ MPa}$$
+   
+   </details>
 
 2. **Peak engagement stress:**
+   
+   <details>
+   <summary>**Click to reveal peak stress calculation**</summary>
+   
    $$\tau_{peak} = \frac{16 \times 150}{\pi (25 \times 10^{-3})^3} = 490.9 \text{ MPa}$$
+   
+   </details>
 
 3. **Safety factor check:**
+   
+   <details>
+   <summary>**Click to reveal safety factor analysis**</summary>
+   
    - Allowable stress: 180 MPa
    - Continuous operation: SF = 180/163.6 = 1.1 ❌ **Too low!**
    - Peak loading: SF = 180/490.9 = 0.37 ❌ **Failure expected!**
+   
+   </details>
 
 </Steps>
 

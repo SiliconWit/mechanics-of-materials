@@ -77,13 +77,17 @@ During gripping operations, the cantilever jaw experiences:
 
 When a beam bends under load, internal stresses develop to resist the applied moment:
 
+<Card title="🎯 Flexural Formula - Bending Stress" icon="document">
 $$\sigma = \frac{My}{I}$$
 
-Where:
+**Where:**
 - $\sigma$ = Bending stress at distance y from neutral axis (Pa)
 - $M$ = Bending moment at the section (N·m)
 - $y$ = Distance from neutral axis to the point of interest (m)
 - $I$ = Second moment of area about the neutral axis (m⁴)
+
+**Physical Meaning:** Bending stress varies linearly across the beam cross-section, with maximum stress at the extreme fibers and zero stress at the neutral axis.
+</Card>
 
 ### Neutral Axis and Stress Distribution
 
@@ -100,14 +104,15 @@ Where:
   </TabItem>
   <TabItem label="Maximum Stress">
     
-    **Maximum bending stress** occurs at the extreme fiber:
-    $$\sigma_{max} = \frac{M \cdot c}{I}$$
+    <Card title="⚡ Maximum Bending Stress" icon="document">
+    $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{M}{S}$$
     
-    Where **c** = distance from neutral axis to extreme fiber
+    **Where:**
+    - $c$ = distance from neutral axis to extreme fiber (m)
+    - $S = \frac{I}{c}$ = section modulus (m³)
     
-    **Section modulus:** $S = \frac{I}{c}$
-    
-    Therefore: $\sigma_{max} = \frac{M}{S}$
+    **Physical Meaning:** Section modulus combines geometric properties (I and c) into a single parameter for maximum stress calculation.
+    </Card>
     
   </TabItem>
   <TabItem label="Sign Convention">
@@ -142,33 +147,57 @@ Let's analyze a realistic cantilever gripper jaw design step by step.
 
 ### Problem Setup
 
-:::info[System Parameters]
-**Industrial Robotic Gripper Jaw**
+:::info[🎯 Problem Statement]
+**Industrial Robotic Gripper Jaw Analysis**
 
-**Geometry:**
+**What we need to determine:**
+1. **Maximum bending moment** in the cantilever gripper jaw
+2. **Maximum bending stress** at the critical section
+3. **Safety factor** against material failure
+4. **Redesign requirements** if the current design is inadequate
+
+**Key Question:** Can this gripper jaw safely handle the specified gripping force without exceeding material limits, and if not, what changes are needed?
+:::
+
+**System Parameters:**
 - Length: L = 80 mm (cantilever span)
 - Cross-section: Rectangular 15 mm × 8 mm
 - Material: Aluminum 6061-T6 (σ_yield = 270 MPa, E = 70 GPa)
 - Safety factor: 3.0
-
-**Loading:**
 - Gripping force: F = 500 N (concentrated at tip)
 - Object contact: Additional distributed reaction
 - **Analysis focus:** Maximum stress at fixed support
-:::
 
 ### Step 1: Calculate Maximum Bending Moment
 
 <Steps>
 
 1. **Identify critical section:**
+   
+   <details>
+   <summary>**Click to reveal critical section analysis**</summary>
+   
    The maximum moment occurs at the **fixed support** for a cantilever beam.
+   
+   </details>
 
 2. **Calculate maximum moment:**
+   
+   <details>
+   <summary>**Click to reveal moment calculation**</summary>
+   
    $$M_{max} = F \times L = 500 \times 0.08 = 40 \text{ N·m}$$
+   
+   </details>
 
 3. **Verify using Lesson 2.1 knowledge:**
+   
+   <details>
+   <summary>**Click to reveal verification**</summary>
+   
    From shear force and moment diagrams, we know the moment increases linearly from 0 at the tip to maximum at the support. ✅
+   
+   </details>
 
 </Steps>
 
@@ -190,13 +219,31 @@ $$S = \frac{I}{c} = \frac{640 \times 10^{-12}}{4 \times 10^{-3}} = 160 \times 10
 <Steps>
 
 1. **Apply flexural formula:**
+   
+   <details>
+   <summary>**Click to reveal flexural formula calculation**</summary>
+   
    $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{40 \times 4 \times 10^{-3}}{640 \times 10^{-12}} = 250 \times 10^6 \text{ Pa} = 250 \text{ MPa}$$
+   
+   </details>
 
 2. **Alternative calculation using section modulus:**
+   
+   <details>
+   <summary>**Click to reveal section modulus method**</summary>
+   
    $$\sigma_{max} = \frac{M}{S} = \frac{40}{160 \times 10^{-9}} = 250 \text{ MPa}$$
+   
+   </details>
 
 3. **Check safety factor:**
+   
+   <details>
+   <summary>**Click to reveal safety factor analysis**</summary>
+   
    $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{270}{250} = 1.08$$
+   
+   </details>
 
 </Steps>
 
