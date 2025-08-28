@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" width="700" height="300">
+  <!-- Background -->
+  <rect width="700" height="300" fill="white"/>
+  
+  <!-- Section 1: Aluminum -->
+  <rect x="100" y="100" width="150" height="60" fill="#D4D4D4" stroke="#000000" stroke-width="2"/>
+  <text x="175" y="130" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Section 1</text>
+  <text x="175" y="150" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Aluminum (E₁=70 GPa, A₁=400 mm²)</text>
+  
+  <!-- Section 2: Parallel brass and steel -->
+  <!-- Brass bar -->
+  <rect x="250" y="100" width="150" height="25" fill="#DAA520" stroke="#000000" stroke-width="2"/>
+  <text x="325" y="117" font-family="Arial" font-size="12" fill="#000000" text-anchor="middle">Brass (E₂=100 GPa, A₂=250 mm²)</text>
+  
+  <!-- Steel bar -->
+  <rect x="250" y="135" width="150" height="25" fill="#A0A0A0" stroke="#000000" stroke-width="2"/>
+  <text x="325" y="152" font-family="Arial" font-size="12" fill="#000000" text-anchor="middle">Steel (E₃=200 GPa, A₃=150 mm²)</text>
+  
+  <text x="325" y="80" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Section 2</text>
+  
+  <!-- Section 3: Titanium -->
+  <rect x="400" y="100" width="150" height="60" fill="#87CEEB" stroke="#000000" stroke-width="2"/>
+  <text x="475" y="130" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Section 3</text>
+  <text x="475" y="150" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Titanium (E₄=110 GPa, A₄=300 mm²)</text>
+  
+  <!-- Left support -->
+  <rect x="70" y="90" width="30" height="80" fill="#555555" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Applied force (right side) -->
+  <line x1="600" y1="130" x2="550" y2="130" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="550,130 560,125 560,135" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="590" y="120" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">30 kN</text>
+  
+  <!-- Section length labels -->
+  <line x1="100" y1="180" x2="250" y2="180" stroke="#000000" stroke-width="1.5"/>
+  <line x1="100" y1="175" x2="100" y2="185" stroke="#000000" stroke-width="1.5"/>
+  <line x1="250" y1="175" x2="250" y2="185" stroke="#000000" stroke-width="1.5"/>
+  <text x="175" y="195" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">0.5 m</text>
+  
+  <line x1="250" y1="180" x2="400" y2="180" stroke="#000000" stroke-width="1.5"/>
+  <line x1="250" y1="175" x2="250" y2="185" stroke="#000000" stroke-width="1.5"/>
+  <line x1="400" y1="175" x2="400" y2="185" stroke="#000000" stroke-width="1.5"/>
+  <text x="325" y="195" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">0.5 m</text>
+  
+  <line x1="400" y1="180" x2="550" y2="180" stroke="#000000" stroke-width="1.5"/>
+  <line x1="400" y1="175" x2="400" y2="185" stroke="#000000" stroke-width="1.5"/>
+  <line x1="550" y1="175" x2="550" y2="185" stroke="#000000" stroke-width="1.5"/>
+  <text x="475" y="195" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">0.5 m</text>
+  
+  <!-- Connector for parallel bars -->
+  <line x1="325" y1="125" x2="325" y2="135" stroke="#000000" stroke-width="2" stroke-dasharray="3,2"/>
+  
+  <!-- Title -->
+  <text x="350" y="40" font-family="Arial" font-size="20" font-weight="bold" fill="#000000" text-anchor="middle">Complex Compound Bar Assignment</text>
+  <text x="350" y="230" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">Calculate the equivalent stiffness, elongation of each section, and total elongation</text>
+</svg>

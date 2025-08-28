@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <!-- Background -->
+  <rect width="600" height="350" fill="white"/>
+  
+  <!-- Initial state (room temperature) -->
+  <rect x="100" y="100" width="300" height="20" fill="#D4D4D4" stroke="#000000" stroke-width="1.5"/>
+  <rect x="100" y="120" width="300" height="20" fill="#DAA520" stroke="#000000" stroke-width="1.5"/>
+  
+  <!-- Temperature Text -->
+  <text x="75" y="120" font-family="Arial" font-size="14" fill="#000000" text-anchor="end">T₁</text>
+  
+  <!-- Material labels for initial state -->
+  <text x="420" y="115" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material A (αA)</text>
+  <text x="420" y="135" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material B (αB)</text>
+  
+  <!-- After heating (bent state) -->
+  <!-- Path for curved upper material -->
+  <path d="M 100,200 Q 250,120 400,200" fill="#D4D4D4" stroke="#000000" stroke-width="1.5"/>
+  
+  <!-- Path for curved lower material -->
+  <path d="M 100,220 Q 250,150 400,220" fill="#DAA520" stroke="#000000" stroke-width="1.5"/>
+  
+  <!-- Temperature Text -->
+  <text x="75" y="210" font-family="Arial" font-size="14" fill="#000000" text-anchor="end">T₂ > T₁</text>
+  
+  <!-- Material labels for bent state -->
+  <text x="420" y="195" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material A (αA)</text>
+  <text x="420" y="215" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material B (αB > αA)</text>
+  
+  <!-- Heat symbols -->
+  <path d="M 250,250 L 250,240 L 245,245 L 250,240 L 255,245" stroke="#FF0000" stroke-width="2" fill="none"/>
+  <path d="M 265,255 L 265,245 L 260,250 L 265,245 L 270,250" stroke="#FF0000" stroke-width="2" fill="none"/>
+  <path d="M 235,255 L 235,245 L 230,250 L 235,245 L 240,250" stroke="#FF0000" stroke-width="2" fill="none"/>
+  
+  <!-- Annotations -->
+  <text x="300" y="70" font-family="Arial" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Bimetallic Strip</text>
+  
+  <text x="250" y="270" font-family="Arial" font-size="14" fill="#FF0000" text-anchor="middle">Heat</text>
+  
+  <text x="200" y="300" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">• Material B has higher coefficient of thermal expansion (αB > αA)</text>
+  <text x="200" y="320" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">• When heated, material B expands more, causing the strip to bend</text>
+  
+  <!-- Arrows showing expansion -->
+  <path d="M 250,170 Q 280,150 310,170" stroke="#FF0000" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+  <polygon points="310,170 300,165 303,175" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+</svg>

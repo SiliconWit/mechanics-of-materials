@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350" width="700" height="350">
+  <!-- Background -->
+  <rect width="700" height="350" fill="white"/>
+  
+  <!-- Title -->
+  <text x="350" y="30" font-family="Arial" font-size="20" font-weight="bold" fill="#000000" text-anchor="middle">Single Shear vs. Double Shear</text>
+  
+  <!-- Single Shear Diagram -->
+  <text x="175" y="60" font-family="Arial" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Single Shear</text>
+  
+  <!-- Plates -->
+  <rect x="50" y="80" width="100" height="20" fill="#D4D4D4" stroke="#000000" stroke-width="2"/>
+  <rect x="150" y="80" width="100" height="20" fill="#A0A0A0" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Bolt -->
+  <circle cx="150" cy="90" r="10" fill="#4682B4" stroke="#000000" stroke-width="1.5"/>
+  
+  <!-- Force arrows -->
+  <line x1="100" y1="130" x2="100" y2="100" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="100,100 95,110 105,110" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="85" y="125" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">F</text>
+  
+  <line x1="200" y1="70" x2="200" y2="100" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="200,70 195,80 205,80" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="215" y="80" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">F</text>
+  
+  <!-- Shear plane indicator -->
+  <line x1="150" y1="70" x2="150" y2="110" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="150" y="125" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">Shear Plane</text>
+  
+  <!-- Formula -->
+  <text x="175" y="155" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">τ = F/A</text>
+  
+  <!-- Double Shear Diagram -->
+  <text x="525" y="60" font-family="Arial" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Double Shear</text>
+  
+  <!-- Plates -->
+  <rect x="400" y="80" width="100" height="20" fill="#D4D4D4" stroke="#000000" stroke-width="2"/>
+  <rect x="500" y="70" width="100" height="40" fill="#A0A0A0" stroke="#000000" stroke-width="2"/>
+  <rect x="600" y="80" width="100" height="20" fill="#D4D4D4" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Bolt -->
+  <circle cx="500" cy="90" r="10" fill="#4682B4" stroke="#000000" stroke-width="1.5"/>
+  <circle cx="600" cy="90" r="10" fill="#4682B4" stroke="#000000" stroke-width="1.5"/>
+  
+  <!-- Force arrows -->
+  <line x1="450" y1="130" x2="450" y2="100" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="450,100 445,110 455,110" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="435" y="125" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">F</text>
+  
+  <line x1="650" y1="130" x2="650" y2="100" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="650,100 645,110 655,110" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="665" y="125" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">F</text>
+  
+  <line x1="550" y1="50" x2="550" y2="110" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="550,50 545,60 555,60" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="565" y="65" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">2F</text>
+  
+  <!-- Shear plane indicators -->
+  <line x1="500" y1="70" x2="500" y2="110" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <line x1="600" y1="70" x2="600" y2="110" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="5,3"/>
+  
+  <text x="500" y="125" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">Shear Plane 1</text>
+  <text x="600" y="125" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">Shear Plane 2</text>
+  
+  <!-- Formula -->
+  <text x="525" y="155" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">τ = F/(2A)</text>
+  
+  <!-- Comparison notes -->
+  <line x1="50" y1="190" x2="675" y2="190" stroke="#000000" stroke-width="1"/>
+  
+  <text x="350" y="210" font-family="Arial" font-size="16" font-weight="bold" fill="#000000" text-anchor="middle">Key Differences</text>
+  
+  <text x="100" y="235" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">• One shear plane</text>
+  <text x="100" y="255" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">• Higher shear stress</text>
+  <text x="100" y="275" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">• Less efficient design</text>
+  
+  <text x="600" y="235" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">• Two shear planes</text>
+  <text x="600" y="255" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">• Lower shear stress (half of single shear)</text>
+  <text x="600" y="275" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">• More efficient load distribution</text>
+  
+  <text x="350" y="310" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">Common applications: bolted connections, riveted joints, pin connections</text>
+</svg>

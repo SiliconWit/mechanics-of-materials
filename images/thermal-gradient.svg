@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="250" y="25" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Thermal Gradient Effects</text>
+  
+  <!-- Temperature gradient beam bending -->
+  <g transform="translate(50, 80)">
+    <text x="0" y="0" font-family="Arial" font-size="14" font-weight="bold">Beam with Temperature Gradient</text>
+    
+    <!-- Original beam position (dashed outline) -->
+    <rect x="20" y="30" width="300" height="40" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="5,3" />
+    
+    <!-- Curved (bent) beam -->
+    <path d="M20,70 C100,100 240,100 320,70" fill="#e5e7eb" stroke="#374151" stroke-width="2" />
+    
+    <!-- Temperature gradient indicator (color gradient) -->
+    <defs>
+      <linearGradient id="tempGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    
+    <!-- Gradient indicator bar -->
+    <rect x="350" y="30" width="20" height="100" fill="url(#tempGradient)" stroke="#374151" stroke-width="1" />
+    <text x="380" y="35" font-family="Arial" font-size="12" fill="#ef4444">Hot (Top)</text>
+    <text x="380" y="130" font-family="Arial" font-size="12" fill="#3b82f6">Cold (Bottom)</text>
+    
+    <!-- Arrows showing differential expansion -->
+    <line x1="170" y1="20" x2="170" y2="0" stroke="#ef4444" stroke-width="1.5" />
+    <polygon points="170,5 167,0 173,0" fill="#ef4444" stroke="none" />
+    <text x="180" y="15" font-family="Arial" font-size="12" fill="#ef4444">Greater expansion</text>
+    
+    <line x1="170" y1="80" x2="170" y2="100" stroke="#3b82f6" stroke-width="1.5" />
+    <polygon points="170,95 167,100 173,100" fill="#3b82f6" stroke="none" />
+    <text x="180" y="95" font-family="Arial" font-size="12" fill="#3b82f6">Less expansion</text>
+    
+    <!-- Curvature indication -->
+    <path d="M150,140 C180,110 220,110 250,140" fill="none" stroke="#374151" stroke-width="1.5" stroke-dasharray="3,2" />
+    <text x="200" y="150" font-family="Arial" font-size="12" text-anchor="middle">Bending due to thermal gradient</text>
+  </g>
+  
+  <!-- Temperature gradient in pressure vessel wall -->
+  <g transform="translate(270, 110)">
+    <g transform="rotate(-90)">
+      <text font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle">Pressure Vessel Wall</text>
+    </g>
+    
+    <!-- Vessel wall cross-section with gradient -->
+    <rect x="150" y="-50" width="30" height="100" fill="url(#tempGradient)" stroke="#374151" stroke-width="2" />
+    
+    <!-- Inner and outer labels -->
+    <text x="140" y="0" font-family="Arial" font-size="12" text-anchor="end">Inner Surface (Hot)</text>
+    <text x="190" y="0" font-family="Arial" font-size="12" text-anchor="start">Outer Surface (Cold)</text>
+    
+    <!-- Stress indication -->
+    <line x1="135" y1="-30" x2="120" y2="-30" stroke="#ef4444" stroke-width="1.5" />
+    <polygon points="130,'-30' 120,-27 120,-33" fill="#ef4444" stroke="none" />
+    <text x="115" y="-30" font-family="Arial" font-size="10" text-anchor="end" fill="#ef4444">Compressive</text>
+    
+    <line x1="195" y1="-30" x2="210" y2="-30" stroke="#3b82f6" stroke-width="1.5" />
+    <polygon points="200,-30 210,-27 210,-33" fill="#3b82f6" stroke="none" />
+    <text x="215" y="-30" font-family="Arial" font-size="10" text-anchor="start" fill="#3b82f6">Tensile</text>
+  </g>
+  
+  <!-- Information text -->
+  <text x="250" y="200" font-family="Arial" font-size="12" text-anchor="middle" font-style="italic">
+    Thermal gradients create complex stress distributions and can cause bending in structures
+  </text>
+</svg>

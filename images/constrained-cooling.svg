@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="250" y="25" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Constrained Cooling</text>
+  
+  <!-- Base position (outline) -->
+  <rect x="80" y="80" width="340" height="60" fill="#f0f0f0" stroke="#666666" stroke-width="2" />
+
+  <!-- Constraints (walls) -->
+  <rect x="60" y="60" width="20" height="100" fill="#666666" />
+  <rect x="420" y="60" width="20" height="100" fill="#666666" />
+  
+  <!-- Arrows showing tension -->
+  <g fill="#3b82f6" stroke="#3b82f6" stroke-width="2">
+    <!-- Left tension arrow -->
+    <line x1="100" y1="110" x2="150" y2="110" />
+    <polygon points="140,110 150,115 150,105" />
+    
+    <!-- Right tension arrow -->
+    <line x1="400" y1="110" x2="350" y2="110" />
+    <polygon points="360,110 350,115 350,105" />
+    
+    <!-- Middle contraction arrows (showing what would happen if free) -->
+    <line x1="240" y1="160" x2="210" y2="160" stroke-dasharray="5,3" />
+    <polygon points="220,160 210,155 210,165" stroke="none" />
+    
+    <line x1="260" y1="160" x2="290" y2="160" stroke-dasharray="5,3" />
+    <polygon points="280,160 290,155 290,165" stroke="none" />
+  </g>
+
+  <!-- Temperature indicator -->
+  <g transform="translate(250, 110)">
+    <circle r="20" fill="#cce5ff" stroke="#3b82f6" stroke-width="2" />
+    <text x="0" y="5" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">-ΔT</text>
+  </g>
+
+  <!-- Stress indicator texts -->
+  <text x="250" y="65" font-family="Arial" font-size="14" text-anchor="middle" fill="#3b82f6">
+    Tensile Stress Develops (σ = α·ΔT·E)
+  </text>
+  
+  <!-- Labels -->
+  <text x="250" y="185" font-family="Arial" font-size="14" text-anchor="middle">
+    Material tries to contract but is constrained
+  </text>
+  
+  <!-- Legend -->
+  <g transform="translate(70, 205)">
+    <circle r="8" fill="#cce5ff" stroke="#3b82f6" stroke-width="1" />
+    <text x="15" y="4" font-family="Arial" font-size="12" text-anchor="start">Cooling</text>
+    
+    <line x1="80" y1="0" x2="110" y2="0" stroke="#3b82f6" stroke-width="2" />
+    <polygon points="100,0 110,5 110,-5" fill="#3b82f6" stroke="none" />
+    <text x="115" y="4" font-family="Arial" font-size="12" text-anchor="start">Tensile Force</text>
+  </g>
+</svg>

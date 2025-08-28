@@ -1,0 +1,97 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="#f8f8f8"/>
+  
+  <!-- Title -->
+  <text x="300" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">
+    Rectangular Shaft - Warping Under Torsion
+  </text>
+  
+  <!-- Shaft in 3D perspective view -->
+  <g transform="translate(300, 220)">
+    <!-- Shaft body -->
+    <g>
+      <!-- Shaft endpoints (rectangular faces) -->
+      <rect x="-180" y="-40" width="60" height="80" fill="#d0d0d0" stroke="#666666" stroke-width="2"/>
+      
+      <!-- Right face - warped rectangle (simulated with path) -->
+      <path d="M 120,-40 C 130,-50 150,-45 150,-40 L 150,40 C 130,45 120,30 120,40 Z" 
+            fill="#4682b4" fill-opacity="0.6" stroke="#3366aa" stroke-width="2"/>
+      
+      <!-- Shaft body sides - top -->
+      <path d="M -180,-40 L 120,-40 C 130,-50 150,-45 150,-40" stroke="#3366aa" stroke-width="2" fill="none"/>
+      
+      <!-- Shaft body sides - bottom -->
+      <path d="M -180,40 L 120,40 C 130,45 120,30 150,40" stroke="#3366aa" stroke-width="2" fill="none"/>
+      
+      <!-- Shaft body sides - sides -->
+      <line x1="-180" y1="-40" x2="-180" y2="40" stroke="#3366aa" stroke-width="2"/>
+      <line x1="-120" y1="-40" x2="-120" y2="40" stroke="#3366aa" stroke-width="2"/>
+    </g>
+    
+    <!-- Grid lines on left face (original position) -->
+    <g stroke="#666666" stroke-width="1.5">
+      <!-- Horizontal grid lines -->
+      <line x1="-180" y1="-20" x2="-120" y2="-20"/>
+      <line x1="-180" y1="0" x2="-120" y2="0"/>
+      <line x1="-180" y1="20" x2="-120" y2="20"/>
+      
+      <!-- Vertical grid lines -->
+      <line x1="-160" y1="-40" x2="-160" y2="40"/>
+      <line x1="-140" y1="-40" x2="-140" y2="40"/>
+    </g>
+    
+    <!-- Grid lines on right face (after twist, warped) -->
+    <g stroke="#3366aa" stroke-width="1.5">
+      <!-- Horizontal grid lines (warped) -->
+      <path d="M 120,-20 C 125,-25 145,-22 150,-20" fill="none"/>
+      <path d="M 120,0 C 125,-2 145,2 150,0" fill="none"/>
+      <path d="M 120,20 C 125,15 145,22 150,20" fill="none"/>
+      
+      <!-- Vertical grid lines (warped) -->
+      <path d="M 130,-40 C 135,-45 135,-15 135,-10 C 135,-5 135,5 135,10 C 135,15 135,35 130,40" fill="none"/>
+      <path d="M 140,-40 C 145,-42 145,-15 145,-10 C 145,-2 145,2 145,10 C 145,15 145,38 140,40" fill="none"/>
+    </g>
+    
+    <!-- Twist angle indicator -->
+    <path d="M 135,-50 A 30 30 0 0 1 160,-30" fill="none" stroke="#cc0000" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="155" y="-45" font-family="Arial, sans-serif" font-size="14" fill="#cc0000">θ</text>
+    
+    <!-- Plane and warping indicators -->
+    <g>
+      <!-- Left face plane indicator -->
+      <rect x="-200" y="-50" width="100" height="100" fill="none" stroke="#006600" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="-150" y="-60" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#006600">Plane</text>
+      
+      <!-- Right face warped plane indicator -->
+      <path d="M 100,-50 C 115,-60 150,-55 170,-50 L 170,50 C 145,55 115,40 100,50 Z" 
+            fill="none" stroke="#ff6600" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="135" y="-60" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#ff6600">Warped</text>
+    </g>
+    
+    <!-- Labels -->
+    <g font-family="Arial, sans-serif" font-size="14">
+      <text x="-150" y="60" text-anchor="middle">Original Position</text>
+      <text x="135" y="60" text-anchor="middle">Twisted Position</text>
+      
+      <!-- Warping arrows -->
+      <g stroke="#ff6600" stroke-width="2" fill="none">
+        <path d="M 130,-40 L 130,-50" />
+        <polygon points="130,-50 127,-45 133,-45" fill="#ff6600"/>
+        
+        <path d="M 150,0 L 160,0" />
+        <polygon points="160,0 155,-3 155,3" fill="#ff6600"/>
+        
+        <path d="M 130,40 L 130,50" />
+        <polygon points="130,50 127,45 133,45" fill="#ff6600"/>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Explanation text -->
+  <g font-family="Arial, sans-serif" font-size="14" transform="translate(300, 330)">
+    <rect x="-250" y="0" width="500" height="50" rx="10" fill="white" stroke="#aaaaaa" stroke-width="1"/>
+    <text x="0" y="20" text-anchor="middle">In non-circular shafts, cross-sections warp out of their original plane during torsion.</text>
+    <text x="0" y="40" text-anchor="middle">This warping creates a complex stress state and reduces torsional efficiency.</text>
+  </g>
+</svg>

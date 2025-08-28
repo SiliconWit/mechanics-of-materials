@@ -1,0 +1,68 @@
+<svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Member under tensile stress -->
+  <rect x="150" y="100" width="300" height="100" fill="#ffe0e0" stroke="#404040" stroke-width="2"/>
+  
+  <!-- Grid to show internal structure -->
+  <line x1="200" y1="100" x2="200" y2="200" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="250" y1="100" x2="250" y2="200" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="300" y1="100" x2="300" y2="200" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="350" y1="100" x2="350" y2="200" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="400" y1="100" x2="400" y2="200" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  
+  <line x1="150" y1="125" x2="450" y2="125" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="150" y1="150" x2="450" y2="150" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  <line x1="150" y1="175" x2="450" y2="175" stroke="#a0a0a0" stroke-width="1" stroke-dasharray="5,3"/>
+  
+  <!-- Internal stress arrows (showing tension) -->
+  <line x1="250" y1="125" x2="270" y2="125" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="270,125 265,122 265,128" fill="#ff0000"/>
+  <line x1="250" y1="125" x2="230" y2="125" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="230,125 235,122 235,128" fill="#ff0000"/>
+  
+  <line x1="250" y1="150" x2="270" y2="150" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="270,150 265,147 265,153" fill="#ff0000"/>
+  <line x1="250" y1="150" x2="230" y2="150" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="230,150 235,147 235,153" fill="#ff0000"/>
+  
+  <line x1="250" y1="175" x2="270" y2="175" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="270,175 265,172 265,178" fill="#ff0000"/>
+  <line x1="250" y1="175" x2="230" y2="175" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="230,175 235,172 235,178" fill="#ff0000"/>
+  
+  <line x1="350" y1="125" x2="370" y2="125" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="370,125 365,122 365,128" fill="#ff0000"/>
+  <line x1="350" y1="125" x2="330" y2="125" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="330,125 335,122 335,128" fill="#ff0000"/>
+  
+  <line x1="350" y1="150" x2="370" y2="150" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="370,150 365,147 365,153" fill="#ff0000"/>
+  <line x1="350" y1="150" x2="330" y2="150" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="330,150 335,147 335,153" fill="#ff0000"/>
+  
+  <line x1="350" y1="175" x2="370" y2="175" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="370,175 365,172 365,178" fill="#ff0000"/>
+  <line x1="350" y1="175" x2="330" y2="175" stroke="#ff0000" stroke-width="1"/>
+  <polygon points="330,175 335,172 335,178" fill="#ff0000"/>
+  
+  <!-- External force arrows -->
+  <line x1="90" y1="150" x2="150" y2="150" stroke="#404040" stroke-width="3"/>
+  <polygon points="90,150 105,145 105,155" fill="#404040"/>
+  <text x="120" y="135" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">F</text>
+  
+  <line x1="510" y1="150" x2="450" y2="150" stroke="#404040" stroke-width="3"/>
+  <polygon points="510,150 495,145 495,155" fill="#404040"/>
+  <text x="480" y="135" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">F</text>
+  
+  <!-- Cross-section indication -->
+  <line x1="250" y1="100" x2="250" y2="200" stroke="#0000ff" stroke-width="2" stroke-dasharray="7,3"/>
+  <text x="250" y="220" font-family="Arial, sans-serif" font-size="16" fill="#0000ff" text-anchor="middle">Cross-section</text>
+  <text x="250" y="240" font-family="Arial, sans-serif" font-size="16" fill="#0000ff" text-anchor="middle">Area (A)</text>
+  
+  <!-- Title -->
+  <text x="300" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle">Tensile Stress</text>
+  
+  <!-- Formula -->
+  <rect x="340" y="210" width="120" height="70" rx="10" fill="#f8f8f8" stroke="#404040" stroke-width="1.5"/>
+  <text x="400" y="240" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">σ = F/A</text>
+  <text x="400" y="265" font-family="Arial, sans-serif" font-size="16" text-anchor="middle">(positive value)</text>
+</svg>

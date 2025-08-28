@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Title -->
+  <text x="250" y="25" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle">Composite Bar under Thermal Load</text>
+  
+  <!-- Initial state -->
+  <g transform="translate(0, 80)">
+    <text x="20" y="0" font-family="Arial" font-size="14" text-anchor="start">Initial State</text>
+    
+    <!-- Composite bar -->
+    <rect x="80" y="-20" width="340" height="40" fill="#9ca3af" stroke="#374151" stroke-width="2" />
+    <rect x="80" y="20" width="340" height="20" fill="#fbbf24" stroke="#374151" stroke-width="2" />
+    
+    <!-- Materials labels -->
+    <text x="250" y="-5" font-family="Arial" font-size="14" text-anchor="middle" fill="white">Material 1 (Steel)</text>
+    <text x="250" y="35" font-family="Arial" font-size="12" text-anchor="middle">Material 2 (Copper)</text>
+    
+    <!-- Temperature indicator -->
+    <text x="450" y="10" font-family="Arial" font-size="14" text-anchor="start">T₀</text>
+  </g>
+  
+  <!-- Free expansion (if not joined) -->
+  <g transform="translate(0, 170)">
+    <text x="20" y="0" font-family="Arial" font-size="14" text-anchor="start">Free Expansion (if not joined)</text>
+    
+    <!-- Offset steel bar (less expansion) -->
+    <rect x="80" y="-20" width="360" height="40" fill="#9ca3af" stroke="#374151" stroke-width="2" />
+    <!-- More expanded copper bar -->
+    <rect x="80" y="20" width="390" height="20" fill="#fbbf24" stroke="#374151" stroke-width="2" />
+    
+    <!-- Expansion arrows and labels -->
+    <g stroke="#ef4444" stroke-width="1.5" fill="#ef4444">
+      <line x1="420" y1="-10" x2="440" y2="-10" />
+      <polygon points="435,-10 440,-7 440,-13" />
+      <text x="470" y="-7" font-family="Arial" font-size="12" text-anchor="start">α₁·ΔT·L₀</text>
+      
+      <line x1="420" y1="30" x2="470" y2="30" />
+      <polygon points="465,30 470,33 470,27" />
+      <text x="470" y="45" font-family="Arial" font-size="12" text-anchor="start">α₂·ΔT·L₀</text>
+    </g>
+    
+    <!-- Temperature indicator -->
+    <text x="490" y="10" font-family="Arial" font-size="14" text-anchor="start">T₀ + ΔT</text>
+  </g>
+  
+  <!-- Actual behavior (joined composite) -->
+  <g transform="translate(0, 260)">
+    <text x="20" y="0" font-family="Arial" font-size="14" text-anchor="start">Actual Behavior (Joined Composite)</text>
+    
+    <!-- Composite bar with common length after heating -->
+    <rect x="80" y="-20" width="370" height="40" fill="#9ca3af" stroke="#374151" stroke-width="2" />
+    <rect x="80" y="20" width="370" height="20" fill="#fbbf24" stroke="#374151" stroke-width="2" />
+    
+    <!-- Forces indication -->
+    <g>
+      <!-- Tensile in material 1 (since it wants to expand less) -->
+      <g stroke="#3b82f6" stroke-width="2" fill="#3b82f6">
+        <line x1="250" y1="-30" x2="280" y2="-30" />
+        <polygon points="275,-30 280,-27 280,-33" />
+        <line x1="250" y1="-30" x2="220" y2="-30" />
+        <polygon points="225,-30 220,-27 220,-33" />
+        <text x="300" y="-27" font-family="Arial" font-size="12" text-anchor="start">Tensile Stress</text>
+      </g>
+      
+      <!-- Compressive in material 2 (since it wants to expand more) -->
+      <g stroke="#ef4444" stroke-width="2" fill="#ef4444">
+        <line x1="250" y1="50" x2="220" y2="50" />
+        <polygon points="225,50 220,47 220,53" />
+        <line x1="250" y1="50" x2="280" y2="50" />
+        <polygon points="275,50 280,47 280,53" />
+        <text x="300" y="53" font-family="Arial" font-size="12" text-anchor="start">Compressive Stress</text>
+      </g>
+    </g>
+    
+    <!-- Final length indicator -->
+    <text x="450" y="10" font-family="Arial" font-size="14" text-anchor="start">Equilibrium Length</text>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(20, 30)">
+    <rect x="0" y="0" width="20" height="10" fill="#9ca3af" stroke="#374151" stroke-width="1" />
+    <text x="25" y="9" font-family="Arial" font-size="12" text-anchor="start">Material 1 (α₁)</text>
+    
+    <rect x="120" y="0" width="20" height="10" fill="#fbbf24" stroke="#374151" stroke-width="1" />
+    <text x="145" y="9" font-family="Arial" font-size="12" text-anchor="start">Material 2 (α₂ > α₁)</text>
+    
+    <text x="280" y="9" font-family="Arial" font-size="12" text-anchor="start" font-style="italic">α₂ > α₁ (Different thermal expansion rates)</text>
+  </g>
+</svg>

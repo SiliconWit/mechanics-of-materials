@@ -1,0 +1,145 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="400" fill="#f8f8f8"/>
+  
+  <!-- Grid lines for reference -->
+  <g stroke="#e0e0e0" stroke-width="0.5">
+    <line x1="0" y1="200" x2="800" y2="200"/>
+    <line x1="400" y1="0" x2="400" y2="400"/>
+  </g>
+  
+  <!-- Left side: Circular Cross-Section with Shear Stress Distribution -->
+  <g transform="translate(200, 200)">
+    <!-- Circular shaft cross-section -->
+    <circle cx="0" cy="0" r="120" fill="#d0d0d0" stroke="#666666" stroke-width="2"/>
+    
+    <!-- Center point -->
+    <circle cx="0" cy="0" r="3" fill="#333333"/>
+    
+    <!-- Radial grid lines to show stress variation -->
+    <g stroke="#3366aa" stroke-width="1.5">
+      <!-- Horizontal axis -->
+      <line x1="-120" y1="0" x2="120" y2="0"/>
+      <!-- Vertical axis -->
+      <line x1="0" y1="-120" x2="0" y2="120"/>
+      <!-- Diagonal axes -->
+      <line x1="-85" y1="-85" x2="85" y2="85"/>
+      <line x1="-85" y1="85" x2="85" y2="-85"/>
+      
+      <!-- Concentric circles -->
+      <circle cx="0" cy="0" r="40" fill="none"/>
+      <circle cx="0" cy="0" r="80" fill="none"/>
+    </g>
+    
+    <!-- Radial stress indicators -->
+    <g>
+      <!-- Arrows showing stress direction (tangential) -->
+      <g stroke="#cc0000" stroke-width="2" fill="none">
+        <!-- Outer circle stress arrows - largest -->
+        <path d="M 0,-120 A 10 10 0 0 1 10,-119" />
+        <polygon points="10,-119 15,-114 5,-114" fill="#cc0000"/>
+        
+        <path d="M 120,0 A 10 10 0 0 1 119,10" />
+        <polygon points="119,10 114,15 114,5" fill="#cc0000"/>
+        
+        <path d="M 0,120 A 10 10 0 0 1 -10,119" />
+        <polygon points="-10,119 -15,114 -5,114" fill="#cc0000"/>
+        
+        <path d="M -120,0 A 10 10 0 0 1 -119,-10" />
+        <polygon points="-119,-10 -114,-15 -114,-5" fill="#cc0000"/>
+        
+        <!-- Middle circle stress arrows - medium -->
+        <path d="M 0,-80 A 7 7 0 0 1 7,-79" stroke-width="1.5"/>
+        <polygon points="7,-79 10,-75 5,-75" fill="#cc0000"/>
+        
+        <path d="M 80,0 A 7 7 0 0 1 79,7" stroke-width="1.5"/>
+        <polygon points="79,7 75,10 75,5" fill="#cc0000"/>
+        
+        <path d="M 0,80 A 7 7 0 0 1 -7,79" stroke-width="1.5"/>
+        <polygon points="-7,79 -10,75 -5,75" fill="#cc0000"/>
+        
+        <path d="M -80,0 A 7 7 0 0 1 -79,-7" stroke-width="1.5"/>
+        <polygon points="-79,-7 -75,-10 -75,-5" fill="#cc0000"/>
+        
+        <!-- Inner circle stress arrows - smallest -->
+        <path d="M 0,-40 A 5 5 0 0 1 5,-39" stroke-width="1"/>
+        <polygon points="5,-39 7,-36 3,-36" fill="#cc0000"/>
+        
+        <path d="M 40,0 A 5 5 0 0 1 39,5" stroke-width="1"/>
+        <polygon points="39,5 36,7 36,3" fill="#cc0000"/>
+        
+        <path d="M 0,40 A 5 5 0 0 1 -5,39" stroke-width="1"/>
+        <polygon points="-5,39 -7,36 -3,36" fill="#cc0000"/>
+        
+        <path d="M -40,0 A 5 5 0 0 1 -39,-5" stroke-width="1"/>
+        <polygon points="-39,-5 -36,-7 -36,-3" fill="#cc0000"/>
+      </g>
+    </g>
+    
+    <!-- Radius indicator -->
+    <g>
+      <line x1="0" y1="0" x2="90" y2="0" stroke="#333333" stroke-width="1" stroke-dasharray="5,3"/>
+      <text x="45" y="-10" font-family="Arial, sans-serif" font-size="14" fill="#333333">ρ</text>
+    </g>
+    
+    <!-- Maximum stress indicator -->
+    <text x="125" y="-10" font-family="Arial, sans-serif" font-size="14" fill="#cc0000" font-weight="bold">τmax</text>
+  </g>
+  
+  <!-- Right side: Linear Stress Distribution Diagram -->
+  <g transform="translate(600, 200)">
+    <!-- Coordinate axes -->
+    <g stroke="#333333" stroke-width="2">
+      <!-- Horizontal axis (radius) -->
+      <line x1="-150" y1="0" x2="150" y2="0"/>
+      <polygon points="150,0 140,-5 140,5" fill="#333333"/>
+      <text x="150" y="20" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">Radius (ρ)</text>
+      
+      <!-- Vertical axis (stress) -->
+      <line x1="0" y1="150" x2="0" y2="-150"/>
+      <polygon points="0,-150 -5,-140 5,-140" fill="#333333"/>
+      <text x="-15" y="-140" font-family="Arial, sans-serif" font-size="14" text-anchor="end">Shear Stress (τ)</text>
+    </g>
+    
+    <!-- Linear stress distribution line -->
+    <g>
+      <line x1="-120" y1="0" x2="120" y2="0" stroke="#333333" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="0" y1="-120" x2="0" y2="120" stroke="#333333" stroke-width="1" stroke-dasharray="3,3"/>
+      
+      <!-- Stress distribution line -->
+      <line x1="-120" y1="-120" x2="120" y2="120" stroke="#cc0000" stroke-width="3"/>
+      
+      <!-- Point markers -->
+      <circle cx="-120" cy="-120" r="5" fill="#cc0000"/>
+      <circle cx="-80" cy="-80" r="4" fill="#cc0000"/>
+      <circle cx="-40" cy="-40" r="3" fill="#cc0000"/>
+      <circle cx="0" cy="0" r="3" fill="#cc0000"/>
+      <circle cx="40" cy="40" r="3" fill="#cc0000"/>
+      <circle cx="80" cy="80" r="4" fill="#cc0000"/>
+      <circle cx="120" cy="120" r="5" fill="#cc0000"/>
+      
+      <!-- Formula -->
+      <text x="0" y="-90" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" font-style="italic">τ = (Tρ)/J</text>
+    </g>
+    
+    <!-- Important points labels -->
+    <g font-family="Arial, sans-serif" font-size="14">
+      <text x="0" y="20" text-anchor="middle">τ = 0 at center</text>
+      <text x="120" y="140" text-anchor="end" fill="#cc0000" font-weight="bold">τmax at surface</text>
+    </g>
+    
+    <!-- Linear relationship indicator -->
+    <g stroke="#333333" stroke-width="1" stroke-dasharray="2,2" fill="none">
+      <path d="M -90,-90 L -90,0 L 0,0" />
+      <path d="M 90,90 L 90,0" />
+    </g>
+  </g>
+  
+  <!-- Title and description -->
+  <g font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="400" y="30" font-size="18" font-weight="bold">Shear Stress Distribution in Circular Shaft</text>
+    <text x="400" y="55" font-size="14" font-style="italic">Stress varies linearly from zero at center to maximum at surface</text>
+    <text x="200" y="380" font-size="16">Circular Cross-Section</text>
+    <text x="600" y="380" font-size="16">Linear Stress Variation</text>
+  </g>
+</svg>

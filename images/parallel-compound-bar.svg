@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" width="600" height="300">
+  <!-- Background -->
+  <rect width="600" height="300" fill="white"/>
+  
+  <!-- Material 1 (Steel) -->
+  <rect x="100" y="80" width="400" height="40" fill="#A0A0A0" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Material 2 (Aluminum) -->
+  <rect x="100" y="120" width="400" height="60" fill="#D4D4D4" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Material 3 (Brass) -->
+  <rect x="100" y="180" width="400" height="40" fill="#DAA520" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Left support -->
+  <rect x="70" y="60" width="30" height="180" fill="#555555" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Right support (with gap for applied force) -->
+  <rect x="500" y="60" width="30" height="40" fill="#555555" stroke="#000000" stroke-width="2"/>
+  <rect x="500" y="180" width="30" height="60" fill="#555555" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Applied force arrow -->
+  <line x1="560" y1="140" x2="530" y2="140" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="530,140 540,135 540,145" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  
+  <!-- Force label -->
+  <text x="555" y="130" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">P</text>
+  
+  <!-- Material Labels -->
+  <text x="150" y="105" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material 1 (E₁, A₁)</text>
+  <text x="150" y="150" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material 2 (E₂, A₂)</text>
+  <text x="150" y="205" font-family="Arial" font-size="14" fill="#000000" text-anchor="start">Material 3 (E₃, A₃)</text>
+  
+  <!-- Length Label -->
+  <line x1="100" y1="250" x2="500" y2="250" stroke="#000000" stroke-width="1.5"/>
+  <line x1="100" y1="245" x2="100" y2="255" stroke="#000000" stroke-width="1.5"/>
+  <line x1="500" y1="245" x2="500" y2="255" stroke="#000000" stroke-width="1.5"/>
+  <text x="300" y="270" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">Length (L)</text>
+  
+  <!-- Individual Force Arrows (internal forces) -->
+  <line x1="300" y1="60" x2="300" y2="80" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="320" y="70" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="start">P₁</text>
+  
+  <line x1="300" y1="120" x2="300" y2="180" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="320" y="150" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="start">P₂</text>
+  
+  <line x1="300" y1="180" x2="300" y2="240" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="320" y="220" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="start">P₃</text>
+  
+  <!-- Title -->
+  <text x="300" y="30" font-family="Arial" font-size="20" font-weight="bold" fill="#000000" text-anchor="middle">Parallel Compound Bar</text>
+</svg>

@@ -1,0 +1,85 @@
+<svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background grid -->
+  <defs>
+    <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#f0f0f0" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+      <rect width="100" height="100" fill="url(#smallGrid)"/>
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="300" fill="url(#grid)" />
+  
+  <!-- Fixed end housing -->
+  <rect x="100" y="100" width="20" height="100" fill="#888888" stroke="#333333" stroke-width="2"/>
+  
+  <!-- Initial state shaft (dotted) -->
+  <rect x="120" y="125" width="560" height="50" fill="none" stroke="#aaaaaa" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Grid lines on initial shaft (dotted) -->
+  <g stroke="#aaaaaa" stroke-width="1" stroke-dasharray="5,5">
+    <line x1="120" y1="125" x2="120" y2="175"/>
+    <line x1="680" y1="125" x2="680" y2="175"/>
+    
+    <!-- Vertical grid lines -->
+    <line x1="200" y1="125" x2="200" y2="175"/>
+    <line x1="280" y1="125" x2="280" y2="175"/>
+    <line x1="360" y1="125" x2="360" y2="175"/>
+    <line x1="440" y1="125" x2="440" y2="175"/>
+    <line x1="520" y1="125" x2="520" y2="175"/>
+    <line x1="600" y1="125" x2="600" y2="175"/>
+    
+    <!-- Horizontal grid lines -->
+    <line x1="120" y1="150" x2="680" y2="150"/>
+  </g>
+  
+  <!-- Twisted state shaft -->
+  <g>
+    <!-- Main shaft -->
+    <rect x="120" y="125" width="560" height="50" fill="#4682b4" fill-opacity="0.4" stroke="#3366aa" stroke-width="2"/>
+    
+    <!-- Twisted grid lines -->
+    <g stroke="#3366aa" stroke-width="1.5">
+      <!-- Vertical grid lines with progressively more slant -->
+      <line x1="200" y1="125" x2="200" y2="175" transform="skewX(2)"/>
+      <line x1="280" y1="125" x2="280" y2="175" transform="skewX(4)"/>
+      <line x1="360" y1="125" x2="360" y2="175" transform="skewX(6)"/>
+      <line x1="440" y1="125" x2="440" y2="175" transform="skewX(8)"/>
+      <line x1="520" y1="125" x2="520" y2="175" transform="skewX(10)"/>
+      <line x1="600" y1="125" x2="600" y2="175" transform="skewX(12)"/>
+      <line x1="680" y1="125" x2="680" y2="175" transform="skewX(14)"/>
+      
+      <!-- Horizontal grid lines (remain straight) -->
+      <line x1="120" y1="150" x2="680" y2="150"/>
+    </g>
+  </g>
+  
+  <!-- Torque arrows -->
+  <g stroke="#cc0000" stroke-width="2" fill="none">
+    <!-- Left end (fixed) -->
+    <line x1="120" y1="100" x2="120" y2="80"/>
+    <line x1="120" y1="80" x2="140" y2="80"/>
+    <polygon points="140,80 130,75 130,85" fill="#cc0000"/>
+    
+    <!-- Right end (applied torque) -->
+    <circle cx="680" cy="150" r="15" stroke-dasharray="4,4"/>
+    <path d="M 695 150 A 15 15 0 1 0 680 135" stroke="#cc0000" fill="none"/>
+    <polygon points="680,135 675,125 685,125" fill="#cc0000"/>
+  </g>
+  
+  <!-- Labels -->
+  <g font-family="Arial, sans-serif" font-size="14" fill="#333333">
+    <text x="100" y="220" text-anchor="middle">Fixed End</text>
+    <text x="680" y="220" text-anchor="middle">Applied Torque</text>
+    <text x="400" y="80" text-anchor="middle" font-weight="bold">Torsional Deformation of a Shaft</text>
+    <text x="400" y="240" text-anchor="middle" font-style="italic">Note how cross-sections rotate progressively along the length</text>
+    
+    <!-- Angle label -->
+    <text x="700" y="155" text-anchor="start" fill="#cc0000" font-weight="bold">T</text>
+    
+    <!-- Initial and final state labels -->
+    <text x="350" y="110" text-anchor="middle" font-style="italic" fill="#aaaaaa">Initial State</text>
+    <text x="450" y="110" text-anchor="middle" font-style="italic" fill="#3366aa">Deformed State</text>
+  </g>
+</svg>

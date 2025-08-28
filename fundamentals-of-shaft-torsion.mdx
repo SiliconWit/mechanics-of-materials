@@ -1,0 +1,373 @@
+---
+title: "Lesson 5: Torsion of Circular Shafts"
+description: "Analyzing torsional stresses and angular deformation in Geneva mechanism crankshafts and rotating mechatronic systems"
+contributors: "sam-macharia,jack-kojiro,new-person6"
+pubDate: 2025-08-28
+tags: ["solid-mechanics", "torsion", "Geneva-mechanism", "crankshaft", "shear-stress", "angular-deformation"]
+excerpt: "Learn torsional analysis through Geneva mechanism crankshafts, covering shear stress distribution, angle of twist calculations, and design principles for rotating mechanical components."
+---
+
+import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
+import TawkWidget from '../../../../components/TawkWidget.astro';
+import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
+import Copyright from '../../../../components/Copyright.astro';
+import BionicText from '../../../../components/BionicText.astro';
+import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps } from '@astrojs/starlight/components';
+
+<UniversalContentContributors 
+  contributors={frontmatter.contributors}
+/>
+
+## 🎯 Learning Objectives
+
+By the end of this lesson, you will be able to:
+
+1. **Calculate** torsional shear stresses in circular crankshafts
+2. **Determine** angular deformation (twist) in rotating shafts  
+3. **Apply** torsion theory to Geneva mechanism analysis
+4. **Design** shafts for both strength and stiffness requirements
+
+## 🔧 Real-World System Problem: Geneva Mechanism Crankshaft
+
+<BionicText method="advanced" intensity="medium" class="highlight">
+The Geneva mechanism (also called Maltese cross mechanism) converts continuous rotation into intermittent motion. Found in film projectors, indexing tables, and automated manufacturing, the crankshaft experiences torsional loading during motion transfer.
+</BionicText>
+
+### System Description
+
+**Geneva Mechanism Components:**
+- **Drive Crankshaft** (continuous rotation input)
+- **Geneva Wheel** (intermittent rotation output)  
+- **Drive Pin** (transfers motion between components)
+- **Motor Coupling** (connects to drive motor)
+
+### The Torsional Challenge
+
+During operation, the Geneva mechanism crankshaft experiences:
+
+:::note[Torsional Loading Conditions]
+- **Continuous torque** from the driving motor
+- **Impact loading** when the drive pin engages the Geneva wheel slots
+- **Variable torque** due to acceleration/deceleration of the Geneva wheel
+- **Angular deformation** that affects timing precision
+:::
+
+> **Engineering Question:** How do we ensure the crankshaft can transmit the required torque without excessive shear stress or angular twist that would affect the mechanism's timing accuracy?
+
+### Why Torsional Analysis Matters
+
+**Consequences of Poor Torsional Design:**
+- **Shaft failure** due to excessive shear stress
+- **Timing errors** from excessive angular deformation  
+- **Mechanism jamming** from shaft twist under load
+- **Reduced accuracy** in intermittent positioning
+
+**Benefits of Proper Torsional Design:**
+- **Reliable torque transmission** without failure
+- **Precise timing** through controlled angular deformation
+- **Long service life** with appropriate safety factors
+- **Predictable performance** under varying loads
+
+## 📚 Fundamental Theory: Torsional Mechanics
+
+### Basic Torsion Concepts
+
+When a circular shaft is subjected to twisting moment (torque), it experiences:
+
+**Shear Stress (τ):** Internal resistance to twisting
+**Shear Strain (γ):** Angular deformation of material elements
+**Angle of Twist (θ):** Overall angular deformation of the shaft
+
+### Torsional Shear Stress Formula
+
+For circular shafts, the shear stress varies linearly from zero at the center to maximum at the outer surface:
+
+$$\tau = \frac{T \rho}{J}$$
+
+Where:
+- $\tau$ = Shear stress (Pa)
+- $T$ = Applied torque (N·m)
+- $\rho$ = Radial distance from center (m)
+- $J$ = Polar moment of inertia (m⁴)
+
+**Maximum shear stress** occurs at the outer surface:
+$$\tau_{max} = \frac{T r}{J} = \frac{T d}{2J}$$
+
+<Tabs>
+  <TabItem label="Solid Circular Shafts">
+    
+    **Polar Moment of Inertia:**
+    $$J = \frac{\pi d^4}{32}$$
+    
+    **Maximum Shear Stress:**
+    $$\tau_{max} = \frac{16 T}{\pi d^3}$$
+    
+    **Common Applications:** Small diameter shafts, cost-sensitive designs
+    
+  </TabItem>
+  <TabItem label="Hollow Circular Shafts">
+    
+    **Polar Moment of Inertia:**
+    $$J = \frac{\pi (d_o^4 - d_i^4)}{32}$$
+    
+    **Maximum Shear Stress:**
+    $$\tau_{max} = \frac{T d_o}{2J}$$
+    
+    **Advantages:** Higher strength-to-weight ratio, material savings
+    
+  </TabItem>
+  <TabItem label="Material Properties">
+    
+    **Shear Modulus (G):**
+    - Steel: G = 80 GPa
+    - Aluminum: G = 26 GPa
+    - Related to Young's Modulus: $G = \frac{E}{2(1+\nu)}$
+    
+    **Allowable Shear Stress:**
+    - Typically 50-60% of yield strength in tension
+    
+  </TabItem>
+</Tabs>
+
+### Angle of Twist Formula
+
+The total angular deformation of a shaft under torque:
+
+$$\theta = \frac{TL}{GJ}$$
+
+Where:
+- $\theta$ = Angle of twist (radians)
+- $T$ = Applied torque (N·m)
+- $L$ = Shaft length (m)  
+- $G$ = Shear modulus (Pa)
+- $J$ = Polar moment of inertia (m⁴)
+
+:::tip[Engineering Units]
+- **Angle in degrees:** $\theta_{degrees} = \theta_{radians} \times \frac{180}{\pi}$
+- **Angle per unit length:** $\theta/L$ = twist per meter (rad/m)
+- **Practical limits:** Typically limit to 1°/meter for precision mechanisms
+:::
+
+## 🔧 Application: Geneva Mechanism Crankshaft Analysis
+
+Let's analyze a realistic Geneva mechanism crankshaft design.
+
+### Problem Setup
+
+:::info[System Parameters]
+**Geneva Mechanism Drive System**
+
+**Crankshaft Specifications:**
+- Material: Steel 1045 (G = 80 GPa, τ_allowable = 180 MPa)
+- Diameter: 25 mm (solid circular)
+- Length: 200 mm
+- Safety factor: 3.0
+
+**Operating Conditions:**
+- Motor torque: 50 N·m (continuous)
+- Peak torque: 150 N·m (during engagement)
+- Required precision: ±0.5° angular accuracy
+:::
+
+### Step 1: Calculate Polar Moment of Inertia
+
+For solid circular shaft:
+$$J = \frac{\pi d^4}{32} = \frac{\pi (25 \times 10^{-3})^4}{32} = 3.835 \times 10^{-8} \text{ m}^4$$
+
+### Step 2: Analyze Torsional Stress
+
+<Steps>
+
+1. **Continuous operation stress:**
+   $$\tau_{continuous} = \frac{16 T}{\pi d^3} = \frac{16 \times 50}{\pi (25 \times 10^{-3})^3} = 163.6 \text{ MPa}$$
+
+2. **Peak engagement stress:**
+   $$\tau_{peak} = \frac{16 \times 150}{\pi (25 \times 10^{-3})^3} = 490.9 \text{ MPa}$$
+
+3. **Safety factor check:**
+   - Allowable stress: 180 MPa
+   - Continuous operation: SF = 180/163.6 = 1.1 ❌ **Too low!**
+   - Peak loading: SF = 180/490.9 = 0.37 ❌ **Failure expected!**
+
+</Steps>
+
+> **Analysis Result:** The 25 mm shaft is undersized for this application!
+
+### Step 3: Redesign for Adequate Safety Factor
+
+**Required shaft diameter for SF = 3:**
+
+From $\tau_{allowable} = \frac{16 T}{\pi d^3}$, solving for diameter:
+
+$$d = \left(\frac{16 T}{\pi \tau_{allowable}}\right)^{1/3}$$
+
+For peak torque with SF = 3:
+- Allowable stress: $\tau_{allowable} = \frac{180}{3} = 60 \text{ MPa}$
+- Required diameter: $d = \left(\frac{16 \times 150}{\pi \times 60 \times 10^6}\right)^{1/3} = 0.0336 \text{ m} = 33.6 \text{ mm}$
+
+**Design Decision:** Use **35 mm diameter** shaft for standard sizing.
+
+### Step 4: Verify Angular Deformation
+
+With the redesigned 35 mm shaft:
+
+$$J_{new} = \frac{\pi (35 \times 10^{-3})^4}{32} = 1.469 \times 10^{-7} \text{ m}^4$$
+
+**Angle of twist under peak torque:**
+$$\theta = \frac{TL}{GJ} = \frac{150 \times 0.2}{80 \times 10^9 \times 1.469 \times 10^{-7}} = 0.255 \text{ radians}$$
+
+**Convert to degrees:**
+$$\theta = 0.255 \times \frac{180}{\pi} = 14.6°$$
+
+:::caution[Design Assessment]
+**Angular deformation = 14.6°** exceeds the required precision of ±0.5°. 
+
+Even with adequate strength, the shaft is too flexible for precision timing!
+:::
+
+### Step 5: Design for Stiffness Requirements
+
+**Required angle limit:** ±0.5° = 0.00873 radians
+
+**Required polar moment of inertia:**
+$$J_{required} = \frac{TL}{G\theta} = \frac{150 \times 0.2}{80 \times 10^9 \times 0.00873} = 4.30 \times 10^{-7} \text{ m}^4$$
+
+**Required diameter:**
+$$d = \left(\frac{32 J_{required}}{\pi}\right)^{1/4} = \left(\frac{32 \times 4.30 \times 10^{-7}}{\pi}\right)^{1/4} = 0.0481 \text{ m} = 48.1 \text{ mm}$$
+
+**Final Design:** Use **50 mm diameter** shaft.
+
+## 📊 Design Comparison Summary
+
+<CardGrid>
+  <Card title="Original Design (25 mm)" icon="error">
+    **Shear Stress:** 491 MPa  
+    **Safety Factor:** 0.37  
+    **Angular Twist:** 40.8°  
+    **Status:** <Badge text="Fails both criteria" variant="danger" />
+  </Card>
+  <Card title="Strength Design (35 mm)" icon="warning">
+    **Shear Stress:** 176 MPa  
+    **Safety Factor:** 3.0  
+    **Angular Twist:** 14.6°  
+    **Status:** <Badge text="Strong but too flexible" variant="caution" />
+  </Card>
+  <Card title="Final Design (50 mm)" icon="approve">
+    **Shear Stress:** 61 MPa  
+    **Safety Factor:** 8.9  
+    **Angular Twist:** 0.49°  
+    **Status:** <Badge text="Meets all requirements" variant="success" />
+  </Card>
+</CardGrid>
+
+## 🎯 Design Guidelines for Torsional Loading
+
+### Design Hierarchy
+
+:::note[Design Priority Order]
+1. **Strength Requirements** - Prevent material failure
+2. **Stiffness Requirements** - Limit angular deformation  
+3. **Dynamic Considerations** - Avoid resonance
+4. **Manufacturing Constraints** - Standard sizes, machining limits
+:::
+
+### Shaft Optimization Strategies
+
+<Tabs>
+  <TabItem label="Hollow vs Solid">
+    
+    **Hollow Shaft Advantages:**
+    - **Weight reduction:** ~40% lighter for same torsional stiffness
+    - **Material savings:** Lower cost for large diameters
+    - **Better heat dissipation:** Internal cooling possible
+    
+    **When to Use Hollow:**
+    - Large diameter requirements (>50 mm)
+    - Weight-critical applications
+    - Heat generation concerns
+    
+  </TabItem>
+  <TabItem label="Material Selection">
+    
+    **High Strength Steel:**
+    - Higher allowable shear stress
+    - Smaller diameter for same torque
+    - More expensive
+    
+    **Standard Steel:**
+    - Good balance of properties
+    - Readily available
+    - Cost-effective
+    
+    **Aluminum:**
+    - Lightweight but lower shear strength
+    - Requires larger diameter
+    - Corrosion resistant
+    
+  </TabItem>
+  <TabItem label="Design Trade-offs">
+    
+    **Diameter vs Length:**
+    - **Diameter ↑** → Stress ↓, Twist ↓ (efficient)
+    - **Length ↑** → Twist ↑ (less efficient)
+    
+    **Rule:** Increase diameter before reducing length
+    
+    **Cost Considerations:**
+    - Material cost ∝ Volume ∝ d²
+    - Machining cost ∝ Length
+    
+  </TabItem>
+</Tabs>
+
+## 🛠️ Advanced Analysis: Variable Torque and Fatigue
+
+### Geneva Mechanism Torque Profile
+
+Geneva mechanisms create **variable torque** during operation:
+
+<Steps>
+
+1. **Engagement Phase:** High torque to accelerate Geneva wheel
+2. **Transfer Phase:** Moderate torque during motion transfer  
+3. **Dwell Phase:** Low torque maintaining position
+4. **Disengagement Phase:** Variable torque as pin exits slot
+
+</Steps>
+
+### Fatigue Considerations
+
+**Alternating Stress Analysis:**
+
+For variable torque applications:
+- **Mean Stress:** $\tau_m = \frac{\tau_{max} + \tau_{min}}{2}$
+- **Alternating Stress:** $\tau_a = \frac{\tau_{max} - \tau_{min}}{2}$
+- **Fatigue Safety Factor:** Must consider both mean and alternating components
+
+:::warning[Fatigue Design Rule]
+For shafts with variable torque, use **endurance limit** (typically 40-50% of ultimate strength) instead of yield strength for allowable stress calculations.
+:::
+
+## 📋 Summary and Next Steps
+
+In this unit, you learned to:
+
+1. **Calculate** torsional shear stress using τ = Tr/J
+2. **Determine** angular twist using θ = TL/(GJ)
+3. **Design** for both strength and stiffness requirements
+4. **Optimize** shaft geometry for torsional loading
+
+**Key Design Insight:** <Badge text="Stiffness often governs shaft design more than strength" variant="note" />
+
+**Critical Formulas:**
+- **Solid shaft stress:** τ = 16T/(πd³)  
+- **Angle of twist:** θ = TL/(GJ)
+- **Design principle:** Increase diameter for both strength and stiffness
+
+**Coming Next**: In Lesson 6, we'll analyze thin-walled pressure vessels in pneumatic actuator casings, exploring how internal pressure creates both hoop and longitudinal stresses in cylindrical components.
+
+<MechanicsOfMaterialsComments />
+<TawkWidget />
+<Copyright />

@@ -1,0 +1,83 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="#f8f8f8"/>
+  
+  <!-- Title -->
+  <text x="300" y="30" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">
+    Circular Shaft - No Warping Under Torsion
+  </text>
+  
+  <!-- Shaft in 3D perspective view -->
+  <g transform="translate(300, 220)">
+    <!-- Shaft body -->
+    <g>
+      <!-- Shaft endpoints (circular faces) -->
+      <ellipse cx="-150" cy="0" rx="60" ry="30" fill="#d0d0d0" stroke="#666666" stroke-width="2"/>
+      <ellipse cx="150" cy="0" rx="60" ry="30" fill="#4682b4" fill-opacity="0.6" stroke="#3366aa" stroke-width="2"/>
+      
+      <!-- Shaft body sides -->
+      <path d="M -150,30 L 150,30" stroke="#3366aa" stroke-width="2" fill="none"/>
+      <path d="M -150,-30 L 150,-30" stroke="#3366aa" stroke-width="2" fill="none"/>
+      
+      <!-- Shaft curve guides (top and bottom) -->
+      <path d="M -150,-30 Q -150,-50 -90,-50 T -30,-50 T 30,-50 T 90,-50 T 150,-50 Q 150,-30 150,-30" 
+            stroke="#3366aa" stroke-width="1" fill="none" opacity="0.6"/>
+      <path d="M -150,30 Q -150,50 -90,50 T -30,50 T 30,50 T 90,50 T 150,50 Q 150,30 150,30" 
+            stroke="#3366aa" stroke-width="1" fill="none" opacity="0.6"/>
+    </g>
+    
+    <!-- Grid lines on left face (original position) -->
+    <g stroke="#666666" stroke-width="1.5">
+      <!-- Horizontal diameter -->
+      <line x1="-210" y1="0" x2="-90" y2="0"/>
+      <!-- Vertical diameter -->
+      <line x1="-150" y1="-30" x2="-150" y2="30"/>
+      <!-- Inner grid circle -->
+      <ellipse cx="-150" cy="0" rx="30" ry="15" fill="none"/>
+    </g>
+    
+    <!-- Grid lines on right face (after twist, still flat) -->
+    <g stroke="#3366aa" stroke-width="1.5" transform="translate(150, 0) rotate(30)">
+      <!-- Rotated horizontal diameter -->
+      <line x1="-60" y1="0" x2="60" y2="0"/>
+      <!-- Rotated vertical diameter -->
+      <line x1="0" y1="-30" x2="0" y2="30"/>
+      <!-- Inner grid circle (still circular) -->
+      <ellipse cx="0" cy="0" rx="30" ry="15" fill="none"/>
+    </g>
+    
+    <!-- Twist angle indicator -->
+    <g transform="translate(150, 0)">
+      <path d="M 0,-40 A 40 40 0 0 1 34.64,-20" fill="none" stroke="#cc0000" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="20" y="-40" font-family="Arial, sans-serif" font-size="14" fill="#cc0000">θ</text>
+    </g>
+    
+    <!-- Plane indicators -->
+    <g>
+      <!-- Left face plane indicator -->
+      <line x1="-200" y1="-40" x2="-100" y2="-40" stroke="#006600" stroke-width="2"/>
+      <line x1="-200" y1="-40" x2="-200" y2="40" stroke="#006600" stroke-width="2"/>
+      <line x1="-200" y1="40" x2="-100" y2="40" stroke="#006600" stroke-width="2"/>
+      <text x="-150" y="-50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#006600">Plane</text>
+      
+      <!-- Right face plane indicator -->
+      <line x1="100" y1="-40" x2="200" y2="-40" stroke="#006600" stroke-width="2"/>
+      <line x1="200" y1="-40" x2="200" y2="40" stroke="#006600" stroke-width="2"/>
+      <line x1="100" y1="40" x2="200" y2="40" stroke="#006600" stroke-width="2"/>
+      <text x="150" y="-50" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#006600">Plane</text>
+    </g>
+    
+    <!-- Labels -->
+    <g font-family="Arial, sans-serif" font-size="14">
+      <text x="-150" y="60" text-anchor="middle">Original Position</text>
+      <text x="150" y="60" text-anchor="middle">Twisted Position</text>
+    </g>
+  </g>
+  
+  <!-- Explanation text -->
+  <g font-family="Arial, sans-serif" font-size="14" transform="translate(300, 330)">
+    <rect x="-250" y="0" width="500" height="50" rx="10" fill="white" stroke="#aaaaaa" stroke-width="1"/>
+    <text x="0" y="20" text-anchor="middle">In circular shafts, cross-sections remain plane (flat) during torsion.</text>
+    <text x="0" y="40" text-anchor="middle">They rotate but do not distort or warp out of their original plane.</text>
+  </g>
+</svg>

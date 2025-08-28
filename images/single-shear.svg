@@ -1,0 +1,31 @@
+<svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Plates -->
+  <rect x="100" y="80" width="300" height="40" fill="#c0c0c0" stroke="#404040" stroke-width="2"/>
+  <rect x="100" y="180" width="300" height="40" fill="#c0c0c0" stroke="#404040" stroke-width="2"/>
+  
+  <!-- Bolt -->
+  <circle cx="250" cy="150" r="25" fill="#808080" stroke="#404040" stroke-width="2"/>
+  <circle cx="250" cy="150" r="5" fill="#606060" stroke="#404040" stroke-width="1"/>
+  
+  <!-- Shear plane indicator -->
+  <line x1="250" y1="50" x2="250" y2="250" stroke="#ff0000" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="250" y="270" font-family="Arial, sans-serif" font-size="16" fill="#ff0000" text-anchor="middle">Shear Plane</text>
+  
+  <!-- Force arrows -->
+  <line x1="50" y1="100" x2="100" y2="100" stroke="#404040" stroke-width="3"/>
+  <polygon points="50,100 65,95 65,105" fill="#404040"/>
+  <text x="75" y="85" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">F</text>
+  
+  <line x1="450" y1="200" x2="400" y2="200" stroke="#404040" stroke-width="3"/>
+  <polygon points="450,200 435,195 435,205" fill="#404040"/>
+  <text x="425" y="185" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">F</text>
+  
+  <!-- Title -->
+  <text x="250" y="30" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle">Single Shear</text>
+  
+  <!-- Formula -->
+  <rect x="300" y="100" width="120" height="90" rx="10" fill="#f8f8f8" stroke="#404040" stroke-width="1.5"/>
+  <text x="360" y="130" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle">τ = F/A</text>
+  <text x="360" y="160" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">where A is the</text>
+  <text x="360" y="180" font-family="Arial, sans-serif" font-size="14" text-anchor="middle">cross-sectional area</text>
+</svg>

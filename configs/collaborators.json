@@ -1,0 +1,40 @@
+{
+  "collaborators": {
+    "new-person5": {
+      "name": "New Person 5",
+      "title": "Student Contributor",
+      "avatar": "/placeholder-avatar.png",
+      "bio": "New contributor to SiliconWit educational content.",
+      "longBio": "A passionate learner and contributor who joined the SiliconWit community to help create better educational content for engineering students worldwide.",
+      "expertise": ["Learning", "Engineering", "Education"],
+      "joinDate": "2025-05-31",
+      "contributions": 1,
+      "location": "Global",
+      "social": {
+        "github": "https://github.com/newperson5",
+        "linkedin": "https://linkedin.com/in/newperson5-student",
+        "twitter": "https://twitter.com/newperson5_edu",
+        "email": "newperson5@example.com",
+        "orcid": "0000-0002-1234-5678"
+      }
+    },
+    "new-person6": {
+      "name": "New Person 6",
+      "title": "Content Contributor 66",
+      "avatar": "/placeholder-avatar.png",
+      "bio": "Another new contributor to SiliconWit educational content.",
+      "longBio": "An enthusiastic educator and engineer who focuses on making complex concepts accessible to students through clear explanations and interactive content.",
+      "expertise": ["Technical Writing", "Engineering", "Education"],
+      "joinDate": "2025-05-31",
+      "contributions": 1,
+      "location": "Global",
+      "social": {
+        "github": "https://github.com/techwriter-p6",
+        "linkedin": "https://linkedin.com/in/newperson6-engineer",
+        "twitter": "https://twitter.com/techwriter_p6",
+        "email": "newperson6@gmail.com",
+        "orcid": "0000-0003-9876-5432"
+      }
+    }
+  }
+}

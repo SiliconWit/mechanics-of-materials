@@ -1,0 +1,266 @@
+---
+title: "Lesson 1: Introduction to Mechanics of Materials in Mechatronics"
+description: "Understanding stress, strain, and material properties through the analysis of a crank-slider connecting rod system"
+contributors: "sam-macharia,jack-kojiro,new-person6"
+pubDate: 2025-08-28
+tags: ["solid-mechanics", "mechatronics", "crank-slider", "stress-strain", "connecting-rod"]
+excerpt: "Learn fundamental solid mechanics concepts by analyzing the connecting rod in a crank-slider mechanism, covering stress-strain relations, Young's modulus, and Poisson's ratio."
+---
+
+import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
+import TawkWidget from '../../../../components/TawkWidget.astro';
+import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
+import Copyright from '../../../../components/Copyright.astro';
+import BionicText from '../../../../components/BionicText.astro';
+import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps } from '@astrojs/starlight/components';
+
+<UniversalContentContributors 
+  contributors={frontmatter.contributors}
+/>
+
+## 🎯 Learning Objectives
+
+By the end of this unit, you will be able to:
+
+1. **Analyze** real-world mechatronic systems to identify critical components under stress
+2. **Define and calculate** stress, strain, and material properties (Young's modulus, Poisson's ratio)
+3. **Apply** Hooke's Law to predict material behavior under loading
+4. **Solve** connecting rod stress problems during peak compression in crank-slider systems
+
+## 🔧 Real-World System Problem: The Crank-Slider Mechanism
+
+<BionicText method="advanced" intensity="medium" class="highlight">
+Consider an internal combustion engine or reciprocating compressor. At the heart of these systems lies the crank-slider mechanism—one of the most fundamental motion conversion systems in mechanical engineering.
+</BionicText>
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Crank-Slider Mechanism Parts](./images/crank-slider-mechanism-parts.png)
+  </TailwindWrapper>
+</div>
+
+### System Components and Function
+
+The crank-slider mechanism consists of:
+- **Crankshaft** (rotates continuously)
+- **Connecting Rod** (experiences **`tension`** and **`compression`**)
+- **Piston** (moves linearly back and forth)
+
+> **Critical Question:** During the compression stroke of an engine, enormous forces act on the connecting rod. How do we ensure this rod won't fail under these extreme loads?
+
+This is where **solid mechanics** becomes essential. Without understanding **`stress`** and **`strain`**, we cannot:
+- **`Predict`** if the connecting rod will buckle or break
+- Choose appropriate **`materials`** (steel, aluminum, titanium)
+- **`Optimize`** the rod's cross-sectional shape
+- Ensure **`reliable`** operation over millions of cycles
+
+### Why This System Matters in Mechatronics
+
+Modern engines and compressors are **mechatronic systems** integrating:
+- **Mechanical**: Crank-slider mechanism, valves, pistons
+- **Electrical**: Ignition systems, fuel injectors, sensors
+- **Control**: Engine management systems, timing control
+
+But if the connecting rod fails mechanically, no amount of sophisticated control can save the system.
+
+:::caution[Critical Design Insight]
+In mechatronic systems, **mechanical failure modes often dominate over electrical or software failures**. A single mechanical component failure can render the entire system inoperable, making solid mechanics analysis essential for system reliability.
+:::
+
+## 📚 Fundamental Theory: Stress, Strain, and Material Properties
+
+Now that we understand **why** we need solid mechanics, let's develop the theoretical foundation to analyze our connecting rod.
+
+### What is Stress?
+
+**Stress** is the internal resistance of a material to applied forces, measured as force per unit area:
+
+$$\sigma = \frac{F}{A}$$
+
+Where:
+- $\sigma$ = Normal stress (Pa or N/m²)
+- $F$ = Applied force (N)
+- $A$ = Cross-sectional area (m²)
+
+<Tabs>
+  <TabItem label="Types of Stress">
+    
+    **Normal Stress (σ):**
+    - **Tensile**: Material is stretched (positive)
+    - **Compressive**: Material is compressed (negative)
+    
+    **Shear Stress (τ):**
+    - Forces act parallel to the surface
+    - Causes angular deformation
+    
+  </TabItem>
+  <TabItem label="Engineering Units">
+    
+    **Common Stress Units:**
+    - Pascal (Pa) = N/m² = 1 Pa
+    - Kilopascal (kPa) = 1,000 Pa
+    - Megapascal (MPa) = 1,000,000 Pa
+    - Gigapascal (GPa) = 1,000,000,000 Pa
+    
+    **Typical Values:**
+    - Steel yield strength: ~250-400 MPa
+    - Aluminum yield strength: ~70-500 MPa
+    
+  </TabItem>
+</Tabs>
+
+### What is Strain?
+
+**Strain** is the measure of deformation—how much a material changes shape under stress:
+
+$$\epsilon = \frac{\delta}{L_0}$$
+
+Where:
+- $\epsilon$ = Normal strain (dimensionless)
+- $\delta$ = Change in length (m)
+- $L_0$ = Original length (m)
+
+### Hooke's Law: The Foundation of Linear Elasticity
+
+For most engineering materials within their elastic range:
+
+$$\sigma = E \cdot \epsilon$$
+
+Where:
+- $E$ = Young's Modulus (Pa)
+- Also written as: $F/A = E \cdot (\delta/L_0)$
+
+**Young's Modulus** represents material stiffness—how much stress is needed to produce a given strain.
+
+:::tip[Material Selection Insight]
+<Badge text="Higher E = Stiffer Material" variant="tip" /> → Less deformation under load  
+<Badge text="Lower E = More Flexible" variant="note" /> → More deformation, better for vibration damping
+:::
+
+### Poisson's Ratio: Lateral Strain Effects
+
+When materials are stretched longitudinally, they contract laterally:
+
+$$\nu = -\frac{\epsilon_{lateral}}{\epsilon_{longitudinal}}$$
+
+Where $\nu$ is Poisson's ratio (typically 0.25-0.35 for metals).
+
+:::note[Poisson's Ratio Applications]
+- **ν ≈ 0.3** for most structural metals (steel, aluminum)
+- **ν ≈ 0.5** for incompressible materials (rubber)
+- **ν ≈ 0.2** for concrete and ceramics
+- **Critical for** multi-axial stress analysis in complex geometries
+:::
+
+## 🔧 Application: Analyzing the Connecting Rod Under Peak Compression
+
+Now let's return to our crank-slider system and apply what we've learned to solve a real engineering problem.
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![4 Stroke Engine](./images/Slider-Crank-Mechanism.gif)
+  </TailwindWrapper>
+</div>
+
+### Problem Setup
+
+**System:** Four-stroke engine with crank-slider mechanism  
+**Critical Component:** Steel connecting rod  
+**Loading Condition:** Peak compression during combustion stroke
+
+**Given Data:**
+- Maximum compression force: F = 15,000 N
+- Connecting rod cross-sectional area: A = 500 mm²
+- Connecting rod length: L = 150 mm
+- Material: Steel (E = 200 GPa, σ_yield = 350 MPa)
+
+<Steps>
+
+1. **Calculate Peak Compressive Stress:**
+   
+   Using our stress formula:
+   $$\sigma = \frac{F}{A} = \frac{15,000 \text{ N}}{500 \text{ mm}^2}$$
+   
+   Converting units: 500 mm² = 500 × 10⁻⁶ m²
+   $$\sigma = \frac{15,000}{500 \times 10^{-6}} = 30,000,000 \text{ Pa} = 30 \text{ MPa}$$
+
+2. **Check Against Material Limits:**
+   
+   **Safety Factor Analysis:**
+   - Applied stress: σ = 30 MPa  
+   - Yield strength: σ_yield = 350 MPa
+   - Safety factor: SF = 350/30 = 11.7
+   
+   ✅ **Result**: <Badge text="Safe operation with SF = 11.7" variant="success" />
+   
+   :::tip[Safety Factor Guidelines]
+   - **SF = 2-3**: Well-understood loading and materials
+   - **SF = 4-6**: Some uncertainty in loads or materials  
+   - **SF = 8-12**: High uncertainty or critical applications
+   - **SF > 15**: May indicate over-design (weight/cost penalty)
+   :::
+
+3. **Calculate Deformation Using Hooke's Law:**
+   
+   The rod will compress slightly under this load:
+   $$\epsilon = \frac{\sigma}{E} = \frac{30 \times 10^6}{200 \times 10^9} = 0.00015$$
+   $$\delta = \epsilon \times L = 0.00015 \times 150 \text{ mm} = 0.0225 \text{ mm}$$
+   
+   **Compression**: Only 0.023 mm—negligible for engine operation.
+   
+   :::note[Deformation Analysis]
+   <Badge text="Elastic deformation" variant="tip" /> is usually **acceptable** in structural components
+   
+   <Badge text="Permanent deformation" variant="caution" /> occurs beyond yield strength
+   
+   <Badge text="Failure" variant="danger" /> occurs at ultimate tensile strength
+   :::
+
+</Steps>
+
+## 🎯 Key Material Properties for Mechatronics
+
+<CardGrid>
+  <Card title="Steel (Structural)">
+    **E = 200 GPa**  
+    High stiffness, moderate weight  
+    Common in: Frames, shafts, gears
+  </Card>
+  <Card title="Aluminum (6061-T6)">
+    **E = 70 GPa**  
+    Lower stiffness, lightweight  
+    Common in: Actuator housings, brackets
+  </Card>
+  <Card title="Carbon Fiber">
+    **E = 150+ GPa**  
+    High stiffness, very lightweight  
+    Common in: Drone frames, precision arms
+  </Card>
+</CardGrid>
+
+## 📋 Summary and Next Steps
+
+In this unit, you learned to:
+
+1. **Identify** critical mechanical components in mechatronic systems
+2. **Define** stress (σ = F/A) and strain (ε = δ/L₀)
+3. **Apply** Hooke's Law (σ = Eε) for elastic analysis  
+4. **Solve** real connecting rod problems with safety factors
+
+**Key Design Principles:**
+- <Badge text="Strength Check" variant="success" />: σ_applied < σ_allowable
+- <Badge text="Stiffness Check" variant="tip" />: δ_applied < δ_allowable  
+- <Badge text="Fatigue Check" variant="caution" />: For cyclic loading
+- <Badge text="Buckling Check" variant="danger" />: For compression members
+
+:::tip[Mechatronic Design Philosophy]
+**"Design for the weakest link"** - In complex mechatronic systems, identify and strengthen the component most likely to fail under normal operating conditions.
+:::
+
+**Coming Next**: In Lesson 2, we'll analyze an actuator shaft under axial loading, exploring how material selection affects performance in precision positioning systems.
+
+<MechanicsOfMaterialsComments />
+<TawkWidget />
+<Copyright />

@@ -1,0 +1,50 @@
+<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Original bar (before strain) -->
+  <rect x="50" y="100" width="200" height="60" fill="#e0e0e0" stroke="#404040" stroke-width="2"/>
+  <text x="150" y="145" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">Original length (L)</text>
+  
+  <!-- Strained bar (after tensile strain) -->
+  <rect x="50" y="240" width="250" height="60" fill="#ffd0d0" stroke="#404040" stroke-width="2"/>
+  <text x="175" y="285" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">Length after tension (L + ΔL)</text>
+  
+  <!-- Dimension arrows for original -->
+  <line x1="50" y1="80" x2="250" y2="80" stroke="#000000" stroke-width="1.5"/>
+  <line x1="50" y1="75" x2="50" y2="85" stroke="#000000" stroke-width="1.5"/>
+  <line x1="250" y1="75" x2="250" y2="85" stroke="#000000" stroke-width="1.5"/>
+  <text x="150" y="70" font-family="Arial, sans-serif" font-size="16" text-anchor="middle">L</text>
+  
+  <!-- Dimension arrows for strained -->
+  <line x1="50" y1="220" x2="300" y2="220" stroke="#000000" stroke-width="1.5"/>
+  <line x1="50" y1="215" x2="50" y2="225" stroke="#000000" stroke-width="1.5"/>
+  <line x1="300" y1="215" x2="300" y2="225" stroke="#000000" stroke-width="1.5"/>
+  <text x="175" y="210" font-family="Arial, sans-serif" font-size="16" text-anchor="middle">L + ΔL</text>
+  
+  <!-- Delta L annotation -->
+  <line x1="250" y1="200" x2="300" y2="200" stroke="#ff0000" stroke-width="1.5"/>
+  <line x1="250" y1="195" x2="250" y2="205" stroke="#ff0000" stroke-width="1.5"/>
+  <line x1="300" y1="195" x2="300" y2="205" stroke="#ff0000" stroke-width="1.5"/>
+  <text x="275" y="190" font-family="Arial, sans-serif" font-size="16" fill="#ff0000" text-anchor="middle">ΔL</text>
+  
+  <!-- Force arrows -->
+  <line x1="20" y1="270" x2="50" y2="270" stroke="#404040" stroke-width="3"/>
+  <polygon points="20,270 30,260 30,280" fill="#404040"/>
+  <line x1="300" y1="270" x2="330" y2="270" stroke="#404040" stroke-width="3"/>
+  <polygon points="330,270 320,260 320,280" fill="#404040"/>
+  
+  <!-- Force labels -->
+  <text x="35" y="250" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">F</text>
+  <text x="315" y="250" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">F</text>
+  
+  <!-- Main title -->
+  <text x="390" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle">Tensile Strain</text>
+  
+  <!-- Formula -->
+  <text x="430" y="140" font-family="Arial, sans-serif" font-size="24" text-anchor="middle">ε = ΔL/L</text>
+  <text x="430" y="180" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">where:</text>
+  <text x="430" y="210" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">ε = strain (dimensionless)</text>
+  <text x="430" y="240" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">ΔL = change in length</text>
+  <text x="430" y="270" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">L = original length</text>
+  
+  <!-- Annotation for positive strain -->
+  <text x="430" y="320" font-family="Arial, sans-serif" font-size="20" font-style="italic" fill="#e00000" text-anchor="middle">Tensile strain is positive</text>
+</svg>

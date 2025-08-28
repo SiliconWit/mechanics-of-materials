@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" width="700" height="320">
+  <!-- Background -->
+  <rect width="700" height="320" fill="white"/>
+  
+  <!-- Series Section 1 -->
+  <rect x="100" y="100" width="100" height="80" fill="#A0A0A0" stroke="#000000" stroke-width="2"/>
+  <text x="150" y="140" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Material A</text>
+  <text x="150" y="160" font-family="Arial" font-size="12" fill="#000000" text-anchor="middle">(EA, AA)</text>
+  
+  <!-- Parallel Section -->
+  <!-- Upper bar -->
+  <rect x="200" y="100" width="200" height="30" fill="#D4D4D4" stroke="#000000" stroke-width="2"/>
+  <text x="300" y="120" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Material B (EB, AB)</text>
+  
+  <!-- Lower bar -->
+  <rect x="200" y="150" width="200" height="30" fill="#DAA520" stroke="#000000" stroke-width="2"/>
+  <text x="300" y="170" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Material C (EC, AC)</text>
+  
+  <!-- Series Section 3 -->
+  <rect x="400" y="100" width="120" height="80" fill="#87CEEB" stroke="#000000" stroke-width="2"/>
+  <text x="460" y="140" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Material D</text>
+  <text x="460" y="160" font-family="Arial" font-size="12" fill="#000000" text-anchor="middle">(ED, AD)</text>
+  
+  <!-- Left support -->
+  <rect x="70" y="80" width="30" height="120" fill="#555555" stroke="#000000" stroke-width="2"/>
+  
+  <!-- Right Load Arrow -->
+  <line x1="580" y1="140" x2="520" y2="140" stroke="#FF0000" stroke-width="3"/>
+  <polygon points="520,140 530,135 530,145" fill="#FF0000" stroke="#FF0000" stroke-width="1"/>
+  <text x="570" y="130" font-family="Arial" font-size="16" fill="#FF0000" text-anchor="middle">P</text>
+  
+  <!-- Section Labels -->
+  <text x="150" y="220" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Section 1</text>
+  <line x1="100" y1="200" x2="200" y2="200" stroke="#000000" stroke-width="1"/>
+  <line x1="100" y1="195" x2="100" y2="205" stroke="#000000" stroke-width="1"/>
+  <line x1="200" y1="195" x2="200" y2="205" stroke="#000000" stroke-width="1"/>
+  
+  <text x="300" y="220" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Section 2</text>
+  <line x1="200" y1="200" x2="400" y2="200" stroke="#000000" stroke-width="1"/>
+  <line x1="200" y1="195" x2="200" y2="205" stroke="#000000" stroke-width="1"/>
+  <line x1="400" y1="195" x2="400" y2="205" stroke="#000000" stroke-width="1"/>
+  
+  <text x="460" y="220" font-family="Arial" font-size="14" fill="#000000" text-anchor="middle">Section 3</text>
+  <line x1="400" y1="200" x2="520" y2="200" stroke="#000000" stroke-width="1"/>
+  <line x1="400" y1="195" x2="400" y2="205" stroke="#000000" stroke-width="1"/>
+  <line x1="520" y1="195" x2="520" y2="205" stroke="#000000" stroke-width="1"/>
+  
+  <!-- Connecting elements -->
+  <!-- Vertical connectors for parallel section -->
+  <line x1="300" y1="130" x2="300" y2="150" stroke="#000000" stroke-width="2" stroke-dasharray="5,3"/>
+  
+  <!-- Force distribution indicators -->
+  <text x="150" y="90" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">P</text>
+  <line x1="150" y1="80" x2="150" y2="100" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="4,2"/>
+  
+  <text x="300" y="80" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">PB</text>
+  <line x1="300" y1="70" x2="300" y2="100" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="4,2"/>
+  
+  <text x="300" y="190" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">PC</text>
+  <line x1="300" y1="180" x2="300" y2="150" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="4,2"/>
+  
+  <text x="460" y="90" font-family="Arial" font-size="14" fill="#0000FF" text-anchor="middle">P</text>
+  <line x1="460" y1="80" x2="460" y2="100" stroke="#0000FF" stroke-width="1.5" stroke-dasharray="4,2"/>
+  
+  <!-- Title -->
+  <text x="350" y="40" font-family="Arial" font-size="20" font-weight="bold" fill="#000000" text-anchor="middle">Complex Compound Bar System</text>
+  <text x="350" y="65" font-family="Arial" font-size="16" fill="#000000" text-anchor="middle">(Combination of Series and Parallel Arrangements)</text>
+</svg>

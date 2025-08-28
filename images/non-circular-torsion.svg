@@ -1,0 +1,100 @@
+<svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="350" fill="#f8f8f8"/>
+  
+  <!-- Square shaft - 3D perspective view -->
+  <g transform="translate(300, 175)">
+    <!-- Base of the shaft (square) -->
+    <rect x="-50" y="-30" width="100" height="60" fill="#d0d0d0" stroke="#666666" stroke-width="2"/>
+    
+    <!-- Body of the shaft -->
+    <g>
+      <!-- Left side lines -->
+      <line x1="-50" y1="-30" x2="-220" y2="-30" stroke="#666666" stroke-width="2"/>
+      <line x1="-50" y1="30" x2="-220" y2="30" stroke="#666666" stroke-width="2"/>
+      <line x1="-220" y1="-30" x2="-220" y2="30" stroke="#666666" stroke-width="2"/>
+      
+      <!-- Right side lines -->
+      <line x1="50" y1="-30" x2="220" y2="-30" stroke="#666666" stroke-width="2"/>
+      <line x1="50" y1="30" x2="220" y2="30" stroke="#666666" stroke-width="2"/>
+      <line x1="220" y1="-30" x2="220" y2="30" stroke="#666666" stroke-width="2"/>
+    </g>
+    
+    <!-- Grid pattern on the square face -->
+    <g stroke="#3366aa" stroke-width="1.5">
+      <!-- Vertical grid lines -->
+      <line x1="-25" y1="-30" x2="-25" y2="30" />
+      <line x1="0" y1="-30" x2="0" y2="30" />
+      <line x1="25" y1="-30" x2="25" y2="30" />
+      
+      <!-- Horizontal grid lines -->
+      <line x1="-50" y1="0" x2="50" y2="0" />
+      <line x1="-50" y1="-15" x2="50" y2="-15" />
+      <line x1="-50" y1="15" x2="50" y2="15" />
+    </g>
+    
+    <!-- Square shaft - further along (showing twist) -->
+    <g transform="translate(220, 0)">
+      <rect x="-50" y="-30" width="100" height="60" fill="#4682b4" fill-opacity="0.5" stroke="#3366aa" stroke-width="2" transform="rotate(30)"/>
+      
+      <!-- Warped grid pattern (simulating warping effect) -->
+      <g stroke="#3366aa" stroke-width="1.5" transform="rotate(30)">
+        <!-- Vertical grid lines - slightly curved to show warping -->
+        <path d="M -25,-30 Q -22,-15 -25,0 T -25,30" />
+        <path d="M 0,-30 Q 5,-15 0,0 T 0,30" />
+        <path d="M 25,-30 Q 22,-15 25,0 T 25,30" />
+        
+        <!-- Horizontal grid lines - also slightly wavy -->
+        <path d="M -50,0 Q -25,5 0,0 T 50,0" />
+        <path d="M -50,-15 Q -25,-10 0,-15 T 50,-15" />
+        <path d="M -50,15 Q -25,20 0,15 T 50,15" />
+      </g>
+      
+      <!-- Stress concentration indicators at corners -->
+      <g fill="#cc0000" opacity="0.7">
+        <circle cx="-43" cy="-25" r="5" transform="rotate(30)"/>
+        <circle cx="43" cy="-25" r="5" transform="rotate(30)"/>
+        <circle cx="-43" cy="25" r="5" transform="rotate(30)"/>
+        <circle cx="43" cy="25" r="5" transform="rotate(30)"/>
+      </g>
+    </g>
+    
+    <!-- Torque arrow indicator -->
+    <g transform="translate(220, 0)">
+      <circle cx="0" cy="0" r="70" fill="none" stroke="#cc0000" stroke-width="2" stroke-dasharray="5,5"/>
+      <path d="M 0,-70 A 70 70 0 0 1 60,35" fill="none" stroke="#cc0000" stroke-width="2"/>
+      <polygon points="60,35 70,40 65,25" fill="#cc0000"/>
+    </g>
+    
+    <!-- Warping callout -->
+    <g transform="translate(220, 0)">
+      <path d="M -50,-30 C -30,-40 30,-40 50,-30" fill="none" stroke="#ff6600" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="0" y="-50" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#ff6600">Warping</text>
+    </g>
+  </g>
+  
+  <!-- Labels -->
+  <g font-family="Arial, sans-serif" font-size="14" text-anchor="middle">
+    <text x="300" y="30" font-weight="bold" font-size="16">Torsion of a Non-Circular Shaft</text>
+    <text x="180" y="75" fill="#3366aa" font-style="italic">Initial position</text>
+    <text x="420" y="75" fill="#3366aa" font-style="italic">Twisted position</text>
+    <text x="420" y="310" fill="#cc0000">Applied torque (T)</text>
+    <text x="300" y="330" font-style="italic">Non-circular cross-sections experience complex behavior under torsion</text>
+  </g>
+  
+  <!-- Key feature callouts -->
+  <g font-family="Arial, sans-serif" font-size="12" fill="#333333">
+    <text x="480" y="155" text-anchor="start">• Cross-sections warp</text>
+    <text x="480" y="175" text-anchor="start">• Stress concentrations</text>
+    <text x="480" y="195" text-anchor="start">  at corners</text>
+    <text x="480" y="215" text-anchor="start">• Complex stress</text>
+    <text x="480" y="235" text-anchor="start">  distribution</text>
+    <text x="480" y="255" text-anchor="start">• Requires advanced</text>
+    <text x="480" y="275" text-anchor="start">  mathematical analysis</text>
+  </g>
+  
+  <!-- Stress concentration indicator -->
+  <g transform="translate(480, 185)">
+    <circle cx="60" cy="0" r="5" fill="#cc0000" opacity="0.7"/>
+  </g>
+</svg>

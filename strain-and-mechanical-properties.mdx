@@ -1,0 +1,301 @@
+---
+title: "Lesson 2: Simple Stress and Strain in Actuator Systems"
+description: "Analyzing axial stress and strain in CNC actuator shafts, including material selection for precision positioning"
+contributors: "sam-macharia,jack-kojiro,new-person6"
+tags: ["solid-mechanics", "actuator-shaft", "axial-stress", "material-selection", "CNC-systems"]
+excerpt: "Learn axial stress and strain analysis through a CNC actuator shaft system, covering material selection criteria for precision mechatronic applications."
+pubDate: 2025-08-28
+---
+
+import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
+import TawkWidget from '../../../../components/TawkWidget.astro';
+import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
+import Copyright from '../../../../components/Copyright.astro';
+import BionicText from '../../../../components/BionicText.astro';
+import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps } from '@astrojs/starlight/components';
+
+<UniversalContentContributors 
+  contributors={frontmatter.contributors}
+/>
+
+## 🎯 Learning Objectives
+
+By the end of this unit, you will be able to:
+
+1. **Analyze** axial stress and strain in precision actuator shafts
+2. **Calculate** allowable loads based on yield strength criteria
+3. **Compare** material properties (aluminum vs steel) for actuator applications
+4. **Solve** shaft sizing problems for CNC positioning systems
+
+## 🔧 Real-World System Problem: CNC Z-Axis Actuator Shaft
+
+<BionicText method="advanced" intensity="medium" class="highlight">
+In a Computer Numerical Control (CNC) machine, the Z-axis actuator controls vertical tool movement. The actuator shaft must transmit precise forces while maintaining dimensional accuracy under varying loads.
+</BionicText>
+
+### System Description
+
+**CNC Z-Axis Components:**
+- **Lead Screw** (converts rotary motion to linear motion)
+- **Actuator Shaft** (transmits axial forces to the tool)
+- **Linear Bearings** (guide smooth motion)
+- **Stepper/Servo Motor** (provides controlled rotation)
+
+### The Critical Challenge
+
+During machining operations:
+- The actuator shaft experiences **axial tension** when the tool pulls upward
+- Heavy workpieces create **axial compression** loads
+- Precision requirements demand **minimal shaft deformation**
+
+> **Engineering Question:** How do we select the right material and shaft diameter to ensure the CNC system maintains ±0.01 mm positioning accuracy under a maximum load of 5,000 N?
+
+### Why Material Selection Matters
+
+**Aluminum Shaft Benefits:**
+- Lightweight (reduces system inertia)
+- Good machinability
+- Corrosion resistance
+- Lower cost
+
+**Steel Shaft Benefits:**
+- Higher strength
+- Greater stiffness (higher E)
+- Better wear resistance
+- Proven reliability
+
+The choice affects system performance, cost, and precision.
+
+:::note[CNC Actuator Design Trade-offs]
+<Badge text="Precision" variant="success" />: Steel's higher stiffness reduces deformation  
+<Badge text="Speed" variant="tip" />: Aluminum's lighter weight enables faster motion  
+<Badge text="Cost" variant="note" />: Material and machining costs vary significantly  
+<Badge text="Durability" variant="caution" />: Steel offers better long-term wear resistance
+:::
+
+## 📚 Fundamental Theory: Axial Stress and Strain
+
+Building on Lesson 1's foundation, let's develop the theory needed to solve our actuator shaft problem.
+
+### Axial Loading Conditions
+
+When forces act **along** the centerline of a shaft:
+
+$$\sigma_{axial} = \frac{F}{A} = \frac{F}{\pi d^2/4}$$
+
+For circular cross-sections:
+$$\sigma_{axial} = \frac{4F}{\pi d^2}$$
+
+Where:
+- $F$ = Axial force (N)
+- $d$ = Shaft diameter (m)
+- $A$ = Cross-sectional area (m²)
+
+### Axial Strain and Deformation
+
+The shaft will elongate (tension) or compress (compression) by:
+
+$$\delta = \frac{FL}{AE} = \frac{\sigma L}{E}$$
+
+Where:
+- $\delta$ = Total deformation (m)
+- $L$ = Shaft length (m)
+- $E$ = Young's modulus (Pa)
+
+### Design Criteria for Actuator Systems
+
+<Tabs>
+  <TabItem label="Strength Criterion">
+    
+    **Prevent Material Failure:**
+    $$\sigma_{applied} \leq \frac{\sigma_{yield}}{SF}$$
+    
+    Where SF = Safety Factor (typically 2-4 for CNC systems)
+    
+  </TabItem>
+  <TabItem label="Stiffness Criterion">
+    
+    **Limit Deformation:**
+    $$\delta = \frac{FL}{AE} \leq \delta_{allowable}$$
+    
+    For precision systems: $\delta_{allowable}$ = 0.01-0.1 mm
+    
+  </TabItem>
+  <TabItem label="Material Properties">
+    
+    **Aluminum 6061-T6:**
+    - $E$ = 70 GPa
+    - $\sigma_{yield}$ = 270 MPa
+    - Density = 2,700 kg/m³
+    
+    **Steel 1045:**
+    - $E$ = 200 GPa  
+    - $\sigma_{yield}$ = 530 MPa
+    - Density = 7,850 kg/m³
+    
+  </TabItem>
+</Tabs>
+
+## 🔧 Application: CNC Actuator Shaft Analysis
+
+Let's solve the actuator shaft problem step by step using our theoretical foundation.
+
+### Problem Setup
+
+**System:** CNC Z-axis positioning system  
+**Component:** Circular actuator shaft  
+**Loading:** Maximum axial force of 5,000 N (tension)  
+**Requirements:** 
+- Maximum allowable stress with SF = 3
+- Deformation limit: δ ≤ 0.05 mm
+- Shaft length: L = 400 mm
+
+**Material Options:**
+- **Option A:** Aluminum 6061-T6 (E = 70 GPa, σ_yield = 270 MPa)
+- **Option B:** Steel 1045 (E = 200 GPa, σ_yield = 530 MPa)
+
+<Steps>
+
+1. **Determine Minimum Shaft Diameter (Strength) for Aluminum 6061-T6:**
+   
+   Allowable stress: $\sigma_{allowable} = \frac{\sigma_{yield}}{SF} = \frac{270}{3} = 90 \text{ MPa}$
+   
+   Required area: $A_{min} = \frac{F}{\sigma_{allowable}} = \frac{5,000}{90 \times 10^6} = 5.56 \times 10^{-5} \text{ m}^2$
+   
+   Minimum diameter: $d_{min} = \sqrt{\frac{4A_{min}}{\pi}} = 8.41 \text{ mm}$
+
+2. **Determine Minimum Shaft Diameter (Strength) for Steel 1045:**
+   
+   Allowable stress: $\sigma_{allowable} = \frac{530}{3} = 177 \text{ MPa}$
+   
+   Required area: $A_{min} = \frac{5,000}{177 \times 10^6} = 2.82 \times 10^{-5} \text{ m}^2$
+   
+   Minimum diameter: $d_{min} = 6.00 \text{ mm}$
+
+</Steps>
+
+### Step 2: Check Stiffness Requirements
+
+Let's check if a **10 mm diameter** shaft meets stiffness requirements:
+
+**Aluminum shaft (d = 10 mm):**
+
+Area: $A = \frac{\pi \times (0.01)^2}{4} = 7.85 \times 10^{-5} \text{ m}^2$
+
+Deformation: $\delta = \frac{FL}{AE} = \frac{5,000 \times 0.4}{7.85 \times 10^{-5} \times 70 \times 10^9} = 0.364 \text{ mm}$
+
+❌ **Fails stiffness requirement** (0.364 mm > 0.05 mm allowable)
+
+:::caution[Stiffness Dominance]
+In precision applications, **stiffness requirements often exceed strength requirements by large margins**. This leads to over-designed components from a strength perspective.
+:::
+
+**Steel shaft (d = 10 mm):**
+
+Deformation: $\delta = \frac{5,000 \times 0.4}{7.85 \times 10^{-5} \times 200 \times 10^9} = 0.127 \text{ mm}$
+
+❌ **Still fails stiffness requirement** (0.127 mm > 0.05 mm allowable)
+
+:::tip[Young's Modulus Impact]
+Steel's <Badge text="2.86× higher E" variant="success" /> compared to aluminum significantly reduces deformation, but still insufficient for this precision requirement.
+:::
+
+### Step 3: Size for Stiffness Requirements
+
+Required area for aluminum: $A = \frac{FL}{\delta_{allowable} \times E} = \frac{5,000 \times 0.4}{0.05 \times 10^{-3} \times 70 \times 10^9} = 5.71 \times 10^{-4} \text{ m}^2$
+
+Required diameter: $d = \sqrt{\frac{4 \times 5.71 \times 10^{-4}}{\pi}} = 27.0 \text{ mm}$
+
+Required area for steel: $A = \frac{5,000 \times 0.4}{0.05 \times 10^{-3} \times 200 \times 10^9} = 2.0 \times 10^{-4} \text{ m}^2$
+
+Required diameter: $d = \sqrt{\frac{4 \times 2.0 \times 10^{-4}}{\pi}} = 16.0 \text{ mm}$
+
+### Step 4: Final Design Comparison
+
+<CardGrid>
+  <Card title="Aluminum 6061-T6 Shaft">
+    **Required Diameter:** 27 mm  
+    **Mass (L=400mm):** 0.62 kg  
+    **Stress:** 8.7 MPa  
+    **Deformation:** 0.05 mm  
+    **Cost:** Lower material cost
+  </Card>
+  <Card title="Steel 1045 Shaft">
+    **Required Diameter:** 16 mm  
+    **Mass (L=400mm):** 0.63 kg  
+    **Stress:** 24.9 MPa  
+    **Deformation:** 0.05 mm  
+    **Cost:** Higher material cost
+  </Card>
+</CardGrid>
+
+:::tip[Engineering Design Decision]
+**Recommended: Steel 1045 shaft (16 mm diameter)**
+
+**Advantages:**
+- <Badge text="69% smaller diameter" variant="success" /> (16 mm vs 27 mm)
+- <Badge text="Compact design" variant="tip" /> fits space constraints
+- <Badge text="Similar mass" variant="note" /> (0.63 kg vs 0.62 kg)
+- <Badge text="Higher strength margin" variant="success" /> for future load increases
+
+**Trade-off:** Slightly higher material cost for superior performance
+:::
+
+## 🎯 Material Selection Guidelines for Mechatronics
+
+### When to Choose Aluminum
+
+:::note[Aluminum Applications in Mechatronics]
+✅ **Excellent for:**
+- <Badge text="High-speed robotics" variant="tip" />: Lower inertia enables faster acceleration
+- <Badge text="Thermal management" variant="note" />: 4× better thermal conductivity than steel
+- <Badge text="Corrosive environments" variant="success" />: Natural oxide layer protection
+- <Badge text="Weight-critical systems" variant="tip" />: Drones, portable equipment
+
+❌ **Avoid when:**
+- <Badge text="Ultra-precision required" variant="danger" />: Lower E causes excessive deflection
+- <Badge text="High contact stresses" variant="caution" />: Lower hardness leads to wear
+- <Badge text="Fatigue-critical" variant="caution" />: Lower fatigue strength than steel
+:::
+
+### When to Choose Steel
+
+:::note[Steel Applications in Mechatronics]
+✅ **Excellent for:**
+- <Badge text="Precision systems" variant="success" />: High E minimizes deflection
+- <Badge text="Load-bearing structures" variant="success" />: Superior strength and stiffness
+- <Badge text="Durable mechanisms" variant="tip" />: Excellent fatigue and wear resistance
+- <Badge text="Space-constrained designs" variant="note" />: Higher strength enables smaller sections
+
+❌ **Avoid when:**
+- <Badge text="Weight-sensitive applications" variant="caution" />: 3× heavier than aluminum
+- <Badge text="High-frequency motion" variant="caution" />: Higher inertia limits acceleration
+- <Badge text="Budget constraints" variant="note" />: Higher material and machining costs
+:::
+
+## 📋 Summary and Next Steps
+
+In this unit, you learned to:
+
+1. **Analyze** axial stress in actuator shafts using σ = F/A
+2. **Calculate** deformation using δ = FL/(AE)
+3. **Apply** both strength and stiffness criteria in design
+4. **Compare** aluminum vs steel for precision applications
+
+**Key Engineering Insights:**
+- <Badge text="Stiffness ∝ E" variant="tip" />: Material stiffness is material-dependent
+- <Badge text="Stiffness ∝ A" variant="note" />: Cross-sectional area linearly affects stiffness  
+- <Badge text="Strength ∝ A" variant="success" />: Doubling area doubles load capacity
+- <Badge text="Deformation ∝ 1/E" variant="caution" />: Higher E dramatically reduces deflection
+
+:::danger[Critical Design Rule]
+**Always check both strength AND stiffness criteria**. In precision mechatronics, stiffness requirements typically govern the design, leading to components that are over-designed for strength.
+:::
+
+**Coming Next**: In Lesson 3, we'll analyze compound bars with multiple materials, exploring how linear actuators with steel-aluminum segments share loads and deform under force.
+
+<MechanicsOfMaterialsComments />
+<TawkWidget />
+<Copyright />

@@ -1,0 +1,90 @@
+<svg viewBox="0 0 600 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="350" fill="#f8f8f8"/>
+  
+  <!-- Circular shaft - 3D perspective view -->
+  <g transform="translate(300, 175)">
+    <!-- Base of the shaft (circular) -->
+    <ellipse cx="0" cy="0" rx="60" ry="30" fill="#d0d0d0" stroke="#666666" stroke-width="2"/>
+    
+    <!-- Body of the shaft -->
+    <g>
+      <!-- Left side line -->
+      <line x1="-60" y1="0" x2="-220" y2="0" stroke="#666666" stroke-width="2"/>
+      <!-- Right side line -->
+      <line x1="60" y1="0" x2="220" y2="0" stroke="#666666" stroke-width="2"/>
+      <!-- Top curve -->
+      <path d="M -220,0 Q -220,-15 -150,-15 T -60,-15" stroke="#666666" stroke-width="2" fill="none"/>
+      <path d="M 60,0 Q 60,-15 150,-15 T 220,-15" stroke="#666666" stroke-width="2" fill="none"/>
+      <!-- Bottom curve -->
+      <path d="M -220,0 Q -220,15 -150,15 T -60,15" stroke="#666666" stroke-width="2" fill="none"/>
+      <path d="M 60,0 Q 60,15 150,15 T 220,15" stroke="#666666" stroke-width="2" fill="none"/>
+    </g>
+    
+    <!-- Grid pattern on the circular face -->
+    <g stroke="#3366aa" stroke-width="1.5">
+      <!-- Vertical diameter -->
+      <line x1="0" y1="-30" x2="0" y2="30" />
+      <!-- Horizontal diameter -->
+      <line x1="-60" y1="0" x2="60" y2="0" />
+      <!-- Circular grids -->
+      <ellipse cx="0" cy="0" rx="20" ry="10" fill="none" />
+      <ellipse cx="0" cy="0" rx="40" ry="20" fill="none" />
+    </g>
+    
+    <!-- Circular shaft - further along (showing twist) -->
+    <g transform="translate(220, 0)">
+      <ellipse cx="0" cy="0" rx="60" ry="30" fill="#4682b4" fill-opacity="0.5" stroke="#3366aa" stroke-width="2"/>
+      
+      <!-- Grid pattern on circular face (rotated) -->
+      <g stroke="#3366aa" stroke-width="1.5" transform="rotate(30)">
+        <!-- Vertical diameter -->
+        <line x1="0" y1="-30" x2="0" y2="30" />
+        <!-- Horizontal diameter -->
+        <line x1="-60" y1="0" x2="60" y2="0" />
+        <!-- Circular grids -->
+        <ellipse cx="0" cy="0" rx="20" ry="10" fill="none" />
+        <ellipse cx="0" cy="0" rx="40" ry="20" fill="none" />
+      </g>
+    </g>
+    
+    <!-- Torque arrow indicator -->
+    <g transform="translate(220, 0)">
+      <circle cx="0" cy="0" r="70" fill="none" stroke="#cc0000" stroke-width="2" stroke-dasharray="5,5"/>
+      <path d="M 0,-70 A 70 70 0 0 1 60,35" fill="none" stroke="#cc0000" stroke-width="2"/>
+      <polygon points="60,35 70,40 65,25" fill="#cc0000"/>
+    </g>
+    
+    <!-- Angle marker -->
+    <g transform="translate(220, 0)">
+      <path d="M 20,0 A 20 20 0 0 1 17.32,10" fill="none" stroke="#cc0000" stroke-width="1.5"/>
+      <text x="35" y="10" font-family="Arial, sans-serif" font-size="12" fill="#cc0000">θ</text>
+    </g>
+    
+    <!-- Radius indicators -->
+    <g stroke="#444444" stroke-width="1" stroke-dasharray="3,2">
+      <line x1="0" y1="0" x2="60" y2="0" />
+      <text x="30" y="-10" font-family="Arial, sans-serif" font-size="12" fill="#444444">R</text>
+    </g>
+  </g>
+  
+  <!-- Labels -->
+  <g font-family="Arial, sans-serif" font-size="14" text-anchor="middle">
+    <text x="300" y="30" font-weight="bold" font-size="16">Torsion of a Circular Shaft</text>
+    <text x="180" y="175" fill="#444444">Cross-section remains</text>
+    <text x="180" y="195" fill="#444444">plane during torsion</text>
+    <text x="180" y="75" fill="#3366aa" font-style="italic">Initial position</text>
+    <text x="420" y="75" fill="#3366aa" font-style="italic">Twisted position</text>
+    <text x="420" y="310" fill="#cc0000">Applied torque (T)</text>
+    <text x="300" y="330" font-style="italic">Circular cross-sections are ideal for torsional loading</text>
+  </g>
+  
+  <!-- Key feature callouts -->
+  <g font-family="Arial, sans-serif" font-size="12" fill="#333333">
+    <text x="480" y="175" text-anchor="start">• Uniform stress distribution</text>
+    <text x="480" y="195" text-anchor="start">• No warping of cross-section</text>
+    <text x="480" y="215" text-anchor="start">• Maximum stress at surface</text>
+    <text x="480" y="235" text-anchor="start">• Simple analysis using</text>
+    <text x="480" y="255" text-anchor="start">  Saint-Venant's theory</text>
+  </g>
+</svg>

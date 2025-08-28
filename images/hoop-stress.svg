@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="white"/>
+  
+  <!-- Title -->
+  <text x="300" y="30" text-anchor="middle" font-family="Arial" font-size="20" font-weight="bold" fill="#333">
+    Hoop (Circumferential) Stress in a Pressure Vessel
+  </text>
+  
+  <!-- Cylinder cross-section -->
+  <g transform="translate(300, 200)">
+    <!-- Outer circle -->
+    <circle cx="0" cy="0" r="150" fill="#f0f0f0" stroke="#555" stroke-width="3"/>
+    
+    <!-- Inner circle -->
+    <circle cx="0" cy="0" r="130" fill="#e0e8ff" stroke="#3366cc" stroke-width="2"/>
+    
+    <!-- Wall thickness indicator -->
+    <line x1="0" y1="-150" x2="0" y2="-130" stroke="#555" stroke-width="1" stroke-dasharray="4"/>
+    <text x="15" y="-140" font-family="Arial" font-size="14" fill="#555">t (wall thickness)</text>
+    
+    <!-- Diameter indicator -->
+    <line x1="-130" y1="0" x2="130" y2="0" stroke="#3366cc" stroke-width="1" stroke-dasharray="4"/>
+    <text x="0" y="16" font-family="Arial" font-size="14" text-anchor="middle" fill="#3366cc">d (inner diameter)</text>
+    
+    <!-- Pressure arrows -->
+    <g stroke="#cc3333" stroke-width="2" fill="#cc3333">
+      <!-- Top pressure arrow -->
+      <line x1="0" y1="-110" x2="0" y2="-80" />
+      <polygon points="0,-80 -5,-90 5,-90" />
+      <text x="-25" y="-95" font-family="Arial" font-size="18" fill="#cc3333">p</text>
+      
+      <!-- Bottom pressure arrow -->
+      <line x1="0" y1="110" x2="0" y2="80" />
+      <polygon points="0,80 -5,90 5,90" />
+      
+      <!-- Left pressure arrow -->
+      <line x1="-110" y1="0" x2="-80" y2="0" />
+      <polygon points="-80,0 -90,-5 -90,5" />
+      
+      <!-- Right pressure arrow -->
+      <line x1="110" y1="0" x2="80" y2="0" />
+      <polygon points="80,0 90,-5 90,5" />
+      
+      <!-- Diagonal pressure arrows -->
+      <line x1="-78" y1="-78" x2="-56" y2="-56" />
+      <polygon points="-56,-56 -70,-60 -60,-70" />
+      
+      <line x1="78" y1="-78" x2="56" y2="-56" />
+      <polygon points="56,-56 60,-70 70,-60" />
+      
+      <line x1="-78" y1="78" x2="-56" y2="56" />
+      <polygon points="-56,56 -70,60 -60,70" />
+      
+      <line x1="78" y1="78" x2="56" y2="56" />
+      <polygon points="56,56 60,70 70,60" />
+    </g>
+    
+    <!-- Hoop stress arrows (outward from vessel wall) -->
+    <g stroke="#009900" stroke-width="3" fill="#009900">
+      <!-- Top stress arrow -->
+      <line x1="0" y1="-150" x2="0" y2="-170" />
+      <polygon points="0,-170 -6,-162 6,-162" />
+      
+      <!-- Bottom stress arrow -->
+      <line x1="0" y1="150" x2="0" y2="170" />
+      <polygon points="0,170 -6,162 6,162" />
+      
+      <!-- Left stress arrow -->
+      <line x1="-150" y1="0" x2="-170" y2="0" />
+      <polygon points="-170,0 -162,-6 -162,6" />
+      
+      <!-- Right stress arrow -->
+      <line x1="150" y1="0" x2="170" y2="0" />
+      <polygon points="170,0 162,-6 162,6" />
+      
+      <!-- Diagonal stress arrows -->
+      <line x1="-106" y1="-106" x2="-120" y2="-120" />
+      <polygon points="-120,-120 -110,-116 -116,-110" />
+      
+      <line x1="106" y1="-106" x2="120" y2="-120" />
+      <polygon points="120,-120 116,-110 110,-116" />
+      
+      <line x1="-106" y1="106" x2="-120" y2="120" />
+      <polygon points="-120,120 -110,116 -116,110" />
+      
+      <line x1="106" y1="106" x2="120" y2="120" />
+      <polygon points="120,120 116,110 110,116" />
+    </g>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(30, 350)">
+    <!-- Pressure -->
+    <line x1="0" y1="0" x2="20" y2="0" stroke="#cc3333" stroke-width="2"/>
+    <polygon points="20,0 15,-3 15,3" fill="#cc3333"/>
+    <text x="30" y="5" font-family="Arial" font-size="14" fill="#333">
+      Internal Pressure (p)
+    </text>
+    
+    <!-- Hoop stress -->
+    <g transform="translate(200, 0)">
+      <line x1="0" y1="0" x2="20" y2="0" stroke="#009900" stroke-width="3"/>
+      <polygon points="20,0 15,-3 15,3" fill="#009900"/>
+      <text x="30" y="5" font-family="Arial" font-size="14" fill="#333">
+        Hoop Stress (σₕ = pd/2t)
+      </text>
+    </g>
+  </g>
+  
+  <!-- Explanation -->
+  <text x="300" y="390" text-anchor="middle" font-family="Arial" font-size="14" fill="#555">
+    Internal pressure creates circumferential (hoop) stress in the vessel wall
+  </text>
+</svg>
