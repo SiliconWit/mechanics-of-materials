@@ -16,15 +16,15 @@ A comprehensive, systems-based approach to teaching solid mechanics through real
 
 ## 📚 Course Overview
 
-This mechanics of materials course covers fundamental solid mechanics principles through 13 comprehensive lessons, each featuring real-world mechatronic system applications:
+This mechanics of materials course covers fundamental solid mechanics principles through 12 comprehensive lessons, each featuring real-world mechatronic system applications:
 
 ### Chapter 1: Fundamental Concepts
-- **Lesson 1**: Fundamental Stress Concepts (Crank-slider connecting rod)
-- **Lesson 2**: Simple Stress and Strain (CNC actuator systems)
-- **Lesson 3**: Compound Bars (Multi-material linear actuators)
-- **Lesson 4**: Thermal Stresses (Heated piston-cylinder systems)
-- **Lesson 5**: Torsion of Circular Shafts (Geneva mechanism crankshafts)
-- **Lesson 6**: Thin-Walled Pressure Vessels (Pneumatic actuator casings)
+- **Lesson 1.1**: Fundamental Stress Concepts (Crank-slider connecting rod)
+- **Lesson 1.2**: Simple Stress and Strain (CNC actuator systems)
+- **Lesson 1.3**: Compound Bars (Multi-material linear actuators)
+- **Lesson 1.4**: Thermal Stresses (Heated piston-cylinder systems)
+- **Lesson 1.5**: Torsion of Circular Shafts (Geneva mechanism crankshafts)
+- **Lesson 1.6**: Thin-Walled Pressure Vessels (Pneumatic actuator casings)
 
 ### Chapter 2: Advanced Analysis
 - **Lesson 2.1**: Shear Force and Bending Moments (Robotic arm segments)
@@ -56,7 +56,7 @@ Each lesson follows our proven pedagogical structure:
 mechanics-of-materials/
 ├── README.md                                          # This file
 ├── fundamental-stress-concepts.mdx                    # Lesson 1
-├── strain-and-mechanical-properties.mdx              # Lesson 2 (Reference format)
+├── strain-and-mechanical-properties.mdx              # Lesson 2
 ├── compound-bars-and-composite-systems.mdx           # Lesson 3
 ├── thermal-stresses-and-strains.mdx                  # Lesson 4
 ├── fundamentals-of-shaft-torsion.mdx                 # Lesson 5
@@ -105,8 +105,8 @@ All lessons follow a strict format pattern based on `strain-and-mechanical-prope
 
 1. **Fork the Repository**
    ```bash
-   git clone https://github.com/your-username/siliconwit-com-astro.git
-   cd siliconwit-com-astro
+   git clone https://github.com/SiliconWit/mechanics-of-materials
+   cd mechanics-of-materials
    ```
 
 2. **Create a Feature Branch**
@@ -205,7 +205,7 @@ npm run preview
 ## 📋 Current Status & Roadmap
 
 ### ✅ Completed
-- [x] 13 comprehensive lessons with mechatronic applications
+- [x] 12 comprehensive lessons with mechatronic applications
 - [x] Enhanced formula presentation with Card components
 - [x] Interactive collapsible problem solutions
 - [x] Consistent format across all lessons
@@ -229,9 +229,8 @@ npm run preview
 
 ### Contributors
 We recognize all contributors who help improve this educational content:
-- **sam-macharia**: Lead curriculum developer and systems architect
-- **jack-kojiro**: Technical content reviewer and mechatronics expert
-- **new-person6**: Interactive learning specialist
+- **[SamMachariaPhD](https://github.com/SamMachariaPhD)**: Lead curriculum developer and systems architect
+- **[jack-kojiro](https://github.com/jack-kojiro)**: Technical content reviewer and mechatronics expert
 
 ### Contribution Recognition
 - All contributors are automatically credited in lesson frontmatter
@@ -252,7 +251,7 @@ We recognize all contributors who help improve this educational content:
 
 ## 📄 License
 
-This educational content is available under the MIT License. See [LICENSE](../../../../LICENSE) for details.
+This educational content is available under the MIT License.
 
 ---
 
