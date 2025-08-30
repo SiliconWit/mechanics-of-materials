@@ -1,7 +1,7 @@
 ---
 title: "Lesson 2.1: Shear Force and Bending Moment in Beams"
 description: "Analyzing shear force and bending moment distributions in robotic arm segments under loading"
-contributors: "sam-macharia,jack-kojiro,new-person6"
+contributors: "sam-macharia,jack-kojiro"
 pubDate: 2025-08-30
 tags: ["solid-mechanics", "bending", "shear-force", "bending-moment", "robotic-arm", "beam-analysis"]
 excerpt: "Learn shear force and bending moment analysis through robotic arm beam segments, covering load distribution, diagram construction, and critical section identification for structural design."
@@ -14,7 +14,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -25,7 +25,7 @@ import { Card, CardGrid, Badge, Steps } from '@astrojs/starlight/components';
 ## 🎓 **Chapter 2: Structural Behavior in Motion and Force Transfer**
 
 <BionicText method="advanced" intensity="medium" class="highlight">
-Welcome to Chapter 2 of our solid mechanics journey! We now transition from axial loading (tension, compression, torsion) to bending-dominated behavior. Here, we'll analyze how beams and structural elements respond to transverse loads, forming the foundation for understanding robotic arms, machine frames, and structural components in mechatronic systems.
+Welcome to Chapter 2 of our mechanics of materials journey! We now transition from axial loading (tension, compression, torsion) to bending-dominated behavior. Here, we'll analyze how beams and structural elements respond to transverse loads, forming the foundation for understanding robotic arms, machine frames, and structural components in mechatronic systems.
 </BionicText>
 
 ---
@@ -189,6 +189,10 @@ Let's analyze a realistic robotic arm segment step by step.
 - Distributed load: **`w`** = -50 N/m (downward)
 - Point load at tip: **`P`** = -200 N (downward)  
 - Applied moment at tip: **`M₀`** = +80 N·m (counterclockwise)
+
+<LinkButton href="/product-development/robotic-arm-cantilever-analysis/" variant="primary" icon="puzzle" iconPlacement="start">
+Interactive System
+</LinkButton>
 
 <hr />
 

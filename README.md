@@ -54,13 +54,13 @@ Each lesson follows our proven pedagogical structure:
 ### File Structure
 ```
 mechanics-of-materials/
-├── README.md                                          # This file
-├── fundamental-stress-concepts.mdx                    # Lesson 1
-├── strain-and-mechanical-properties.mdx              # Lesson 2
-├── compound-bars-and-composite-systems.mdx           # Lesson 3
-├── thermal-stresses-and-strains.mdx                  # Lesson 4
-├── fundamentals-of-shaft-torsion.mdx                 # Lesson 5
-├── thin-walled-pressure-vessels.mdx                  # Lesson 6
+├── README.md                                         # This file
+├── fundamental-stress-concepts.mdx                   # Lesson 1.1
+├── strain-and-mechanical-properties.mdx              # Lesson 1.2
+├── compound-bars-and-composite-systems.mdx           # Lesson 1.3
+├── thermal-stresses-and-strains.mdx                  # Lesson 1.4
+├── fundamentals-of-shaft-torsion.mdx                 # Lesson 1.5
+├── thin-walled-pressure-vessels.mdx                  # Lesson 1.6
 ├── shear-force-bending-moment-beams.mdx              # Lesson 2.1
 ├── bending-stresses-simple-beams.mdx                 # Lesson 2.2
 ├── beam-deflections-stiffness-analysis.mdx           # Lesson 2.3
