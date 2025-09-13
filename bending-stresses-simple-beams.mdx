@@ -1,7 +1,7 @@
 ---
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
-contributors: "sam-macharia,jack-kojiro,new-person6"
+contributors: "sam-macharia,jack-kojiro"
 pubDate: 2025-09-13
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
@@ -33,8 +33,14 @@ By the end of this lesson, you will be able to:
 ## 🔧 Real-World System Problem: Robotic Gripper Jaw
 
 <BionicText method="advanced" intensity="medium" class="highlight">
-Robotic grippers are critical components in automation systems, requiring precise force control and structural integrity. The cantilever gripper jaw must withstand bending moments from gripping forces while maintaining accuracy and preventing failure during object manipulation.
+Robotic grippers are critical components in automation systems, requiring precise force control and structural integrity. The cantilever robotic gripper jaw must withstand bending moments from gripping forces while maintaining accuracy and preventing failure during object manipulation.
 </BionicText>
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Cantilever Robotic Gripper Jaw.png](./images/cantilever-gripper-jaw.png)
+  </TailwindWrapper>
+</div>
 
 ### System Description
 
@@ -59,11 +65,9 @@ During gripping operations, the cantilever jaw experiences:
 > **Engineering Question:** How do we calculate the maximum bending stress in a gripper jaw and ensure it doesn't exceed the material's strength limits during maximum gripping force?
 
 ### Why Bending Stress Analysis Matters
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Beam Deflection Accident](./images/fail-accident.gif)
-  </TailwindWrapper>
-</div>
+
+<div class="tenor-gif-embed" data-postid="14323151" data-share-method="host" data-aspect-ratio="1.77778" data-width="100%"><a href="https://tenor.com/view/robo-robot-robozinho-little-robot-diy-gif-14323151">Robo Robot GIF</a>from <a href="https://tenor.com/search/robo-gifs">Robo GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+
 **Consequences of Poor Bending Design:**
 - **Jaw failure** during heavy object manipulation
 - **Plastic deformation** reducing gripping accuracy
