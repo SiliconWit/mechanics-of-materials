@@ -2,7 +2,7 @@
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
 contributors: "sam-macharia,jack-kojiro,new-person6"
-pubDate: 2025-09-10
+pubDate: 2025-09-13
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
 ---
@@ -10,6 +10,7 @@ excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw
 import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
 import TawkWidget from '../../../../components/TawkWidget.astro';
 import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
+import InArticleAd from '../../../../components/InArticleAd.astro';
 import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
@@ -117,6 +118,7 @@ $$\sigma = \frac{My}{I}$$
     
     **Physical Meaning:** Section modulus combines geometric properties (I and c) into a single parameter for maximum stress calculation.
     </Card>
+
     
   </TabItem>
   <TabItem label="Sign Convention">
@@ -134,6 +136,9 @@ $$\sigma = \frac{My}{I}$$
 </Tabs>
 
 ### Second Moment of Area for Common Shapes
+
+
+<InArticleAd />
 
 **Rectangular Section (width b, height h):**
 $$I = \frac{bh^3}{12}$$
@@ -273,6 +278,9 @@ The gripper jaw is **severely undersized** and likely to fail under the specifie
 
 ## 📊 Design Verification Summary
 
+
+<InArticleAd />
+
 <CardGrid>
   <Card title="Original Design (15×8 mm)" icon="error">
     **Max Stress:** 250 MPa  
@@ -366,6 +374,7 @@ In this lesson, you learned to:
 
 **Coming Next**: In Lesson 2.3, we'll analyze beam deflections and stiffness, exploring how to calculate elastic deformations in CNC spindles under cutting loads for precision control applications.
 
+<InArticleAd />
 <MechanicsOfMaterialsComments />
 <TawkWidget />
 <Copyright />
