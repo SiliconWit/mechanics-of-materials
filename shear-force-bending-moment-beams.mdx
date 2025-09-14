@@ -2,7 +2,7 @@
 title: "Lesson 2.1: Shear Force and Bending Moment in Beams"
 description: "Analyzing shear force and bending moment distributions in robotic arm segments under loading"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-13
+pubDate: 2025-09-14
 tags: ["solid-mechanics", "bending", "shear-force", "bending-moment", "robotic-arm", "beam-analysis"]
 excerpt: "Learn shear force and bending moment analysis through robotic arm beam segments, covering load distribution, diagram construction, and critical section identification for structural design."
 ---
@@ -10,7 +10,6 @@ excerpt: "Learn shear force and bending moment analysis through robotic arm beam
 import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
 import TawkWidget from '../../../../components/TawkWidget.astro';
 import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
-import InArticleAd from '../../../../components/InArticleAd.astro';
 import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
@@ -75,9 +74,6 @@ The semi-automatic material handling arm acts as a **cantilever beam** experienc
 > **Engineering Question:** How do we determine where the maximum bending stress occurs in this semi-automatic material handling arm under loading, and how do we size the structure to safely handle typical payloads with appropriate safety margins?
 
 ### Why Beam Analysis Matters in Material Handling Robotics
-
-
-<InArticleAd />
 
 <div class="tenor-gif-embed" data-postid="21291658" data-share-method="host" data-aspect-ratio="1.77778" data-width="100%"><a href="https://tenor.com/view/arabic-arab-indian-crane-billboard-gif-21291658">Arabic Indian GIF</a>from <a href="https://tenor.com/search/arabic-gifs">Arabic GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
@@ -316,9 +312,6 @@ $$M(x) = -3234.375 + 1387.5x - 37.5x^2$$
 - At x = 0: M(0) = -3234.375 N·m (negative = sagging moment at fixed end)
 - At x = 2.5 m: M(2.5) = -3234.375 + 1387.5(2.5) - 37.5(2.5)² = -3234.375 + 3468.75 - 234.375 = 0 N·m
 
-
-<InArticleAd />
-
 **Free end boundary condition:**
 At the free end (x = 2.5 m), the internal moment must be zero since there are no applied moments. Our equation gives M(2.5) = 0, confirming equilibrium at the tip ✅
 
@@ -484,7 +477,6 @@ In this lesson, you learned to:
 
 **Coming Next**: In Lesson 2.2, we'll calculate bending stresses in robotic cantilever gripper jaws using beam theory, applying the flexural formula to check if the jaws can safely support design loads.
 
-<InArticleAd />
 <MechanicsOfMaterialsComments />
 <TawkWidget />
 <Copyright />
