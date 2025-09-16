@@ -26,28 +26,72 @@ This mechanics of materials course covers fundamental solid mechanics principles
 - **Lesson 1.5**: Torsion of Circular Shafts (Geneva mechanism crankshafts)
 - **Lesson 1.6**: Thin-Walled Pressure Vessels (Pneumatic actuator casings)
 
-### Chapter 2: Advanced Analysis
-- **Lesson 2.1**: Shear Force and Bending Moments (Robotic arm segments)
-- **Lesson 2.2**: Bending Stresses (Cantilever robotic gripper jaws)
-- **Lesson 2.3**: Beam Deflections (CNC spindle stiffness analysis)
-- **Lesson 2.4**: Combined Loading (Robotic wrist joints)
-- **Lesson 2.5**: Composite Beams (CNC machine bed structures)
-- **Lesson 2.6**: Principal Stresses (Universal joint failure analysis)
+### Chapter 2: Structural Analysis & Complex Loading
+- **Lesson 2.1**: Shear Force and Bending Moments (4 applications covering cantilever, fixed-fixed, and combined loading)
+- **Lesson 2.2**: Bending Stresses (3 problems including overhanging beams and multi-span analysis)
+- **Lesson 2.3**: Beam Deflections (Continuous beams with varying loads, stiffness-critical applications)
+- **Lesson 2.4**: Combined Loading Analysis (von Mises and Tresca failure criteria for multi-axis stress states)
+- **Lesson 2.5**: Composite Beam Systems (Transformed section method for steel-concrete and hybrid materials)
+- **Lesson 2.6**: Principal Stresses (Complex stress analysis using Mohr's circle and failure prediction)
 
 ## 🎯 Educational Philosophy
 
-### Systems-Based Learning
-Each lesson follows our proven pedagogical structure:
-1. **Real-World System Problem** - Authentic mechatronic applications
-2. **Fundamental Theory** - Enhanced with interactive Card components
-3. **Step-by-Step Application** - Collapsible solutions for active learning
-4. **Design Guidelines** - Practical engineering wisdom
+### Problem-Focused Academic Approach
+Chapter 2 has been completely restructured to emphasize pure engineering problem-solving:
+1. **Multiple Applications per Lesson** - 3-4 diverse engineering problems covering different beam types and loading conditions
+2. **Comprehensive Coverage** - Balanced representation of all major beam types and loading scenarios
+3. **Strategic Progression** - Problems increase in complexity while maintaining B.Sc. level accessibility
+4. **Field Diversity** - Applications spanning mechanical, electrical, and mechatronics engineering
+
+### Chapter 2: Balanced Beam Type Representation
+Our curriculum ensures comprehensive coverage of industrial beam applications:
+
+#### **Beam Types Distribution:**
+- **Cantilever Beams** (5 problems): Robotic arms, gripper jaws, motor brackets
+- **Simply Supported Beams** (4 problems): Machine tool supports, spindle housings  
+- **Fixed-Fixed Beams** (1 problem): Electrical busbar systems with distributed loads
+- **Overhanging Beams** (1 problem): Crane jibs with multiple load points
+- **Continuous Beams** (1 problem): Bridge decks with varying wind loading
+
+#### **Loading Conditions Coverage:**
+- **Point Loads**: Motor reactions, payload forces, tool cutting forces
+- **Uniform Distributed**: Self-weight, equipment arrays, cable loads
+- **Varying Distributed**: Wind patterns, thermal gradients, pressure distributions  
+- **Combined Loading**: Simultaneous bending, torsion, and axial forces
+
+#### **Engineering Field Applications:**
+- **Mechanical Engineering** (60%): CNC machines, robotics, cranes, structural systems
+- **Electrical Engineering** (20%): Busbars, equipment mounting, power distribution  
+- **Mechatronics** (20%): Automated systems, sensors, control mechanisms
 
 ### Interactive Learning Features
-- **Collapsible calculations**: Students try problems first, then reveal solutions
-- **Enhanced formulas**: Key equations highlighted with visual Card components
-- **Active learning**: Step-by-step problem solving with expandable details
-- **Real-world context**: Every concept tied to actual mechatronic systems
+- **Step-by-step solutions**: Clear calculation methodology with ✅ checkmarks
+- **Professional formatting**: LaTeX equations and engineering notation
+- **Expandable details**: Collapsible sections for active learning
+- **Practical context**: Every problem tied to real engineering applications
+
+### Curriculum Balancing Principles
+
+#### **Problem Difficulty Progression**
+- **B.Sc. Level Appropriate**: All problems solvable with undergraduate knowledge
+- **Increasing Complexity**: From basic cantilevers to complex continuous beams
+- **Real-World Relevance**: Every application represents actual engineering scenarios
+- **Time-Balanced**: Each lesson designed for 2-3 hour learning sessions
+
+#### **Industry Application Coverage**
+Problems intentionally distributed to provide comprehensive industry exposure:
+
+| **Engineering Field** | **Lesson Focus** | **Representative Applications** |
+|----------------------|------------------|--------------------------------|
+| **Mechanical** | 2.1, 2.2, 2.3 | CNC machines, robotics, cranes, structural systems |
+| **Electrical** | 2.1, 2.6 | Busbars, equipment mounting, power distribution |
+| **Mechatronics** | 2.4, 2.5, 2.6 | Control systems, sensors, automated machinery |
+
+#### **Assessment Strategy**
+- **Formative Learning**: Step-by-step reveals encourage self-assessment
+- **Scaffolded Complexity**: Each lesson builds on previous concepts  
+- **Professional Standards**: All solutions follow engineering practice conventions
+- **Critical Thinking**: Problems require analysis selection and method justification
 
 ## 🛠 Technical Architecture
 
@@ -70,34 +114,48 @@ mechanics-of-materials/
 ```
 
 ### Content Format Standards
-All lessons follow a strict format pattern based on `strain-and-mechanical-properties.mdx`:
 
-**Application Section Structure:**
+#### **Chapter 1 Format** (Theoretical Foundation)
+Lessons 1.1-1.6 follow comprehensive system-based analysis with design guidelines and optimization strategies.
+
+#### **Chapter 2 Format** (Problem-Solving Focus)
+Lessons 2.1-2.6 follow a streamlined, academic problem-solving approach:
+
+**Primary Application Structure:**
 ```mdx
+## 🔧 Application 1: [System Name]
+
+Brief descriptive sentence about the engineering system.
+
 :::note[Problem Statement]
-**What we need to determine:**
-1. Point 1
-2. Point 2
-**Key Question:** Specific engineering question?
+**Given:**
+- Parameter 1: value (units)
+- Parameter 2: value (units)
+
+**Find:** Clear objective statement.
 :::
 
-<hr />
-
-**System Parameters:**
-- Parameter descriptions with **`highlighted`** values
-
-<hr />
-
-### Step 1: Description
+### Step 1: [Analysis Type]
 <details>
-<summary>**Click to reveal calculations**</summary>
+<summary>**Click to reveal [specific analysis] calculations**</summary>
 
-<Steps>
-1. **Sub-step 1:**
-   Calculation details
-</Steps>
+1. **Calculation step:**
+   
+   $$LaTeX equations$$
+   
+   $$Result = value \text{ units}$$ ✅
+
 </details>
 ```
+
+**Secondary Application Structure:**
+```mdx
+## 🔧 Application 2: [System Name]
+## 🔧 Application 3: [System Name] 
+## 🔧 Application 4: [System Name]
+```
+
+All follow identical step-by-step methodology with professional LaTeX formatting and strategic ✅ placement on final answers.
 
 ## 🤝 Contributing Guidelines
 
@@ -204,26 +262,31 @@ npm run preview
 
 ## 📋 Current Status & Roadmap
 
-### ✅ Completed
-- [x] 12 comprehensive lessons with mechatronic applications
-- [x] Enhanced formula presentation with Card components
-- [x] Interactive collapsible problem solutions
-- [x] Consistent format across all lessons
-- [x] Mobile-responsive design
-- [x] Comprehensive build and test validation
+### ✅ Completed (2025 Update)
+- [x] **12 comprehensive lessons** with authentic mechatronic applications
+- [x] **Chapter 2 restructuring** - Complete redesign focusing on pure problem-solving
+- [x] **Balanced beam type representation** - All major beam types and loading conditions covered
+- [x] **18 engineering applications** across Chapter 2 (3+ per lesson)
+- [x] **Field diversity achieved** - Mechanical (60%), electrical (20%), mechatronics (20%) 
+- [x] **Professional formatting** - LaTeX equations with strategic ✅ placement
+- [x] **Interactive collapsible solutions** with step-by-step methodology
+- [x] **Mobile-responsive design** and comprehensive build validation
 
-### 🔄 In Progress
-- [ ] Interactive calculation tools
-- [ ] Video demonstrations of real systems
-- [ ] Advanced visualization components
-- [ ] Multi-language support
+### 🔄 Recent Improvements (2025)
+- [x] **Fixed-fixed beam analysis** - Added electrical busbar applications
+- [x] **Overhanging beam problems** - Crane jib with multiple load points  
+- [x] **Continuous beam analysis** - Bridge deck with varying wind loads
+- [x] **Eliminated redundancy** - Reduced excessive cantilever examples
+- [x] **Enhanced electrical applications** - Better field representation balance
 
 ### 🎯 Future Enhancements
-- [ ] Virtual laboratory simulations
-- [ ] AR/VR mechatronic system exploration
-- [ ] Industry partnership case studies
-- [ ] Professional certification pathway
-- [ ] Advanced graduate-level extensions
+- [ ] **Interactive calculation tools** - Real-time problem solvers
+- [ ] **Video demonstrations** - Physical system examples  
+- [ ] **Advanced visualization** - 3D beam diagrams and stress distributions
+- [ ] **Multi-language support** - International accessibility
+- [ ] **Virtual laboratory simulations** - Hands-on engineering experience
+- [ ] **Industry partnership cases** - Current real-world applications
+- [ ] **Professional certification** - Pathway to engineering credentials
 
 ## 🏆 Recognition & Attribution
 

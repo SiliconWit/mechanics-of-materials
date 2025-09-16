@@ -2,7 +2,7 @@
 title: "Lesson 2.6: Principal Stresses and Failure Criteria Analysis"
 description: "Applying Mohr's circle analysis for critical stress evaluation in mechatronic joint design and failure prediction"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-15
+pubDate: 2025-09-16
 tags: ["solid-mechanics", "principal-stress", "Mohrs-circle", "failure-analysis", "mechatronic-joints"]
 excerpt: "Learn principal stress analysis through mechatronic joint design, covering Mohr's circle construction, failure theories, and critical stress evaluation for complex loading conditions in robotic systems."
 ---
@@ -297,133 +297,163 @@ Let's analyze a critical universal joint pin under complex loading.
 
 </details>
 
-## 📊 Principal Stress Analysis Summary
+## 🔧 Engineering Problems
 
-<CardGrid>
-  <Card title="Principal Stress Analysis" icon="error">
-    **σ₁ (Max Tension):** 226.6 MPa  
-    **σ₂ (Max Compression):** -146.2 MPa  
-    **Status:** <Badge text="Exceeds allowable" variant="danger" />
-  </Card>
-  <Card title="Shear Stress Analysis" icon="error">
-    **τ_max:** 186.4 MPa  
-    **Allowable:** 58.75 MPa  
-    **Margin:** <Badge text="3.17× over limit" variant="danger" />
-  </Card>
-  <Card title="von Mises Analysis" icon="error">
-    **Equivalent Stress:** 342.7 MPa  
-    **Allowable:** 117.5 MPa  
-    **Safety Factor:** <Badge text="1.37 (inadequate)" variant="danger" />
-  </Card>
-</CardGrid>
+### Problem 1: Pressure Vessel Joint Analysis
 
-## 🎯 Design Optimization Strategy
+A spherical pressure vessel joint experiences complex stress states from internal pressure and thermal effects, requiring principal stress analysis.
 
-### Redesign Options
+**Given:**
+- Spherical pressure vessel: inner radius R = 500 mm, wall thickness t = 20 mm
+- Internal pressure: p = 2.5 MPa
+- Additional thermal stress: σ_thermal = 50 MPa (tangential direction)
+- Material: Steel (σ_yield = 250 MPa, σ_ultimate = 400 MPa)
+- Safety factor required: 3.0
 
-<Tabs>
-  <TabItem label="Increase Pin Diameter">
-    
-    **Required diameter for von Mises criterion:**
-    
-    Stress scales as 1/d³ for bending, 1/d³ for torsion
-    
-    Scale factor needed: 342.7/117.5 = 2.91
-    
-    Diameter increase: ∛(2.91) = 1.43
-    
-    **New diameter:** 25 × 1.43 = **36 mm**
-    
-  </TabItem>
-  <TabItem label="Use Stronger Material">
-    
-    **High-strength steel options:**
-    - Steel 4340 HT: σ_yield = 860 MPa
-    - Maraging steel: σ_yield = 1200 MPa
-    - Tool steel: σ_yield = 1000+ MPa
-    
-    **Trade-offs:** Higher cost, heat treatment complexity
-    
-  </TabItem>
-  <TabItem label="Reduce Loading">
-    
-    **System modifications:**
-    - Reduce operating torque (slower operation)
-    - Limit joint angles (reduce bending)
-    - Distribute loads (multiple pins)
-    - Add damping (reduce dynamic amplification)
-    
-  </TabItem>
-  <TabItem label="Optimize Geometry">
-    
-    **Design improvements:**
-    - Hollow pin (same strength, lower weight)
-    - Radius fillets (reduce stress concentration)
-    - Surface treatments (improve fatigue life)
-    - Better load distribution (bearing design)
-    
-  </TabItem>
-</Tabs>
+**Find:** Principal stresses and safety factor using von Mises criterion.
 
-## 🛠️ Advanced Failure Analysis Considerations
+<details>
+<summary>**Click to reveal solution**</summary>
 
-### Fatigue Under Complex Stress States
+<Steps>
 
-Real robotic joints experience cyclic loading:
+1. ✓ **Calculate pressure-induced stresses**
+   
+   For thin-walled spherical pressure vessel:
+   - Hoop stress: σ₁ = σ₂ = pR/(2t) = (2.5 × 500)/(2 × 20) = 31.25 MPa
+   - Radial stress: σ₃ ≈ 0 (thin wall assumption)
 
-**Multiaxial Fatigue Criteria:**
+2. ✓ **Add thermal stress components**
+   
+   Combined stress state:
+   - σ₁ = 31.25 + 50 = 81.25 MPa (tangential)
+   - σ₂ = 31.25 MPa (tangential)  
+   - σ₃ = 0 MPa (radial)
 
-1. **Equivalent alternating stress approach:**
-   $$\sigma_{eq,alt} = \sqrt{\sigma_{1,alt}^2 - \sigma_{1,alt}\sigma_{2,alt} + \sigma_{2,alt}^2}$$
+3. ✓ **Identify principal stresses**
+   
+   Since stresses are aligned with coordinate axes:
+   - σ₁ = 81.25 MPa (maximum principal stress)
+   - σ₂ = 31.25 MPa (intermediate principal stress)
+   - σ₃ = 0 MPa (minimum principal stress)
 
-2. **Critical plane approach:**
-   - Find plane of maximum shear strain amplitude
-   - Consider normal stress on critical plane
-   - Account for mean stress effects
+4. ✓ **Apply von Mises failure criterion**
+   
+   σ_eq = √[(σ₁-σ₂)² + (σ₂-σ₃)² + (σ₃-σ₁)²]/√2
+   σ_eq = √[(81.25-31.25)² + (31.25-0)² + (0-81.25)²]/√2
+   σ_eq = √[2500 + 976.6 + 6601.6]/√2 = 71.4 MPa
 
-### Stress Concentration Effects
+5. ✓ **Calculate safety factor**
+   
+   SF = σ_yield/σ_eq = 250/71.4 = 3.50
+   Required SF = 3.0, Actual SF = 3.50 ✓ (Design adequate)
 
-**Common stress concentrations in joints:**
-- Keyways: K_t = 2.0-3.0
-- Diameter changes: K_t = 1.5-2.5
-- Pin holes: K_t = 2.0-4.0
+</Steps>
 
-**Fatigue notch factor:**
-$$K_f = 1 + q(K_t - 1)$$
+</details>
 
-Where q = notch sensitivity factor (0 &lt; q &lt; 1)
+### Problem 2: Shaft with Keyway Under Combined Loading
 
-## 📋 Design Guidelines for Critical Stress Analysis
+A motor shaft with a keyway experiences combined bending and torsion, creating a complex stress state requiring Mohr's circle analysis.
 
-### Analysis Procedure
+**Given:**
+- Solid circular shaft: diameter d = 50 mm  
+- Keyway: 12 mm wide × 6 mm deep (standard)
+- Bending moment: M = 800 N·m
+- Torque: T = 1200 N·m  
+- Material: Steel 4140 (σ_yield = 415 MPa)
+- Stress concentration factor for keyway: Kt = 2.5
 
-:::note[Complete Stress Analysis Process]
-1. **Identify all loading components** and their orientations
-2. **Calculate stress components** at critical locations
-3. **Construct Mohr's circle** or use analytical methods
-4. **Determine principal stresses** and maximum shear stress
-5. **Apply appropriate failure theory** for material and loading type
-6. **Check fatigue criteria** for cyclic loading
-7. **Account for stress concentrations** and environmental effects
-8. **Optimize design** if safety factors are inadequate or excessive
-:::
+**Find:** Principal stresses at keyway location and safety factor.
 
-### Material-Specific Failure Theory Selection
+<details>
+<summary>**Click to reveal solution**</summary>
 
-**Ductile Materials (Steel, Aluminum):**
-- **von Mises theory** most accurate
-- Consider both static and fatigue failure
-- Account for mean stress effects in fatigue
+<Steps>
 
-**Brittle Materials (Cast Iron, Ceramics):**
-- **Maximum normal stress theory** for tension
-- **Modified failure envelopes** for combined tension-compression
-- Fatigue less critical than static failure
+1. ✓ **Calculate nominal stresses**
+   
+   At keyway location on shaft surface:
+   - Bending stress: σ = Mc/I = (800×10³×25)/(π×50⁴/64) = 32.7 MPa
+   - Torsional shear: τ = Tr/J = (1200×10³×25)/(π×50⁴/32) = 24.5 MPa
 
-**Composite Materials:**
-- **Tsai-Wu or Tsai-Hill criteria** for anisotropic materials
-- **Interlaminar shear** considerations
-- **Fiber-matrix failure modes**
+2. ✓ **Apply stress concentration**
+   
+   Keyway amplifies stresses:
+   - σ_max = Kt × σ = 2.5 × 32.7 = 81.8 MPa
+   - τ_max = Kt × τ = 2.5 × 24.5 = 61.3 MPa
+
+3. ✓ **Calculate principal stresses**
+   
+   For combined normal and shear stress:
+   - σ_avg = σ_max/2 = 81.8/2 = 40.9 MPa
+   - σ₁ = σ_avg + √(σ_avg² + τ_max²) = 40.9 + √(40.9² + 61.3²) = 114.5 MPa
+   - σ₂ = σ_avg - √(σ_avg² + τ_max²) = 40.9 - 73.6 = -32.7 MPa
+
+4. ✓ **Determine maximum shear stress**
+   
+   τ_max = (σ₁ - σ₂)/2 = (114.5 - (-32.7))/2 = 73.6 MPa
+
+5. ✓ **Apply von Mises criterion**
+   
+   σ_eq = √(σ₁² - σ₁σ₂ + σ₂²) = √(114.5² - 114.5×(-32.7) + (-32.7)²) = 128.2 MPa
+   SF = 415/128.2 = 3.24 ✓ (Adequate safety factor)
+
+</Steps>
+
+</details>
+
+### Problem 3: Bolted Joint Under Eccentric Loading
+
+A bolted connection experiences eccentric loading creating non-uniform stress distribution requiring principal stress analysis for the most critical bolt.
+
+**Given:**
+- Bolt material: Steel Grade 8.8 (σ_yield = 640 MPa)  
+- Bolt diameter: M12 (nominal diameter 12 mm)
+- Tensile load: F = 8000 N (eccentric, creates additional bending)
+- Bending moment on bolt: M = 96 N·m (from load eccentricity)
+- Thread stress concentration: Kt = 3.0
+- Safety factor required: 4.0
+
+**Find:** Principal stresses in bolt and design adequacy.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Calculate bolt cross-sectional properties**
+   
+   For M12 bolt (tensile stress area):
+   - As = 84.3 mm² (standard value for M12)
+   - Minor diameter: d = 10.106 mm
+   - Section modulus: S = πd³/32 = π(10.106)³/32 = 101.4 mm³
+
+2. ✓ **Calculate nominal stresses**
+   
+   Direct tensile stress: σ_t = F/As = 8000/84.3 = 94.9 MPa
+   Bending stress: σ_b = M/S = 96×10³/101.4 = 946.7 MPa
+
+3. ✓ **Combine stresses and apply stress concentration**
+   
+   Total tensile stress: σ_total = σ_t + σ_b = 94.9 + 946.7 = 1041.6 MPa
+   With stress concentration: σ_max = Kt × σ_total = 3.0 × 1041.6 = 3124.8 MPa
+
+4. ✓ **Identify principal stress state**
+   
+   Uniaxial tension case:
+   - σ₁ = 3124.8 MPa (maximum tensile)
+   - σ₂ = σ₃ = 0 MPa
+   Von Mises equivalent: σ_eq = σ₁ = 3124.8 MPa
+
+5. ✓ **Check safety factor**
+   
+   SF = σ_yield/σ_eq = 640/3124.8 = 0.20
+   Required SF = 4.0, Actual SF = 0.20 ⚠️ (Severely inadequate - redesign required)
+
+</Steps>
+
+</details>
 
 ## 📋 Course Completion Summary
 

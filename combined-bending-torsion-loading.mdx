@@ -2,7 +2,7 @@
 title: "Lesson 2.4: Combined Bending and Torsion Loading"
 description: "Analyzing multi-axis loading in robotic wrist joints experiencing simultaneous bending and twisting forces"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-15
+pubDate: 2025-09-16
 tags: ["solid-mechanics", "combined-loading", "robotic-wrist", "equivalent-stress", "multi-axis-loading"]
 excerpt: "Learn combined stress analysis through robotic wrist joints, covering principal stress theory, equivalent stress calculations, and failure prediction under simultaneous bending and torsion loading."
 ---
@@ -59,11 +59,7 @@ During industrial operations, the wrist joint simultaneously experiences:
 > **Engineering Question:** How do we analyze a robotic wrist shaft that experiences both 150 N·m bending moment and 200 N·m torque simultaneously, and determine if this combination will cause failure?
 
 ### Why Combined Loading Analysis Matters
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Combined Bending and Twisting Superman](./images/dean-cain-superman.gif)
-  </TailwindWrapper>
-</div>
+
 **Consequences of Inadequate Analysis:**
 - **Unexpected joint failure** during operation
 - **Reduced precision** from excessive deflection
@@ -295,113 +291,158 @@ Let's analyze a realistic wrist joint under combined loading.
 
 </details>
 
-## 📊 Stress Analysis Summary
+## 🔧 Engineering Problems
 
-<CardGrid>
-  <Card title="Von Mises Analysis" icon="approve">
-    **Equivalent Stress:** 77.2 MPa  
-    **Safety Factor:** 5.38  
-    **Status:** <Badge text="Conservative design" variant="success" />
-  </Card>
-  <Card title="Maximum Shear Theory" icon="approve">
-    **Equivalent Stress:** 84.1 MPa  
-    **Safety Factor:** 4.93  
-    **Status:** <Badge text="Safe design" variant="success" />
-  </Card>
-  <Card title="Critical Loading" icon="information">
-    **Bending dominates:** 50.9 MPa normal  
-    **Torsion contributes:** 33.5 MPa shear  
-    **Ratio:** <Badge text="Mixed loading condition" variant="tip" />
-  </Card>
-</CardGrid>
+### Problem 1: Motor Drive Shaft Under Combined Loading
 
-## 🎯 Advanced Analysis: Fatigue Under Combined Loading
+A motor drive shaft in an industrial conveyor system experiences both torsional loads from power transmission and bending moments from belt tension.
 
-### Fatigue Considerations
+**Given:**
+- Solid circular steel shaft: diameter d = 40 mm
+- Torque: T = 300 N·m (from motor power transmission)
+- Bending moment: M = 150 N·m (from belt tension offset)
+- Material: Steel (σ_yield = 250 MPa, τ_yield = 145 MPa)
+- Safety factor required: 2.0
 
-Real robotic systems experience cyclic loading:
+**Find:** Von Mises equivalent stress and safety factor verification.
 
-**Alternating Stress Components:**
-- Bending: Varies with tool orientation
-- Torsion: Varies with joint positioning
-- Combined: Creates complex stress cycles
+<details>
+<summary>**Click to reveal solution**</summary>
 
-<Tabs>
-  <TabItem label="Equivalent Alternating Stress">
-    
-    **For von Mises equivalent stress:**
-    $$\sigma_{eq,alt} = \sqrt{\sigma_{alt}^2 + 3\tau_{alt}^2}$$
-    
-    **For mean stress effects:**
-    $$\sigma_{eq,mean} = \sqrt{\sigma_{mean}^2 + 3\tau_{mean}^2}$$
-    
-  </TabItem>
-  <TabItem label="Modified Goodman">
-    
-    **Fatigue failure criterion:**
-    $$\frac{\sigma_{alt}}{S_e} + \frac{\sigma_{mean}}{S_{ut}} = \frac{1}{n}$$
-    
-    Where:
-    - S_e = Endurance limit
-    - S_ut = Ultimate tensile strength  
-    - n = Safety factor for fatigue
-    
-  </TabItem>
-  <TabItem label="Design Guidelines">
-    
-    **Fatigue design rules:**
-    1. Minimize stress concentrations
-    2. Use appropriate surface finishes
-    3. Consider size effects
-    4. Apply fatigue safety factors (3-10)
-    
-  </TabItem>
-</Tabs>
+<Steps>
 
-### Optimization Strategies
+1. ✓ **Calculate section properties**
+   
+   For solid circular cross-section (d = 40 mm):
+   - Area: A = πd²/4 = π(40)²/4 = 1,257 mm²
+   - Polar moment: J = πd⁴/32 = π(40)⁴/32 = 251,300 mm⁴
+   - Second moment: I = πd⁴/64 = π(40)⁴/64 = 125,700 mm⁴
 
-**For over-designed joints (SF > required):**
+2. ✓ **Calculate normal stress from bending**
+   
+   Maximum bending stress at outer fiber:
+   σ = Mc/I = (150 × 10³ × 20)/125,700 = 23.9 MPa
 
-1. **Reduce shaft diameter** → Weight savings, faster dynamics
-2. **Use hollow sections** → Maintain strength, reduce inertia
-3. **Optimize material** → High strength-to-weight ratio
-4. **Redesign load paths** → Minimize combined loading
+3. ✓ **Calculate shear stress from torsion**
+   
+   Maximum torsional shear stress at outer fiber:
+   τ = Tr/J = (300 × 10³ × 20)/251,300 = 23.9 MPa
 
-## 🛠️ Design Guidelines for Combined Loading
+4. ✓ **Apply von Mises failure criterion**
+   
+   Von Mises equivalent stress:
+   σ_eq = √(σ² + 3τ²) = √(23.9² + 3 × 23.9²) = √(571.2 + 1,713.5) = 47.8 MPa
 
-### Analysis Procedure
+5. ✓ **Calculate safety factor**
+   
+   SF = σ_yield/σ_eq = 250/47.8 = 5.23
+   Required SF = 2.0, Actual SF = 5.23 ✓ (Very safe design)
 
-:::note[Combined Loading Design Process]
-1. **Identify all loading components** (bending, torsion, axial)
-2. **Calculate individual stress components** at critical points
-3. **Apply appropriate failure theory** (von Mises recommended for ductile materials)
-4. **Check both static and fatigue failure modes**
-5. **Optimize geometry** if over-designed or under-designed
-:::
+</Steps>
 
-### Theory Selection Guidelines
+</details>
 
-**Von Mises (Distortion Energy):**
-- **Best for ductile materials** (steel, aluminum)
-- **Accurate for complex stress states**
-- **Widely accepted in engineering practice**
+### Problem 2: Robotic Wrist Joint Shaft
 
-**Maximum Shear Stress (Tresca):**
-- **Conservative predictions**
-- **Simple calculations**
-- **Good for preliminary design**
+A robotic wrist joint experiences simultaneous bending and twisting during manipulation tasks.
 
-**Maximum Normal Stress:**
-- **For brittle materials only**
-- **Not suitable for combined loading**
-- **Limited practical use**
+**Given:**
+- Hollow circular aluminum shaft: outer diameter 50 mm, inner diameter 40 mm
+- Bending moment: M = 80 N·m (from payload and inertia)  
+- Torque: T = 120 N·m (from joint rotation)
+- Material: Aluminum 7075-T6 (σ_yield = 500 MPa, τ_yield = 290 MPa)
+- Design requirement: SF > 3.0
 
-### Common Applications
+**Find:** Compare von Mises and maximum shear stress theories.
 
-**Robotic Joints:** Combined bending and torsion dominant
-**Drive Shafts:** Torsion with bending from misalignment
-**Tool Holders:** Bending dominant with some torsion
-**Gear Shafts:** Combined bending, torsion, and contact stresses
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Calculate hollow section properties**
+   
+   For hollow circular cross-section:
+   - Second moment: I = π(D⁴-d⁴)/64 = π(50⁴-40⁴)/64 = 230,700 mm⁴
+   - Polar moment: J = π(D⁴-d⁴)/32 = π(50⁴-40⁴)/32 = 461,400 mm⁴
+   - Outer radius: R = 25 mm
+
+2. ✓ **Calculate stress components**
+   
+   Normal stress: σ = MR/I = (80 × 10³ × 25)/230,700 = 8.66 MPa
+   Shear stress: τ = TR/J = (120 × 10³ × 25)/461,400 = 6.50 MPa
+
+3. ✓ **Apply von Mises theory**
+   
+   σ_eq = √(σ² + 3τ²) = √(8.66² + 3 × 6.50²) = √(75.0 + 126.8) = 14.2 MPa
+   SF_vonMises = 500/14.2 = 35.2
+
+4. ✓ **Apply maximum shear stress theory (Tresca)**
+   
+   Principal stresses:
+   σ₁ = σ/2 + √((σ/2)² + τ²) = 4.33 + √(18.7 + 42.3) = 12.1 MPa
+   σ₂ = σ/2 - √((σ/2)² + τ²) = 4.33 - 7.81 = -3.48 MPa
+   σ_eq,Tresca = σ₁ - σ₂ = 12.1 - (-3.48) = 15.6 MPa
+
+5. ✓ **Compare safety factors**
+   
+   SF_Tresca = 500/15.6 = 32.1
+   Both theories show SF >> 3.0 required (very conservative design)
+
+</Steps>
+
+</details>
+
+### Problem 3: Electric Motor Coupling Shaft
+
+A flexible coupling shaft connects an electric motor to a pump, experiencing both torque transmission and misalignment bending.
+
+**Given:**
+- Solid circular stainless steel shaft: diameter 30 mm
+- Transmitted torque: T = 200 N·m (motor power)
+- Bending moment: M = 75 N·m (from coupling misalignment)
+- Material: Stainless Steel 316 (σ_yield = 210 MPa)
+- Operating temperature: 80°C (no significant strength reduction)
+
+**Find:** Maximum equivalent stress and failure theory comparison.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Calculate section properties**
+   
+   For d = 30 mm solid circular shaft:
+   - Second moment: I = πd⁴/64 = π(30)⁴/64 = 39,760 mm⁴
+   - Polar moment: J = πd⁴/32 = π(30)⁴/32 = 79,520 mm⁴
+   - c = r = 15 mm
+
+2. ✓ **Calculate individual stress components**
+   
+   Bending stress: σ = Mc/I = (75 × 10³ × 15)/39,760 = 28.3 MPa
+   Torsional shear: τ = Tr/J = (200 × 10³ × 15)/79,520 = 37.7 MPa
+
+3. ✓ **Von Mises equivalent stress**
+   
+   σ_eq = √(σ² + 3τ²) = √(28.3² + 3 × 37.7²) = √(800.9 + 4,265.5) = 71.2 MPa
+
+4. ✓ **Maximum shear stress equivalent**
+   
+   Principal stresses:
+   σ₁ = 14.15 + √(14.15² + 37.7²) = 14.15 + 40.2 = 54.4 MPa
+   σ₂ = 14.15 - 40.2 = -26.0 MPa
+   σ_eq,Tresca = 54.4 - (-26.0) = 80.4 MPa
+
+5. ✓ **Safety factor assessment**
+   
+   SF_vonMises = 210/71.2 = 2.95
+   SF_Tresca = 210/80.4 = 2.61
+   Both theories show adequate safety (SF > 2.5 for rotating machinery)
+
+</Steps>
+
+</details>
 
 ## 📋 Summary and Next Steps
 

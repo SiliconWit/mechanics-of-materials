@@ -1,0 +1,628 @@
+---
+title: "Chapter 2 Assignments: Structural Analysis in Mechatronic Systems"
+description: "Comprehensive assignments covering shear force, bending moment, stress analysis, deflections, combined loading, composite beams, and failure analysis in mechatronic applications"
+contributors: "sam-macharia,jack-kojiro"
+pubDate: 2025-09-16
+tags: ["solid-mechanics", "assignments", "structural-analysis", "mechatronics", "beam-analysis", "robotics"]
+excerpt: "Apply your knowledge of structural analysis through five comprehensive assignments involving robotic systems, CNC machines, and mechatronic components with real-world engineering challenges."
+---
+
+import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
+import TawkWidget from '../../../../components/TawkWidget.astro';
+import UniversalContentContributors from '../../../../components/UniversalContentContributors.astro';
+import Copyright from '../../../../components/Copyright.astro';
+import BionicText from '../../../../components/BionicText.astro';
+import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+
+<UniversalContentContributors 
+  contributors={frontmatter.contributors}
+/>
+
+---
+
+## 🎓 **Chapter 2: Structural Behavior in Motion and Force Transfer - Assignments**
+
+<BionicText method="advanced" intensity="medium" class="highlight">
+These assignments integrate the comprehensive knowledge from Lessons 2.1 through 2.6, challenging you to analyze real mechatronic systems using shear force and bending moment analysis, stress calculations, deflection predictions, combined loading evaluation, composite beam behavior, and failure analysis techniques.
+</BionicText>
+
+---
+
+## 📋 Assignment Overview
+
+<CardGrid>
+  <Card title="Assignment 1" icon="puzzle">
+    **Industrial Robotic Manipulator**
+
+    Comprehensive analysis of a 6-DOF industrial robot arm under multi-axis loading conditions.
+  </Card>
+  <Card title="Assignment 2" icon="setting">
+    **CNC Machine Tool System**
+
+    Design and analysis of a high-speed CNC spindle for precision machining applications.
+  </Card>
+  <Card title="Assignment 3" icon="rocket">
+    **Automated Material Handling**
+
+    Structural design of an overhead crane system for warehouse automation.
+  </Card>
+  <Card title="Assignment 4" icon="document">
+    **Hybrid Manufacturing Platform**
+
+    Analysis of a composite beam structure for additive-subtractive manufacturing systems.
+  </Card>
+  <Card title="Assignment 5" icon="warning">
+    **Critical System Integration**
+
+    Failure analysis and redesign of a mechatronic joint under complex loading scenarios.
+  </Card>
+</CardGrid>
+
+---
+
+---
+
+## 📝 Assignment 1: Industrial Robotic Manipulator Structural Analysis
+
+### System Description
+
+You are tasked with analyzing a 6-DOF industrial robotic manipulator used in automotive assembly. The robot must handle a maximum payload of 150 kg while maintaining positioning accuracy of ±0.1 mm at the end-effector.
+
+**System Specifications:**
+- Main arm length: 3.2 m (cantilever configuration)
+- Secondary arm length: 1.8 m
+- Material: High-strength steel (σ_yield = 350 MPa, E = 200 GPa)
+- Cross-section: Hollow rectangular (200 mm × 150 mm, wall thickness = 8 mm)
+- Operating environment: Continuous duty cycle, 24/7 operation
+
+### Part A: Shear Force and Bending Moment Analysis (25 points)
+
+<Steps>
+1. **Loading Analysis**
+   - Calculate the distributed load from the arm's self-weight (arm mass = 85 kg/m)
+   - Determine point loads from payload (150 kg), end-effector (25 kg), and secondary arm assembly (120 kg)
+   - Account for dynamic amplification factor of 1.5 during rapid positioning
+
+2. **Diagram Construction**
+   - Construct accurate shear force and bending moment diagrams for the main arm
+   - Identify locations of maximum shear force and maximum bending moment
+   - Determine critical cross-sections for stress analysis
+
+3. **Critical Values**
+   - Calculate maximum shear force and its location
+   - Calculate maximum bending moment and its location
+   - Verify equilibrium conditions throughout the analysis
+</Steps>
+
+### Part B: Bending Stress Analysis (25 points)
+
+<Steps>
+1. **Cross-Section Properties**
+   - Calculate the moment of inertia for the hollow rectangular cross-section
+   - Determine the section modulus and neutral axis location
+   - Account for stress concentration factors at connection points
+
+2. **Stress Calculations**
+   - Calculate maximum tensile and compressive bending stresses
+   - Determine stress distribution across the critical cross-section
+   - Compare calculated stresses with material yield strength
+
+3. **Safety Factor Evaluation**
+   - Calculate the factor of safety based on yield strength
+   - Evaluate adequacy for industrial robotic applications
+   - Recommend design modifications if necessary
+</Steps>
+
+### Part C: Deflection and Precision Analysis (25 points)
+
+<Steps>
+1. **Deflection Calculations**
+   - Calculate maximum deflection at the end-effector using superposition
+   - Determine slope at critical locations along the arm
+   - Account for both bending and shear deformations
+
+2. **Precision Requirements**
+   - Compare calculated deflections with positioning accuracy requirements (±0.1 mm)
+   - Analyze the effect of thermal expansion on positioning accuracy
+   - Evaluate stiffness requirements for the robotic application
+
+3. **Design Optimization**
+   - Propose modifications to meet precision requirements
+   - Calculate required moment of inertia for improved stiffness
+   - Consider trade-offs between weight and stiffness
+</Steps>
+
+### Part D: Combined Loading Analysis (25 points)
+
+<Steps>
+1. **Multi-Axis Loading**
+   - Include torsional loading from wrist joint rotation (torque = 2500 N⋅m)
+   - Calculate combined stresses using von Mises equivalent stress theory
+   - Account for biaxial stress states at critical locations
+
+2. **Failure Prediction**
+   - Apply appropriate failure theories for ductile steel material
+   - Calculate equivalent stress and compare with yield strength
+   - Evaluate fatigue considerations for continuous operation
+
+3. **Joint Design Considerations**
+   - Analyze stress concentrations at bearing connections
+   - Design appropriate fillets and transitions
+   - Consider bolted joint analysis at mounting interfaces
+</Steps>
+
+**Deliverables:**
+- Complete calculations with clear free-body diagrams
+- Shear force and bending moment diagrams with critical values labeled
+- Stress distribution plots across critical cross-sections
+- Deflection analysis with precision evaluation
+- Design recommendations with supporting calculations
+
+---
+
+## 📝 Assignment 2: CNC Machine Tool Spindle System
+
+### System Description
+
+Design and analyze a high-speed CNC machining spindle for aerospace component manufacturing. The spindle must operate at 20,000 RPM while maintaining tool runout less than 5 μm.
+
+**System Specifications:**
+- Spindle length: 800 mm (between bearings)
+- Tool overhang: 150 mm from front bearing
+- Material: Tool steel (σ_yield = 1200 MPa, E = 210 GPa)
+- Operating speed: 20,000 RPM
+- Maximum cutting force: 5000 N (radial), 2000 N (axial)
+
+### Part A: Dynamic Loading Analysis (30 points)
+
+<Steps>
+1. **Cutting Force Analysis**
+   - Model cutting forces as distributed and concentrated loads
+   - Calculate equivalent static loads including dynamic amplification
+   - Determine reaction forces at bearing supports
+
+2. **Rotational Effects**
+   - Calculate centrifugal forces on the rotating spindle
+   - Analyze gyroscopic moments during machine acceleration
+   - Include unbalance forces (assume 0.1 g⋅mm residual unbalance)
+
+3. **Critical Speed Analysis**
+   - Calculate the first critical speed of the spindle
+   - Ensure operating speed is safely below critical speed
+   - Analyze the effect of tool mass on critical speed
+</Steps>
+
+### Part B: Stress and Deflection Analysis (35 points)
+
+<Steps>
+1. **Bending Stress Calculation**
+   - Calculate maximum bending stresses in the spindle shaft
+   - Include stress concentrations at bearing seats and tool interface
+   - Analyze stress variation along the spindle length
+
+2. **Tool Point Deflection**
+   - Calculate deflection at the tool tip using beam theory
+   - Include effects of bearing stiffness and compliance
+   - Compare deflection with runout requirements (5 μm)
+
+3. **Thermal Analysis**
+   - Calculate thermal expansion effects at high-speed operation
+   - Analyze thermal stress due to temperature gradients
+   - Include bearing heat generation effects on spindle expansion
+</Steps>
+
+### Part C: Bearing Design Integration (35 points)
+
+<Steps>
+1. **Bearing Load Analysis**
+   - Calculate radial and axial loads on front and rear bearings
+   - Determine bearing life based on L10 life calculations
+   - Select appropriate bearing types and configurations
+
+2. **Stiffness Analysis**
+   - Calculate system stiffness including bearing and spindle contributions
+   - Analyze the effect of preload on bearing stiffness
+   - Optimize bearing arrangement for maximum stiffness
+
+3. **Vibration Analysis**
+   - Calculate natural frequencies of the spindle-bearing system
+   - Identify potential resonance frequencies
+   - Design damping strategies for vibration control
+</Steps>
+
+**Deliverables:**
+- Complete dynamic analysis with force diagrams
+- Stress and deflection calculations with safety factor evaluation
+- Bearing selection and life calculations
+- Critical speed analysis and recommendations
+- Thermal analysis and expansion calculations
+
+---
+
+## 📝 Assignment 3: Automated Overhead Crane System
+
+### System Description
+
+Design the main bridge girder for an automated overhead crane in a smart warehouse facility. The crane operates continuously and must handle variable loads with high precision positioning.
+
+**System Specifications:**
+- Bridge span: 25 m (simply supported)
+- Maximum lifting capacity: 50 tons
+- Crane trolley weight: 8 tons
+- Bridge girder: Steel I-beam (σ_yield = 250 MPa, E = 200 GPa)
+- Operating class: Heavy duty (2 million cycles expected)
+
+### Part A: Moving Load Analysis (25 points)
+
+<Steps>
+1. **Load Cases**
+   - Analyze maximum moment due to trolley and load at mid-span
+   - Determine maximum moment due to moving trolley across the span
+   - Calculate impact factors for dynamic loading conditions
+
+2. **Influence Lines**
+   - Construct influence lines for maximum positive moment
+   - Determine critical positioning of trolley for maximum shear
+   - Analyze multiple crane operation scenarios
+
+3. **Load Combinations**
+   - Combine dead loads, live loads, and dynamic effects
+   - Include wind loads and seismic considerations
+   - Apply appropriate load factors for ultimate strength design
+</Steps>
+
+### Part B: Beam Design and Analysis (25 points)
+
+<Steps>
+1. **Cross-Section Selection**
+   - Select appropriate I-beam section based on moment requirements
+   - Calculate section properties (I, S, r) for selected beam
+   - Verify adequacy for both strength and deflection limits
+
+2. **Lateral-Torsional Buckling**
+   - Check lateral-torsional buckling stability
+   - Determine required lateral bracing intervals
+   - Calculate modification factors for reduced moment capacity
+
+3. **Local Buckling Analysis**
+   - Check web and flange local buckling
+   - Verify width-thickness ratios against code limits
+   - Design stiffeners if required for web stability
+</Steps>
+
+### Part C: Fatigue Analysis (25 points)
+
+<Steps>
+1. **Stress Range Analysis**
+   - Calculate stress ranges due to moving trolley loads
+   - Determine effective stress ranges for fatigue analysis
+   - Identify critical details susceptible to fatigue cracking
+
+2. **Fatigue Life Calculation**
+   - Apply appropriate S-N curves for steel details
+   - Calculate accumulated fatigue damage using Miner's rule
+   - Verify fatigue life exceeds design requirements (2 million cycles)
+
+3. **Fatigue Improvement Strategies**
+   - Design smooth transitions and avoid stress concentrations
+   - Specify appropriate welding procedures and inspection requirements
+   - Recommend maintenance procedures for fatigue-critical details
+</Steps>
+
+### Part D: Control System Integration (25 points)
+
+<Steps>
+1. **Deflection Monitoring**
+   - Calculate deflection limits for automated positioning accuracy
+   - Design real-time deflection monitoring system
+   - Integrate deflection compensation in control algorithms
+
+2. **Dynamic Response**
+   - Analyze natural frequencies and mode shapes
+   - Design vibration control strategies
+   - Optimize acceleration/deceleration profiles to minimize dynamic effects
+
+3. **Safety Systems**
+   - Design overload protection systems
+   - Implement structural health monitoring
+   - Develop predictive maintenance strategies based on structural analysis
+</Steps>
+
+**Deliverables:**
+- Moving load analysis with influence line diagrams
+- Complete beam design calculations with code checks
+- Fatigue analysis and life prediction
+- Dynamic response analysis and control integration
+- Safety system design recommendations
+
+---
+
+## 📝 Assignment 4: Hybrid Manufacturing Platform Structure
+
+### System Description
+
+Analyze a composite beam structure for a hybrid additive-subtractive manufacturing platform. The system combines 3D printing capabilities with CNC machining in a single machine, requiring exceptional stiffness and thermal stability.
+
+**System Specifications:**
+- Machine bed length: 4.5 m
+- Steel reinforcement: W21×68 sections (E_steel = 200 GPa)
+- Aluminum casting: 6061-T6 aluminum (E_aluminum = 69 GPa)
+- Thermal environment: 20°C to 80°C operating range
+- Vibration requirements: &lt;1 μm amplitude at cutting frequencies
+
+### Part A: Composite Section Analysis (30 points)
+
+<Steps>
+1. **Transformed Section Method**
+   - Calculate the modular ratio (n = E_steel/E_aluminum)
+   - Transform the aluminum section to equivalent steel area
+   - Locate the neutral axis of the composite section
+
+2. **Section Properties**
+   - Calculate the moment of inertia of the transformed section
+   - Determine section moduli for steel and aluminum portions
+   - Verify calculations using parallel axis theorem
+
+3. **Material Interface Analysis**
+   - Analyze shear stress distribution at the steel-aluminum interface
+   - Calculate required bond strength for interface integrity
+   - Design mechanical connections (bolts/studs) if adhesive bonding insufficient
+</Steps>
+
+### Part B: Stress Analysis Under Service Loads (35 points)
+
+<Steps>
+1. **Manufacturing Load Analysis**
+   - Model loads from 3D printing process (thermal loads, support reactions)
+   - Analyze CNC machining forces transmitted through the bed structure
+   - Include loads from machine components (spindles, linear guides, etc.)
+
+2. **Stress Distribution**
+   - Calculate bending stresses in steel reinforcement
+   - Calculate bending stresses in aluminum casting
+   - Verify that maximum stresses remain within allowable limits
+
+3. **Interface Shear Analysis**
+   - Calculate horizontal shear forces at steel-aluminum interface
+   - Design shear connectors for composite action
+   - Analyze slip and separation potential under loading
+</Steps>
+
+### Part C: Thermal Analysis (35 points)
+
+<Steps>
+1. **Thermal Expansion Analysis**
+   - Calculate differential thermal expansion between steel and aluminum
+   - Analyze thermal stresses due to temperature gradients
+   - Design expansion joints and flexible connections where needed
+
+2. **Thermal Distortion Prediction**
+   - Calculate machine bed distortion under thermal loading
+   - Analyze impact on manufacturing precision and tolerances
+   - Design thermal compensation strategies
+
+3. **Thermal Cycling Effects**
+   - Analyze fatigue effects from thermal cycling (20°C to 80°C)
+   - Calculate thermal stress ranges and fatigue life
+   - Design for thermal stress relief and minimize constraint
+</Steps>
+
+**Deliverables:**
+- Composite section analysis with transformed section properties
+- Complete stress analysis for both materials under service loads
+- Thermal analysis with expansion and distortion calculations
+- Interface design for shear transfer and thermal compatibility
+- Thermal compensation system recommendations
+
+---
+
+## 📝 Assignment 5: Mechatronic Joint Failure Analysis and Redesign
+
+### System Description
+
+Investigate the failure of a critical mechatronic joint in a precision assembly robot and develop an improved design. The original joint failed after 180,000 cycles due to fatigue cracking at the stress concentration.
+
+**Original System Specifications:**
+- Joint material: 4140 steel, heat-treated (σ_yield = 850 MPa, σ_ultimate = 1000 MPa)
+- Loading: Combined bending (M = 15,000 N⋅mm) and torsion (T = 8,000 N⋅mm)
+- Geometry: Stepped shaft with 2:1 diameter ratio (d = 25 mm, D = 50 mm)
+- Operating frequency: 2 Hz continuous operation
+- Failed at root of step after 180,000 cycles
+
+### Part A: Failure Analysis Investigation (25 points)
+
+<Steps>
+1. **Stress Concentration Analysis**
+   - Calculate theoretical stress concentration factors (Kt) for the stepped geometry
+   - Determine fatigue stress concentration factor (Kf) using material sensitivity
+   - Calculate actual stress levels at the failure location
+
+2. **Principal Stress Analysis**
+   - Construct Mohr's circle for the combined loading state
+   - Calculate principal stresses and maximum shear stress
+   - Determine orientation of principal stress planes
+
+3. **Fatigue Life Prediction**
+   - Apply appropriate S-N curve for the 4140 steel material
+   - Calculate stress amplitude and mean stress effects
+   - Predict fatigue life using Goodman or Gerber criteria
+   - Compare predicted life with actual failure (180,000 cycles)
+</Steps>
+
+### Part B: Failure Mode Identification (25 points)
+
+<Steps>
+1. **Crack Initiation Analysis**
+   - Identify most likely crack initiation location based on stress analysis
+   - Analyze the orientation of initial fatigue crack
+   - Consider surface finish and material condition effects
+
+2. **Crack Propagation Modeling**
+   - Apply fracture mechanics principles for crack growth analysis
+   - Calculate stress intensity factors for the growing crack
+   - Estimate crack propagation life using Paris law
+
+3. **Final Failure Mechanism**
+   - Determine critical crack size for final fracture
+   - Analyze whether failure was sudden or gradual
+   - Consider environmental factors (corrosion, temperature, etc.)
+</Steps>
+
+### Part C: Redesign Solutions (25 points)
+
+<Steps>
+1. **Geometric Modifications**
+   - Design improved fillet radius to reduce stress concentration
+   - Consider alternative shaft configurations (gradual taper, multiple steps)
+   - Calculate stress concentration factors for proposed geometries
+
+2. **Material Selection**
+   - Evaluate alternative materials with improved fatigue resistance
+   - Consider surface treatments (shot peening, case hardening, coatings)
+   - Analyze cost-benefit trade-offs for material upgrades
+
+3. **Design Optimization**
+   - Optimize geometry for minimum stress concentration
+   - Balance stress reduction with manufacturing constraints
+   - Consider weight and space limitations in the mechatronic system
+</Steps>
+
+### Part D: Verification and Validation (25 points)
+
+<Steps>
+1. **Stress Analysis of Redesign**
+   - Calculate stress levels in the improved design
+   - Verify stress concentration reduction achieved
+   - Confirm adequate safety factors for the application
+
+2. **Fatigue Life Prediction**
+   - Predict fatigue life of the redesigned joint
+   - Compare with design requirements (minimum 2 million cycles)
+   - Include appropriate safety factors for critical application
+
+3. **Testing and Validation Plan**
+   - Design accelerated fatigue testing protocol
+   - Specify inspection and monitoring procedures
+   - Develop predictive maintenance strategies for the improved design
+</Steps>
+
+**Deliverables:**
+- Complete failure analysis with root cause identification
+- Principal stress analysis with Mohr's circle construction
+- Detailed redesign with stress concentration calculations
+- Fatigue life predictions for original and improved designs
+- Testing and validation plan for the redesigned component
+
+---
+
+## 🛠️ Interactive Analysis Tools
+
+<LinkButton href="/product-development/robotic-arm-cantilever-analysis/" variant="primary" icon="puzzle" iconPlacement="start">
+Interactive Beam Analysis
+</LinkButton>
+
+You may use this interactive tool to verify basic calculations and explore different loading scenarios for beam analysis problem in Lesson 2.1.
+
+## 📊 Grading Rubric
+
+Each assignment is worth 100 points, distributed as follows:
+
+<Tabs>
+  <TabItem label="Technical Analysis">
+    **Technical Accuracy (40 points)**
+    - Correct application of theoretical principles
+    - Accurate calculations and methodology
+    - Proper use of engineering formulas and standards
+    - Clear understanding of physical phenomena
+  </TabItem>
+  <TabItem label="Problem Solving">
+    **Engineering Problem-Solving (30 points)**
+    - Systematic approach to complex problems
+    - Creative solutions and design thinking
+    - Integration of multiple analysis methods
+    - Consideration of practical constraints
+  </TabItem>
+  <TabItem label="Communication">
+    **Communication and Documentation (20 points)**
+    - Clear and professional presentation
+    - Well-organized calculations and diagrams
+    - Appropriate use of engineering graphics
+    - Comprehensive deliverable packages
+  </TabItem>
+  <TabItem label="Design Integration">
+    **Design Integration (10 points)**
+    - Understanding of mechatronic system requirements
+    - Consideration of manufacturability and cost
+    - Safety and reliability factors
+    - Innovation and optimization
+  </TabItem>
+</Tabs>
+
+---
+
+## 📚 Resources and References
+
+<CardGrid>
+  <Card title="Analysis Software" icon="laptop">
+    - ANSYS Mechanical (FEA verification)
+    - SolidWorks Simulation (3D modeling)
+    - MATLAB/Python (numerical analysis)
+    - Interactive Beam Analysis Tool (validation)
+  </Card>
+  <Card title="Standards and Codes" icon="document">
+    - AISC Steel Construction Manual
+    - AGMA Gear Rating Standards
+    - ISO 12100 (Machine Safety)
+    - IEC 61508 (Functional Safety)
+  </Card>
+  <Card title="Material Properties" icon="setting">
+    - ASM Metals Handbook
+    - Machinery's Handbook
+    - Material property databases
+    - Fatigue design guidelines
+  </Card>
+  <Card title="Design Guidelines" icon="puzzle">
+    - Roark's Formulas for Stress and Strain
+    - Peterson's Stress Concentration Factors
+    - Mechanical Engineering Design (Shigley)
+    - Machine Element Design principles
+  </Card>
+</CardGrid>
+
+---
+
+## 🎯 Assignment Submission Guidelines
+
+<Steps>
+1. **Documentation Requirements**
+   - Include complete problem statements and assumptions
+   - Show all calculation steps with clear methodology
+   - Provide properly labeled diagrams and sketches
+   - Include appropriate units throughout all calculations
+
+2. **Analysis Verification**
+   - Cross-check results using alternative methods where possible
+   - Verify equilibrium conditions and dimensional consistency
+   - Use the Interactive Beam Analysis tool for validation
+   - Compare results with published solutions or case studies
+
+3. **Design Justification**
+   - Explain design decisions and trade-offs considered
+   - Address safety factors and reliability requirements
+   - Consider manufacturing and economic constraints
+   - Discuss alternative approaches and their relative merits
+
+4. **Professional Presentation**
+   - Use standard engineering notation and terminology
+   - Include executive summary for each assignment
+   - Provide conclusions and recommendations
+   - Follow professional report formatting guidelines
+</Steps>
+
+---
+
+<MechanicsOfMaterialsComments />
+<TawkWidget />
+<Copyright />

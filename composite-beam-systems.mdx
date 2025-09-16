@@ -2,7 +2,7 @@
 title: "Lesson 2.5: Composite and Built-up Beam Systems"
 description: "Analyzing bending stresses in hybrid CNC machine beds with aluminum-steel composite construction"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-15
+pubDate: 2025-09-16
 tags: ["solid-mechanics", "composite-beams", "CNC-bed", "transformed-section", "multi-material"]
 excerpt: "Learn composite beam analysis through a hybrid CNC machine bed with aluminum-steel construction, covering the transformed section method, neutral axis location, and stress distribution in multi-material beam systems."
 ---
@@ -291,86 +291,157 @@ Let's analyze a realistic CNC bed cross-section step by step.
 
 </details>
 
-## 📊 Composite Beam Analysis Summary
+## 🔧 Engineering Problems
 
-<CardGrid>
-  <Card title="Aluminum Casting" icon="approve">
-    **Max Stress:** 14.9 MPa  
-    **Safety Factor:** 9.4  
-    **Status:** <Badge text="Very conservative" variant="success" />
-  </Card>
-  <Card title="Steel Reinforcement" icon="approve">
-    **Max Stress:** 42.6 MPa  
-    **Safety Factor:** 5.9  
-    **Status:** <Badge text="Safe design" variant="success" />
-  </Card>
-  <Card title="Load Distribution" icon="information">
-    **Transformation ratio:** 2.86  
-    **Steel efficiency:** Carries higher stress  
-    **Composite action:** <Badge text="Optimal material usage" variant="tip" />
-  </Card>
-</CardGrid>
+### Problem 1: Steel-Concrete Composite Beam
 
-## 🎯 Advanced Analysis: Interface Considerations
+A composite beam consists of a steel I-beam with a concrete slab cast on top, used in building construction.
 
-### Bond Strength Requirements
+**Given:**
+- Steel I-beam: W200×36 (A = 4580 mm², I = 40.5×10⁶ mm⁴, centroid 100 mm from bottom)
+- Concrete slab: 1000 mm wide × 100 mm thick, cast on steel top flange
+- Simply supported span: L = 6000 mm
+- Uniform load: w = 15 kN/m (including self-weight)
+- Materials: Steel E₁ = 200 GPa, Concrete E₂ = 25 GPa
+- Perfect bond assumed between steel and concrete
 
-The interface between steel and aluminum must transfer **shear forces** to maintain composite action:
+**Find:** Maximum stresses in both steel and concrete.
 
-**Interface shear stress:**
-$$\tau = \frac{VQ}{It}$$
+<details>
+<summary>**Click to reveal solution**</summary>
 
-Where Q is the first moment of area of the steel section about the neutral axis.
+<Steps>
 
-### Thermal Stress Effects
+1. ✓ **Calculate transformation ratio**
+   
+   Using steel as reference material:
+   n = E_concrete/E_steel = 25/200 = 0.125
+   Transformed concrete width: b_t = n × 1000 = 125 mm
 
-<Tabs>
-  <TabItem label="Differential Expansion">
-    
-    **Thermal expansion coefficients:**
-    - Steel: α₁ = 12 × 10⁻⁶ /°C
-    - Aluminum: α₂ = 23 × 10⁻⁶ /°C
-    
-    **Problem:** Aluminum expands more than steel
-    
-  </TabItem>
-  <TabItem label="Thermal Stress">
-    
-    **For temperature change ΔT:**
-    
-    Differential strain: Δε = (α₂ - α₁)ΔT
-    
-    **Thermal stresses develop** if expansion is constrained
-    
-  </TabItem>
-  <TabItem label="Design Solutions">
-    
-    **Mitigation strategies:**
-    - Expansion joints in long structures
-    - Flexible mounting systems
-    - Thermal barrier coatings
-    - Controlled manufacturing temperatures
-    
-  </TabItem>
-</Tabs>
+2. ✓ **Locate neutral axis of composite section**
+   
+   For steel I-beam: A₁ = 4580 mm², ȳ₁ = 100 mm (from bottom)
+   For concrete slab: A₂ = 125 × 100 = 12,500 mm², ȳ₂ = 250 mm (from bottom)
+   
+   ȳ = (A₁ȳ₁ + A₂ȳ₂)/(A₁ + A₂) = (4580×100 + 12,500×250)/(4580 + 12,500) = 202 mm
 
-## 🛠️ Design Guidelines for Composite Beams
+3. ✓ **Calculate composite moment of inertia**
+   
+   Using parallel axis theorem for transformed section:
+   I_composite = I_steel + A₁d₁² + A₂d₂²
+   I_composite = 40.5×10⁶ + 4580×(202-100)² + 12,500×(250-202)²
+   I_composite = 40.5×10⁶ + 47.6×10⁶ + 28.8×10⁶ = 116.9×10⁶ mm⁴
 
-### Optimization Principles
+4. ✓ **Calculate maximum bending moment**
+   
+   For simply supported beam: M_max = wL²/8 = 15×6²/8 = 67.5 kN·m
 
-:::note[Composite Design Rules]
-1. **Place stiffer material** where bending stresses are highest
-2. **Ensure adequate bond strength** at material interfaces
-3. **Consider thermal effects** in temperature-varying environments
-4. **Design for fatigue** if loading is cyclic
-5. **Verify interface shear capacity** throughout the span
-:::
+5. ✓ **Calculate stresses**
+   
+   Steel (bottom): σ_s = M×c_s/I = 67.5×10⁶×202/116.9×10⁶ = 116.7 MPa
+   Concrete (top): σ_c = (M×c_c/I) = 67.5×10⁶×48/116.9×10⁶ = 27.7 MPa (before transformation correction)
 
-### Common Applications
+</Steps>
 
-**Steel-Concrete:** Buildings, bridges (steel tension, concrete compression)
-**Steel-Aluminum:** Aerospace, automotive (steel strength, aluminum lightness)  
-**Carbon Fiber-Aluminum:** High-performance applications (CF stiffness, Al toughness)
+</details>
+
+### Problem 2: Aluminum-Steel Hybrid Beam
+
+A lightweight beam combines aluminum flanges with a steel web for optimal strength-to-weight ratio in aerospace applications.
+
+**Given:**
+- Steel web: 200 mm high × 8 mm thick (E₁ = 200 GPa)
+- Aluminum flanges: 150 mm wide × 20 mm thick, top and bottom (E₂ = 70 GPa)
+- Cantilever beam length: L = 1200 mm
+- Point load: P = 5000 N at free end
+- Perfect bonding between materials
+
+**Find:** Maximum bending stresses in steel and aluminum components.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Transform aluminum to equivalent steel**
+   
+   Transformation ratio: n = E_aluminum/E_steel = 70/200 = 0.35
+   Transformed aluminum flange width: b_t = 150 × 0.35 = 52.5 mm
+
+2. ✓ **Calculate transformed section properties**
+   
+   Due to symmetry, neutral axis is at mid-height (120 mm from bottom)
+   - Steel web area: A₁ = 200 × 8 = 1600 mm²
+   - Aluminum flange areas: A₂ = 2 × (52.5 × 20) = 2100 mm²
+   
+3. ✓ **Calculate moment of inertia of transformed section**
+   
+   I_transformed = I_web + I_flanges + Ad² terms
+   I_transformed = (8×200³)/12 + 2×[(52.5×20³)/12 + 52.5×20×100²]
+   I_transformed = 5.33×10⁶ + 2×[35,000 + 10.5×10⁶] = 26.4×10⁶ mm⁴
+
+4. ✓ **Calculate maximum bending moment**
+   
+   For cantilever: M_max = P × L = 5000 × 1200 = 6×10⁶ N·mm
+
+5. ✓ **Calculate stresses in both materials**
+   
+   Steel web (at neutral axis level): σ_steel = 0 MPa
+   Aluminum flanges: σ_aluminum = M×c/I_transformed × n⁻¹
+   σ_aluminum = (6×10⁶ × 120)/(26.4×10⁶) × (1/0.35) = 78.0 MPa
+
+</Steps>
+
+</details>
+
+### Problem 3: Carbon Fiber-Aluminum Composite Beam
+
+A high-performance beam uses carbon fiber reinforcement bonded to aluminum structure for maximum stiffness with minimal weight.
+
+**Given:**
+- Aluminum beam: rectangular 60 mm wide × 80 mm thick (E₁ = 70 GPa)
+- Carbon fiber strips: 60 mm wide × 3 mm thick, bonded to top and bottom (E₂ = 150 GPa)
+- Simply supported span: L = 800 mm
+- Uniform distributed load: w = 2000 N/m
+- Perfect bond between materials
+
+**Find:** Stress distribution and maximum stresses in each material.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Calculate transformation ratio**
+   
+   Using aluminum as reference: n = E_CF/E_Al = 150/70 = 2.14
+   Carbon fiber strips transform to equivalent aluminum: b_t = 60 × 2.14 = 128.6 mm
+
+2. ✓ **Locate composite neutral axis**
+   
+   Aluminum beam: A₁ = 60 × 80 = 4800 mm², ȳ₁ = 40 mm
+   CF strips: A₂ = 2 × (128.6 × 3) = 771.6 mm², ȳ₂ = 42.5 mm (average of top/bottom)
+   
+   Due to near symmetry, neutral axis ≈ 40 mm from bottom
+
+3. ✓ **Calculate composite moment of inertia**
+   
+   I_aluminum = 60×80³/12 = 2.56×10⁶ mm⁴
+   I_CF = 2×[128.6×3³/12 + 128.6×3×38.5²] = 2×[96.4 + 57,200] = 114,600 mm⁴
+   I_total = 2.56×10⁶ + 0.115×10⁶ = 2.675×10⁶ mm⁴
+
+4. ✓ **Calculate maximum bending moment**
+   
+   M_max = wL²/8 = 2000 × 0.8²/8 = 160 N·m
+
+5. ✓ **Determine maximum stresses**
+   
+   Aluminum: σ_Al = Mc/I = 160×10³ × 40/(2.675×10⁶) = 2.39 MPa
+   Carbon fiber: σ_CF = n × Mc/I = 2.14 × 160×10³ × 41.5/(2.675×10⁶) = 8.46 MPa
+
+</Steps>
+
+</details>
 
 ## 📋 Summary and Next Steps
 

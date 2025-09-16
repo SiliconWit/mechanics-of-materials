@@ -2,7 +2,7 @@
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-15
+pubDate: 2025-09-16
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
 ---
@@ -64,8 +64,6 @@ During gripping operations, the cantilever jaw experiences:
 > **Engineering Question:** How do we calculate the maximum bending stress in a gripper jaw and ensure it doesn't exceed the material's strength limits during maximum gripping force?
 
 ### Why Bending Stress Analysis Matters
-
-<div class="tenor-gif-embed" data-postid="14323151" data-share-method="host" data-aspect-ratio="1.77778" data-width="100%"><a href="https://tenor.com/view/robo-robot-robozinho-little-robot-diy-gif-14323151">Robo Robot GIF</a>from <a href="https://tenor.com/search/robo-gifs">Robo GIFs</a></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
 
 **Consequences of Poor Bending Design:**
 - **Jaw failure** during heavy object manipulation
@@ -276,82 +274,154 @@ The gripper jaw is **severely undersized** and likely to fail under the specifie
 
 </details>
 
-## 📊 Design Verification Summary
+## 🔧 Engineering Problems
 
-<CardGrid>
-  <Card title="Original Design (15×8 mm)" icon="error">
-    **Max Stress:** 250 MPa  
-    **Safety Factor:** 1.08  
-    **Status:** <Badge text="Unsafe - will fail" variant="danger" />
-  </Card>
-  <Card title="Redesigned (15×14 mm)" icon="approve">
-    **Max Stress:** 82 MPa  
-    **Safety Factor:** 3.3  
-    **Status:** <Badge text="Safe design" variant="success" />
-  </Card>
-  <Card title="Weight Comparison" icon="information">
-    **Original:** 7.7 g  
-    **Redesigned:** 13.4 g  
-    **Increase:** 74% heavier but safe
-  </Card>
-</CardGrid>
+### Problem 1: Servo Motor Shaft Under Load
 
-## 🎯 Advanced Analysis: Stress Distribution
+A servo motor shaft in a robotic joint experiences bending moments due to gear reaction forces and load inertia.
 
-### Complete Stress Picture
+**Given:**
+- Solid circular shaft diameter: d = 25 mm
+- Maximum bending moment: M = 180 N·m (at gear location)
+- Material: Steel shaft (σ_yield = 300 MPa, E = 200 GPa)
+- Safety factor required: 2.5
 
-At the critical section (fixed support), the stress varies linearly:
+**Find:** Maximum bending stress and safety factor verification.
 
-**Tensile stress (bottom fiber):** σ = +82 MPa  
-**Compressive stress (top fiber):** σ = -82 MPa  
-**Neutral axis stress:** σ = 0 MPa  
+<details>
+<summary>**Click to reveal solution**</summary>
 
-### Material Considerations
+<Steps>
 
-<Tabs>
-  <TabItem label="Ductile Materials">
-    
-    **Aluminum, Steel:**
-    - Similar strength in tension and compression
-    - **Both failure modes** must be checked
-    - Yielding typically governs design
-    
-  </TabItem>
-  <TabItem label="Brittle Materials">
-    
-    **Cast Iron, Ceramics:**
-    - **Much weaker in tension** than compression
-    - Tension side typically governs design
-    - **Asymmetric cross-sections** may be beneficial
-    
-  </TabItem>
-  <TabItem label="Composite Materials">
-    
-    **Carbon Fiber, Fiberglass:**
-    - **Directional properties**
-    - Fiber orientation affects bending strength
-    - **Layup design** optimizes stress distribution
-    
-  </TabItem>
-</Tabs>
+1. ✓ **Calculate section properties**
+   
+   For solid circular cross-section:
+   - Area: A = πd²/4 = π(25)²/4 = 491 mm²
+   - Second moment of area: I = πd⁴/64 = π(25)⁴/64 = 19,175 mm⁴
+   - Section modulus: S = I/c = I/(d/2) = 19,175/12.5 = 1,534 mm³
 
-## 🛠️ Design Guidelines for Bending
+2. ✓ **Apply flexural formula**
+   
+   Maximum bending stress occurs at extreme fiber:
+   σ_max = M/S = (180 × 10³)/1,534 = 117.3 MPa
 
-### Cross-Section Optimization
+3. ✓ **Check safety factor**
+   
+   SF = σ_yield/σ_max = 300/117.3 = 2.56
+   Required SF = 2.5, Actual SF = 2.56 ✓
 
-:::note[Bending Design Rules]
-1. **Maximize section modulus** (I/c) for bending strength
-2. **Material should be as far as possible** from neutral axis
-3. **Hollow sections** are very efficient for bending
-4. **Web prevents buckling** in thin-walled sections
-:::
+4. ✓ **Stress distribution analysis**
+   
+   - Maximum tensile stress: +117.3 MPa (bottom fiber)
+   - Maximum compressive stress: -117.3 MPa (top fiber)
+   - Neutral axis stress: 0 MPa
 
-### Common Gripper Jaw Cross-Sections
+5. ✓ **Design verification**
+   
+   The 25 mm diameter shaft is adequate with SF = 2.56 > 2.5 required
 
-**Rectangular:** Simple manufacturing, moderate efficiency  
-**I-beam:** Maximum bending efficiency, complex manufacturing  
-**Hollow rectangular:** Good efficiency, moderate complexity  
-**T-section:** Asymmetric loading, lighter weight
+</Steps>
+
+</details>
+
+### Problem 2: Crane Jib with Overhang Loading
+
+An overhanging beam supports a hoist mechanism with multiple load points typical in material handling systems.
+
+**Given:**
+- Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
+- Span: 3000 mm between supports A and B
+- Overhang: 1000 mm beyond support B
+- Load 1: P₁ = 5000 N at 1500 mm from A (midspan)
+- Load 2: P₂ = 3000 N at end of overhang
+- Material: Structural steel (σ_yield = 250 MPa)
+
+**Find:** Maximum bending stress and its location.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+1. **Calculate reaction forces**
+   
+   $$\sum M_A = 0: R_B(3) - 5000(1.5) - 3000(4) = 0$$
+   $$R_B = \frac{7500 + 12000}{3} = 6500 \text{ N}$$ ✅
+   
+   $$\sum F_y = 0: R_A + 6500 - 5000 - 3000 = 0$$
+   $$R_A = 1500 \text{ N}$$ ✅
+
+2. **Calculate bending moments at critical points**
+   
+   At midspan (x = 1500 mm):
+   $$M = 1500(1.5) = 2250 \text{ N·m}$$ ✅
+   
+   At support B (x = 3000 mm):
+   $$M = 1500(3) - 5000(1.5) = -3000 \text{ N·m}$$ ✅
+   
+   At overhang end (x = 4000 mm):
+   $$M = 1500(4) - 5000(2.5) - 6500(1) = -6000 \text{ N·m}$$ ✅
+
+3. **Determine maximum bending stress**
+   
+   Maximum moment: |M_max| = 6000 N·m at overhang end
+   
+   $$\sigma_{max} = \frac{M_{max}}{S} = \frac{6000 \times 10^3 \times 75}{8.2 \times 10^6} = 54.9 \text{ MPa}$$ ✅
+
+4. **Calculate safety factor**
+   
+   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{54.9} = 4.55$$ ✅
+
+</details>
+
+### Problem 3: CNC Machine Spindle Housing
+
+A spindle housing beam in a CNC machine supports cutting reaction forces and spindle weight.
+
+**Given:**
+- I-beam cross-section: flanges 80×12 mm, web 156×8 mm
+- Simply supported span: L = 400 mm
+- Uniform load: w = 500 N/m (spindle weight)
+- Point load: P = 2000 N at midspan (cutting force)
+- Material: Cast iron (σ_tensile = 150 MPa, σ_compressive = 600 MPa)
+
+**Find:** Maximum bending stresses and critical failure mode.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Calculate maximum bending moment**
+   
+   For simply supported beam with uniform load + point load at center:
+   - From uniform load: M₁ = wL²/8 = 500 × 0.4²/8 = 10 N·m
+   - From point load: M₂ = PL/4 = 2000 × 0.4/4 = 200 N·m
+   - Total: M_max = M₁ + M₂ = 210 N·m
+
+2. ✓ **Calculate I-beam properties**
+   
+   - Total height: h = 180 mm
+   - Area: A = 2(80×12) + (156×8) = 3,168 mm²
+   - I ≈ 15.6 × 10⁶ mm⁴ (using parallel axis theorem)
+   - Distance to extreme fiber: c = 90 mm
+
+3. ✓ **Calculate maximum bending stress**
+   
+   σ_max = Mc/I = (210 × 10³ × 90)/(15.6 × 10⁶) = 1.21 MPa
+
+4. ✓ **Check both failure modes**
+   
+   - Tensile stress (bottom): σ_t = +1.21 MPa < 150 MPa ✓
+   - Compressive stress (top): σ_c = -1.21 MPa < 600 MPa ✓
+   - Tensile failure governs (lower strength)
+
+5. ✓ **Safety factor assessment**
+   
+   SF_tensile = 150/1.21 = 124 (very conservative design)
+   SF_compressive = 600/1.21 = 496
+
+</Steps>
+
+</details>
 
 ## 📋 Summary and Next Steps
 

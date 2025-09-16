@@ -2,7 +2,7 @@
 title: "Lesson 2.3: Beam Deflections and Stiffness Analysis"
 description: "Predicting elastic deformations in CNC spindles under cutting loads for precision control applications"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-15
+pubDate: 2025-09-16
 tags: ["solid-mechanics", "beam-deflection", "CNC-spindle", "elastic-deformation", "precision-control"]
 excerpt: "Learn beam deflection analysis through CNC spindle systems, covering elastic curve equations, superposition methods, and deflection limits for precision mechanical applications."
 ---
@@ -59,11 +59,7 @@ During machining operations, the CNC spindle experiences:
 > **Engineering Question:** How do we predict and limit spindle deflections to maintain machining accuracy within ±0.005 mm while optimizing spindle design for maximum productivity?
 
 ### Why Deflection Analysis Matters
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![CNC Machinist Accident](./images/cnc-machinist.gif)
-  </TailwindWrapper>
-</div>
+
 **Consequences of Excessive Deflections:**
 - **Dimensional errors** in machined parts
 - **Poor surface finish** from tool chatter
@@ -298,99 +294,155 @@ The spindle system requires significant stiffening to meet precision requirement
 
 </details>
 
-## 📊 Design Optimization Analysis
+## 🔧 Engineering Problems
 
-<CardGrid>
-  <Card title="Current Design" icon="error">
-    **Max Deflection:** 0.018 mm  
-    **Tolerance:** 0.005 mm  
-    **Ratio:** 3.6× over limit  
-    **Status:** <Badge text="Fails precision requirement" variant="danger" />
-  </Card>
-  <Card title="Critical Contributor" icon="warning">
-    **Overhang deflection:** 0.0159 mm (88%)  
-    **Main span deflection:** 0.002 mm (12%)  
-    **Analysis:** <Badge text="Tool overhang dominates" variant="caution" />
-  </Card>
-  <Card title="Design Strategy" icon="information">
-    **Priority 1:** Reduce tool overhang length  
-    **Priority 2:** Increase spindle diameter  
-    **Priority 3:** Use stiffer materials  
-    **Approach:** <Badge text="Focus on overhang stiffness" variant="tip" />
-  </Card>
-</CardGrid>
+### Problem 1: Bridge Deck with Wind Loading
 
-## 🎯 Optimization Strategies
+A continuous beam bridge deck experiences varying wind load distribution across its spans, requiring deflection analysis for structural integrity.
 
-### Strategy 1: Reduce Tool Overhang
+**Given:**
+- Steel I-beam continuous over 3 spans: 8m + 10m + 8m = 26m total
+- Cross-section: I = 2.5 × 10⁸ mm⁴, E = 200 GPa  
+- Varying wind load: w(x) = w₀(1 + 0.5sin(πx/L)) where w₀ = 500 N/m
+- Dead load: uniform 800 N/m over entire length
+- Deflection limit: L/250 for each span
 
-**Reduce overhang from 100 mm to 60 mm:**
+**Find:** Maximum deflection in critical span.
 
-New overhang deflection:
-$$\delta_{new} = \frac{2000 \times 0.06^3}{3EI} + \frac{500 \times 0.06^4}{8EI} = 0.0052 + 0.00029 = 0.0055 \text{ mm}$$
+<details>
+<summary>**Click to reveal solution**</summary>
 
-**Total system deflection ≈ 0.0075 mm** - Still exceeds requirement!
+1. **Analyze loading pattern**
+   
+   Total loading: w(x) = 800 + 500(1 + 0.5sin(πx/26))
+   Maximum intensity: w_max = 800 + 500(1.5) = 1550 N/m ✅
+   Minimum intensity: w_min = 800 + 500(0.5) = 1050 N/m ✅
 
-### Strategy 2: Increase Spindle Diameter
+2. **Calculate reactions using influence lines**
+   
+   For continuous beam, reactions calculated by structural analysis:
+   R₁ ≈ 8,650 N, R₂ ≈ 15,400 N, R₃ ≈ 15,400 N, R₄ ≈ 8,650 N ✅
 
-<Tabs>
-  <TabItem label="Diameter Effect">
-    
-    **Deflection ∝ 1/I ∝ 1/D⁴**
-    
-    To reduce deflection by factor of 3.6:
-    Required diameter increase: $(3.6)^{1/4} = 1.375$
-    
-    New diameter: 80 × 1.375 = **110 mm**
-    
-  </TabItem>
-  <TabItem label="Weight Trade-off">
-    
-    **Volume increase:** $(110/80)^2 = 1.89×$
-    
-    **Weight penalty:** ~89% heavier spindle
-    
-    **Impact:** Higher rotational inertia, slower acceleration
-    
-  </TabItem>
-  <TabItem label="Alternative Materials">
-    
-    **Carbon Fiber Composite:**
-    - E = 150 GPa (vs 200 GPa steel)
-    - Density = 1600 kg/m³ (vs 7850 kg/m³ steel)
-    - **Net benefit:** 60% weight reduction, modest stiffness reduction
-    
-  </TabItem>
-</Tabs>
+3. **Determine critical span deflection**
+   
+   Center span (10m) typically has maximum deflection
+   Using beam deflection formulas for continuous beams with varying load:
+   
+   $$\delta_{max} = \frac{w_0 L^4}{384EI} \times k_{varying}$$
+   
+   Where k_varying = 1.15 for this loading pattern ✅
 
-### Strategy 3: Optimize Bearing Configuration
+4. **Calculate maximum deflection**
+   
+   $$\delta_{max} = \frac{1200 \times (10 \times 10^3)^4 \times 1.15}{384 \times 200 \times 10^9 \times 2.5 \times 10^8 \times 10^{-12}}$$
+   
+   $$\delta_{max} = 24.0 \text{ mm}$$ ✅
 
-**Bearing stiffness effects:**
-- Increase bearing preload → higher stiffness
-- Use angular contact bearings → better moment resistance
-- Add third bearing → convert overhang to simply supported span
+5. **Check deflection limits**
+   
+   Allowable: L/250 = 10,000/250 = 40 mm
+   Actual: 24.0 mm < 40 mm ✅ (Design adequate)
 
-## 🛠️ Design Guidelines for Stiffness-Critical Applications
+</details>
 
-### Deflection Limits by Application
+### Problem 2: Robotic Arm Link Deflection
 
-:::note[Typical Deflection Limits]
-**Ultra-Precision Machining:** δ/L < 1:200,000 (0.002 mm for 400 mm span)
+A robotic arm link experiences deflection under payload loads, affecting positioning accuracy.
 
-**High-Precision Machining:** δ/L < 1:100,000 (0.004 mm for 400 mm span)
+**Given:**
+- Hollow circular aluminum tube: outer diameter 60 mm, wall thickness 5 mm
+- Simply supported span: L = 1200 mm
+- Point load at center: P = 500 N (payload + gripper)
+- Material: Aluminum (E = 70 GPa)
+- Accuracy requirement: δ < 2 mm
 
-**Production Machining:** δ/L < 1:50,000 (0.008 mm for 400 mm span)
+**Find:** Maximum deflection and stiffness adequacy.
 
-**Rough Machining:** δ/L < 1:25,000 (0.016 mm for 400 mm span)
-:::
+<details>
+<summary>**Click to reveal solution**</summary>
 
-### Stiffness Optimization Hierarchy
+<Steps>
 
-1. **Minimize overhang lengths** (deflection ∝ L³)
-2. **Maximize section moments of inertia** (deflection ∝ 1/I)
-3. **Optimize support locations** (convert cantilevers to beams)
-4. **Use high-modulus materials** (deflection ∝ 1/E)
-5. **Increase bearing stiffness** (reduces effective span)
+1. ✓ **Calculate tube section properties**
+   
+   For hollow circular cross-section:
+   - Outer diameter: D = 60 mm, Inner diameter: d = 50 mm
+   - Second moment: I = π(D⁴-d⁴)/64 = π(60⁴-50⁴)/64 = 1,917,000 mm⁴
+
+2. ✓ **Apply simply supported beam deflection formula**
+   
+   For point load at center of simply supported beam:
+   δ_max = PL³/(48EI)
+
+3. ✓ **Calculate maximum deflection**
+   
+   δ_max = (500 × 1200³)/(48 × 70,000 × 1,917,000)
+   δ_max = (500 × 1.728 × 10⁹)/(6.44 × 10¹²) = 1.34 mm
+
+4. ✓ **Verify accuracy requirement**
+   
+   δ_max = 1.34 mm < 2 mm limit ✓
+   Design meets accuracy requirement with 33% margin
+
+5. ✓ **Calculate stiffness**
+   
+   Structural stiffness: k = P/δ = 500/1.34 = 373 N/mm
+   Higher stiffness indicates good structural rigidity
+
+</Steps>
+
+</details>
+
+### Problem 3: Machine Tool Support Beam
+
+A CNC machine tool support beam must maintain tight deflection tolerances under cutting loads.
+
+**Given:**
+- I-beam cross-section: flanges 100×15 mm, web 170×10 mm
+- Simply supported span: L = 2000 mm  
+- Uniform load: w = 800 N/m (machine weight)
+- Point load: P = 3000 N at L/3 from left support (cutting force)
+- Material: Steel (E = 200 GPa)
+- Deflection limit: δ < 1.5 mm
+
+**Find:** Maximum deflection location and magnitude.
+
+<details>
+<summary>**Click to reveal solution**</summary>
+
+<Steps>
+
+1. ✓ **Calculate I-beam properties**
+   
+   Total height: h = 200 mm
+   - Flanges: 2 × (100×15) = 3,000 mm²
+   - Web: 170×10 = 1,700 mm²
+   - Total area: A = 4,700 mm²
+   - I ≈ 83.5 × 10⁶ mm⁴ (calculated using parallel axis theorem)
+
+2. ✓ **Analyze uniform load deflection**
+   
+   For uniform load on simply supported beam:
+   δ_uniform = 5wL⁴/(384EI) = (5 × 0.8 × 2000⁴)/(384 × 200,000 × 83.5 × 10⁶) = 0.39 mm
+
+3. ✓ **Analyze point load deflection**
+   
+   For point load at L/3 from support, maximum deflection occurs at:
+   x = L√(3)/3 ≈ 0.577L = 1154 mm from left support
+
+4. ✓ **Calculate point load deflection**
+   
+   Using standard beam formulas for P at L/3:
+   δ_point = PL³/(3√3 × 9EI) = (3000 × 2000³)/(3√3 × 9 × 200,000 × 83.5 × 10⁶) = 0.91 mm
+
+5. ✓ **Determine total maximum deflection**
+   
+   δ_total = δ_uniform + δ_point = 0.39 + 0.91 = 1.30 mm
+   δ_max = 1.30 mm < 1.5 mm limit ✓ (Design adequate)
+
+</Steps>
+
+</details>
 
 ## 📋 Summary and Next Steps
 
