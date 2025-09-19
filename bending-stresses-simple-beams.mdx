@@ -2,7 +2,7 @@
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-18
+pubDate: 2025-09-19
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
 ---
@@ -63,8 +63,8 @@ During gripping operations, the cantilever jaw experiences:
 
 > **Engineering Question:** How do we calculate the maximum bending stress in a gripper jaw and ensure it doesn't exceed the material's strength limits during maximum gripping force?
 
-### Why Bending Stress Analysis Matters
-
+<details>
+<summary>**Click to Reveal: Why Bending Stress Analysis Matters**</summary>
 **Consequences of Poor Bending Design:**
 - **Jaw failure** during heavy object manipulation
 - **Plastic deformation** reducing gripping accuracy
@@ -76,6 +76,7 @@ During gripping operations, the cantilever jaw experiences:
 - **Optimized jaw geometry** for strength and weight
 - **Predictable deflections** for control system compensation
 - **Extended service life** through proper stress management
+</details>
 
 ## 📚 Fundamental Theory: Bending Stress Mechanics
 
@@ -148,7 +149,7 @@ $$I = \frac{\pi d^4}{64}$$
 For the same cross-sectional area, **tall narrow sections** have much higher bending resistance than **short wide sections**. This is why I-beams and T-beams are so effective in bending.
 :::
 
-## 🔧 Application: Robotic Gripper Jaw Analysis
+## 🔧 Application 1: Robotic Gripper Jaw Analysis
 
 Let's analyze a realistic cantilever gripper jaw design step by step.
 
@@ -324,51 +325,240 @@ A servo motor shaft in a robotic joint experiences bending moments due to gear r
 
 </details>
 
-### Problem 2: Crane Jib with Overhang Loading
+## 🔧 Application 3: Crane Jib with Overhang Loading
 
-An overhanging beam supports a hoist mechanism with multiple load points typical in material handling systems.
+An industrial crane jib beam supports a hoist mechanism with multiple load points typical in material handling systems. This analysis demonstrates complex loading scenarios with both positive and negative bending moments.
 
-**Given:**
+:::note[Problem Statement]
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Double Girder Gantry Crane](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/double-girder-gantry-crane.png)
+  </TailwindWrapper>
+</div>
+**What we need to determine:**
+1. **Support reaction forces** under combined loading
+2. **Shear force and bending moment diagrams** across the entire beam
+3. **Maximum bending stress** and its critical location
+4. **Safety factor assessment** for structural adequacy
+
+**Key Question:** Can this crane jib safely handle the specified loads including dynamic factors, and where do the maximum stresses occur?
+:::
+
+<hr />
+
+**System Parameters:**
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Cantilever Robotic Gripper Jaw](./codes/crane_jib_beam_diagram.png)
+  </TailwindWrapper>
+</div>
 - Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
 - Span: 3000 mm between supports A and B
 - Overhang: 1000 mm beyond support B
 - Load 1: P₁ = 5000 N at 1500 mm from A (midspan)
 - Load 2: P₂ = 3000 N at end of overhang
+- Load 3: Distributed load w = 800 N/m over entire length (beam self-weight + attachments)
 - Material: Structural steel (σ_yield = 250 MPa)
+- Safety factor required: 2.5
+- Dynamic amplification factor: 1.4 (for crane operations)
 
-**Find:** Maximum bending stress and its location.
+<hr />
+
+### Step 1: Calculate Support Reaction Forces
 
 <details>
-<summary>**Click to reveal solution**</summary>
+<summary>**Click to reveal equilibrium calculations**</summary>
 
-1. **Calculate reaction forces**
-   
-   $$\sum M_A = 0: R_B(3) - 5000(1.5) - 3000(4) = 0$$
-   $$R_B = \frac{7500 + 12000}{3} = 6500 \text{ N}$$ ✅
-   
-   $$\sum F_y = 0: R_A + 6500 - 5000 - 3000 = 0$$
-   $$R_A = 1500 \text{ N}$$ ✅
+<Steps>
 
-2. **Calculate bending moments at critical points**
-   
-   At midspan (x = 1500 mm):
-   $$M = 1500(1.5) = 2250 \text{ N·m}$$ ✅
-   
-   At support B (x = 3000 mm):
-   $$M = 1500(3) - 5000(1.5) = -3000 \text{ N·m}$$ ✅
-   
-   At overhang end (x = 4000 mm):
-   $$M = 1500(4) - 5000(2.5) - 6500(1) = -6000 \text{ N·m}$$ ✅
+1. **Account for distributed loading effects:**
 
-3. **Determine maximum bending stress**
-   
-   Maximum moment: |M_max| = 6000 N·m at overhang end
-   
-   $$\sigma_{max} = \frac{M_{max}}{S} = \frac{6000 \times 10^3 \times 75}{8.2 \times 10^6} = 54.9 \text{ MPa}$$ ✅
+   Distributed load total force: W = w × L_total = 800 × 4.0 = 3200 N
 
-4. **Calculate safety factor**
-   
-   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{54.9} = 4.55$$ ✅
+   This acts at the centroid of the beam: x̄ = 2.0 m from A ✅
+
+2. **Apply dynamic amplification factor:**
+
+   Applied loads with dynamic effects:
+   - P₁_dynamic = 1.4 × 5000 = 7000 N
+   - P₂_dynamic = 1.4 × 3000 = 4200 N
+   - W remains at 3200 N (self-weight not amplified) ✅
+
+3. **Calculate reaction at support B using moment equilibrium about A:**
+
+   $$\sum M_A = 0: R_B(3.0) - 7000(1.5) - 3200(2.0) - 4200(4.0) = 0$$
+   $$R_B = \frac{10500 + 6400 + 16800}{3.0} = \frac{33700}{3.0} = 11233 \text{ N}$$ ✅
+
+4. **Calculate reaction at support A using force equilibrium:**
+
+   $$\sum F_y = 0: R_A + 11233 - 7000 - 3200 - 4200 = 0$$
+   $$R_A = 14400 - 11233 = 3167 \text{ N}$$ ✅
+
+5. **Verify equilibrium check:**
+
+   $$\sum F_y = 3167 + 11233 - 7000 - 3200 - 4200 = 0$$ ✅
+
+</Steps>
+
+</details>
+
+### Step 2: Construct Shear Force and Bending Moment Diagrams
+
+<details>
+<summary>**Click to reveal shear and moment analysis**</summary>
+
+<Steps>
+
+1. **Calculate shear forces at critical points:**
+
+   - At x = 0 (point A): V = +3167 N
+   - Just before P₁ (x = 1.5⁻): V = 3167 - 800(1.5) = 1967 N
+   - Just after P₁ (x = 1.5⁺): V = 1967 - 7000 = -5033 N
+   - Just before B (x = 3.0⁻): V = -5033 - 800(1.5) = -6233 N
+   - Just after B (x = 3.0⁺): V = -6233 + 11233 = 5000 N
+   - At overhang end (x = 4.0): V = 5000 - 800(1.0) - 4200 = 0 ✅
+
+2. **Calculate bending moments at critical points:**
+
+   **Method:** Cut beam at calculation point, sum moments of all forces to the LEFT of the cut
+
+   **At support A (x = 0 m):**
+
+   Forces to the left: None (this is the starting point)
+
+   $$M = 0 \text{ N·m}$$ ✅
+
+   **At midspan (x = 1.5 m):**
+
+   Forces to the left: R_A and partial distributed load
+   - R_A = 3167 N at distance 1.5 m from cut
+   - Distributed load from 0 to 1.5 m = 800(1.5) = 1200 N at centroid distance 0.75 m from cut
+
+   $$M = 3167(1.5) - 1200(0.75) = 4750.5 - 900 = 3850.5 \text{ N·m}$$ ✅
+
+   **At support B (x = 3.0 m):**
+
+   Forces to the left: R_A, distributed load from 0 to 3.0 m, and P₁
+   - R_A = 3167 N at distance 3.0 m from cut
+   - Distributed load from 0 to 3.0 m = 800(3.0) = 2400 N at centroid distance 1.5 m from cut
+   - P₁ = 7000 N at distance (3.0 - 1.5) = 1.5 m from cut
+
+   $$M = 3167(3.0) - 2400(1.5) - 7000(1.5) = 9501 - 3600 - 10500 = -4599 \text{ N·m}$$ ✅
+
+   **At overhang end (x = 4.0 m):**
+
+   Forces to the left: R_A, full distributed load, P₁, and R_B
+   - R_A = 3167 N at distance 4.0 m from cut
+   - Full distributed load = 800(4.0) = 3200 N at centroid distance 2.0 m from cut
+   - P₁ = 7000 N at distance (4.0 - 1.5) = 2.5 m from cut
+   - R_B = 11233 N at distance (4.0 - 3.0) = 1.0 m from cut
+   - P₂ = 4200 N at distance (4.0 - 4.0) = 0 m from cut
+
+   $$M = 3167(4.0) - 3200(2.0) - 7000(2.5) + 11233(1.0) - 4200(0)$$
+   $$M = 12668 - 6400 - 17500 + 11233 - 0 = 1 \text{ N·m} \approx 0$$ ✅
+
+   **Note:** The moment at the free end is approximately zero, confirming equilibrium.
+
+3. **Identify maximum moment locations:**
+
+   - **Positive moment maximum:** M = +3850.5 N·m at x = 1.5 m
+   - **Negative moment maximum:** M = -4599 N·m at support B (x = 3.0 m) ✅
+
+</Steps>
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Cantilever Robotic Gripper Jaw](./codes/crane_jib_shear_diagram.png)
+  </TailwindWrapper>
+</div>
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Cantilever Robotic Gripper Jaw](./codes/crane_jib_moment_diagram.png)
+  </TailwindWrapper>
+</div>
+
+</details>
+
+### Step 3: Calculate Maximum Bending Stresses
+
+<details>
+<summary>**Click to reveal stress calculations**</summary>
+
+<Steps>
+
+1. **Calculate section modulus using flexural formula:**
+
+   **Flexural Formula:** $$\sigma = \frac{My}{I}$$
+
+   **Where:**
+   - **M** = Bending moment at the section (N·m)
+   - **y** = Distance from neutral axis to point of interest (m)
+   - **I** = Second moment of area about neutral axis (m⁴)
+
+   **For maximum stress:** $$\sigma_{max} = \frac{M \cdot c}{I}$$
+
+   **Where:**
+   - **c** = Distance from neutral axis to extreme fiber (m)
+
+   **Section Modulus:** $$S = \frac{I}{c}$$
+
+   **Therefore:** $$\sigma_{max} = \frac{M}{S}$$
+
+   Given I = 8.2 × 10⁶ mm⁴ and c = 75 mm:
+   $$S = \frac{I}{c} = \frac{8.2 \times 10^6}{75} = 109333 \text{ mm}^3 = 109.33 \times 10^{-6} \text{ m}^3$$ ✅
+
+2. **Calculate stress at positive moment maximum (x = 1.5 m):**
+
+   $$\sigma_{max,pos} = \frac{M_{max,pos}}{S} = \frac{3850.5}{109.33 \times 10^{-6}} = 35.2 \text{ MPa}$$ ✅
+
+   **Stress distribution:** Compression on top fiber, tension on bottom fiber
+
+3. **Calculate stress at negative moment maximum (x = 3.0 m):**
+
+   $$\sigma_{max,neg} = \frac{|M_{max,neg}|}{S} = \frac{4599}{109.33 \times 10^{-6}} = 42.1 \text{ MPa}$$ ✅
+
+   **Stress distribution:** Tension on top fiber, compression on bottom fiber
+
+4. **Determine controlling stress:**
+
+   Comparing the two maximum stresses:
+   - Positive moment stress: 35.2 MPa
+   - Negative moment stress: 42.1 MPa
+
+   **Maximum bending stress** = 42.1 MPa occurs at support B ✅
+
+</Steps>
+
+</details>
+
+### Step 4: Safety Factor Assessment and Design Verification
+
+<details>
+<summary>**Click to reveal safety analysis**</summary>
+
+<Steps>
+
+1. **Calculate safety factor against yielding:**
+
+   $$SF_{yield} = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{42.1} = 5.94$$ ✅
+
+2. **Check against required safety factor:**
+
+   **Design Criterion:** If the required safety factor is 2.5, then your design safety factor must be ≥ 2.5
+
+   Required SF = 2.5, Actual SF = 5.94 > 2.5 ✅
+
+   **Design Status:** ADEQUATE with substantial margin
+
+3. **Assess critical design considerations:**
+
+   - **Support B region** experiences highest stress (42.1 MPa)
+   - **Negative bending** creates tension on top flange at support B
+   - **Dynamic loading** significantly increases applied loads (40% amplification applied) ✅
+   - **Design is conservative** with SF = 5.94, well above required SF = 2.5
+
+</Steps>
 
 </details>
 
