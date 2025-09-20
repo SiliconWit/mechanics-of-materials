@@ -2,7 +2,7 @@
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-19
+pubDate: 2025-09-20
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
 ---
@@ -19,6 +19,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
 />
+
+import ChartEmbed from '../../../../components/mechanics-of-materials/ChartEmbed.astro';
+import LoadingDiagramEmbed from '../../../../components/mechanics-of-materials/LoadingDiagramEmbed.astro';
 
 ## 🎯 Learning Objectives
 
@@ -347,11 +350,12 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 <hr />
 
 **System Parameters:**
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Cantilever Robotic Gripper Jaw](./codes/crane_jib_beam_diagram.png)
-  </TailwindWrapper>
-</div>
+<LoadingDiagramEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_loading_diagram.html"
+  title="Crane Jib Loading Diagram"
+  description="Beam structure with loads and reactions"
+  height="380px"
+/>
 - Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
 - Span: 3000 mm between supports A and B
 - Overhang: 1000 mm beyond support B
@@ -407,28 +411,37 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 <details>
 <summary>**Click to reveal shear and moment analysis**</summary>
 
+- **Calculate shear forces at critical points:**
 <Steps>
+1. At x = 0 (point A): V = +3167 N
+2. Just before P₁ (x = 1.5⁻): V = 3167 - 800(1.5) = 1967 N
 
-1. **Calculate shear forces at critical points:**
+   Just after P₁ (x = 1.5⁺): V = 1967 - 7000 = -5033 N ✅
+   
+3. Just before B (x = 3.0⁻): V = -5033 - 800(1.5) = -6233 N
 
-   - At x = 0 (point A): V = +3167 N
-   - Just before P₁ (x = 1.5⁻): V = 3167 - 800(1.5) = 1967 N
-   - Just after P₁ (x = 1.5⁺): V = 1967 - 7000 = -5033 N
-   - Just before B (x = 3.0⁻): V = -5033 - 800(1.5) = -6233 N
-   - Just after B (x = 3.0⁺): V = -6233 + 11233 = 5000 N
-   - At overhang end (x = 4.0): V = 5000 - 800(1.0) - 4200 = 0 ✅
+   Just after B (x = 3.0⁺): V = -6233 + 11233 = 5000 N ✅
+   
+4. At overhang end (x = 4.0): V = 5000 - 800(1.0) - 4200 = 0 ✅
+</Steps>
+<ChartEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_shear_chart.html"
+  title="Interactive Shear Force Diagram"
+  description="Hover to see exact shear force values"
+  height="500px"
+/>
 
-2. **Calculate bending moments at critical points:**
+- **Calculate bending moments at critical points:**
 
-   **Method:** Cut beam at calculation point, sum moments of all forces to the LEFT of the cut
-
-   **At support A (x = 0 m):**
+- **Method:** Cut beam at calculation point, sum moments of all forces to the LEFT of the cut
+<Steps>
+1. **At support A (x = 0 m):**
 
    Forces to the left: None (this is the starting point)
 
    $$M = 0 \text{ N·m}$$ ✅
 
-   **At midspan (x = 1.5 m):**
+2. **At midspan (x = 1.5 m):**
 
    Forces to the left: R_A and partial distributed load
    - R_A = 3167 N at distance 1.5 m from cut
@@ -436,7 +449,7 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 
    $$M = 3167(1.5) - 1200(0.75) = 4750.5 - 900 = 3850.5 \text{ N·m}$$ ✅
 
-   **At support B (x = 3.0 m):**
+3. **At support B (x = 3.0 m):**
 
    Forces to the left: R_A, distributed load from 0 to 3.0 m, and P₁
    - R_A = 3167 N at distance 3.0 m from cut
@@ -445,7 +458,7 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 
    $$M = 3167(3.0) - 2400(1.5) - 7000(1.5) = 9501 - 3600 - 10500 = -4599 \text{ N·m}$$ ✅
 
-   **At overhang end (x = 4.0 m):**
+4. **At overhang end (x = 4.0 m):**
 
    Forces to the left: R_A, full distributed load, P₁, and R_B
    - R_A = 3167 N at distance 4.0 m from cut
@@ -456,27 +469,21 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 
    $$M = 3167(4.0) - 3200(2.0) - 7000(2.5) + 11233(1.0) - 4200(0)$$
    $$M = 12668 - 6400 - 17500 + 11233 - 0 = 1 \text{ N·m} \approx 0$$ ✅
+</Steps>
+> **Note:** The moment at the free end is approximately zero, confirming equilibrium.
 
-   **Note:** The moment at the free end is approximately zero, confirming equilibrium.
-
+<ChartEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_moment_chart.html"
+  title="Interactive Bending Moment Diagram"
+  description="Hover to see exact bending moment values"
+  height="500px"
+/>
+<Steps>
 3. **Identify maximum moment locations:**
 
    - **Positive moment maximum:** M = +3850.5 N·m at x = 1.5 m
    - **Negative moment maximum:** M = -4599 N·m at support B (x = 3.0 m) ✅
-
 </Steps>
-
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Cantilever Robotic Gripper Jaw](./codes/crane_jib_shear_diagram.png)
-  </TailwindWrapper>
-</div>
-
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Cantilever Robotic Gripper Jaw](./codes/crane_jib_moment_diagram.png)
-  </TailwindWrapper>
-</div>
 
 </details>
 
@@ -491,15 +498,7 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 
    **Flexural Formula:** $$\sigma = \frac{My}{I}$$
 
-   **Where:**
-   - **M** = Bending moment at the section (N·m)
-   - **y** = Distance from neutral axis to point of interest (m)
-   - **I** = Second moment of area about neutral axis (m⁴)
-
    **For maximum stress:** $$\sigma_{max} = \frac{M \cdot c}{I}$$
-
-   **Where:**
-   - **c** = Distance from neutral axis to extreme fiber (m)
 
    **Section Modulus:** $$S = \frac{I}{c}$$
 
