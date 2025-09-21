@@ -2,7 +2,7 @@
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-20
+pubDate: 2025-09-21
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
 ---
@@ -328,17 +328,286 @@ A servo motor shaft in a robotic joint experiences bending moments due to gear r
 
 </details>
 
-## 🔧 Application 3: Crane Jib with Overhang Loading
+## 🏭 Application 2: Pantograph Arm of Electric Train (Electromechanical)
+
+An electric train pantograph arm maintains contact with overhead power lines while experiencing dynamic forces during operation. This cantilever structure requires careful stress analysis to ensure reliable power collection and structural integrity.
+
+:::note[Problem Statement]
+- **Loading condition:** End point load (contact force with overhead wire)
+- **Support configuration:** Cantilever beam fixed at train roof connection
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+    ![Electric Train Pantograph](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/electric-bus-pantograph.png)
+  </TailwindWrapper>
+</div>
+**What we need to analyze:**
+1. **Support reaction forces** under contact loading
+2. **Shear force and bending moment diagrams** across the cantilever
+3. **Maximum bending stress** at the critical cantilever section
+4. **Safety factor assessment** against yield failure
+5. **Failure risks** during sudden contact loss scenarios
+
+**Key Question:** Can this pantograph arm safely withstand contact forces including dynamic effects, and what are the implications of sudden load removal?
+:::
+
+<Card title="🔧 System Parameters" icon="document">
+<LoadingDiagramEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/pantograph_loading_diagram.html"
+  title="Crane Jib Loading Diagram"
+  height="380px"
+/>
+- Hollow steel tube: OD = 50 mm, wall thickness = 4 mm
+- Length: 1200 mm cantilever span
+- Contact force: P₁ = 800 N at tip (includes vibration effects)
+- Second moment of area: I = 2.45 × 10⁶ mm⁴
+- Distance to extreme fiber: c = 25 mm
+- Material: High-strength steel (σ_yield = 250 MPa)
+- Safety factor required: 3.0
+- Operating conditions: Dynamic contact with overhead wire at 600V DC
+</Card>
+
+### Step 1: Calculate Support Reaction Forces
+
+<details>
+<summary>**Click to reveal equilibrium calculations**</summary>
+
+<Steps>
+
+1. **Identify loading and support configuration:**
+
+   Cantilever beam with concentrated load P = 800 N at free end
+
+   Fixed support at train roof connection provides both vertical reaction and moment reaction
+
+2. **Apply equilibrium equations:**
+
+   **Vertical force equilibrium:** $\sum F_y = 0$
+
+   $R_A - P = 0$
+
+   $R_A = P = 800 \text{ N}$ (upward reaction at fixed support)
+
+3. **Moment equilibrium about fixed support A:** $\sum M_A = 0$
+
+   $M_A - P \times L = 0$
+
+   $M_A = 800 \times 1200 = 960,000 \text{ N·mm}$ (reaction moment at fixed support)
+
+4. **Verify equilibrium:**
+
+   - Vertical forces: $R_A - P = 800 - 800 = 0$ (check)
+   - Moments about any point: $M_A - P \times L = 960,000 - 960,000 = 0$ (check)
+
+</Steps>
+
+</details>
+
+### Step 2: Shear Force and Bending Moment Analysis
+
+<details>
+<summary>**Click to reveal shear and moment calculations**</summary>
+
+- **Calculate shear forces at critical points:**
+
+<Steps>
+1. **Shear force distribution:**
+
+   For cantilever with concentrated end load:
+   - At any point along the beam: V = -P = -800 N
+   - Constant shear force throughout the cantilever length
+   - Negative sign indicates internal shear acts downward
+
+2. **Verify shear force values:**
+
+   - At free end (x = 0): V = -800 N
+   - At fixed support (x = 1200 mm): V = -800 N
+   - No variation along beam length for single concentrated load (check)
+
+</Steps>
+
+- **Calculate bending moments at critical points:**
+
+- **Method:** For cantilever beam, moment at distance x from free end = -P × x
+
+<Steps>
+1. **At free end (x = 0):**
+
+   $M = 0 \text{ N·mm}$ (free end boundary condition)
+
+2. **At quarter span (x = 300 mm):**
+
+   $M = -P \times x = -800 \times 300 = -240,000 \text{ N·mm}$
+
+3. **At midspan (x = 600 mm):**
+
+   $M = -P \times x = -800 \times 600 = -480,000 \text{ N·mm}$
+
+4. **At fixed support (x = 1200 mm):**
+
+   $M = -P \times x = -800 \times 1200 = -960,000 \text{ N·mm}$ (maximum moment)
+
+</Steps>
+
+> **Note:** Negative moments indicate compression on the top fiber and tension on the bottom fiber.
+
+</details>
+
+### Step 3: Calculate Maximum Bending Moment
+
+<details>
+<summary>**Click to reveal moment calculations**</summary>
+
+<Steps>
+
+1. **Identify loading configuration:**
+
+   Cantilever beam with concentrated load P = 800 N at free end
+
+   Length L = 1.2 m = 1200 mm ✅
+
+2. **Apply cantilever moment equations:**
+
+   For cantilever with end load, maximum moment occurs at fixed support:
+
+   $M_{max} = P \times L = 800 \times 1200 = 960,000 \text{ N·mm}$ ✅
+
+3. **Verify moment distribution:**
+
+   - At free end (x = 0): M = 0
+   - At fixed end (x = L): M = -960,000 N·mm (negative indicates compression on top fiber)
+   - Moment varies linearly along the beam length ✅
+
+</Steps>
+
+</details>
+
+### Step 4: Calculate Maximum Bending Stress
+
+<details>
+<summary>**Click to reveal stress calculations**</summary>
+
+<Steps>
+
+1. **Apply flexural formula:**
+
+   $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{960,000 \times 25}{2.45 \times 10^6} = \frac{24,000,000}{2,450,000} = 9.80 \text{ MPa}$$
+
+2. **Alternative using section modulus:**
+
+   $$S = \frac{I}{c} = \frac{2.45 \times 10^6}{25} = 98,000 \text{ mm}^3$$
+
+   $$\sigma_{max} = \frac{M}{S} = \frac{960,000}{98,000} = 9.80 \text{ MPa}$$ ✅
+
+3. **Stress distribution:**
+
+   - Maximum tensile stress: +9.80 MPa (bottom fiber at fixed end)
+   - Maximum compressive stress: -9.80 MPa (top fiber at fixed end)
+   - Neutral axis stress: 0 MPa ✅
+
+</Steps>
+
+</details>
+
+### Step 5: Safety Factor Assessment
+
+<details>
+<summary>**Click to reveal safety calculations**</summary>
+
+<Steps>
+
+1. **Calculate actual safety factor:**
+
+   $$SF_{actual} = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{9.80} = 25.5$$
+
+2. **Compare with required safety factor:**
+
+   Required SF = 3.0
+   Actual SF = 25.5 >> 3.0 ✅
+
+3. **Design adequacy assessment:**
+
+   The pantograph arm is **significantly over-designed** with respect to static bending stress.
+
+   This high safety margin is intentional for dynamic loading conditions. ✅
+
+</Steps>
+
+</details>
+
+### Step 6: Shear and Moment Analysis
+
+<Card title="📊 Shear Force Diagram" icon="chart">
+<ChartEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/pantograph_shear_chart.html"
+  title="Pantograph Arm Shear Force Distribution"
+/>
+
+**Key observations:**
+- Constant shear force V = -800 N throughout the cantilever
+- Negative sign indicates downward internal force
+- No variation along beam length for concentrated end load
+</Card>
+
+<Card title="📈 Bending Moment Diagram" icon="chart">
+<ChartEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/pantograph_moment_chart.html"
+  title="Pantograph Arm Bending Moment Distribution"
+/>
+
+**Key observations:**
+- Linear moment variation: M(x) = -Px = -800x N⋅m
+- Maximum moment at fixed support: M_max = -960 N⋅m
+- Zero moment at free end
+- Negative moment causes compression on top fiber
+</Card>
+
+### Step 7: Dynamic Loading and Failure Risk Analysis
+
+<details>
+<summary>**Click to reveal dynamic analysis**</summary>
+
+<Steps>
+
+1. **Dynamic amplification considerations:**
+
+   Current analysis uses static load of 800 N which already includes vibration effects.
+
+   Actual contact force may vary: 200-1200 N depending on wire tension and vehicle dynamics. ✅
+
+2. **Sudden contact loss scenarios:**
+
+   **Risk 1: Rapid load removal**
+   - Stored elastic energy in cantilever suddenly released
+   - Can cause violent upward motion and potential wire damage
+   - Damping mechanisms essential for controlled motion ✅
+
+   **Risk 2: Recontact impact**
+   - Higher impact forces during wire recontact
+   - May exceed static analysis by 2-4× due to dynamic effects
+   - Still within safety margin: 4 × 9.80 = 39.2 MPa $\ll$ 250 MPa ✅
+
+3. **Fatigue considerations:**
+
+   Continuous contact/loss cycles create fatigue loading.
+   High safety factor provides adequate fatigue life margin. ✅
+
+</Steps>
+
+</details>
+
+## 🏭 Application 3: Crane Jib with Overhang Loading (Mechanical)
 
 An industrial crane jib beam supports a hoist mechanism with multiple load points typical in material handling systems. This analysis demonstrates complex loading scenarios with both positive and negative bending moments.
 
 :::note[Problem Statement]
+- **Loading condition:** Uniformly distributed load (UDL) + two point loads
+- **Support configuration:** Overhanging simply supported beam with roller
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
 	![Double Girder Gantry Crane](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/double-girder-gantry-crane.png)
   </TailwindWrapper>
 </div>
-**What we need to determine:**
+**What we need to analyze:**
 1. **Support reaction forces** under combined loading
 2. **Shear force and bending moment diagrams** across the entire beam
 3. **Maximum bending stress** and its critical location
@@ -347,13 +616,10 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 **Key Question:** Can this crane jib safely handle the specified loads including dynamic factors, and where do the maximum stresses occur?
 :::
 
-<hr />
-
-**System Parameters:**
+<Card title="🔧 System Parameters" icon="document">
 <LoadingDiagramEmbed
   src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_loading_diagram.html"
   title="Crane Jib Loading Diagram"
-  description="Beam structure with loads and reactions"
   height="380px"
 />
 - Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
@@ -361,12 +627,11 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 - Overhang: 1000 mm beyond support B
 - Load 1: P₁ = 5000 N at 1500 mm from A (midspan)
 - Load 2: P₂ = 3000 N at end of overhang
-- Load 3: Distributed load w = 800 N/m over entire length (beam self-weight + attachments)
+- Load 3: Distributed load W = 800 N/m over entire length (beam self-weight + attachments)
 - Material: Structural steel (σ_yield = 250 MPa)
 - Safety factor required: 2.5
 - Dynamic amplification factor: 1.4 (for crane operations)
-
-<hr />
+</Card>
 
 ### Step 1: Calculate Support Reaction Forces
 

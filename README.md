@@ -43,6 +43,85 @@ Chapter 2 has been completely restructured to emphasize pure engineering problem
 3. **Strategic Progression** - Problems increase in complexity while maintaining B.Sc. level accessibility
 4. **Field Diversity** - Applications spanning mechanical, electrical, and mechatronics engineering
 
+### Application/Question/Problem/Solutions/Answers Structure
+
+1. "🏭 Application <number>: <short problem title> (<discipline>)
+2. Brief desctiption
+3. 
+:::note[Problem Statement]
+- **Loading condition:** <state loading conditions>
+- **Support configuration:** <state support config>
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Double Girder Gantry Crane](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/double-girder-gantry-crane.png)
+  </TailwindWrapper>
+</div>
+**What we need to analyze:**
+1. **<bold most important>** <state more>
+
+**Key Question:** <key question briefly>
+:::
+
+<Card title="🔧 System Parameters" icon="document">
+<LoadingDiagramEmbed
+  src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_loading_diagram.html"
+  title="Crane Jib Loading Diagram"
+  height="380px"
+/>
+<specific details and values e.g.:>
+- Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
+- Span: 3000 mm between supports A and B
+- Overhang: 1000 mm beyond support B
+- Load 1: P₁ = 5000 N at 1500 mm from A (midspan)
+- Load 2: P₂ = 3000 N at end of overhang
+- Load 3: Distributed load W = 800 N/m over entire length (beam self-weight + attachments)
+- Material: Structural steel (σ_yield = 250 MPa)
+- Safety factor required: 2.5
+- Dynamic amplification factor: 1.4 (for crane operations)
+</Card>
+
+<very detailed solutions e.g.:>
+### Step 1: Calculate Support Reaction Forces
+
+<details>
+<summary>**Click to reveal equilibrium calculations**</summary>
+<use standard latex formulae and not unicode>
+<Steps>
+
+1. **Account for distributed loading effects:**
+
+   Distributed load total force: W = w × L_total = 800 × 4.0 = 3200 N
+
+   This acts at the centroid of the beam: x̄ = 2.0 m from A ✅
+
+2. **Apply dynamic amplification factor:**
+
+   Applied loads with dynamic effects:
+   - P₁_dynamic = 1.4 × 5000 = 7000 N
+   - P₂_dynamic = 1.4 × 3000 = 4200 N
+   - W remains at 3200 N (self-weight not amplified) ✅
+
+3. **Calculate reaction at support B using moment equilibrium about A:**
+
+   $$\sum M_A = 0: R_B(3.0) - 7000(1.5) - 3200(2.0) - 4200(4.0) = 0$$
+   $$R_B = \frac{10500 + 6400 + 16800}{3.0} = \frac{33700}{3.0} = 11233 \text{ N}$$ ✅
+
+4. **Calculate reaction at support A using force equilibrium:**
+
+   $$\sum F_y = 0: R_A + 11233 - 7000 - 3200 - 4200 = 0$$
+   $$R_A = 14400 - 11233 = 3167 \text{ N}$$ ✅
+
+5. **Verify equilibrium check:**
+
+   $$\sum F_y = 3167 + 11233 - 7000 - 3200 - 4200 = 0$$ ✅
+
+</Steps>
+
+</details>
+
+
+
+
 ### Chapter 2: Balanced Beam Type Representation
 Our curriculum ensures comprehensive coverage of industrial beam applications:
 
