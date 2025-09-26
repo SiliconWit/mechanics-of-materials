@@ -1,0 +1,76 @@
+# Crane Jib Analysis - Lesson 2.2 Application 3
+
+## Overview
+This program analyzes the crane jib with overhang loading from Application 3 of Lesson 2.2: Bending Stresses in Simple Beams.
+
+## Problem Description
+- **Beam Type**: Steel I-beam (150 mm × 100 mm × 8 mm)
+- **Configuration**: Overhanging simply supported beam
+- **Span**: 3.0 m between supports A and B
+- **Overhang**: 1.0 m beyond support B
+- **Total Length**: 4.0 m
+
+### Loading
+- **P₁**: 5000 N → 7000 N (with dynamic factor 1.4) at x = 1.5 m (midspan)
+- **P₂**: 3000 N → 4200 N (with dynamic factor 1.4) at x = 4.0 m (overhang end)
+- **Distributed Load**: 800 N/m over entire length (3200 N total)
+
+### Material Properties
+- **I**: 8.2 × 10⁶ mm⁴
+- **c**: 75 mm
+- **σ_yield**: 250 MPa
+
+## Analysis Results
+
+### Reaction Forces
+- **R_A** = 3167 N (upward)
+- **R_B** = 11233 N (upward)
+
+### Critical Values
+- **Maximum Positive Shear**: 4998 N at support B
+- **Maximum Negative Shear**: -6233 N at support B
+- **Maximum Positive Moment**: 3845 N·m at x = 1.5 m (midspan)
+- **Maximum Negative Moment**: -4594 N·m at support B
+
+### Stress Analysis
+- **Section Modulus**: S = 109.3×10³ mm³
+- **Maximum Stress (Positive Moment)**: σ = 35.2 MPa
+- **Maximum Stress (Negative Moment)**: σ = 42.0 MPa
+- **Controlling Stress**: 42.0 MPa (at support B)
+- **Safety Factor**: 6.0
+
+## Generated Files
+
+### crane_jib_analysis.py
+Main Python program that:
+- Calculates all reaction forces using equilibrium equations
+- Generates shear force and bending moment diagrams
+- Performs stress analysis
+- Creates mobile-optimized SVG visualizations
+
+### SVG Outputs
+1. **crane_jib_loading_diagram.svg**: Complete loading diagram showing beam, supports, loads, and reactions
+2. **crane_jib_shear_diagram.svg**: Interactive shear force diagram with critical values
+3. **crane_jib_moment_diagram.svg**: Interactive bending moment diagram with critical values
+
+## Features
+- **Mobile-Optimized**: Large fonts and compatible colors for phone viewing
+- **Universal Compatibility**: Colors work on both light and dark backgrounds
+- **Transparent Backgrounds**: No white or black colors used
+- **Professional Quality**: High-resolution SVG format suitable for technical documentation
+
+## Usage
+```bash
+python3 crane_jib_analysis.py
+```
+
+The program will:
+1. Display detailed calculations in the terminal
+2. Generate three SVG files with the visualizations
+3. Show all critical values and stress analysis results
+
+## Engineering Insights
+- The crane jib experiences both positive and negative bending moments
+- Maximum stress occurs at support B due to negative moment
+- The dynamic amplification factor significantly increases the applied loads
+- The beam has adequate safety margin (SF = 6.0) for the given loading conditions

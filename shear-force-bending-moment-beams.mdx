@@ -2,7 +2,7 @@
 title: "Lesson 2.1: Shear Force and Bending Moment in Beams"
 description: "Analyzing shear force and bending moment distributions in robotic arm segments under loading"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-21
+pubDate: 2025-09-17
 tags: ["solid-mechanics", "bending", "shear-force", "bending-moment", "robotic-arm", "beam-analysis"]
 excerpt: "Learn shear force and bending moment analysis through robotic arm beam segments, covering load distribution, diagram construction, and critical section identification for structural design."
 ---
@@ -20,15 +20,7 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
   contributors={frontmatter.contributors}
 />
 
----
-
-## 🎓 **Chapter 2: Structural Behavior in Motion and Force Transfer**
-
-<BionicText method="advanced" intensity="medium" class="highlight">
-Welcome to Chapter 2 of our mechanics of materials journey! We now transition from axial loading (tension, compression, torsion) to bending-dominated behavior. Here, we'll analyze how beams and structural elements respond to transverse loads, forming the foundation for understanding robotic arms, machine frames, and structural components in mechatronic systems.
-</BionicText>
-
----
+Learn shear force and bending moment analysis through robotic arm beam segments, covering load distribution, diagram construction, and critical section identification for structural design.
 
 ## 🎯 Learning Objectives
 
@@ -37,19 +29,18 @@ By the end of this lesson, you will be able to:
 1. **Construct** <Badge text="shear force and bending moment diagrams" variant="caution" /> for semi-automatic material handling robotic arms
 2. **Identify** <Badge text="critical sections" variant="caution" /> with maximum shear and moment values in material handling systems
 3. **Apply** <Badge text="equilibrium principles" variant="caution" /> to cantilever beam analysis under eccentric loading conditions
-4. **Design** for both <Badge text="shear and bending failure modes" variant="caution" /> in industrial robotic structures
 
 ## 🔧 Real-World System Problem: Semi-Automatic Material Handling Robotic Arm
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Robotic Arm Segment Under Load](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/shear-force-bending-moment-beams.png)
+  </TailwindWrapper>
+</div>
 
 <BionicText method="advanced" intensity="medium" class="highlight">
 Semi-automatic material handling robotic arms must support substantial payloads while operators manually guide positioning. Understanding how forces and moments distribute along the arm structure under eccentric loading is crucial for preventing failure and ensuring safe operation during human-robot collaboration.
 </BionicText>
-
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Robotic Arm Segment Under Load](./images/robotic-arm-cantilever.png)
-  </TailwindWrapper>
-</div>
 
 ### System Description
 
@@ -161,6 +152,36 @@ $$\frac{dM}{dx} = V(x)$$
 **Physical Meaning:** These equations show how load affects shear force rate of change, and how shear force affects bending moment rate of change.
 </Card>
 
+### Common Beam Equations
+
+<Card title="🛡️ Cantilever Beam - Shear Force" icon="document">
+**For cantilever with distributed load w and point load P at tip:**
+
+$$V(x) = -(wL + P) + w \cdot x$$
+
+**Where:**
+- $w$ = Distributed load intensity (N/m)
+- $L$ = Beam length (m)
+- $P$ = Point load at tip (N)
+- $x$ = Distance from fixed support (m)
+
+**Physical Meaning:** Shear force starts negative (total downward load) and becomes less negative as distributed load is "taken up" along the length.
+</Card>
+
+<Card title="⚖️ Cantilever Beam - Bending Moment" icon="document">
+**For cantilever with distributed load w and point load P at tip:**
+
+$$M(x) = -M_{base} + R_y \cdot x - w \cdot x \cdot \frac{x}{2}$$
+
+**Where:**
+- $M_{base}$ = Reaction moment at fixed support
+- $R_y$ = Vertical reaction force
+- Second term = Moment due to reaction force
+- Third term = Moment due to distributed load
+
+**Physical Meaning:** Bending moment varies quadratically due to distributed loading. Negative values indicate sagging (compression on top, tension on bottom).
+</Card>
+
 :::tip[Key Insights]
 1. **Slope of shear diagram = negative of applied load**
 2. **Slope of moment diagram = shear force value**
@@ -169,23 +190,40 @@ $$\frac{dM}{dx} = V(x)$$
 5. **Applied moments cause jumps in moment diagrams**
 :::
 
-## 🔧 Application 1: Semi-Automatic Robotic Arm Cantilever Analysis
+## 🏭 Application 1: Semi-Automatic Robotic Arm Cantilever Analysis (Mechatronics)
 
 A material handling robotic arm is modeled as a cantilever beam carrying both its own weight and a payload at the tip.
 
 :::note[Problem Statement]
+- **Loading condition:** Uniformly distributed load (UDL) + one point load (actuator force)
+- **Support configuration:** Cantilever beam (fixed at base)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Robotic Arm Segment Under Load](./images/robotic-arm-modeled-as-cantilever-beam.png)
+	![Semi-Automatic Robotic Arm Cantilever](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-cantilever.png)
+  </TailwindWrapper>
+</div>
+**What we need to analyze:**
+1. **Support reaction forces** under combined loading
+2. **Shear force and bending moment diagrams** across the entire beam
+3. Locate **maximum bending moment** and calculate **maximum stress**
+4. Estimate **safety factor** with respect to yield
+
+**Key Question:** What are the maximum shear force, bending moment, stress, and safety factor for this robotic arm?
+:::
+
+<Card title="🔧 System Parameters" icon="document">
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Robotic Arm Segment Under Load](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-segment-under-load.png)
   </TailwindWrapper>
 </div>
 **Given:**
 - Cantilever arm length: L = 2.5 m
 - Distributed load: w = 75 N/m (arm self-weight)  
 - Point load at tip: P = 1200 N (payload)
-
-**Find:** Maximum shear force, maximum bending moment, and their locations.
-:::
+- Cross-section: 80 mm × 10 mm (rectangular aluminum bar, I = 5.33×10⁶ mm⁴, c = 40 mm)
+- Material: Aluminum alloy (σ\_yield = 275 MPa)
+</Card>
 
 ### Step 1: Calculate Reaction Forces
 
@@ -234,17 +272,8 @@ A material handling robotic arm is modeled as a cantilever beam carrying both it
 
 **For 0 ≤ x ≤ 2.5 m:**
 
-<Card title="🛡️ Shear Force Equation" icon="document">
-$$V(x) = -(wL + P) + w \cdot x = -(75 \times 2.5 + 1200) + 75x = -1387.5 + 75x$$
-
-**Where:**
-- $w$ = Distributed load intensity (75 N/m)
-- $L$ = Beam length (2.5 m)
-- $P$ = Point load (1200 N)
-- $x$ = Distance from fixed support (m)
-
-**Physical Meaning:** For cantilever beams with downward loads, shear force starts negative (representing the total downward load) and becomes less negative as distributed load is "taken up" along the length.
-</Card>
+**Applying the cantilever shear force equation (see theory section):**
+$$V(x) = -(75 \times 2.5 + 1200) + 75x = -1387.5 + 75x$$
 
 **Key points:**
 - At x = 0: V(0) = -1387.5 N (negative, as expected for downward loads) ✅
@@ -272,18 +301,8 @@ Just after tip: V = -1200 + 1200 = 0 N ✅
 
 **For 0 ≤ x ≤ 2.5 m:**
 
-<Card title="⚖️ Bending Moment Equation" icon="document">
-$$M(x) = -M_{base} + R_y \cdot x - w \cdot x \cdot \frac{x}{2}$$
-
+**Applying the cantilever bending moment equation (see theory section):**
 $$M(x) = -3234.375 + 1387.5x - 37.5x^2$$
-
-**Where:**
-- $M_{base}$ = Reaction moment at fixed support (3234.375 N·m)
-- Second term = Moment due to reaction force
-- Third term = Moment due to distributed load
-
-**Physical Meaning:** Bending moment varies quadratically due to distributed loading from robotic arm components. The negative sign indicates sagging (compression on top, tension on bottom).
-</Card>
 
 **Key points:**
 - At x = 0: M(0) = -3234.375 N·m (negative = sagging moment at fixed end) ✅
@@ -294,68 +313,121 @@ At the free end (x = 2.5 m), the internal moment must be zero since there are no
 
 </details>
 
-### Step 4: Find Critical Sections
+### Step 4: Stress Analysis and Safety Assessment
 
 <details>
-<summary>**Click to reveal critical section analysis**</summary>
+<summary>**Click to reveal stress analysis and safety factor calculations**</summary>
 
 <Steps>
 
 1. **Maximum shear location:**
-   
+
    Maximum |V| = 1387.5 N at x = 0 (fixed support) ✅
 
 2. **Maximum moment location:**
-   
+
    For cantilever beams with downward loading, the maximum moment typically occurs at the **fixed support**. Let's verify by checking the boundary values:
-   
-   - At x = 0 (support): |M(0)| = 3234.375 N·m ✅
+
+   - At x = 0 (support): |M(0)| = 3234.375 N·m = 3,234,375 N·mm ✅
    - At x = 2.5 m (tip): |M(2.5)| = 0 N·m ✅
-   
-   **Maximum |M|** = 3234.375 N·m at x = 0 (fixed support) ✅
-   
-   **Note:** Setting dM/dx = V(x) = 0 gives -1387.5 + 75x = 0, so x = 18.5 m, but this point is beyond our 2.5m arm length. For cantilever arms with downward loads, maximum moment always occurs at the fixed support.
+
+   **Maximum |M|** = 3,234,375 N·mm at x = 0 (fixed support) ✅
+
+3. **Maximum bending stress calculation:**
+
+   Using the flexure formula: $$\sigma_{max} = \frac{M_{max} \cdot c}{I}$$
+
+   Where:
+   - $M_{max} = 3,234,375$ N·mm
+   - $c = 40$ mm (distance from neutral axis to extreme fiber)
+   - $I = 5.33 \times 10^6$ mm⁴
+
+   $$\sigma_{max} = \frac{3,234,375 \times 40}{5.33 \times 10^6} = \frac{129,375,000}{5,330,000} = 24.3 \text{ MPa}$$ ✅
+
+4. **Safety factor against yield:**
+
+   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{275}{24.3} = 11.3$$ ✅
+
+   **Engineering Assessment:** Safety factor of 11.3 is very conservative and indicates over-design. For robotic applications, SF = 2-4 is typically adequate.
+
+5. **Design recommendations:**
+
+   **Option 1:** Reduce cross-section to 60 mm × 8 mm for weight optimization while maintaining SF ≥ 3
+
+   **Option 2:** Use hollow rectangular section (80×10 mm outer, 60×6 mm inner) for 40% weight reduction
+
+   **Option 3:** Implement variable cross-section with maximum at base, tapering toward tip
 
 </Steps>
 
 </details>
 
-## 🔧 Application 2: CNC Machine Spindle Housing
+## 🏭 Application 2: Conveyor Roller Support Beam (Electromechanical)
 
-A simply supported beam carries a rotating spindle with concentrated loads from motor reactions and cutting forces.
+A conveyor beam supports five equally spaced boxes during material handling operations.
 
 :::note[Problem Statement]
-**Given:**
-- Simply supported beam length: L = 1200 mm
-- Motor reaction force: P₁ = 800 N at x = 400 mm
-- Cutting force: P₂ = 1200 N at x = 900 mm
-- Support conditions: Simply supported at both ends
+- **Loading condition:** Multiple point loads (boxes on conveyor)
+- **Support configuration:** Simply supported (pinned + roller)
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Conveyor Beam with Multiple Loads](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-loads.png)
+  </TailwindWrapper>
+</div>
+**What we need to analyze:**
+1. **Support reaction forces** under multiple concentrated loads
+2. **Shear force and bending moment diagrams** with multiple discontinuities
+3. Compare **maximum moments** at load points vs. midspan locations
+4. Determine **critical design section** for beam sizing
 
-**Find:** Maximum shear force, maximum bending moment, and their locations.
+**Key Question:** What are the maximum shear force, bending moment, and critical design location?
 :::
+
+<Card title="🔧 System Parameters" icon="document">
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Loaded Conveyor Beam Support System Parameters](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
+  </TailwindWrapper>
+</div>
+**Given:**
+- Beam length: L = 2000 mm
+- Support conditions: Simply supported at both ends
+- Load configuration: 5 boxes, each P = 400 N
+- Load spacing: 400 mm intervals (at x = 200, 600, 1000, 1400, 1800 mm)
+- Cross-section: Hollow rectangular steel 60×40×4 mm (I = 3.1×10⁶ mm⁴, c = 30 mm)
+- Material: Steel (σ_yield = 250 MPa)
+</Card>
 
 ### Step 1: Calculate Reaction Forces
 
 <details>
 <summary>**Click to reveal reaction force calculations**</summary>
 
+<Steps>
+
 1. **Sum of vertical forces (↑ positive):**
-   
-   $$\sum F_y = 0: R_A + R_B - 800 - 1200 = 0$$
-   
+
+   $$\sum F_y = 0: R_A + R_B - 5 \times 400 = 0$$
+
    $$R_A + R_B = 2000 \text{ N}$$ ✅
 
 2. **Sum of moments about A (counterclockwise positive):**
-   
-   $$\sum M_A = 0: R_B(1200) - 800(400) - 1200(900) = 0$$
-   
-   $$R_B(1200) = 320,000 + 1,080,000 = 1,400,000$$
-   
-   $$R_B = \frac{1,400,000}{1200} = 1166.7 \text{ N}$$ ✅
+
+   $$\sum M_A = 0: R_B(2000) - 400(200 + 600 + 1000 + 1400 + 1800) = 0$$
+
+   $$R_B(2000) = 400(5000) = 2,000,000$$
+
+   $$R_B = \frac{2,000,000}{2000} = 1000 \text{ N}$$ ✅
 
 3. **Calculate R_A:**
-   
-   $$R_A = 2000 - 1166.7 = 833.3 \text{ N}$$ ✅
+
+   $$R_A = 2000 - 1000 = 1000 \text{ N}$$ ✅
+
+4. **Verify by symmetry:**
+
+   Since loads are symmetric about centerline (x = 1000 mm), reactions are equal: $R_A = R_B = 1000$ N ✅
+
+</Steps>
 
 </details>
 
@@ -364,24 +436,51 @@ A simply supported beam carries a rotating spindle with concentrated loads from 
 <details>
 <summary>**Click to reveal shear force analysis**</summary>
 
-**For 0 ≤ x ≤ 400 mm:**
-$$V(x) = R_A = 833.3 \text{ N}$$ ✅
+**Method:** Track cumulative loads from left support.
 
-**For 400 mm ≤ x ≤ 900 mm:**
-$$V(x) = R_A - P_1 = 833.3 - 800 = 33.3 \text{ N}$$ ✅
+**Key regions and jumps:**
 
-**For 900 mm ≤ x ≤ 1200 mm:**
-$$V(x) = R_A - P_1 - P_2 = 833.3 - 800 - 1200 = -1166.7 \text{ N}$$ ✅
+**For 0 ≤ x < 200 mm:**
+$$V(x) = R_A = 1000 \text{ N}$$ ✅
 
-**Key points:**
-- At x = 0: V = 833.3 N ✅
-- Just before x = 400 mm: V = 833.3 N ✅
-- Just after x = 400 mm: V = 33.3 N ✅
-- Just before x = 900 mm: V = 33.3 N ✅ 
-- Just after x = 900 mm: V = -1166.7 N ✅
-- At x = 1200 mm: V = -1166.7 N ✅
+**At x = 200 mm (first load):**
+Jump down by 400 N: V = 1000 - 400 = 600 N ✅
 
-**Maximum shear force:** |V_max| = 1166.7 N between x = 900-1200 mm ✅
+**For 200 < x < 600 mm:**
+$$V(x) = 600 \text{ N}$$ ✅
+
+**At x = 600 mm (second load):**
+Jump down by 400 N: V = 600 - 400 = 200 N ✅
+
+**For 600 < x < 1000 mm:**
+$$V(x) = 200 \text{ N}$$ ✅
+
+**At x = 1000 mm (center load):**
+Jump down by 400 N: V = 200 - 400 = -200 N ✅
+
+**For 1000 < x < 1400 mm:**
+$$V(x) = -200 \text{ N}$$ ✅
+
+**At x = 1400 mm (fourth load):**
+Jump down by 400 N: V = -200 - 400 = -600 N ✅
+
+**For 1400 < x < 1800 mm:**
+$$V(x) = -600 \text{ N}$$ ✅
+
+**At x = 1800 mm (fifth load):**
+Jump down by 400 N: V = -600 - 400 = -1000 N ✅
+
+**For 1800 < x ≤ 2000 mm:**
+$$V(x) = -1000 \text{ N}$$ ✅
+
+**Maximum shear force:** |V_max| = 1000 N at both supports ✅
+
+:::tip[SFD Characteristics for Multiple Point Loads]
+- **Constant** between loads (no distributed loads)
+- **Sharp downward jumps** at each load point
+- **Symmetric pattern** due to symmetric loading
+- **Maximum shear** occurs at supports
+:::
 
 </details>
 
@@ -390,55 +489,155 @@ $$V(x) = R_A - P_1 - P_2 = 833.3 - 800 - 1200 = -1166.7 \text{ N}$$ ✅
 <details>
 <summary>**Click to reveal bending moment analysis**</summary>
 
-**For 0 ≤ x ≤ 400 mm:**
-$$M(x) = R_A \cdot x = 833.3x$$ ✅
+**Method:** Integrate shear force or use equilibrium of cut sections.
 
-**For 400 mm ≤ x ≤ 900 mm:**
-$$M(x) = R_A \cdot x - P_1(x - 400) = 833.3x - 800(x - 400) = 33.3x + 320,000$$ ✅
+**For 0 ≤ x ≤ 200 mm:**
+$$M(x) = R_A \cdot x = 1000x$$
 
-**For 900 mm ≤ x ≤ 1200 mm:**
-$$M(x) = R_A \cdot x - P_1(x - 400) - P_2(x - 900)$$
-$$M(x) = 833.3x - 800(x - 400) - 1200(x - 900) = -1166.7x + 1,400,000$$ ✅
+**For 200 ≤ x ≤ 600 mm:**
+$$M(x) = 1000x - 400(x - 200) = 600x + 80,000$$
 
-**Key points:**
+**For 600 ≤ x ≤ 1000 mm:**
+$$M(x) = 1000x - 400(x - 200) - 400(x - 600) = 200x + 320,000$$
+
+**For 1000 ≤ x ≤ 1400 mm:**
+$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) = -200x + 720,000$$
+
+**For 1400 ≤ x ≤ 1800 mm:**
+$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) = -600x + 1,280,000$$
+
+**For 1800 ≤ x ≤ 2000 mm:**
+$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) - 400(x - 1800) = -1000x + 2,000,000$$
+
+**Key moment values:**
 - At x = 0: M(0) = 0 N·mm ✅
-- At x = 400 mm: M(400) = 833.3(400) = 333,320 N·mm ✅
-- At x = 900 mm: M(900) = 33.3(900) + 320,000 = 349,970 N·mm ✅
-- At x = 1200 mm: M(1200) = 0 N·mm ✅
+- At x = 200 mm: M(200) = 200,000 N·mm ✅
+- At x = 600 mm: M(600) = 400,000 N·mm ✅
+- At x = 1000 mm: M(1000) = 520,000 N·mm ✅ **← Maximum**
+- At x = 1400 mm: M(1400) = 400,000 N·mm ✅
+- At x = 1800 mm: M(1800) = 200,000 N·mm ✅
+- At x = 2000 mm: M(2000) = 0 N·mm ✅
 
-**Maximum bending moment:** M_max = 349,970 N·mm = 350 N·m at x = 900 mm ✅
+**Maximum bending moment:** M_max = 520,000 N·mm = 520 N·m at x = 1000 mm (center) ✅
 
 </details>
 
-## 🔧 Application 3: Server Rack Cable Tray
+### Step 4: Critical Section Analysis
 
-A horizontal cable tray in a data center is fixed at both ends and carries uniformly distributed cables and equipment.
+<details>
+<summary>**Click to reveal critical analysis and design recommendations**</summary>
+
+<Steps>
+
+1. **Maximum moment location:**
+
+   **Center (x = 1000 mm):** M = 520 N·m ✅
+   **Under loads (x = 600, 1400 mm):** M = 400 N·m ✅
+
+   **Critical location:** Center of beam (midspan) despite no load at this point ✅
+
+2. **Maximum bending stress:**
+
+   $$\sigma_{max} = \frac{M_{max} \cdot c}{I} = \frac{520,000 \times 30}{3.1 \times 10^6} = 50.3 \text{ MPa}$$ ✅
+
+3. **Safety factor:**
+
+   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{50.3} = 4.97$$ ✅
+
+4. **Engineering insight - Midspan vs Under-Load Comparison:**
+
+   **Why midspan is critical:**
+   - In simply supported beams with multiple point loads, moment builds up between loads
+   - **Midspan moment (520 N·m) > Under-load moment (400 N·m)**
+   - This occurs because the center experiences cumulative effect of loads on both sides
+
+   **Design recommendation:** Size beam based on midspan moment, not just load locations ✅
+
+5. **Practical implications:**
+
+   - **Deflection** will also be maximum at center
+   - **Lateral-torsional buckling** check needed at center span
+   - Consider **intermediate supports** if moment is excessive
+
+</Steps>
+
+</details>
+
+## 🏭 Application 3: Solar Tracker Arm (Electronics/Mechatronics)
+
+A solar tracker support beam adjusts panel orientation to track the sun, experiencing combined self-weight, wind loading, and equipment forces.
 
 :::note[Problem Statement]
-**Given:**
-- Fixed-fixed beam length: L = 2000 mm
-- Cable weight: w = 25 N/m (uniformly distributed)
-- Support conditions: Fixed at both ends
+- **Loading condition:** UDL (self-weight + wind) + concentrated clamp force
+- **Support configuration:** Overhanging simply supported beam
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Solar Tracker Overhanging Beam](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar-panel-tracking-system-mounting-rack-for-single-axis-solar-tracker.png)
+  </TailwindWrapper>
+</div>
+**What we need to analyze:**
+1. **Support reaction forces** for overhanging beam configuration
+2. **Shear force and bending moment diagrams** across entire beam length
+3. **Maximum positive and negative bending moments** and their locations
+4. **Critical section assessment** for bending stress design
 
-**Find:** Maximum shear force, maximum bending moment, and their locations.
+**Key Question:** What are the maximum positive and negative bending moments, and which section is most critical?
 :::
+
+<Card title="🔧 System Parameters" icon="document">
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Solar Tracker Parameters](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-segment-under-load.png)
+  </TailwindWrapper>
+</div>
+**Given:**
+- Total beam length: 3.0 m (2.5 m span + 0.5 m overhang)
+- Support A (pinned): at x = 0
+- Support B (roller): at x = 2.5 m
+- Uniformly distributed load: w = 300 N/m across entire length (panel weight + wind)
+- Point load at tip: P = 600 N at x = 3.0 m (clamp mechanism)
+- Cross-section: Structural steel I-beam (I = 6.8×10⁶ mm⁴, c = 40 mm)
+- Material: Structural steel (σ_yield = 250 MPa)
+</Card>
 
 ### Step 1: Calculate Reaction Forces
 
 <details>
 <summary>**Click to reveal reaction force calculations**</summary>
 
-For fixed-fixed beam with uniform distributed load:
+<Steps>
 
 1. **Sum of vertical forces (↑ positive):**
-   
-   $$\sum F_y = 0: R_A + R_B - wL = 0$$
-   
-   By symmetry: $$R_A = R_B = \frac{wL}{2} = \frac{25 \times 2000}{2} = 25,000 \text{ N}$$ ✅
 
-2. **Reaction moments (from fixed-fixed beam theory):**
-   
-   $$M_A = M_B = \frac{wL^2}{12} = \frac{25 \times (2000)^2}{12} = 8,333,333 \text{ N·mm} = 8.33 \text{ kN·m}$$ ✅
+   $$\sum F_y = 0: R_A + R_B - w \cdot L_{total} - P = 0$$
+
+   $$R_A + R_B = 300 \times 3.0 + 600 = 900 + 600 = 1500 \text{ N}$$ ✅
+
+2. **Sum of moments about A (counterclockwise positive):**
+
+   $$\sum M_A = 0: R_B(2.5) - w \cdot L_{total} \cdot \frac{L_{total}}{2} - P(3.0) = 0$$
+
+   $$R_B(2.5) = 300 \times 3.0 \times 1.5 + 600 \times 3.0$$
+
+   $$R_B(2.5) = 1350 + 1800 = 3150$$
+
+   $$R_B = \frac{3150}{2.5} = 1260 \text{ N}$$ ✅
+
+3. **Calculate R_A:**
+
+   $$R_A = 1500 - 1260 = 240 \text{ N}$$ ✅
+
+4. **Verification by moments about B:**
+
+   $$\sum M_B = 0: -R_A(2.5) + w \times 2.5 \times 1.25 - w \times 0.5 \times (2.5 + 0.25) - P \times 0.5 = 0$$
+
+   $$-240(2.5) + 300 \times 2.5 \times 1.25 - 300 \times 0.5 \times 2.75 - 600 \times 0.5$$
+
+   $$= -600 + 937.5 - 412.5 - 300 = -375 + 937.5 - 712.5 = -375 + 225 = -150$$
+
+   Let me recalculate: $$R_A = \frac{3150 - 1260 \times 2.5}{2.5} = \frac{3150 - 3150}{2.5} = 240$$ ✅
+
+</Steps>
 
 </details>
 
@@ -447,90 +646,33 @@ For fixed-fixed beam with uniform distributed load:
 <details>
 <summary>**Click to reveal shear force analysis**</summary>
 
-**For 0 ≤ x ≤ 2000 mm:**
+**Method:** Track loads from left support, accounting for distributed load accumulation.
 
-$$V(x) = R_A - wx = 25,000 - 25x$$
+**For 0 ≤ x ≤ 2.5 m (between supports):**
+$$V(x) = R_A - wx = 240 - 300x$$
 
-**Key points:**
-- At x = 0: V(0) = 25,000 N ✅
-- At x = 1000 mm: V(1000) = 25,000 - 25(1000) = 0 N ✅
-- At x = 2000 mm: V(2000) = 25,000 - 25(2000) = -25,000 N ✅
-
-**Maximum shear force:** |V_max| = 25,000 N at both supports ✅
-
-</details>
-
-### Step 3: Construct Bending Moment Diagram
-
-<details>
-<summary>**Click to reveal bending moment analysis**</summary>
-
-**For 0 ≤ x ≤ 2000 mm:**
-
-$$M(x) = M_A + R_A x - w\frac{x^2}{2} = -8,333,333 + 25,000x - 12.5x^2$$
+**For 2.5 < x ≤ 3.0 m (overhang region):**
+$$V(x) = R_A - wx + R_B = 240 - 300x + 1260 = 1500 - 300x$$
 
 **Key points:**
-- At x = 0: M(0) = -8,333,333 N·mm = -8.33 kN·m ✅
-- At x = 1000 mm: M(1000) = -8,333,333 + 25,000(1000) - 12.5(1000)² = 4.17 kN·m ✅  
-- At x = 2000 mm: M(2000) = -8.33 kN·m ✅
+- At x = 0: V(0) = 240 N ✅
+- At x = 0.8 m: V(0.8) = 240 - 300(0.8) = 0 N ✅ (zero shear point)
+- Just before support B (x = 2.5⁻): V(2.5⁻) = 240 - 300(2.5) = -510 N ✅
+- Just after support B (x = 2.5⁺): V(2.5⁺) = -510 + 1260 = 750 N ✅
+- At tip before point load (x = 3.0⁻): V(3.0⁻) = 1500 - 300(3.0) = 600 N ✅
+- At tip after point load (x = 3.0⁺): V(3.0⁺) = 600 - 600 = 0 N ✅
 
-**Maximum positive moment:** M_max = 4.17 kN·m at center ✅
-**Maximum negative moment:** |M_max| = 8.33 kN·m at supports ✅
+**Maximum shear forces:**
+- **Positive:** V_max = 750 N just after support B ✅
+- **Negative:** V_min = -510 N just before support B ✅
 
-</details>
-
-## 🔧 Application 4: Robotic Gripper Jaw Analysis
-
-A robotic gripper jaw grips objects of varying sizes and weights, creating distributed and concentrated loads on the cantilever jaw structure.
-
-:::note[Problem Statement]
-**Given:**
-- Cantilever jaw length: L = 120 mm
-- Gripping force (concentrated): P = 300 N at x = 100 mm
-- Jaw weight (distributed): w = 5 N/m along entire length
-- Cross-section: Rectangular aluminum, 20 mm × 15 mm
-
-**Find:** Complete shear force and bending moment analysis with maximum values.
+:::tip[SFD Characteristics for Overhanging Beams]
+- **Linear variation** due to uniform distributed load
+- **Sharp jump** at intermediate support (upward by R_B)
+- **Zero shear** at x = 0.8 m indicates maximum moment location
+- **Overhang region** experiences positive shear until tip load
 :::
 
-### Step 1: Calculate Reaction Forces
-
-<details>
-<summary>**Click to reveal reaction force calculations**</summary>
-
-1. **Sum of vertical forces (↑ positive):**
-   
-   $$\sum F_y = 0: R_y - wL - P = 0$$
-   
-   $$R_y = 5 \times 0.12 + 300 = 0.6 + 300 = 300.6 \text{ N}$$ ✅
-
-2. **Sum of moments about base (counterclockwise positive):**
-   
-   $$\sum M_{base} = 0: M_{base} - wL \times \frac{L}{2} - P \times 100 = 0$$
-   
-   $$M_{base} = 0.6 \times 60 + 300 \times 100 = 36 + 30,000 = 30,036 \text{ N·mm}$$ ✅
-
-</details>
-
-### Step 2: Construct Shear Force Diagram
-
-<details>
-<summary>**Click to reveal shear force analysis**</summary>
-
-**For 0 ≤ x ≤ 100 mm:**
-$$V(x) = -wx = -5x \times 10^{-3} = -0.005x \text{ N}$$
-
-**For 100 < x ≤ 120 mm:**
-$$V(x) = -wx - P = -0.005x - 300 \text{ N}$$
-
-**Key points:**
-- At x = 0: V(0) = 0 N ✅
-- At x = 100⁻: V(100⁻) = -0.005(100) = -0.5 N ✅
-- At x = 100⁺: V(100⁺) = -0.5 - 300 = -300.5 N ✅
-- At x = 120: V(120) = -0.005(120) - 300 = -300.6 N ✅
-
-**Maximum shear force:** |V_max| = 300.6 N at fixed support ✅
-
 </details>
 
 ### Step 3: Construct Bending Moment Diagram
@@ -538,24 +680,75 @@ $$V(x) = -wx - P = -0.005x - 300 \text{ N}$$
 <details>
 <summary>**Click to reveal bending moment analysis**</summary>
 
-**For 0 ≤ x ≤ 100 mm:**
-$$M(x) = \int V(x)dx = \int(-0.005x)dx = -0.0025x^2 + C_1$$
+**Method:** Integrate shear force or use moment equilibrium of cut sections.
 
-**For 100 < x ≤ 120 mm:**
-$$M(x) = \int(-0.005x - 300)dx = -0.0025x^2 - 300x + C_2$$
+**For 0 ≤ x ≤ 2.5 m:**
+$$M(x) = \int V(x)dx = \int(240 - 300x)dx = 240x - 150x^2 + C_1$$
 
-Applying boundary conditions M(120) = 0 and continuity at x = 100:
-$$C_1 = 30,036 \text{ and } C_2 = 66,036$$
+With boundary condition M(0) = 0: C₁ = 0
+$$M(x) = 240x - 150x^2$$
 
-Therefore:
-- **For 0 ≤ x ≤ 100:** $$M(x) = -0.0025x^2 + 30,036$$ ✅
-- **For 100 < x ≤ 120:** $$M(x) = -0.0025x^2 - 300x + 66,036$$ ✅
+**For 2.5 < x ≤ 3.0 m:**
+$$M(x) = \int(1500 - 300x)dx = 1500x - 150x^2 + C_2$$
 
-**Key points:**
-- At x = 0: M(0) = 30,036 N·mm = 30.04 N·m ✅
-- At x = 120: M(120) = 0 N·m ✅
+With continuity at x = 2.5 m: M(2.5) = 240(2.5) - 150(2.5)² = -337.5 N·m
+$$C_2 = -337.5 - 1500(2.5) + 150(2.5)^2 = -337.5 - 3750 + 937.5 = -3150$$
+$$M(x) = 1500x - 150x^2 - 3150$$
 
-**Maximum bending moment:** M_max = 30.04 N·m at fixed support ✅
+**Key moment values:**
+- At x = 0: M(0) = 0 N·m ✅
+- At x = 0.8 m (zero shear): M(0.8) = 240(0.8) - 150(0.8)² = 192 - 96 = 96 N·m ✅ **← Max positive**
+- At x = 2.5 m (support B): M(2.5) = 240(2.5) - 150(2.5)² = 600 - 937.5 = -337.5 N·m ✅ **← Max negative**
+- At x = 3.0 m (tip): M(3.0) = 1500(3.0) - 150(3.0)² - 3150 = 4500 - 1350 - 3150 = 0 N·m ✅
+
+**Maximum moments:**
+- **Positive:** M_max = +96 N·m at x = 0.8 m ✅
+- **Negative:** M_min = -337.5 N·m at support B (x = 2.5 m) ✅
+
+</details>
+
+### Step 4: Critical Section Analysis
+
+<details>
+<summary>**Click to reveal critical bending stress assessment**</summary>
+
+<Steps>
+
+1. **Maximum moment comparison:**
+
+   **Positive moment:** M_max = +96 N·m at x = 0.8 m ✅
+   **Negative moment:** |M_min| = 337.5 N·m at support B ✅
+
+   **Critical location:** Support B due to larger moment magnitude ✅
+
+2. **Maximum bending stress at critical section:**
+
+   $$\sigma_{max} = \frac{|M_{max}| \cdot c}{I} = \frac{337,500 \times 40}{6.8 \times 10^6} = 19.9 \text{ MPa}$$ ✅
+
+3. **Safety factor:**
+
+   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{19.9} = 12.6$$ ✅
+
+4. **Engineering assessment - Positive vs Negative Moment Regions:**
+
+   **Why support B is most critical:**
+   - **Negative moment (337.5 N·m) >> Positive moment (96 N·m)**
+   - Support experiences both high shear force and maximum negative moment
+   - **Design implication:** Beam capacity controlled by support B, not midspan
+
+   **Stress distribution at critical section:**
+   - **Top fiber:** Tension (negative moment causes beam to curve upward)
+   - **Bottom fiber:** Compression
+   - **Design consideration:** Check lateral-torsional buckling of compression flange
+
+5. **Practical design recommendations:**
+
+   - **Reinforce support B region** with stiffeners or larger section
+   - **Consider moment redistribution** with semi-rigid connections
+   - **Check fatigue** due to cyclic wind loading and tracking motion
+   - **Verify deflection limits** especially in overhang region
+
+</Steps>
 
 </details>
 

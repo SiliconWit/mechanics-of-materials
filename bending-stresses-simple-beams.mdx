@@ -2,7 +2,7 @@
 title: "Lesson 2.2: Bending Stresses in Simple Beams"
 description: "Analyzing bending stresses in cantilever robotic gripper jaws under grasping loads"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-21
+pubDate: 2025-09-26
 tags: ["solid-mechanics", "bending-stress", "cantilever-gripper", "robotic-gripper", "flexural-formula"]
 excerpt: "Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications."
 ---
@@ -23,26 +23,27 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 import ChartEmbed from '../../../../components/mechanics-of-materials/ChartEmbed.astro';
 import LoadingDiagramEmbed from '../../../../components/mechanics-of-materials/LoadingDiagramEmbed.astro';
 
+Learn bending stress analysis through a cantilever robotic gripper jaw, covering the flexural formula, neutral axis concepts, and stress distribution in beam cross-sections for precise gripping applications.
+
 ## 🎯 Learning Objectives
 
 By the end of this lesson, you will be able to:
-
-1. **Calculate** bending stresses in cantilever gripper jaws using the flexural formula
-2. **Locate** the neutral axis and identify maximum stress locations
-3. **Analyze** stress distribution across beam cross-sections
-4. **Design** gripper jaws for both tensile and compressive stress limits
+1. <Badge text="Calculate" variant="tip" /> bending stresses in cantilever gripper jaws using the flexural formula
+2. <Badge text="Locate" variant="note" /> the neutral axis and identify maximum stress locations
+3. <Badge text="Analyze" variant="caution" /> stress distribution across beam cross-sections
+4. <Badge text="Design" variant="tip" /> gripper jaws for both tensile and compressive stress limits
 
 ## 🔧 Real-World System Problem: Robotic Gripper Jaw
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Bending Stresses in Simple Beams](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/bending-stresses-in-simple-beams.png)
+  </TailwindWrapper>
+</div>
 
 <BionicText method="advanced" intensity="medium" class="highlight">
 Robotic grippers are critical components in automation systems, requiring precise force control and structural integrity. The cantilever robotic gripper jaw must withstand bending moments from gripping forces while maintaining accuracy and preventing failure during object manipulation.
 </BionicText>
-
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Cantilever Robotic Gripper Jaw.png](./images/cantilever-gripper-jaw.png)
-  </TailwindWrapper>
-</div>
 
 ### System Description
 
@@ -395,17 +396,17 @@ An electric train pantograph arm maintains contact with overhead power lines whi
 
 4. **Verify equilibrium:**
 
-   - Vertical forces: $R_A - P = 800 - 800 = 0$ (check)
-   - Moments about any point: $M_A - P \times L = 960,000 - 960,000 = 0$ (check)
+   - Vertical forces: $R_A - P = 800 - 800 = 0$ ✅
+   - Moments about any point: $M_A - P \times L = 960,000 - 960,000 = 0$ ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Shear Force and Bending Moment Analysis
+### Step 2: Shear Force Analysis
 
 <details>
-<summary>**Click to reveal shear and moment calculations**</summary>
+<summary>**Click to reveal shear calculations**</summary>
 
 - **Calculate shear forces at critical points:**
 
@@ -419,40 +420,74 @@ An electric train pantograph arm maintains contact with overhead power lines whi
 
 2. **Verify shear force values:**
 
-   - At free end (x = 0): V = -800 N
-   - At fixed support (x = 1200 mm): V = -800 N
-   - No variation along beam length for single concentrated load (check)
+   - At fixed support (x = 0): V = -800 N
+   - At free end (x = 1200 mm): V = -800 N
+   - No variation along beam length for single concentrated load ✅
 
 </Steps>
 
-- **Calculate bending moments at critical points:**
+**Shear Force Diagram**
 
-- **Method:** For cantilever beam, moment at distance x from free end = -P × x
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Pantograph Arm Shear Force Distribution](./codes/lesson-2-2/pantograph_arm_shear_diagram.svg)
+  </TailwindWrapper>
+</div>
 
-<Steps>
-1. **At free end (x = 0):**
-
-   $M = 0 \text{ N·mm}$ (free end boundary condition)
-
-2. **At quarter span (x = 300 mm):**
-
-   $M = -P \times x = -800 \times 300 = -240,000 \text{ N·mm}$
-
-3. **At midspan (x = 600 mm):**
-
-   $M = -P \times x = -800 \times 600 = -480,000 \text{ N·mm}$
-
-4. **At fixed support (x = 1200 mm):**
-
-   $M = -P \times x = -800 \times 1200 = -960,000 \text{ N·mm}$ (maximum moment)
-
-</Steps>
-
-> **Note:** Negative moments indicate compression on the top fiber and tension on the bottom fiber.
+> **Key observations:**
+> *Constant shear force V* = -800 N throughout the cantilever, 
+> *Negative sign* indicates downward internal force,
+> *No variation* along beam length for concentrated end load
 
 </details>
 
-### Step 3: Calculate Maximum Bending Moment
+### Step 3: Bending Moment Analysis
+
+<details>
+<summary>**Click to reveal moment calculations**</summary>
+
+- **Calculate bending moments at critical points:**
+
+- **Method:** For cantilever beam, moment at distance x from fixed support = -P × (L - x)
+
+<Steps>
+1. **At fixed support (x = 0):**
+
+   $M = -P \times (L - x) = -800 \times (1200 - 0) = -960,000 \text{ N·mm}$ (maximum moment)
+
+2. **At quarter span (x = 300 mm):**
+
+   $M = -P \times (L - x) = -800 \times (1200 - 300) = -720,000 \text{ N·mm}$
+
+3. **At midspan (x = 600 mm):**
+
+   $M = -P \times (L - x) = -800 \times (1200 - 600) = -480,000 \text{ N·mm}$
+
+4. **At free end (x = 1200 mm):**
+
+   $M = -P \times (L - x) = -800 \times (1200 - 1200) = 0 \text{ N·mm}$ (free end boundary condition)
+
+</Steps>
+
+> **Note:** For this cantilever configuration, negative moments indicate **tension on the top fiber** and **compression on the bottom fiber** (beam curves downward).
+
+**Bending Moment Diagram**
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Bending Moment Diagram](./codes/lesson-2-2/pantograph_arm_moment_diagram.svg)
+  </TailwindWrapper>
+</div>
+
+**Key observations:**
+- Linear moment variation: M(x) = -P(L-x) = -800(1.2-x) N⋅m
+- Maximum moment at fixed support (x=0): M_max = -960 N⋅m
+- Zero moment at free end (x=1.2m)
+- Negative moment causes **tension on top fiber** (cantilever curves downward)
+
+</details>
+
+### Step 4: Calculate Maximum Bending Moment
 
 <details>
 <summary>**Click to reveal moment calculations**</summary>
@@ -473,15 +508,15 @@ An electric train pantograph arm maintains contact with overhead power lines whi
 
 3. **Verify moment distribution:**
 
-   - At free end (x = 0): M = 0
-   - At fixed end (x = L): M = -960,000 N·mm (negative indicates compression on top fiber)
+   - At fixed support (x = 0): M = -960,000 N·mm (maximum, negative indicates compression on top fiber)
+   - At free end (x = L): M = 0 N·mm (free end boundary condition)
    - Moment varies linearly along the beam length ✅
 
 </Steps>
 
 </details>
 
-### Step 4: Calculate Maximum Bending Stress
+### Step 5: Calculate Maximum Bending Stress
 
 <details>
 <summary>**Click to reveal stress calculations**</summary>
@@ -500,15 +535,15 @@ An electric train pantograph arm maintains contact with overhead power lines whi
 
 3. **Stress distribution:**
 
-   - Maximum tensile stress: +9.80 MPa (bottom fiber at fixed end)
-   - Maximum compressive stress: -9.80 MPa (top fiber at fixed end)
+   - Maximum tensile stress: +9.80 MPa (top fiber at fixed end)
+   - Maximum compressive stress: -9.80 MPa (bottom fiber at fixed end)
    - Neutral axis stress: 0 MPa ✅
 
 </Steps>
 
 </details>
 
-### Step 5: Safety Factor Assessment
+### Step 6: Safety Factor Assessment
 
 <details>
 <summary>**Click to reveal safety calculations**</summary>
@@ -533,33 +568,6 @@ An electric train pantograph arm maintains contact with overhead power lines whi
 </Steps>
 
 </details>
-
-### Step 6: Shear and Moment Analysis
-
-<Card title="📊 Shear Force Diagram" icon="chart">
-<ChartEmbed
-  src="/education/mechanics-of-materials/components/lesson-2-2/pantograph_shear_chart.html"
-  title="Pantograph Arm Shear Force Distribution"
-/>
-
-**Key observations:**
-- Constant shear force V = -800 N throughout the cantilever
-- Negative sign indicates downward internal force
-- No variation along beam length for concentrated end load
-</Card>
-
-<Card title="📈 Bending Moment Diagram" icon="chart">
-<ChartEmbed
-  src="/education/mechanics-of-materials/components/lesson-2-2/pantograph_moment_chart.html"
-  title="Pantograph Arm Bending Moment Distribution"
-/>
-
-**Key observations:**
-- Linear moment variation: M(x) = -Px = -800x N⋅m
-- Maximum moment at fixed support: M_max = -960 N⋅m
-- Zero moment at free end
-- Negative moment causes compression on top fiber
-</Card>
 
 ### Step 7: Dynamic Loading and Failure Risk Analysis
 
@@ -622,6 +630,7 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
   title="Crane Jib Loading Diagram"
   height="380px"
 />
+**Given:**
 - Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
 - Span: 3000 mm between supports A and B
 - Overhang: 1000 mm beyond support B
@@ -689,12 +698,12 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
    
 4. At overhang end (x = 4.0): V = 5000 - 800(1.0) - 4200 = 0 ✅
 </Steps>
-<ChartEmbed
-  src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_shear_chart.html"
-  title="Interactive Shear Force Diagram"
-  description="Hover to see exact shear force values"
-  height="500px"
-/>
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Double Girder Gantry Crane](./codes/lesson-2-2/crane_jib_shear_diagram.svg)
+  </TailwindWrapper>
+</div>
 
 - **Calculate bending moments at critical points:**
 
@@ -737,12 +746,12 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 </Steps>
 > **Note:** The moment at the free end is approximately zero, confirming equilibrium.
 
-<ChartEmbed
-  src="/education/mechanics-of-materials/components/lesson-2-2/crane_jib_moment_chart.html"
-  title="Interactive Bending Moment Diagram"
-  description="Hover to see exact bending moment values"
-  height="500px"
-/>
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Double Girder Gantry Crane](./codes/lesson-2-2/crane_jib_moment_diagram.svg)
+  </TailwindWrapper>
+</div>
+
 <Steps>
 3. **Identify maximum moment locations:**
 
