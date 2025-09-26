@@ -30,7 +30,7 @@ from matplotlib.patches import FancyBboxPatch
 import warnings
 warnings.filterwarnings('ignore')
 
-# Set up matplotlib for mobile-friendly plots
+# Set up matplotlib for mobile-friendly plots with transparent background
 plt.rcParams.update({
     'font.size': 28,
     'axes.titlesize': 32,
@@ -45,24 +45,24 @@ plt.rcParams.update({
     'ytick.major.width': 4,
     'xtick.major.size': 10,
     'ytick.major.size': 10,
-    'figure.facecolor': '#F8FAFC',
-    'axes.facecolor': '#F8FAFC',
-    'savefig.facecolor': '#F8FAFC',
+    'figure.facecolor': 'none',
+    'axes.facecolor': 'none',
+    'savefig.facecolor': 'none',
     'savefig.edgecolor': 'none'
 })
 
-# Color scheme with teal instead of blue for brand consistency
+# Color scheme matching SVG colors
 COLORS = {
-    'beam': '#4472C4',           # Blue (keep for beam structure)
-    'load_arrow': '#E74C3C',     # Red
-    'reaction': '#27AE60',       # Green
-    'shear_pos': '#008080',      # Teal (brand-friendly)
-    'shear_neg': '#E67E22',      # Orange
-    'moment_pos': '#20B2AA',     # Light Sea Green (teal family)
-    'moment_neg': '#F39C12',     # Dark orange
-    'text': '#2C3E50',           # Dark gray
-    'grid': '#95A5A6',           # Light gray
-    'support': '#34495E',        # Steel gray
+    'beam': '#405ab9',           # Blue from SVG axes
+    'load_arrow': '#ff8c36',     # Orange from SVG
+    'reaction': '#00a0d0',       # Light blue from SVG
+    'shear_pos': '#405ab9',      # Blue for positive shear
+    'shear_neg': '#ff8c36',      # Orange for negative shear
+    'moment_pos': '#405ab9',     # Blue for positive moment
+    'moment_neg': '#ff8c36',     # Orange for negative moment
+    'text': '#405ab9',           # Blue for all text/axes/labels
+    'grid': '#9ea388',           # Gray-green from SVG
+    'support': '#405ab9',        # Blue for supports
     'wire': '#FFD700'            # Gold for overhead wire
 }
 
@@ -339,28 +339,28 @@ class PantographArmAnalysis:
         x_array = np.linspace(0, self.L/1000, 100)
         V = self.calculate_shear_forces(x_array) / 1000  # Convert to kN
 
-        # Plot shear force (constant line)
-        ax.plot(x_array, V, color=COLORS['shear_neg'], linewidth=4)
+        # Plot shear force (constant line) with consistent blue color
+        ax.plot(x_array, V, color=COLORS['shear_pos'], linewidth=4)
 
         # Fill area (negative throughout)
         ax.fill_between(x_array, V, 0, alpha=0.3, color=COLORS['shear_neg'])
 
-        # Mark critical points
+        # Mark critical points with consistent orange fill and blue outline
         # At x=0 (fixed support): V = -0.8 kN
         ax.plot(0, -0.8, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
-               markerfacecolor=COLORS['shear_neg'], markeredgecolor='#2C3E50', zorder=5)
-        ax.annotate('-0.80 kN\n(Fixed support)', (0, -0.8), xytext=(25, -25),
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('-0.80 kN', (0, -0.8), xytext=(40, 50),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left', bbox=dict(boxstyle='round,pad=0.6',
-                   facecolor='#F8FAFC', edgecolor='#2C3E50', alpha=0.9))
+                   weight='bold', ha='left',
+                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
         # At x=1.2m (free end): V = -0.8 kN
         ax.plot(1.2, -0.8, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
-               markerfacecolor=COLORS['shear_neg'], markeredgecolor='#2C3E50', zorder=5)
-        ax.annotate('-0.80 kN\n(Free end)', (1.2, -0.8), xytext=(-100, -25),
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('-0.80 kN', (1.2, -0.8), xytext=(-80, 50),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left', bbox=dict(boxstyle='round,pad=0.6',
-                   facecolor='#F8FAFC', edgecolor='#2C3E50', alpha=0.9))
+                   weight='bold', ha='right',
+                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
         # Customize plot
         ax.axhline(y=0, color=COLORS['text'], linewidth=4, alpha=0.8)
@@ -370,17 +370,19 @@ class PantographArmAnalysis:
         ax.xaxis.labelpad = 25
         ax.yaxis.labelpad = 25
 
-        # Support line
-        ax.axvline(x=0, color=COLORS['support'], linewidth=4, alpha=0.4, linestyle='--')
+        # Support line with consistent orange color
+        ax.axvline(x=0, color=COLORS['load_arrow'], linewidth=4, alpha=0.4, linestyle='--')
 
-        # Load line at tip
+        # Load line at tip with consistent orange color
         ax.axvline(x=self.L/1000, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
 
         ax.tick_params(colors=COLORS['text'], labelsize=26, width=4, length=10)
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_linewidth(4)
+        ax.spines['left'].set_color(COLORS['text'])
         ax.spines['bottom'].set_linewidth(4)
+        ax.spines['bottom'].set_color(COLORS['text'])
 
         plt.subplots_adjust(left=0.15, right=0.95, top=0.92, bottom=0.15)
         return fig
@@ -394,36 +396,36 @@ class PantographArmAnalysis:
         M = self.calculate_moments(x_array)
         M_kNm = M / 1000  # Convert to kN·m
 
-        # Plot moment diagram
-        ax.plot(x_array, M_kNm, color=COLORS['moment_neg'], linewidth=4)
+        # Plot moment diagram with consistent blue color
+        ax.plot(x_array, M_kNm, color=COLORS['moment_pos'], linewidth=4)
 
         # Fill area (negative throughout)
         ax.fill_between(x_array, M_kNm, 0, alpha=0.3, color=COLORS['moment_neg'])
 
-        # Mark critical points
+        # Mark critical points with consistent orange fill and blue outline
         # At x=0 (fixed support): M = -0.96 kN·m (maximum negative moment)
         ax.plot(0, -0.96, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
-               markerfacecolor=COLORS['moment_neg'], markeredgecolor='#2C3E50', zorder=5)
-        ax.annotate('-0.96 kN·m\n(Fixed support)', (0, -0.96), xytext=(25, -25),
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('-0.96 kN·m', (0, -0.96), xytext=(80, 10),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left', bbox=dict(boxstyle='round,pad=0.6',
-                   facecolor='#F8FAFC', edgecolor='#2C3E50', alpha=0.9))
+                   weight='bold', ha='left',
+                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
         # At x=0.6m (midspan): M = -0.48 kN·m
         ax.plot(0.6, -0.48, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
-               markerfacecolor=COLORS['moment_neg'], markeredgecolor='#2C3E50', zorder=5)
-        ax.annotate('-0.48 kN·m\n(Midspan)', (0.6, -0.48), xytext=(25, -25),
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('-0.48 kN·m', (0.6, -0.48), xytext=(40, -50),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left', bbox=dict(boxstyle='round,pad=0.6',
-                   facecolor='#F8FAFC', edgecolor='#2C3E50', alpha=0.9))
+                   weight='bold', ha='left',
+                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
         # At x=1.2m (free end): M = 0 kN·m
         ax.plot(1.2, 0, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
-               markerfacecolor='#95A5A6', markeredgecolor='#2C3E50', zorder=5)
-        ax.annotate('0 kN·m\n(Free end)', (1.2, 0), xytext=(-100, 25),
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('0 kN·m', (1.2, 0), xytext=(-80, 30),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left', bbox=dict(boxstyle='round,pad=0.6',
-                   facecolor='#F8FAFC', edgecolor='#2C3E50', alpha=0.9))
+                   weight='bold', ha='right',
+                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
         # Customize plot
         ax.axhline(y=0, color=COLORS['text'], linewidth=4, alpha=0.8)
@@ -434,7 +436,7 @@ class PantographArmAnalysis:
         ax.yaxis.labelpad = 25
 
         # Support line
-        ax.axvline(x=0, color=COLORS['support'], linewidth=4, alpha=0.4, linestyle='--')
+        ax.axvline(x=0, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
 
         # Load line at tip
         ax.axvline(x=self.L/1000, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
@@ -444,6 +446,8 @@ class PantographArmAnalysis:
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_linewidth(4)
         ax.spines['bottom'].set_linewidth(4)
+        ax.spines['left'].set_color(COLORS['text'])
+        ax.spines['bottom'].set_color(COLORS['text'])
 
         plt.subplots_adjust(left=0.15, right=0.95, top=0.92, bottom=0.15)
         return fig
@@ -462,19 +466,19 @@ def main():
     # Loading diagram
     fig1 = pantograph.create_loading_diagram()
     fig1.savefig('pantograph_arm_loading_diagram.svg', format='svg', dpi=300, bbox_inches='tight',
-                facecolor='#F8FAFC', edgecolor='none')
+                transparent=True)
     print("✅ Loading diagram saved as 'pantograph_arm_loading_diagram.svg'")
 
     # Shear force diagram
     fig2 = pantograph.create_shear_diagram()
     fig2.savefig('pantograph_arm_shear_diagram.svg', format='svg', dpi=300, bbox_inches='tight',
-                facecolor='#F8FAFC', edgecolor='none')
+                transparent=True)
     print("✅ Shear force diagram saved as 'pantograph_arm_shear_diagram.svg'")
 
     # Bending moment diagram
     fig3 = pantograph.create_moment_diagram()
     fig3.savefig('pantograph_arm_moment_diagram.svg', format='svg', dpi=300, bbox_inches='tight',
-                facecolor='#F8FAFC', edgecolor='none')
+                transparent=True)
     print("✅ Bending moment diagram saved as 'pantograph_arm_moment_diagram.svg'")
 
     plt.close('all')
