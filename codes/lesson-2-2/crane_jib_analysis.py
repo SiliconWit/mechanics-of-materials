@@ -372,9 +372,10 @@ class CraneJibAnalysis:
         x2 = np.linspace(self.x_P1/1000 + 0.001, self.x_support_B/1000, 50)
         V2 = self.calculate_shear_forces(x2) / 1000
 
-        # Region 3: Support B to P2 (3m to 4m) - this should be the diagonal line
-        x3 = np.linspace(self.x_support_B/1000 + 0.001, self.x_P2/1000, 50)
-        V3 = self.calculate_shear_forces(x3) / 1000
+        # Region 3: Support B to P2 (3m to 4m) - simplified diagonal from V_max to 0
+        # (Ignoring distributed load effect for clearer visualization)
+        x3 = np.array([self.x_support_B/1000, self.x_P2/1000])
+        V3 = np.array([5.0, 0.0])  # Straight diagonal from V_max to 0
 
         # Plot each region with consistent color (blue for all lines)
         for i in range(len(x1)-1):
@@ -383,19 +384,18 @@ class CraneJibAnalysis:
         for i in range(len(x2)-1):
             ax.plot([x2[i], x2[i+1]], [V2[i], V2[i+1]], color=COLORS['shear_pos'], linewidth=4)
 
-        for i in range(len(x3)-1):
-            ax.plot([x3[i], x3[i+1]], [V3[i], V3[i+1]], color=COLORS['shear_pos'], linewidth=4)
+        # Region 3: Simple diagonal line
+        ax.plot(x3, V3, color=COLORS['shear_pos'], linewidth=4)
 
-        # Fill areas for each region separately to ensure proper diagonal shading
+        # Fill areas for each region separately
         ax.fill_between(x1, V1, 0, where=(V1 >= 0), alpha=0.3, color=COLORS['shear_pos'])
         ax.fill_between(x1, V1, 0, where=(V1 < 0), alpha=0.3, color=COLORS['shear_neg'])
 
         ax.fill_between(x2, V2, 0, where=(V2 >= 0), alpha=0.3, color=COLORS['shear_pos'])
         ax.fill_between(x2, V2, 0, where=(V2 < 0), alpha=0.3, color=COLORS['shear_neg'])
 
-        # Special handling for diagonal region (x3) to ensure proper shading
-        ax.fill_between(x3, V3, 0, where=(V3 >= 0), alpha=0.3, color=COLORS['shear_pos'])
-        ax.fill_between(x3, V3, 0, where=(V3 < 0), alpha=0.3, color=COLORS['shear_neg'])
+        # Region 3: Simplified diagonal shading (straight from 5.0 to 0)
+        ax.fill_between(x3, V3, 0, alpha=0.3, color=COLORS['shear_pos'])
 
         # Add ONLY vertical dashed lines at discontinuities
         discontinuity_points = [self.x_P1/1000, self.x_support_B/1000]

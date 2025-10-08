@@ -1,0 +1,14 @@
+# Manim media output directories
+**/media/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Generated plots and images
+*.svg
+*.png
+*.jpg
+*.gif
+*.mp4
