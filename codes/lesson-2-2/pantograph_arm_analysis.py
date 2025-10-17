@@ -4,21 +4,27 @@ Pantograph Arm of Electric Train (Electromechanical) Analysis
 Application 2 from Lesson 2.2: Bending Stresses in Simple Beams
 
 This program calculates and visualizes:
-1. Support reaction forces
-2. Shear force diagram
-3. Bending moment diagram
+1. Spring force and support reaction forces
+2. Shear force diagram (two-region distribution)
+3. Bending moment diagram (maximum at spring location)
 4. Maximum bending stresses
 5. Safety factor assessment
 
-Problem Parameters:
+Problem Parameters (CORRECTED MODEL - Pin Joint + Spring Mechanism):
 - Hollow steel tube: OD = 50 mm, wall thickness = 4 mm
-- Length: 1200 mm cantilever span
-- Contact force: P₁ = 800 N at tip (includes vibration effects)
+- Total arm length: 1200 mm from pin joint to wire contact
+- Pin joint at A: Allows rotation, provides vertical reaction only
+- Spring mechanism: Located 300 mm from pin joint, provides upward force
+- Wire contact force: P₁ = 800 N downward at tip (reaction from overhead cable)
 - Second moment of area: I = 2.45 × 10⁶ mm⁴
 - Distance to extreme fiber: c = 25 mm
 - Material: High-strength steel (σ_yield = 250 MPa)
 - Safety factor required: 3.0
 - Operating conditions: Dynamic contact with overhead wire at 600V DC
+
+Key Insight:
+Real pantographs use pin joints + springs (NOT fixed cantilevers) to allow
+articulation and maintain contact pressure independent of wire height variations.
 """
 
 import numpy as np
@@ -56,6 +62,7 @@ COLORS = {
     'beam': '#405ab9',           # Blue from SVG axes
     'load_arrow': '#ff8c36',     # Orange from SVG
     'reaction': '#00a0d0',       # Light blue from SVG
+    'spring': '#00d000',         # Green for spring
     'shear_pos': '#405ab9',      # Blue for positive shear
     'shear_neg': '#ff8c36',      # Orange for negative shear
     'moment_pos': '#405ab9',     # Blue for positive moment
@@ -69,14 +76,15 @@ COLORS = {
 class PantographArmAnalysis:
     def __init__(self):
         # Beam geometry (all in mm)
-        self.L = 1200  # Cantilever length
+        self.L = 1200  # Total arm length from pin to wire contact
+        self.x_spring = 300  # Spring location from pin joint
 
         # Loads
-        self.P = 800  # N, contact force at tip (already includes vibration effects)
+        self.P = 800  # N, wire contact force at tip (reaction from overhead cable)
 
-        # Load positions (mm from fixed support)
-        self.x_P = self.L  # Contact force at free end
-        self.x_support = 0  # Fixed support at train roof connection
+        # Load positions (mm from pin joint)
+        self.x_P = self.L  # Contact force at wire contact point
+        self.x_pin = 0  # Pin joint at train roof connection
 
         # Beam properties
         self.I = 2.45e6  # mm⁴ (given)
@@ -107,13 +115,15 @@ class PantographArmAnalysis:
             print("⚠️  Minor discrepancy - using given values for analysis")
 
     def calculate_reactions(self):
-        """Calculate support reaction forces using equilibrium equations."""
+        """Calculate spring force and pin reaction using equilibrium equations."""
         print("="*80)
         print("PANTOGRAPH ARM OF ELECTRIC TRAIN ANALYSIS")
+        print("PIN JOINT + SPRING MECHANISM (CORRECT MODEL)")
         print("="*80)
         print("\n📊 PROBLEM SETUP:")
-        print(f"• Cantilever length: {self.L/1000:.1f} m")
-        print(f"• Contact force: P = {self.P} N at tip (includes dynamic effects)")
+        print(f"• Total arm length: {self.L/1000:.1f} m")
+        print(f"• Spring location: {self.x_spring/1000:.1f} m from pin joint")
+        print(f"• Wire contact force: P = {self.P} N at tip (reaction from overhead cable)")
         print(f"• Hollow tube: OD = {self.OD} mm, wall thickness = {self.t} mm")
         print(f"• Section properties: I = {self.I/1e6:.2f}×10⁶ mm⁴, c = {self.c} mm")
         print(f"• Material: High-strength steel (σ_yield = {self.sigma_yield} MPa)")
@@ -121,47 +131,72 @@ class PantographArmAnalysis:
 
         self.verify_section_properties()
 
-        # For cantilever beam with end load
-        # Vertical equilibrium: R_A = P
-        self.R_A = self.P  # 800 N (upward reaction at fixed support)
+        # Calculate spring force from moment equilibrium about pin A
+        # ΣM_A = 0 (pin joint cannot resist moment)
+        # F_spring × x_spring - P × L = 0
+        self.F_spring = (self.P * self.L) / self.x_spring
 
-        # Moment equilibrium about fixed support A: M_A = P × L
-        self.M_A = self.P * (self.L / 1000)  # 800 × 1.2 = 960 N·m (reaction moment at fixed support)
+        # Calculate pin reaction from vertical force equilibrium
+        # ΣF_y = 0: R_A + F_spring - P = 0
+        self.R_A = self.P - self.F_spring  # Negative means downward
 
         print(f"\n🔧 REACTION FORCE CALCULATIONS:")
-        print(f"For cantilever with end load P = {self.P} N:")
-        print(f"• Vertical reaction: R_A = P = {self.R_A} N (upward)")
-        print(f"• Moment reaction: M_A = P × L = {self.P} × {self.L/1000:.1f} = {self.M_A} N·m")
+        print(f"\n1. Spring force (from moment equilibrium about pin A):")
+        print(f"   ΣM_A = 0: F_spring × {self.x_spring/1000:.1f} - {self.P} × {self.L/1000:.1f} = 0")
+        print(f"   F_spring = {self.P} × {self.L/1000:.1f} / {self.x_spring/1000:.1f} = {self.F_spring:.0f} N (upward)")
+        print(f"   → Spring must provide {self.F_spring/self.P:.1f}× the contact force due to {self.L/self.x_spring:.1f}:1 lever ratio")
+
+        print(f"\n2. Pin reaction (from vertical force equilibrium):")
+        print(f"   ΣF_y = 0: R_A + {self.F_spring:.0f} - {self.P} = 0")
+        print(f"   R_A = {self.R_A:.0f} N (negative = downward)")
+        print(f"   → Pin pulls DOWN on the arm (spring force exceeds wire contact force)")
 
         # Verification
-        print(f"\n✅ Equilibrium check:")
-        print(f"• ΣF_y = {self.R_A} - {self.P} = 0 ✓")
-        print(f"• ΣM_A = {self.M_A} - {self.P} × {self.L/1000:.1f} = 0 ✓")
+        print(f"\n✅ Equilibrium verification:")
+        sum_Fy = self.R_A + self.F_spring - self.P
+        sum_MA = self.F_spring * (self.x_spring/1000) - self.P * (self.L/1000)
+        print(f"• ΣF_y = {self.R_A:.0f} + {self.F_spring:.0f} - {self.P} = {sum_Fy:.1f} ≈ 0 ✓")
+        print(f"• ΣM_A = {self.F_spring:.0f}({self.x_spring/1000:.1f}) - {self.P}({self.L/1000:.1f}) = {sum_MA:.1f} ≈ 0 ✓")
+
+        print(f"\n💡 KEY INSIGHT - Comparison with incorrect fixed cantilever:")
+        M_fixed_incorrect = self.P * (self.L/1000)
+        print(f"• Fixed cantilever (INCORRECT): M_max = {M_fixed_incorrect:.0f} N·m at support")
+        M_pin_spring_correct = abs(self.R_A) * (self.x_spring/1000)
+        print(f"• Pin + Spring (CORRECT): M_max = {M_pin_spring_correct:.0f} N·m at spring")
+        reduction_pct = (1 - M_pin_spring_correct/M_fixed_incorrect) * 100
+        print(f"• Moment reduction: {reduction_pct:.1f}% lower with correct model!")
 
     def calculate_shear_forces(self, x_points):
-        """Calculate shear forces at given x positions (in m from fixed support)."""
+        """Calculate shear forces at given x positions (in m from pin joint)."""
         V = np.zeros_like(x_points)
 
         for i, x in enumerate(x_points):
-            # For cantilever with end load, shear force is constant = -P
-            V[i] = -self.P  # Negative throughout (downward internal force)
+            x_mm = x * 1000  # Convert to mm
+
+            if x_mm <= self.x_spring:
+                # Region 1: Pin to spring (0 ≤ x < 0.3 m)
+                V[i] = self.R_A  # -2400 N (downward)
+            else:
+                # Region 2: Spring to wire (0.3 m < x ≤ 1.2 m)
+                V[i] = self.R_A + self.F_spring  # +800 N (upward)
 
         return V
 
     def calculate_moments(self, x_points):
-        """Calculate bending moments at given x positions (in m from fixed support)."""
+        """Calculate bending moments at given x positions (in m from pin joint)."""
         M = np.zeros_like(x_points)
 
         for i, x in enumerate(x_points):
-            # For cantilever: M(x) = -P(L - x) where x is from fixed support
-            # At fixed support (x=0): M = -P×L (maximum negative moment)
-            # At free end (x=L): M = 0
-            x_mm = x * 1000  # Convert to mm for comparison with self.L
-            if x_mm <= self.L:
-                distance_from_tip = (self.L - x_mm) / 1000  # Distance in meters
-                M[i] = -self.P * distance_from_tip
+            x_mm = x * 1000  # Convert to mm
+
+            if x_mm <= self.x_spring:
+                # Region 1: Pin to spring (0 < x < 0.3 m)
+                # M(x) = R_A × x
+                M[i] = self.R_A * x  # Negative (R_A is negative)
             else:
-                M[i] = 0
+                # Region 2: Spring to wire (0.3 m < x ≤ 1.2 m)
+                # M(x) = R_A × x + F_spring × (x - x_spring)
+                M[i] = self.R_A * x + self.F_spring * (x - self.x_spring/1000)
 
         return M
 
@@ -172,13 +207,11 @@ class PantographArmAnalysis:
         V_fine = self.calculate_shear_forces(x_fine)
         M_fine = self.calculate_moments(x_fine)
 
-        # For cantilever with end load:
-        # - Shear is constant throughout
-        # - Maximum moment occurs at fixed support
+        # Find maximum absolute values
         V_max = np.max(V_fine)
         V_min = np.min(V_fine)
-        M_max = np.max(M_fine)  # This will be 0 (at free end)
-        M_min = np.min(M_fine)  # This will be negative (at fixed support)
+        M_max = np.max(M_fine)  # This will be 0 (at pin and wire contact)
+        M_min = np.min(M_fine)  # This will be negative (at spring)
 
         # Find locations
         V_max_idx = np.argmax(V_fine)
@@ -194,20 +227,26 @@ class PantographArmAnalysis:
         }
 
         # Calculate stresses (M in N·m, S in mm³, result in MPa)
-        # Maximum stress occurs at fixed support where |M| is maximum
-        M_max_abs = abs(M_min)  # Maximum absolute moment
+        # Maximum stress occurs at spring location where |M| is maximum
+        M_max_abs = abs(M_min)  # Maximum absolute moment at spring
         sigma_max = (M_max_abs * 1000) / self.S  # Convert N·m to N·mm, divide by S in mm³
 
         print(f"\n📈 CRITICAL VALUES:")
-        print(f"Shear force: V = {V_min:.0f} N (constant throughout)")
-        print(f"Maximum moment magnitude: |M_max| = {M_max_abs:.0f} N·m at fixed support")
-        print(f"Moment at free end: M = 0 N·m")
+        print(f"\nShear force distribution (two regions):")
+        print(f"• Region 1 (0 to {self.x_spring/1000:.1f}m): V = {V_min:.0f} N (downward)")
+        print(f"• Region 2 ({self.x_spring/1000:.1f}m to {self.L/1000:.1f}m): V = {V_max:.0f} N (upward)")
+        print(f"• Discontinuity at spring: ΔV = {self.F_spring:.0f} N jump")
+
+        print(f"\nBending moment distribution:")
+        print(f"• At pin joint (x=0): M = 0 N·m (pin cannot resist moment)")
+        print(f"• Maximum magnitude: |M_max| = {M_max_abs:.0f} N·m at spring location (x={self.x_spring/1000:.1f}m)")
+        print(f"• At wire contact (x={self.L/1000:.1f}m): M = 0 N·m")
 
         print(f"\n🔬 STRESS ANALYSIS:")
         print(f"Section modulus: S = I/c = {self.S/1000:.1f}×10³ mm³")
         print(f"Maximum bending stress: σ_max = |M|×c/I = {sigma_max:.2f} MPa")
-        print(f"Location: Fixed support (train roof connection)")
-        print(f"Stress distribution:")
+        print(f"Critical location: Spring attachment point (x = {self.x_spring/1000:.1f} m)")
+        print(f"Stress distribution at spring:")
         print(f"  • Tension: +{sigma_max:.2f} MPa (top fiber)")
         print(f"  • Compression: -{sigma_max:.2f} MPa (bottom fiber)")
 
@@ -220,7 +259,11 @@ class PantographArmAnalysis:
 
         if safety_factor >= self.required_SF:
             print(f"✅ Design is ADEQUATE (SF = {safety_factor:.1f} > {self.required_SF})")
-            print(f"   High safety margin intentional for dynamic loading")
+            print(f"   High safety margin (>10× required) intentional for:")
+            print(f"   - Dynamic loading (wire contact/loss impacts)")
+            print(f"   - Vibration effects (train motion cycles)")
+            print(f"   - Fatigue resistance (~70 million cycles over 20 years)")
+            print(f"   - Electrical safety (must not fail near 600V wire)")
         else:
             print(f"❌ Design is INADEQUATE (SF = {safety_factor:.1f} < {self.required_SF})")
 
@@ -229,7 +272,7 @@ class PantographArmAnalysis:
         self.safety_factor = safety_factor
 
     def create_loading_diagram(self):
-        """Create loading diagram showing cantilever beam, support, and load."""
+        """Create loading diagram showing pin joint, spring, beam, and wire contact."""
         fig, ax = plt.subplots(figsize=(16, 10))
 
         # Beam representation
@@ -239,18 +282,49 @@ class PantographArmAnalysis:
                                facecolor=COLORS['beam'], edgecolor=COLORS['text'], linewidth=3)
         ax.add_patch(beam)
 
-        # Fixed support at left (train roof connection)
+        # Pin joint at left (train roof connection)
+        pin_radius = 0.08
+        pin = patches.Circle((0, beam_y), pin_radius,
+                           facecolor='#FFFFFF', edgecolor=COLORS['support'], linewidth=4)
+        ax.add_patch(pin)
+        # Inner pin circle
+        pin_inner = patches.Circle((0, beam_y), pin_radius * 0.4,
+                                  facecolor=COLORS['support'], edgecolor=COLORS['support'], linewidth=2)
+        ax.add_patch(pin_inner)
+
+        # Pin support structure
         support_width = 0.15
-        support_height = 0.8
-        support = patches.Rectangle((-support_width, beam_y - support_height/2), support_width, support_height,
+        support_height = 0.6
+        support = patches.Rectangle((-support_width, beam_y - support_height/2), support_width, support_height/2,
                                   facecolor=COLORS['support'], edgecolor=COLORS['text'], linewidth=3)
         ax.add_patch(support)
 
-        # Add hatching pattern to show fixed support
-        hatch_lines = 5
-        for i in range(hatch_lines):
-            y_pos = beam_y - support_height/2 + (i+0.5) * support_height/hatch_lines
-            ax.plot([-support_width, -support_width + 0.05], [y_pos, y_pos - 0.05],
+        # Spring mechanism
+        spring_x = self.x_spring / 1000
+        spring_y_bottom = beam_y - beam_height/2 - 0.6
+        spring_height = 0.6
+
+        # Draw spring as zigzag
+        n_coils = 8
+        spring_x_pts = [spring_x]
+        spring_y_pts = [spring_y_bottom]
+        for i in range(n_coils):
+            spring_x_pts.append(spring_x + (-1)**(i) * 0.05)
+            spring_y_pts.append(spring_y_bottom + (i+1) * spring_height / n_coils)
+        spring_x_pts.append(spring_x)
+        spring_y_pts.append(beam_y - beam_height/2)
+
+        ax.plot(spring_x_pts, spring_y_pts, color=COLORS['spring'], linewidth=5, solid_capstyle='round')
+
+        # Spring base plate
+        base_plate = patches.Rectangle((spring_x - 0.1, spring_y_bottom - 0.05), 0.2, 0.05,
+                                     facecolor=COLORS['support'], edgecolor=COLORS['text'], linewidth=2)
+        ax.add_patch(base_plate)
+        # Hatching for ground
+        for i in range(5):
+            x_offset = -0.1 + i * 0.05
+            ax.plot([spring_x + x_offset, spring_x + x_offset + 0.03],
+                   [spring_y_bottom - 0.05, spring_y_bottom - 0.08],
                    color=COLORS['text'], linewidth=2)
 
         # Overhead wire representation
@@ -266,49 +340,43 @@ class PantographArmAnalysis:
                                facecolor=COLORS['wire'], edgecolor=COLORS['text'], linewidth=3)
         ax.add_patch(contact)
 
-        # Contact force at tip
+        # Wire contact force at tip (downward)
         arrow_length = 0.8
         arrow_width = 0.18
         ax.arrow(self.L/1000, beam_y + beam_height/2 + arrow_length, 0, -arrow_length + 0.1,
                 head_width=arrow_width, head_length=0.1, fc=COLORS['load_arrow'],
                 ec=COLORS['load_arrow'], linewidth=3)
-        ax.text(self.L/1000, beam_y + beam_height/2 + arrow_length + 0.2,
-               f'P = {self.P} N\n(Contact Force)', ha='center', va='bottom',
-               fontsize=26, color=COLORS['load_arrow'], weight='bold',
+        ax.text(self.L/1000 + 0.25, beam_y + beam_height/2 + arrow_length/2,
+               f'P₁ = {self.P} N\n(Wire Contact)', ha='left', va='center',
+               fontsize=24, color=COLORS['load_arrow'], weight='bold',
                bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
                         edgecolor=COLORS['load_arrow'], alpha=0.9))
 
-        # Reaction forces at fixed support
-        reaction_arrow_length = 0.6
+        # Spring force (upward)
+        ax.arrow(spring_x, spring_y_bottom - 0.3, 0, 0.2,
+                head_width=arrow_width, head_length=0.1, fc=COLORS['spring'],
+                ec=COLORS['spring'], linewidth=3)
+        ax.text(spring_x - 0.25, spring_y_bottom - 0.2,
+               f'F_spring = {self.F_spring:.0f} N', ha='right', va='center',
+               fontsize=24, color=COLORS['spring'], weight='bold',
+               bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
+                        edgecolor=COLORS['spring'], alpha=0.9))
 
-        # Vertical reaction R_A
-        ax.arrow(0, beam_y - beam_height/2 - reaction_arrow_length, 0, reaction_arrow_length - 0.1,
+        # Pin reaction (downward)
+        reaction_arrow_length = 0.5
+        ax.arrow(0, beam_y - beam_height/2, 0, -reaction_arrow_length + 0.1,
                 head_width=arrow_width, head_length=0.1, fc=COLORS['reaction'],
                 ec=COLORS['reaction'], linewidth=3)
-        ax.text(-0.02, beam_y - beam_height/2 - reaction_arrow_length - 0.1,
-               f'R_A = {self.R_A} N', ha='right', va='top',
-               fontsize=26, color=COLORS['reaction'], weight='bold',
+        ax.text(-0.25, beam_y - beam_height/2 - reaction_arrow_length/2,
+               f'R_A = {abs(self.R_A):.0f} N', ha='right', va='center',
+               fontsize=24, color=COLORS['reaction'], weight='bold',
                bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
                         edgecolor=COLORS['reaction'], alpha=0.9))
 
-        # Moment reaction (curved arrow)
-        from matplotlib.patches import FancyArrowPatch
-        from matplotlib.patches import ConnectionPatch
-        # Draw curved arrow to represent moment
-        circle = patches.Arc((0, beam_y), 0.4, 0.4, theta1=-45, theta2=225,
-                            color=COLORS['reaction'], linewidth=4)
-        ax.add_patch(circle)
-        # Arrow head for moment
-        ax.annotate('', xy=(-0.14, beam_y + 0.14), xytext=(-0.12, beam_y + 0.16),
-                   arrowprops=dict(arrowstyle='->', color=COLORS['reaction'], lw=3))
-        ax.text(-0.02, beam_y + 0.3,
-               f'M_A = {self.M_A:.0f} N·m', ha='right', va='bottom',
-               fontsize=26, color=COLORS['reaction'], weight='bold',
-               bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
-                        edgecolor=COLORS['reaction'], alpha=0.9))
+        # Dimension lines
+        dimension_y = beam_y - beam_height/2 - 1.2
 
-        # Dimension line
-        dimension_y = beam_y - beam_height/2 - 1.0
+        # Total length
         ax.annotate('', xy=(0, dimension_y), xytext=(self.L/1000, dimension_y),
                    arrowprops=dict(arrowstyle='<->', color=COLORS['text'], lw=3))
         ax.text(self.L/2000, dimension_y - 0.15, f'L = {self.L/1000:.1f} m',
@@ -316,15 +384,22 @@ class PantographArmAnalysis:
                bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
                         edgecolor=COLORS['text'], alpha=0.9))
 
+        # Spring location
+        dimension_y2 = dimension_y - 0.35
+        ax.annotate('', xy=(0, dimension_y2), xytext=(spring_x, dimension_y2),
+                   arrowprops=dict(arrowstyle='<->', color=COLORS['spring'], lw=2))
+        ax.text(spring_x/2, dimension_y2 - 0.12, f'{self.x_spring/1000:.1f} m',
+               ha='center', va='top', fontsize=22, color=COLORS['spring'], weight='bold')
+
         # Add cross-section details
-        ax.text(self.L/1000 + 0.3, beam_y,
+        ax.text(self.L/1000 + 0.3, beam_y - 0.5,
                f'Hollow Steel Tube\nOD = {self.OD} mm\nt = {self.t} mm\nσ_yield = {self.sigma_yield} MPa',
-               ha='left', va='center', fontsize=22, color=COLORS['text'], weight='bold',
+               ha='left', va='top', fontsize=20, color=COLORS['text'], weight='bold',
                bbox=dict(boxstyle='round,pad=0.8', facecolor='#F8FAFC',
                         edgecolor=COLORS['text'], alpha=0.9))
 
-        ax.set_xlim(-0.4, 1.8)
-        ax.set_ylim(-1.8, 1.4)
+        ax.set_xlim(-0.5, 1.8)
+        ax.set_ylim(-1.9, 1.4)
         ax.set_aspect('equal')
         ax.axis('off')
 
@@ -332,32 +407,48 @@ class PantographArmAnalysis:
         return fig
 
     def create_shear_diagram(self):
-        """Create shear force diagram."""
+        """Create shear force diagram showing two-region distribution."""
         fig, ax = plt.subplots(figsize=(16, 10))
 
-        # Create x points
-        x_array = np.linspace(0, self.L/1000, 100)
-        V = self.calculate_shear_forces(x_array) / 1000  # Convert to kN
+        # Create x points for both regions - no overlap
+        x_region1 = np.linspace(0, self.x_spring/1000, 50)  # 0 to 0.3
+        x_region2 = np.linspace(self.x_spring/1000, self.L/1000, 50)  # 0.3 to 1.2
 
-        # Plot shear force (constant line) with consistent blue color
-        ax.plot(x_array, V, color=COLORS['shear_pos'], linewidth=4)
+        # Calculate shear forces - Region 1: V = -2400 N, Region 2: V = +800 N
+        V_region1 = np.full_like(x_region1, self.R_A / 1000)  # -2.4 kN (constant)
+        V_region2 = np.full_like(x_region2, (self.R_A + self.F_spring) / 1000)  # +0.8 kN (constant)
 
-        # Fill area (negative throughout)
-        ax.fill_between(x_array, V, 0, alpha=0.3, color=COLORS['shear_neg'])
+        # Plot region 1 (negative shear) - plot and shade separately
+        ax.plot(x_region1, V_region1, color=COLORS['shear_pos'], linewidth=4)
+        ax.fill_between(x_region1, V_region1, 0, alpha=0.3, color=COLORS['shear_neg'])
 
-        # Mark critical points with consistent orange fill and blue outline
-        # At x=0 (fixed support): V = -0.8 kN
-        ax.plot(0, -0.8, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
+        # Plot region 2 (positive shear) - plot and shade separately
+        ax.plot(x_region2, V_region2, color=COLORS['shear_pos'], linewidth=4)
+        ax.fill_between(x_region2, V_region2, 0, alpha=0.3, color=COLORS['moment_pos'])
+
+        # Mark critical points
+        # At x=0 (pin): V = -2.4 kN
+        ax.plot(0, -2.4, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
                markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
-        ax.annotate('-0.80 kN', (0, -0.8), xytext=(40, 50),
+        ax.annotate('-2.40 kN', (0, -2.4), xytext=(40, 50),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
                    weight='bold', ha='left',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
-        # At x=1.2m (free end): V = -0.8 kN
-        ax.plot(1.2, -0.8, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
+        # At x=0.3m (spring): Discontinuity
+        ax.plot(self.x_spring/1000, -2.4, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
                markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
-        ax.annotate('-0.80 kN', (1.2, -0.8), xytext=(-80, 50),
+        ax.plot(self.x_spring/1000, 0.8, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+
+        # Vertical jump line at spring - exactly at x = 0.3
+        ax.plot([self.x_spring/1000, self.x_spring/1000], [-2.4, 0.8],
+               color=COLORS['shear_pos'], linewidth=4, zorder=4)
+
+        # At x=1.2m (wire contact): V = +0.8 kN
+        ax.plot(1.2, 0.8, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('+0.80 kN', (1.2, 0.8), xytext=(-80, 20),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
                    weight='bold', ha='right',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
@@ -365,15 +456,19 @@ class PantographArmAnalysis:
         # Customize plot
         ax.axhline(y=0, color=COLORS['text'], linewidth=4, alpha=0.8)
         ax.grid(True, alpha=0.3, color=COLORS['grid'], linewidth=2)
-        ax.set_xlabel('Distance from Fixed Support (m)', fontsize=30, color=COLORS['text'], weight='bold')
+        ax.set_xlabel('Distance from Pin Joint (m)', fontsize=30, color=COLORS['text'], weight='bold')
         ax.set_ylabel('Shear Force (kN)', fontsize=30, color=COLORS['text'], weight='bold')
         ax.xaxis.labelpad = 25
         ax.yaxis.labelpad = 25
 
-        # Support line with consistent orange color
-        ax.axvline(x=0, color=COLORS['load_arrow'], linewidth=4, alpha=0.4, linestyle='--')
+        # All vertical dashed lines use load_arrow color (orange)
+        # Pin line
+        ax.axvline(x=0, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
 
-        # Load line at tip with consistent orange color
+        # Spring line
+        ax.axvline(x=self.x_spring/1000, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
+
+        # Wire contact line
         ax.axvline(x=self.L/1000, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
 
         ax.tick_params(colors=COLORS['text'], labelsize=26, width=4, length=10)
@@ -388,7 +483,7 @@ class PantographArmAnalysis:
         return fig
 
     def create_moment_diagram(self):
-        """Create bending moment diagram."""
+        """Create bending moment diagram showing maximum at spring location."""
         fig, ax = plt.subplots(figsize=(16, 10))
 
         # Create x points
@@ -396,17 +491,25 @@ class PantographArmAnalysis:
         M = self.calculate_moments(x_array)
         M_kNm = M / 1000  # Convert to kN·m
 
-        # Plot moment diagram with consistent blue color
+        # Plot moment diagram
         ax.plot(x_array, M_kNm, color=COLORS['moment_pos'], linewidth=4)
 
         # Fill area (negative throughout)
         ax.fill_between(x_array, M_kNm, 0, alpha=0.3, color=COLORS['moment_neg'])
 
-        # Mark critical points with consistent orange fill and blue outline
-        # At x=0 (fixed support): M = -0.96 kN·m (maximum negative moment)
-        ax.plot(0, -0.96, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
+        # Mark critical points
+        # At x=0 (pin): M = 0 kN·m
+        ax.plot(0, 0, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
                markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
-        ax.annotate('-0.96 kN·m', (0, -0.96), xytext=(80, 10),
+        ax.annotate('0 kN·m\n(Pin)', (0, 0), xytext=(40, -60),
+                   textcoords='offset points', fontsize=26, color=COLORS['text'],
+                   weight='bold', ha='left',
+                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
+
+        # At x=0.3m (spring): M = -0.72 kN·m (maximum magnitude)
+        ax.plot(self.x_spring/1000, -0.72, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
+               markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
+        ax.annotate('-0.72 kN·m\n(MAX at Spring)', (self.x_spring/1000, -0.72), xytext=(50, -10),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
                    weight='bold', ha='left',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
@@ -419,10 +522,10 @@ class PantographArmAnalysis:
                    weight='bold', ha='left',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
-        # At x=1.2m (free end): M = 0 kN·m
+        # At x=1.2m (wire contact): M = 0 kN·m
         ax.plot(1.2, 0, 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
                markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
-        ax.annotate('0 kN·m', (1.2, 0), xytext=(-80, 30),
+        ax.annotate('0 kN·m', (1.2, 0), xytext=(-80, -40),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
                    weight='bold', ha='right',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
@@ -430,15 +533,19 @@ class PantographArmAnalysis:
         # Customize plot
         ax.axhline(y=0, color=COLORS['text'], linewidth=4, alpha=0.8)
         ax.grid(True, alpha=0.3, color=COLORS['grid'], linewidth=2)
-        ax.set_xlabel('Distance from Fixed Support (m)', fontsize=30, color=COLORS['text'], weight='bold')
+        ax.set_xlabel('Distance from Pin Joint (m)', fontsize=30, color=COLORS['text'], weight='bold')
         ax.set_ylabel('Bending Moment (kN·m)', fontsize=30, color=COLORS['text'], weight='bold')
         ax.xaxis.labelpad = 25
         ax.yaxis.labelpad = 25
 
-        # Support line
+        # All vertical dashed lines use load_arrow color (orange)
+        # Pin line
         ax.axvline(x=0, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
 
-        # Load line at tip
+        # Spring line (critical location)
+        ax.axvline(x=self.x_spring/1000, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
+
+        # Wire contact line
         ax.axvline(x=self.L/1000, color=COLORS['load_arrow'], linewidth=4, alpha=0.6, linestyle='--')
 
         ax.tick_params(colors=COLORS['text'], labelsize=26, width=4, length=10)
@@ -489,9 +596,13 @@ def main():
 
     # Summary of key results
     print(f"\n📋 SUMMARY:")
-    print(f"• Maximum stress: {pantograph.sigma_max:.2f} MPa at fixed support")
+    print(f"• Spring force: {pantograph.F_spring:.0f} N (4× contact force)")
+    print(f"• Pin reaction: {abs(pantograph.R_A):.0f} N (downward)")
+    print(f"• Maximum moment: {abs(pantograph.critical_results['M_min']):.0f} N·m at spring (x={pantograph.x_spring/1000:.1f}m)")
+    print(f"• Maximum stress: {pantograph.sigma_max:.2f} MPa at spring attachment")
     print(f"• Safety factor: {pantograph.safety_factor:.1f}")
     print(f"• Design status: {'ADEQUATE' if pantograph.safety_factor >= pantograph.required_SF else 'INADEQUATE'}")
+    print(f"\n💡 The pin + spring mechanism reduces max moment by 25% compared to fixed cantilever!")
 
 if __name__ == "__main__":
     main()
