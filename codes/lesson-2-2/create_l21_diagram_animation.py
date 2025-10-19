@@ -453,17 +453,17 @@ def main():
     bg_color = '#F8FAFC'  # Light grayish-blue background
     frames = [
         {'type': 'text', 'text': 'Real World System', 'text_color': '#405ab9', 'watermark': False, 'bg_color': bg_color},
-        {'type': 'image', 'path': os.path.join(script_dir, 'double-girder-gantry-crane.png'), 'watermark': False, 'bg_color': bg_color},
+        {'type': 'image', 'path': os.path.join(script_dir, 'conveyor-beam-loads.png'), 'watermark': False, 'bg_color': bg_color},
         {'type': 'text', 'text': 'Equivalent System Model', 'text_color': '#405ab9', 'watermark': False, 'bg_color': bg_color},
-        {'type': 'image', 'path': os.path.join(script_dir, 'crane-loading-diagram.png'), 'watermark': True, 'bg_color': bg_color},
+        {'type': 'image', 'path': os.path.join(script_dir, 'conveyor-beam-supports-spaced-boxes.png'), 'watermark': True, 'bg_color': bg_color},
         {'type': 'text', 'text': 'Shear Force Plot', 'text_color': '#405ab9', 'watermark': False, 'bg_color': bg_color},
-        {'type': 'image', 'path': os.path.join(script_dir, 'crane_jib_shear_diagram.svg'), 'watermark': True, 'bg_color': bg_color},
+        {'type': 'image', 'path': os.path.join(script_dir, 'conveyor_beam_shear_diagram.svg'), 'watermark': True, 'bg_color': bg_color},
         {'type': 'text', 'text': 'Bending Moment Plot', 'text_color': '#405ab9', 'watermark': False, 'bg_color': bg_color},
-        {'type': 'image', 'path': os.path.join(script_dir, 'crane_jib_moment_diagram.svg'), 'watermark': True, 'bg_color': bg_color},
+        {'type': 'image', 'path': os.path.join(script_dir, 'conveyor_beam_moment_diagram.svg'), 'watermark': True, 'bg_color': bg_color},
     ]
 
     # Output path
-    output_path = os.path.join(script_dir, 'crane_jib_analysis_animation.gif')
+    output_path = os.path.join(script_dir, 'conveyor-beam-analysis-animation.gif')
 
     # Create the animation (width and height auto-detected from images)
     create_animation(

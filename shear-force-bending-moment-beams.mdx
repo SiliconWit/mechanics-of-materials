@@ -1,10 +1,11 @@
 ---
 title: "Lesson 2.1: Shear Force and Bending Moment in Beams"
-description: "Analyzing shear force and bending moment distributions in robotic arm segments under loading"
+description: "Master shear force and bending moment analysis for industrial beam structures including robotic arms, conveyor systems, and solar trackers through practical engineering applications"
 contributors: "sam-macharia,jack-kojiro"
 pubDate: 2025-09-17
-tags: ["solid-mechanics", "bending", "shear-force", "bending-moment", "robotic-arm", "beam-analysis"]
-excerpt: "Learn shear force and bending moment analysis through robotic arm beam segments, covering load distribution, diagram construction, and critical section identification for structural design."
+tags: ["solid-mechanics", "structural-analysis", "shear-force", "bending-moment", "beam-design", "industrial-applications", "mechatronics", "material-handling"]
+excerpt: "Master shear force and bending moment analysis through real-world industrial applications: robotic arm cantilevers, conveyor support beams, and solar tracker structures. Learn to construct diagrams, identify critical sections, and apply equilibrium principles for safe structural design in mechatronics and automation systems."
+hashtags: ["#BeamAnalysis", "#StructuralMechanics", "#EngineeringDesign"]
 ---
 
 import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
@@ -20,65 +21,55 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
   contributors={frontmatter.contributors}
 />
 
-Learn shear force and bending moment analysis through robotic arm beam segments, covering load distribution, diagram construction, and critical section identification for structural design.
+Master shear force and bending moment analysis through real-world industrial beam structures: robotic arm cantilevers, conveyor support systems, and solar tracker mechanisms. Learn load distribution analysis, diagram construction techniques, and critical section identification essential for safe structural design across mechatronics and automation systems.
 
 ## 🎯 Learning Objectives
 
 By the end of this lesson, you will be able to:
 
-1. **Construct** <Badge text="shear force and bending moment diagrams" variant="caution" /> for semi-automatic material handling robotic arms
-2. **Identify** <Badge text="critical sections" variant="caution" /> with maximum shear and moment values in material handling systems
-3. **Apply** <Badge text="equilibrium principles" variant="caution" /> to cantilever beam analysis under eccentric loading conditions
+1. **Construct** <Badge text="shear force and bending moment diagrams" variant="caution" /> for cantilever, simply supported, and overhanging beam configurations
+2. **Identify** <Badge text="critical sections" variant="caution" /> with maximum shear and moment values across diverse loading conditions
+3. **Apply** <Badge text="equilibrium principles" variant="caution" /> to analyze beams under point loads, distributed loads, and combined loading scenarios
+4. **Determine** <Badge text="reaction forces" variant="caution" /> for different support types including fixed, pinned, and roller supports
 
-## 🔧 Real-World System Problem: Semi-Automatic Material Handling Robotic Arm
+## 🔧 Real-World Engineering Challenge: Beam Analysis in Industrial Automation Systems
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Robotic Arm Segment Under Load](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/shear-force-bending-moment-beams.png)
+	![Industrial Beam Structures](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-analysis-animation.gif)
   </TailwindWrapper>
 </div>
 
 <BionicText method="advanced" intensity="medium" class="highlight">
-Semi-automatic material handling robotic arms must support substantial payloads while operators manually guide positioning. Understanding how forces and moments distribute along the arm structure under eccentric loading is crucial for preventing failure and ensuring safe operation during human-robot collaboration.
+Industrial automation systems rely on structural beam elements that must safely support complex loading conditions. Understanding how internal forces and moments distribute along beam structures is fundamental to preventing failure, optimizing material usage, and ensuring reliable performance across mechatronics, material handling, and renewable energy applications.
 </BionicText>
 
-### System Description
+### Industrial Beam Applications
 
-**Semi-Automatic Material Handling Robotic Arm Components:**
-- **Fixed Base** (servo-controlled rotation joint with structural support)
-- **Main Arm Structure** (2.5m cantilever beam supporting payload and end-effector)
-- **End-Effector Assembly** (gripper or tool interface for material handling)
-- **Manual Guidance System** (allows operator control for precise positioning)
-- **Load Distribution** (structural components, motors, sensors along arm length)
+**Common Beam Structures in Automation:**
+- **Robotic Arms** (cantilever beams supporting payloads and end-effectors)
+- **Conveyor Support Beams** (simply supported beams carrying multiple concentrated loads)
+- **Solar Tracker Arms** (overhanging beams managing distributed loads plus equipment forces)
 
 ### The Structural Challenge
 
-The semi-automatic material handling arm acts as a **cantilever beam** experiencing complex loading from both structural and operational sources:
+All industrial beam structures experience **internal shear forces and bending moments** that determine structural adequacy. Different support types (fixed, pinned, roller) and loading patterns (point loads, distributed loads, combined) create varying internal force distributions requiring careful analysis for safe design.
 
-:::note[Material Handling Loading Conditions]
-- **Structural self-weight** distributed along the 2.5m arm length (uniform load from motors, sensors, frame)
-- **Payload concentration** at the end-effector (typical 120kg loads during material handling)
-- **Manual guidance forces** during human-robot collaborative positioning  
-- **Dynamic effects** from load pickup, transport, and placement operations
-:::
-
-> **Engineering Question 1:** How do we determine where the maximum bending stress occurs in this semi-automatic material handling arm under loading, and how do we size the structure to safely handle typical payloads with appropriate safety margins?  
-> **Engineering Question 2:** How do we account for fatigue and cyclic loading effects in the arm to ensure durability under repetitive operation?  
-> **Engineering Question 3:** What role does joint and connection design play in maintaining structural integrity and preventing localized stress concentrations?  
+> **Engineering Question 1:** How do we determine where maximum bending stresses occur in different beam configurations and what governs the critical design section?
+> **Engineering Question 2:** How do support types and loading patterns affect internal force distributions and structural requirements?
+> **Engineering Question 3:** What analytical tools enable optimized designs that balance safety, cost, and performance?
 
 <details>
-<summary>**Click to Reveal: Why Beam Analysis Matters in Material Handling Robotics**</summary>
-**Consequences of Poor Structural Design in Material Handling:**
-- **Arm deflection** compromises load positioning accuracy and operator safety
-- **Structural failure** causes expensive downtime and potential injury hazards
-- **Excessive arm weight** reduces payload capacity and increases energy consumption
-- **Insufficient stiffness** creates handling difficulties during manual guidance
+<summary>**Click to Reveal: Why Beam Analysis Matters**</summary>
+**Consequences of Inadequate Analysis:**
+- **Structural failure** causing downtime, equipment damage, and safety hazards
+- **Excessive deflection** compromising positioning accuracy
+- **Over-designed structures** wasting material and increasing costs
 
-**Benefits of Proper Beam Analysis in Material Handling Systems:**
-- **Optimized structure** for handling 120kg payloads safely with minimal deflection
-- **Predictable behavior** under loading conditions for operator confidence  
-- **Reliable operation** throughout full payload range with appropriate safety margins
-- **Cost-effective design** balancing structural requirements with manufacturing economics
+**Benefits of Proper Analysis:**
+- **Safe, reliable structures** with appropriate safety factors
+- **Material optimization** through accurate critical section identification
+- **Foundation for advanced analysis** including stress and deflection prediction
 </details>
 
 ## 📚 Fundamental Theory: Shear Force and Bending Moment
@@ -90,6 +81,43 @@ When a beam is loaded transversely, internal forces develop to maintain equilibr
 **Shear Force (V):** Internal force that resists sliding <br/>
 **Bending Moment (M):** Internal moment that resists rotation <br/>
 **Normal Force (N):** Internal axial force (usually zero in pure bending)
+
+### Beam Support Types
+
+Before analyzing shear forces and bending moments, it's essential to understand how beams are supported. The type of support determines which movements and rotations are allowed or prevented, directly affecting the reaction forces and internal stresses.
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+    ![Beam Support Types Comparison](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/support-comparison.gif)
+  </TailwindWrapper>
+</div>
+
+**Common Support Types:**
+
+1. **Pinned Support (Hinge)**
+   - ✅ Allows rotation at the connection
+   - ❌ Prevents translation (both horizontal and vertical movement)
+   - **Reactions:** Provides both vertical and horizontal reaction forces (2 unknowns: R<sub>x</sub>, R<sub>y</sub>)
+   - **Common applications:** Used in joints of robotic arms, mechanical linkages, and hinged enclosures where controlled rotation is needed
+
+2. **Roller Support**
+   - ✅ Allows rotation at the connection
+   - ✅ Allows translation in one direction (typically horizontal)
+   - **Reactions:** Provides only vertical reaction force (1 unknown: R<sub>y</sub>)
+   - **Common applications:** Found in systems like conveyor supports, linear guides, and structures accommodating thermal or mechanical expansion
+
+3. **Fixed Support (Built-in/Clamped)**
+   - ❌ Prevents rotation at the connection
+   - ❌ Prevents translation (both horizontal and vertical movement)
+   - **Reactions:** Provides vertical force, horizontal force, and moment (3 unknowns: R<sub>x</sub>, R<sub>y</sub>, M)
+   - **Common applications:** Used in cantilevered robotic arms, rigidly mounted machine bases, and firmly fixed electronic equipment supports
+
+:::tip[Support Selection Guidelines]
+- Use **fixed supports** when you need maximum rigidity (e.g., cantilever robotic arms)
+- Use **pinned + roller** combination for simply supported beams to allow thermal expansion
+- The choice of support affects the internal force distribution and maximum bending moments
+- Fixed supports create the most statically indeterminate systems but provide the strongest connection
+:::
 
 ### Sign Conventions
 
@@ -194,7 +222,7 @@ $$M(x) = -M_{base} + R_y \cdot x - w \cdot x \cdot \frac{x}{2}$$
 
 A material handling robotic arm is modeled as a cantilever beam carrying both its own weight and a payload at the tip.
 
-:::note[Problem Statement]
+:::note[System Problem Statement]
 - **Loading condition:** Uniformly distributed load (UDL) + one point load (actuator force)
 - **Support configuration:** Cantilever beam (fixed at base)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -205,13 +233,12 @@ A material handling robotic arm is modeled as a cantilever beam carrying both it
 **What we need to analyze:**
 1. **Support reaction forces** under combined loading
 2. **Shear force and bending moment diagrams** across the entire beam
-3. Locate **maximum bending moment** and calculate **maximum stress**
-4. Estimate **safety factor** with respect to yield
+3. Locate **maximum bending moment** locations
 
-**Key Question:** What are the maximum shear force, bending moment, stress, and safety factor for this robotic arm?
+**Key Question:** What are the maximum shear force and bending moment for this robotic arm?
 :::
 
-<Card title="🔧 System Parameters" icon="document">
+<Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
 	![Robotic Arm Segment Under Load](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-segment-under-load.png)
@@ -283,6 +310,12 @@ $$V(x) = -(75 \times 2.5 + 1200) + 75x = -1387.5 + 75x$$
 Just before tip: V = -1200 N <br/>
 Just after tip: V = -1200 + 1200 = 0 N ✅
 
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Semi-Automatic Robotic Arm Shear Force Plot](./codes/lesson-2-2/robotic_arm_shear_diagram.svg)
+  </TailwindWrapper>
+</div>
+
 :::tip[Shear Force Diagram Characteristics]
 - **Negative values throughout** due to downward loading
 - **Linear increase** (becomes less negative) due to distributed load being "taken up"
@@ -308,57 +341,49 @@ $$M(x) = -3234.375 + 1387.5x - 37.5x^2$$
 - At x = 0: M(0) = -3234.375 N·m (negative = sagging moment at fixed end) ✅
 - At x = 2.5 m: M(2.5) = -3234.375 + 1387.5(2.5) - 37.5(2.5)² = -3234.375 + 3468.75 - 234.375 = 0 N·m ✅
 
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Semi-Automatic Robotic Arm Moment Plot](./codes/lesson-2-2/robotic_arm_moment_diagram.svg)
+  </TailwindWrapper>
+</div>
+
 **Free end boundary condition:**
 At the free end (x = 2.5 m), the internal moment must be zero since there are no applied moments. Our equation gives M(2.5) = 0, confirming equilibrium at the tip ✅
 
 </details>
 
-### Step 4: Stress Analysis and Safety Assessment
+### Step 4: Summary of Critical Values
 
 <details>
-<summary>**Click to reveal stress analysis and safety factor calculations**</summary>
+<summary>**Click to reveal summary of maximum shear and moment**</summary>
 
 <Steps>
 
-1. **Maximum shear location:**
+1. **Maximum shear force location:**
 
    Maximum |V| = 1387.5 N at x = 0 (fixed support) ✅
 
-2. **Maximum moment location:**
+2. **Maximum bending moment location:**
 
-   For cantilever beams with downward loading, the maximum moment typically occurs at the **fixed support**. Let's verify by checking the boundary values:
+   For cantilever beams with downward loading, the maximum moment occurs at the **fixed support**:
 
-   - At x = 0 (support): |M(0)| = 3234.375 N·m = 3,234,375 N·mm ✅
-   - At x = 2.5 m (tip): |M(2.5)| = 0 N·m ✅
+   - At x = 0 (support): |M(0)| = 3234.375 N·m ✅
+   - At x = 2.5 m (tip): M(2.5) = 0 N·m ✅
 
-   **Maximum |M|** = 3,234,375 N·mm at x = 0 (fixed support) ✅
+   **Maximum |M|** = 3234.375 N·m at x = 0 (fixed support) ✅
 
-3. **Maximum bending stress calculation:**
+3. **Key observations:**
 
-   Using the flexure formula: $$\sigma_{max} = \frac{M_{max} \cdot c}{I}$$
-
-   Where:
-   - $M_{max} = 3,234,375$ N·mm
-   - $c = 40$ mm (distance from neutral axis to extreme fiber)
-   - $I = 5.33 \times 10^6$ mm⁴
-
-   $$\sigma_{max} = \frac{3,234,375 \times 40}{5.33 \times 10^6} = \frac{129,375,000}{5,330,000} = 24.3 \text{ MPa}$$ ✅
-
-4. **Safety factor against yield:**
-
-   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{275}{24.3} = 11.3$$ ✅
-
-   **Engineering Assessment:** Safety factor of 11.3 is very conservative and indicates over-design. For robotic applications, SF = 2-4 is typically adequate.
-
-5. **Design recommendations:**
-
-   **Option 1:** Reduce cross-section to 60 mm × 8 mm for weight optimization while maintaining SF ≥ 3
-
-   **Option 2:** Use hollow rectangular section (80×10 mm outer, 60×6 mm inner) for 40% weight reduction
-
-   **Option 3:** Implement variable cross-section with maximum at base, tapering toward tip
+   - **Shear force** varies linearly from -1387.5 N to -1200 N
+   - **Bending moment** varies parabolically with maximum magnitude at the fixed end
+   - Both maximum shear and moment occur at the **fixed support** (x = 0)
+   - The free end has zero moment, as expected (no applied moment there)
 
 </Steps>
+
+:::note[Engineering Insight]
+The maximum bending moment at the fixed support makes this the **critical location** for structural design. This location experiences the highest internal stresses and would be the first point to fail under overloading. In future lessons, we'll learn how to calculate the actual stresses and check if the beam can safely carry these loads.
+:::
 
 </details>
 
@@ -366,7 +391,7 @@ At the free end (x = 2.5 m), the internal moment must be zero since there are no
 
 A conveyor beam supports five equally spaced boxes during material handling operations.
 
-:::note[Problem Statement]
+:::note[System Problem Statement]
 - **Loading condition:** Multiple point loads (boxes on conveyor)
 - **Support configuration:** Simply supported (pinned + roller)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -383,10 +408,10 @@ A conveyor beam supports five equally spaced boxes during material handling oper
 **Key Question:** What are the maximum shear force, bending moment, and critical design location?
 :::
 
-<Card title="🔧 System Parameters" icon="document">
+<Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Loaded Conveyor Beam Support System Parameters](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
+	![Loaded Conveyor Beam Support Equivalent System Model](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
   </TailwindWrapper>
 </div>
 **Given:**
@@ -407,7 +432,7 @@ A conveyor beam supports five equally spaced boxes during material handling oper
 
 1. **Sum of vertical forces (↑ positive):**
 
-   $$\sum F_y = 0: R_A + R_B - 5 \times 400 = 0$$
+   $$\sum F_y = 0: R_A + R_B - (5 \times 400) = 0$$
 
    $$R_A + R_B = 2000 \text{ N}$$ ✅
 
@@ -475,6 +500,12 @@ $$V(x) = -1000 \text{ N}$$ ✅
 
 **Maximum shear force:** |V_max| = 1000 N at both supports ✅
 
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Conveyor Beam with Multiple Loads Shear Force Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor_beam_shear_diagram.svg)
+  </TailwindWrapper>
+</div>
+
 :::tip[SFD Characteristics for Multiple Point Loads]
 - **Constant** between loads (no distributed loads)
 - **Sharp downward jumps** at each load point
@@ -504,21 +535,28 @@ $$M(x) = 1000x - 400(x - 200) - 400(x - 600) = 200x + 320,000$$
 $$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) = -200x + 720,000$$
 
 **For 1400 ≤ x ≤ 1800 mm:**
-$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) = -600x + 1,280,000$$
+$$
+\begin{aligned}
+M(x) &= 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) \\
+     &= -600x + 1,280,000
+\end{aligned}
+$$
 
 **For 1800 ≤ x ≤ 2000 mm:**
-$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) - 400(x - 1800) = -1000x + 2,000,000$$
-
-**Key moment values:**
-- At x = 0: M(0) = 0 N·mm ✅
-- At x = 200 mm: M(200) = 200,000 N·mm ✅
-- At x = 600 mm: M(600) = 400,000 N·mm ✅
-- At x = 1000 mm: M(1000) = 520,000 N·mm ✅ **← Maximum**
-- At x = 1400 mm: M(1400) = 400,000 N·mm ✅
-- At x = 1800 mm: M(1800) = 200,000 N·mm ✅
-- At x = 2000 mm: M(2000) = 0 N·mm ✅
+$$
+\begin{aligned}
+M(x) &= 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) - 400(x - 1800) \\
+     &= -1000x + 2,000,000
+\end{aligned}
+$$
 
 **Maximum bending moment:** M_max = 520,000 N·mm = 520 N·m at x = 1000 mm (center) ✅
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Conveyor Beam with Multiple Loads Bending Moment Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor_beam_moment_diagram.svg)
+  </TailwindWrapper>
+</div>
 
 </details>
 
@@ -532,28 +570,20 @@ $$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) - 4
 1. **Maximum moment location:**
 
    **Center (x = 1000 mm):** M = 520 N·m ✅
-   **Under loads (x = 600, 1400 mm):** M = 400 N·m ✅
+   **Under loads (x = 600, 1400 mm):** M = 440 N·m ✅
 
    **Critical location:** Center of beam (midspan) despite no load at this point ✅
 
-2. **Maximum bending stress:**
-
-   $$\sigma_{max} = \frac{M_{max} \cdot c}{I} = \frac{520,000 \times 30}{3.1 \times 10^6} = 50.3 \text{ MPa}$$ ✅
-
-3. **Safety factor:**
-
-   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{50.3} = 4.97$$ ✅
-
-4. **Engineering insight - Midspan vs Under-Load Comparison:**
+2. **Engineering insight - Midspan vs Under-Load Comparison:**
 
    **Why midspan is critical:**
    - In simply supported beams with multiple point loads, moment builds up between loads
-   - **Midspan moment (520 N·m) > Under-load moment (400 N·m)**
+   - **Midspan moment (520 N·m) > Under-load moment (440 N·m)**
    - This occurs because the center experiences cumulative effect of loads on both sides
 
    **Design recommendation:** Size beam based on midspan moment, not just load locations ✅
 
-5. **Practical implications:**
+3. **Practical implications:**
 
    - **Deflection** will also be maximum at center
    - **Lateral-torsional buckling** check needed at center span
@@ -567,7 +597,7 @@ $$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) - 4
 
 A solar tracker support beam adjusts panel orientation to track the sun, experiencing combined self-weight, wind loading, and equipment forces.
 
-:::note[Problem Statement]
+:::note[System Problem Statement]
 - **Loading condition:** UDL (self-weight + wind) + concentrated clamp force
 - **Support configuration:** Overhanging simply supported beam
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -584,18 +614,18 @@ A solar tracker support beam adjusts panel orientation to track the sun, experie
 **Key Question:** What are the maximum positive and negative bending moments, and which section is most critical?
 :::
 
-<Card title="🔧 System Parameters" icon="document">
+<Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Parameters](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-segment-under-load.png)
+	![Solar Tracker Parameters](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar-tracker-arm-loading-diagram.png)
   </TailwindWrapper>
 </div>
 **Given:**
 - Total beam length: 3.0 m (2.5 m span + 0.5 m overhang)
 - Support A (pinned): at x = 0
 - Support B (roller): at x = 2.5 m
-- Uniformly distributed load: w = 300 N/m across entire length (panel weight + wind)
-- Point load at tip: P = 600 N at x = 3.0 m (clamp mechanism)
+- Uniformly distributed load: W = 300 N/m across entire length (panel weight + wind)
+- Point load at tip: P1 = 600 N at x = 3.0 m (clamp mechanism)
 - Cross-section: Structural steel I-beam (I = 6.8×10⁶ mm⁴, c = 40 mm)
 - Material: Structural steel (σ_yield = 250 MPa)
 </Card>
@@ -629,13 +659,15 @@ A solar tracker support beam adjusts panel orientation to track the sun, experie
 
 4. **Verification by moments about B:**
 
-   $$\sum M_B = 0: -R_A(2.5) + w \times 2.5 \times 1.25 - w \times 0.5 \times (2.5 + 0.25) - P \times 0.5 = 0$$
+   $$\sum M_B = 0: R_A(2.5) - w(2.5)(1.25) + w(0.5)(0.25) + P(0.5) = 0$$
 
-   $$-240(2.5) + 300 \times 2.5 \times 1.25 - 300 \times 0.5 \times 2.75 - 600 \times 0.5$$
+   **Breaking down each term:**
+   - Moment from R_A: +240(2.5) = +600 N·m
+   - Moment from UDL on span (0 to 2.5 m): -300(2.5)(1.25) = -937.5 N·m
+   - Moment from UDL on overhang (2.5 to 3.0 m): +300(0.5)(0.25) = +37.5 N·m
+   - Moment from P at tip: +600(0.5) = +300 N·m
 
-   $$= -600 + 937.5 - 412.5 - 300 = -375 + 937.5 - 712.5 = -375 + 225 = -150$$
-
-   Let me recalculate: $$R_A = \frac{3150 - 1260 \times 2.5}{2.5} = \frac{3150 - 3150}{2.5} = 240$$ ✅
+   $$\sum M_B = 600 - 937.5 + 37.5 + 300 = 0$$ ✅
 
 </Steps>
 
@@ -665,6 +697,12 @@ $$V(x) = R_A - wx + R_B = 240 - 300x + 1260 = 1500 - 300x$$
 **Maximum shear forces:**
 - **Positive:** V_max = 750 N just after support B ✅
 - **Negative:** V_min = -510 N just before support B ✅
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Solar Tracker Overhanging Beam Shear Force Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar_tracker_arm_shear_diagram.svg)
+  </TailwindWrapper>
+</div>
 
 :::tip[SFD Characteristics for Overhanging Beams]
 - **Linear variation** due to uniform distributed load
@@ -705,6 +743,12 @@ $$M(x) = 1500x - 150x^2 - 3150$$
 - **Positive:** M_max = +96 N·m at x = 0.8 m ✅
 - **Negative:** M_min = -337.5 N·m at support B (x = 2.5 m) ✅
 
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Solar Tracker Overhanging Beam Bending Moment Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar_tracker_arm_moment_diagram.svg)
+  </TailwindWrapper>
+</div>
+
 </details>
 
 ### Step 4: Critical Section Analysis
@@ -721,15 +765,7 @@ $$M(x) = 1500x - 150x^2 - 3150$$
 
    **Critical location:** Support B due to larger moment magnitude ✅
 
-2. **Maximum bending stress at critical section:**
-
-   $$\sigma_{max} = \frac{|M_{max}| \cdot c}{I} = \frac{337,500 \times 40}{6.8 \times 10^6} = 19.9 \text{ MPa}$$ ✅
-
-3. **Safety factor:**
-
-   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{19.9} = 12.6$$ ✅
-
-4. **Engineering assessment - Positive vs Negative Moment Regions:**
+2. **Engineering assessment - Positive vs Negative Moment Regions:**
 
    **Why support B is most critical:**
    - **Negative moment (337.5 N·m) >> Positive moment (96 N·m)**
@@ -741,7 +777,7 @@ $$M(x) = 1500x - 150x^2 - 3150$$
    - **Bottom fiber:** Compression
    - **Design consideration:** Check lateral-torsional buckling of compression flange
 
-5. **Practical design recommendations:**
+3. **Practical design recommendations:**
 
    - **Reinforce support B region** with stiffeners or larger section
    - **Consider moment redistribution** with semi-rigid connections
@@ -756,13 +792,16 @@ $$M(x) = 1500x - 150x^2 - 3150$$
 
 In this lesson, you learned to:
 
-1. **Construct** shear force diagrams using V = ΣF_y and dV/dx = -w
-2. **Build** bending moment diagrams using M relationships and dM/dx = V  
-3. **Identify** critical sections for maximum shear and moment
-4. **Apply** equilibrium principles to cantilever beam analysis
+1. **Construct** shear force diagrams using equilibrium (V = ΣF_y) and differential relationships (dV/dx = -w)
+2. **Build** bending moment diagrams using integration (dM/dx = V) and moment equilibrium principles
+3. **Identify** critical sections with maximum shear and moment values
+4. **Analyze** cantilever, simply supported, and overhanging beam configurations
+5. **Determine** reaction forces for fixed, pinned, and roller supports
 
 **Key Design Insights:**
-- <Badge text="Maximum moment often occurs at supports" variant="note" />
+- <Badge text="Cantilever beams: Maximum moment at fixed support" variant="note" />
+- <Badge text="Simply supported beams: Maximum moment often at midspan" variant="note" />
+- <Badge text="Overhanging beams: Critical section at intermediate support" variant="note" />
 - <Badge text="Shear jumps at point loads, moment jumps at applied moments" variant="tip" />
 - <Badge text="Distributed loads create linear shear and parabolic moment curves" variant="tip" />
 
@@ -771,7 +810,7 @@ In this lesson, you learned to:
 - **Shear-Moment:** dM/dx = V(x)
 - **Maximum moment:** Occurs where V(x) = 0
 
-**Coming Next**: In Lesson 2.2, we'll calculate bending stresses in robotic cantilever gripper jaws using beam theory, applying the flexural formula to check if the jaws can safely support design loads.
+**Coming Next**: In Lesson 2.2, we'll calculate bending stresses using the flexure formula σ = My/I to determine if beam designs can safely support operational loads.
 
 <MechanicsOfMaterialsComments />
 <TawkWidget />
