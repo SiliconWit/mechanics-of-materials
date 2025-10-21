@@ -2,7 +2,7 @@
 title: "Lesson 2.1: Shear Force and Bending Moment in Beams"
 description: "Master shear force and bending moment analysis for industrial beam structures including robotic arms, conveyor systems, and solar trackers through practical engineering applications"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-09-17
+pubDate: 2025-09-21
 tags: ["solid-mechanics", "structural-analysis", "shear-force", "bending-moment", "beam-design", "industrial-applications", "mechatronics", "material-handling"]
 excerpt: "Master shear force and bending moment analysis through real-world industrial applications: robotic arm cantilevers, conveyor support beams, and solar tracker structures. Learn to construct diagrams, identify critical sections, and apply equilibrium principles for safe structural design in mechatronics and automation systems."
 hashtags: ["#BeamAnalysis", "#StructuralMechanics", "#EngineeringDesign"]
@@ -76,14 +76,6 @@ All industrial beam structures experience **internal shear forces and bending mo
 
 ### Basic Beam Concepts
 
-When a beam is loaded transversely, internal forces develop to maintain equilibrium:
-
-**Shear Force (V):** Internal force that resists sliding <br/>
-**Bending Moment (M):** Internal moment that resists rotation <br/>
-**Normal Force (N):** Internal axial force (usually zero in pure bending)
-
-### Beam Support Types
-
 Before analyzing shear forces and bending moments, it's essential to understand how beams are supported. The type of support determines which movements and rotations are allowed or prevented, directly affecting the reaction forces and internal stresses.
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -118,6 +110,12 @@ Before analyzing shear forces and bending moments, it's essential to understand 
 - The choice of support affects the internal force distribution and maximum bending moments
 - Fixed supports create the most statically indeterminate systems but provide the strongest connection
 :::
+
+When a beam is loaded transversely, internal forces develop to maintain equilibrium:
+
+**Shear Force (V):** Internal force that resists sliding <br/>
+**Bending Moment (M):** Internal moment that resists rotation <br/>
+**Normal Force (N):** Internal axial force (usually zero in pure bending)
 
 ### Sign Conventions
 
@@ -163,7 +161,7 @@ Before analyzing shear forces and bending moments, it's essential to understand 
   </TabItem>
 </Tabs>
 
-### Differential Relationships
+### Common Beam Equations
 
 The fundamental relationship between load, shear, and moment:
 
@@ -174,40 +172,69 @@ $$\frac{dM}{dx} = V(x)$$
 
 **Where:**
 - $w(x)$ = distributed load intensity (N/m)
-- $V(x)$ = shear force at position x (N)  
+- $V(x)$ = shear force at position x (N)
 - $M(x)$ = bending moment at position x (N·m)
 
 **Physical Meaning:** These equations show how load affects shear force rate of change, and how shear force affects bending moment rate of change.
 </Card>
 
-### Common Beam Equations
+<Card title="🛡️ Cantilever Beam (Fixed-Free)" icon="document">
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
+  ![Cantilever Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/cantilever_beam.svg)
+</div>
 
-<Card title="🛡️ Cantilever Beam - Shear Force" icon="document">
 **For cantilever with distributed load w and point load P at tip:**
 
+**Shear Force:**
 $$V(x) = -(wL + P) + w \cdot x$$
 
-**Where:**
-- $w$ = Distributed load intensity (N/m)
-- $L$ = Beam length (m)
-- $P$ = Point load at tip (N)
-- $x$ = Distance from fixed support (m)
+**Bending Moment:**
+$$M(x) = -M_{base} + R_y \cdot x - w \cdot \frac{x^2}{2}$$
 
-**Physical Meaning:** Shear force starts negative (total downward load) and becomes less negative as distributed load is "taken up" along the length.
+**Key Characteristics:**
+- Maximum shear and moment at **fixed support**
+- Zero shear and moment at **free end**
+- Linear shear variation, parabolic moment variation
 </Card>
 
-<Card title="⚖️ Cantilever Beam - Bending Moment" icon="document">
-**For cantilever with distributed load w and point load P at tip:**
+<Card title="⚖️ Simply Supported Beam (Pin-Roller)" icon="document">
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
+  ![Simply Supported Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/simply_supported_beam.svg)
+</div>
 
-$$M(x) = -M_{base} + R_y \cdot x - w \cdot x \cdot \frac{x}{2}$$
+**For simply supported beam with central point load P:**
 
-**Where:**
-- $M_{base}$ = Reaction moment at fixed support
-- $R_y$ = Vertical reaction force
-- Second term = Moment due to reaction force
-- Third term = Moment due to distributed load
+**Shear Force:**
+$$V(x) = \frac{P}{2} \text{ (constant from 0 to L/2)}$$
 
-**Physical Meaning:** Bending moment varies quadratically due to distributed loading. Negative values indicate sagging (compression on top, tension on bottom).
+**Bending Moment:**
+$$M(x) = \frac{P}{2} \cdot x \text{ (for 0 ≤ x ≤ L/2)}$$
+
+**Key Characteristics:**
+- Zero moment at **both supports** (pins/rollers cannot resist rotation)
+- Maximum moment at **center** (where shear = 0)
+- Symmetric shear and moment for symmetric loading
+</Card>
+
+<Card title="🔗 Overhanging Beam" icon="document">
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
+  ![Overhanging Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/overhanging_beam.svg)
+</div>
+
+**For overhanging beam with UDL across entire length:**
+
+**Shear Force:**
+- Between supports: $V(x) = R_A - w \cdot x$
+- Overhang region: $V(x) = R_A - w \cdot x + R_B$
+
+**Bending Moment:**
+- Between supports: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2}$
+- Overhang region: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2} + R_B(x - L_{span})$
+
+**Key Characteristics:**
+- **Both positive and negative moments** occur
+- Maximum negative moment typically at **intermediate support**
+- Zero moment at pin/roller supports
 </Card>
 
 :::tip[Key Insights]
@@ -216,6 +243,73 @@ $$M(x) = -M_{base} + R_y \cdot x - w \cdot x \cdot \frac{x}{2}$$
 3. **Maximum moment occurs where shear = 0**
 4. **Point loads cause jumps in shear diagrams**
 5. **Applied moments cause jumps in moment diagrams**
+:::
+
+### Quick Sketching Techniques
+
+The differential equations $\frac{dV}{dx} = -w(x)$ and $\frac{dM}{dx} = V(x)$ provide exact mathematical relationships for **all beam types**. While the equations above show specific formulas for cantilever, simply supported, and overhanging beams, engineers can use these fundamental differential relationships to **quickly sketch** approximate shear force and bending moment diagrams for any beam configuration before performing detailed calculations.
+
+#### Rule 1: Integration Pattern (from dV/dx = -w and dM/dx = V)
+
+Since shear "integrates" from loading ($\frac{dV}{dx} = -w$) and moment "integrates" from shear ($\frac{dM}{dx} = V$), the diagram shapes follow an **integration-like pattern** for **any beam type**:
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+    ![Integration Pattern Rule](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/sketching_integration_pattern.svg)
+  </TailwindWrapper>
+</div>
+
+**Pattern Recognition:**
+- **Point load** (vertical line) → **Constant shear** (horizontal) → **Linear moment** (slope)
+- **UDL** (uniform arrows) → **Linear shear** (slope) → **Parabolic moment** (curve)
+- **Triangular load** (varying) → **Parabolic shear** (curve) → **Cubic moment** (S-curve)
+
+**Why this works:** Just like integrating $y = 5$ gives $5x$, then $\frac{5x^2}{2}$, each integration "steps up" curve complexity by one order. This directly follows from $\frac{dV}{dx} = -w(x)$ and $\frac{dM}{dx} = V(x)$.
+
+#### Rule 2: Slope Direction → Curve Shape (from dM/dx = V)
+
+When sketching moment diagrams from shear diagrams, the **slope direction** in the shear plot tells you the **curvature** in the moment plot:
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+    ![Slope Direction Guide](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/sketching_slope_direction_guide.svg)
+  </TailwindWrapper>
+</div>
+
+**The "Inverted Road" Analogy:**
+
+Imagine an **inverted car** (shown in diagrams) rolling on an **inverted road** representing the moment curve. The shear slope tells you how the "car" accelerates:
+
+- **Right slope ``/" (positive shear slope):** Moment change starts **slow**, ends **fast**
+  - Moment curve must be **flat on left, steep on right** → **Concave up** parabola
+  - Think: car needs gentle start, steep finish
+
+- **Left slope ``\\" (negative shear slope):** Moment change starts **fast**, ends **slow**
+  - Moment curve must be **steep on left, flat on right** → **Concave down** parabola
+  - Think: car needs steep start, gentle finish
+
+**Practical Application:** Mark calculated moment values at critical points, then connect them with curves matching the shear slope direction.
+
+#### Rule 3: Essential Boundary Conditions
+
+Use these instant checks derived from support types and equilibrium:
+
+**Support Behavior:**
+1. **Cantilever Free End:** V = 0 **and** M = 0 (no loads or constraints at tip)
+2. **Simple Supports (Pin/Roller):** M = 0 (cannot resist rotation, only vertical force)
+3. **Fixed Support:** Both V ≠ 0 **and** M ≠ 0 (resists shear force and rotation)
+
+**Loading Effects:**
+1. **Point Load:** Shear **jumps** by magnitude P; moment remains **continuous** (no slope discontinuity)
+2. **Applied Moment:** Moment **jumps** by M₀; shear remains **continuous**
+3. **Zero Shear Point:** Indicates **local maximum or minimum** in moment diagram (since dM/dx = V = 0)
+
+:::tip[Rapid Sketching Workflow]
+1. **Sketch supports** and identify boundary conditions (M = 0 at pins/rollers, both V and M at fixed)
+2. **Calculate** critical reaction forces and at least one key shear/moment value
+3. **Apply integration pattern** to determine curve type (point load → horizontal → slope; UDL → slope → parabola)
+4. **Use slope direction rule** for moment curve shape (right slope → concave up; left slope → concave down)
+5. **Verify** boundary conditions are satisfied and shear jumps occur at point loads
 :::
 
 ## 🏭 Application 1: Semi-Automatic Robotic Arm Cantilever Analysis (Mechatronics)

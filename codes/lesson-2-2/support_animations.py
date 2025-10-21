@@ -59,7 +59,7 @@ plt.rcParams.update({
     'figure.facecolor': '#F8FAFC',  # Light gray background
     'axes.facecolor': '#F8FAFC',
     'savefig.facecolor': '#F8FAFC',
-    'savefig.edgecolor': '#5EEAD4'  # Light teal border for saved figure
+    'savefig.edgecolor': '#5ab9a0'  # Light teal border for saved figure (matching beam_type_diagrams.py)
 })
 
 class BeamSupportAnimator:
@@ -80,14 +80,14 @@ class BeamSupportAnimator:
         self.beam_length = 8.0
         self.beam_height = 0.4
 
-        # Color scheme
-        self.beam_color = '#405ab9'      # Blue from pantograph
+        # Color scheme (matching beam_type_diagrams.py)
+        self.beam_color = '#2d7a8f'      # Darker teal with blue undertone
         self.support_color = '#6B7280'   # Gray for triangles/supports
-        self.ground_color = '#000000'    # Black for ground/fixed
+        self.ground_color = '#5ab9a0'    # Light teal for ground/fixed/outlines
         self.force_color = '#ff8c36'     # Orange for applied forces
         self.reaction_color = '#00a0d0'  # Light blue for reactions
         self.text_color = '#1F2937'      # Dark gray for text
-        self.border_color = '#5EEAD4'    # Light teal for border
+        self.border_color = '#5ab9a0'    # Light teal for border (matching ground)
         self.checkmark_color = '#10B981' # Green for ✓
         self.cross_color = '#EF4444'     # Red for ✗
         self.bg_color = '#F8FAFC'        # Light gray background
@@ -164,8 +164,8 @@ class BeamSupportAnimator:
         ], closed=True, fc=self.support_color, ec=self.ground_color, linewidth=5, alpha=0.8)
         ax.add_patch(triangle)
 
-        # Pin circle (white fill with black edge, larger)
-        pin = Circle((x, y), 0.2 * scale, fc='white', ec=self.ground_color, linewidth=5, zorder=10)
+        # Pin circle (black fill with teal edge, larger)
+        pin = Circle((x, y), 0.2 * scale, fc='black', ec=self.ground_color, linewidth=5, zorder=10)
         ax.add_patch(pin)
 
         # Ground (centered at x)
@@ -194,16 +194,16 @@ class BeamSupportAnimator:
         ], closed=True, fc=self.support_color, ec=self.ground_color, linewidth=5, alpha=0.8)
         ax.add_patch(triangle)
 
-        # Pin circle at apex (white fill with black edge, larger) - same as pinned support
-        pin = Circle((x, y), 0.2 * scale, fc='white', ec=self.ground_color, linewidth=5, zorder=10)
+        # Pin circle at apex (black fill with teal edge, larger) - same as pinned support
+        pin = Circle((x, y), 0.2 * scale, fc='black', ec=self.ground_color, linewidth=5, zorder=10)
         ax.add_patch(pin)
 
-        # Rollers (circles) - these move with x (white fill with black edge, larger)
+        # Rollers (circles) - these move with x (black fill with teal edge, larger)
         roller_y = y - triangle_height - 0.2
         roller1 = Circle((x - 0.3, roller_y), 0.2 * scale,
-                        fc='white', ec=self.ground_color, linewidth=5, zorder=10)
+                        fc='black', ec=self.ground_color, linewidth=5, zorder=10)
         roller2 = Circle((x + 0.3, roller_y), 0.2 * scale,
-                        fc='white', ec=self.ground_color, linewidth=5, zorder=10)
+                        fc='black', ec=self.ground_color, linewidth=5, zorder=10)
         ax.add_patch(roller1)
         ax.add_patch(roller2)
 
@@ -312,7 +312,7 @@ class BeamSupportAnimator:
             rotated_corners[:, 0] += support_x
             rotated_corners[:, 1] += support_y
 
-            beam = Polygon(rotated_corners, fc=self.beam_color, ec='black',
+            beam = Polygon(rotated_corners, fc=self.beam_color, ec=self.ground_color,
                           linewidth=2, alpha=0.7)
             ax.add_patch(beam)
 
@@ -427,7 +427,7 @@ class BeamSupportAnimator:
             rotated_corners[:, 0] += support_x
             rotated_corners[:, 1] += support_y
 
-            beam = Polygon(rotated_corners, fc=self.beam_color, ec='black',
+            beam = Polygon(rotated_corners, fc=self.beam_color, ec=self.ground_color,
                           linewidth=2, alpha=0.7)
             ax.add_patch(beam)
 
@@ -532,7 +532,7 @@ class BeamSupportAnimator:
             beam_y = np.concatenate([y_top, y_bottom[::-1]])
 
             beam = Polygon(np.column_stack([beam_x, beam_y]),
-                          fc=self.beam_color, ec='black', linewidth=2, alpha=0.7)
+                          fc=self.beam_color, ec=self.ground_color, linewidth=2, alpha=0.7)
             ax.add_patch(beam)
 
             # Draw fixed support
