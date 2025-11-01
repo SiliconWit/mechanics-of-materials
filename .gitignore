@@ -12,3 +12,8 @@ __pycache__/
 *.jpg
 *.gif
 *.mp4
+*.stl
+*.glb
+*.FCStd
+*.FCBak
+

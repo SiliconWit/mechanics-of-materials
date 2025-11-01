@@ -2,7 +2,7 @@
 title: "Practical Laboratory Experiments: Structural Analysis with Python and FreeCAD"
 description: "Hands-on laboratory series combining analytical methods, Python programming, and FreeCAD FEM analysis for real-world engineering applications in robotics, 3D printing, and aerospace structures"
 contributors: "sam-macharia,bright-gitari,consolata-kiiru"
-pubDate: 2025-10-30
+pubDate: 2025-11-01
 tags: ["solid-mechanics", "laboratory", "python", "freecad", "fem-analysis", "shear-force", "bending-moment", "stress-analysis", "robotics", "structural-design"]
 excerpt: "Master structural analysis through three progressive laboratory experiments: robotic arm cantilever analysis, 3D printer gantry rail design, and drone arm combined loading. Learn to validate analytical solutions with Python programming and FreeCAD FEM simulations for real mechatronics applications."
 hashtags: ["#StructuralAnalysis", "#EngineeringLabs", "#FEMAnalysis"]
@@ -251,7 +251,7 @@ Before writing any code, develop fundamental understanding through hand calculat
 
    Sketch the beam showing:
    - Fixed support at left end (x = 0) with reaction force R_y and reaction moment M_A
-   - Downward force P = 1200 N at right end (x = 800 mm)
+   - Downward force P = 500 N at right end (x = 500 mm)
    - Coordinate system with x-axis along beam length
 
 2. **Calculate Reaction Forces**
@@ -438,6 +438,31 @@ Compare these values with your hand calculations. They should match within round
 
 Create a 3D model of the robotic arm in FreeCAD to visualize the component and understand its geometry.
 
+**Beam Geometry and Orientation**:
+
+```
+Coordinate System (FreeCAD Standard):
+┌─────────────────────────────────────────────────┐
+│  X-axis: Beam LENGTH (500 mm) → extends left-right
+│  Y-axis: Beam WIDTH (60 mm) → extends front-back
+│  Z-axis: Beam HEIGHT (20 mm) → extends up-down
+│
+│  Cross-section: 60 mm (Y) × 20 mm (Z) rectangle
+│  Extrusion: Along X-axis for 500 mm
+│
+│  Load: P = 500 N pointing DOWN (-Z direction)
+│        at x = 500 mm (free end, right side)
+│
+│  Support: Fixed at x = 0 mm (left side)
+└─────────────────────────────────────────────────┘
+```
+
+:::tip[FreeCAD Sketch Reference]
+- **Horizontal** in sketch view = **Y-axis** (width = 60 mm)
+- **Vertical** in sketch view = **Z-axis** (height = 20 mm)
+- **Extrude/Pad** direction = **X-axis** (length = 500 mm)
+:::
+
 <Steps>
 
 1. **Create Basic Beam Model**
@@ -445,21 +470,23 @@ Create a 3D model of the robotic arm in FreeCAD to visualize the component and u
    - Open FreeCAD and create new document (File → New)
    - Switch to Part Design workbench
    - Create new body (right-click in tree → Create Body)
-   - Create sketch on XY plane
+   - Create sketch on **XY plane** (this will be the cross-section face)
 
-2. **Draw Cross-Section**
+2. **Draw Rectangular Cross-Section (60 mm wide × 20 mm tall)**
 
-   - Click Rectangle tool
-   - Draw from origin
-   - Constrain bottom horizontal line: 60 mm
-   - Constrain right vertical line: 20 mm
+   - Click **Rectangle tool**
+   - Draw rectangle centered on origin (or from origin)
+   - Constrain **horizontal dimension** (width): **60 mm** (Y-direction)
+   - Constrain **vertical dimension** (height): **20 mm** (Z-direction)
    - Close sketch
 
-3. **Extrude Beam**
+3. **Extrude Beam Along Length (500 mm)**
 
-   - Click 'Pad' button
-   - Enter length: 500 mm
+   - Click **'Pad'** button (extrusion tool)
+   - Enter **length: 500 mm**
+     - This extrudes the cross-section along the **X-axis** (beam length direction)
    - Click OK
+   - **Result**: You now have a beam 500 mm long (X) × 60 mm wide (Y) × 20 mm tall (Z)
 
 4. **Add Material Properties**
 
@@ -467,42 +494,95 @@ Create a 3D model of the robotic arm in FreeCAD to visualize the component and u
    - Choose 'Aluminum' from material library
    - Set aluminum silver color
 
-5. **Add Load Visualization**
+5. **Add Load Visualization (Arrow Pointing Downward)**
 
-   - Switch to Part workbench
-   - Create cylinder at free end (x=500mm) pointing downward
-   - Color it red to represent 500 N force
-   - Add text label 'P = 500 N' using Draft workbench
+   - Switch to **Part workbench**
+   - Create arrow shaft: **Part → Primitives → Cylinder**
+     - Radius: 8 mm, Height: 80 mm
+     - Position: Above beam at free end (x = 500 mm, z = top of beam + 80 mm)
+     - **Rotate 180°** around Y-axis to point **downward**
+   - Create arrow head: **Part → Primitives → Cone**
+     - Base radius: 15 mm, Height: 25 mm
+     - Position: At bottom of shaft, pointing at beam
+     - **Rotate 180°** around Y-axis to point **downward**
+   - Fuse shaft and head: Select both → **Part → Boolean → Union**
+   - Color it **orange/red** (right-click → Appearance → Shape color)
+   - Add text label using **Draft workbench**: Text = "P = 500 N"
 
-6. **Create Engineering Context**
+   :::tip[Load Direction]
+   The arrow must point **downward** (negative Z-direction) to represent the gravitational load from the gripper and payload.
+   :::
 
-   - Add simple gripper representation (two small boxes at free end)
-   - Add simple joint representation (cylinder at fixed end)
-   - Add dimension annotations showing 500mm length
+6. **Add Fixed Support Visualization**
+
+   - At the left end (x = 0), add a wall/block to represent the fixed support
+   - Use **Part → Box** with dimensions 30 mm × 70 mm × 50 mm
+   - Position it at the left end of beam
+   - Color it **gray** to distinguish from beam
+   - Add text label: "Fixed Support"
 
 7. **Create Technical Drawing (TechDraw Workbench)**
 
-   - Switch to TechDraw workbench
+   - Switch to **TechDraw workbench**
    - Insert → Default Page (A4 landscape)
    - Insert View → Insert View → Select your beam body
-   - Position front view showing 500mm length and 20mm height
-   - Add top view showing 60mm width
-   - Add section view (A-A) through beam cross-section
-   - Insert → Dimensions → Add length dimensions (500mm, 60mm, 20mm)
-   - Insert → Annotation → Add material note: "Al 6061-T6"
-   - Insert → Annotation → Add load note: "P = 500 N at free end"
-   - File → Export as PDF → Save as per naming convention
 
-8. **Export Model and Images**
+   **Add Multiple Views**:
+   - **Front view**: Shows length (500 mm, X-axis) and height (20 mm, Z-axis)
+   - **Top view**: Shows length (500 mm, X-axis) and width (60 mm, Y-axis)
+   - **Right side view**: Shows width (60 mm, Y-axis) and height (20 mm, Z-axis)
+   - **Section A-A**: Cut through beam to show rectangular cross-section clearly
 
-   - Rotate to isometric view
-   - View → Screenshot → Save as per naming convention (Isometric.png)
-   - Rotate to side view
-   - View → Screenshot → Save as per naming convention (SideView.png)
-   - **Export 3D model:** File → Export → Select ".glb" format → Save as per naming convention
-   - (GLB format is preferred for web visualization and is universally compatible)
+   **Add Dimensions**:
+   - Insert → Dimensions → Length: 500 mm (beam length)
+   - Insert → Dimensions → Width: 60 mm (cross-section width)
+   - Insert → Dimensions → Height: 20 mm (cross-section height)
+
+   **Add Annotations**:
+   - Insert → Annotation → Material: "Aluminum Alloy 6061-T6"
+   - Insert → Annotation → Load: "P = 500 N (downward) at x = 500 mm"
+   - Insert → Annotation → Support: "Fixed support at x = 0 mm"
+
+   **Export Drawing**:
+   - File → Export as PDF
+   - Save as: `E022-01-XXXX-YYYY-Lab1-Drawing.pdf`
+
+8. **Export 3D Model and Images**
+
+   **Set Isometric View**:
+   - Click **View → Standard Views → Isometric**
+   - Or press **"0"** on numpad for isometric view
+   - Adjust camera to show beam, load arrow, and support clearly
+
+   **Take Screenshots**:
+   - **Isometric view**: View → Screenshot → Save as `E022-01-XXXX-YYYY-Lab1-Isometric.png`
+     - Resolution: according to the [File Naming and Submission Standards](#file-naming-and-submission-standards) above
+   - **Side view**: Rotate to side → Screenshot → Save as `E022-01-XXXX-YYYY-Lab1-SideView.png`
+     - Should clearly show beam length and load arrow
+
+   **Export 3D Model (GLB for Web)**:
+   - Select all model objects in tree view (Ctrl+A or select individually)
+   - File → Export
+   - In the file type dropdown, select **"glTF 2.0 (*.glb *.gltf)"**
+   - **Important**: Change the extension from `.gltf` to `.glb` before saving
+     - Default filename: `E022-01-XXXX-YYYY-Lab1-Model.gltf`
+     - Change to: `E022-01-XXXX-YYYY-Lab1-Model.glb`
+   - Click **Export** or **Save**
+   - **Verify your GLB file**: Visit https://siliconwit.com/product-development/3d-model-viewer/
+     - Drag and drop your `.glb` file to confirm it displays correctly
 
 </Steps>
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '2rem 0' }}>
+  <TailwindWrapper>
+    <figure>
+      ![FreeCAD Robotic Arm Model - Isometric View](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/lab1-freecad-robotic-arm-isometric.png)
+      <figcaption style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', fontStyle: 'italic', color: '#666' }}>
+        Example FreeCAD model showing beam, fixed support, and load arrow
+      </figcaption>
+    </figure>
+  </TailwindWrapper>
+</div>
 
 :::note[Important]
 This lab focuses on visualization and familiarity with FreeCAD. FEM analysis will be introduced in Lab 2.
@@ -582,7 +662,7 @@ Desktop 3D printers use a horizontal rail (gantry) that supports the print head 
 **Geometry:**
 - Rail Length (L): **800 mm**
 - Cross-section: **Aluminum tube OD 30 mm × ID 24 mm × 3 mm wall thickness** (hollow circular)
-- Moment of Inertia (I): **6.0 × 10⁴ mm⁴** (hollow circular section)
+- Moment of Inertia (I): **2.35 × 10⁴ mm⁴** (hollow circular: I = π(OD⁴-ID⁴)/64)
 - Distance to outer fiber (c): **15 mm** (outer radius)
 
 **Loading:**
@@ -765,25 +845,25 @@ Now validate the analytical solution using finite element analysis.
 
 <Steps>
 
-1. **Create 3D Model of Hollow Beam**
+1. **Create 3D Model of Hollow Circular Tube**
 
    - Open FreeCAD, create new document
    - Part Design workbench → Create Body
    - Create sketch on XY plane
-   - Draw 40×40 mm square centered on origin
-   - Close sketch, Pad 1200 mm along length
+   - Draw **circle with radius 15 mm** (OD = 30 mm diameter) centered on origin
+   - Close sketch, Pad **800 mm** along length (beam length)
    - Create second sketch on same face
-   - Draw 34×34 mm square centered (inner cavity)
-   - Close sketch, Pocket through all (creates hollow section)
+   - Draw **circle with radius 12 mm** (ID = 24 mm diameter) centered on origin (inner cavity)
+   - Close sketch, Pocket through all (creates hollow circular tube with 3 mm wall thickness)
 
 2. **Switch to FEM Workbench**
 
    - Workbench dropdown → FEM
-   - Create Analysis container: Analysis → Analysis container
+   - Create Analysis container: Model → Analysis container
 
 3. **Add Material**
 
-   - Analysis → Material → FEM material for solid
+   - Model → Material → System → Standard → Metal
    - Select material: Aluminum-Generic
    - Verify: E = 70 GPa, ν = 0.33
    - Select solid body, click OK
