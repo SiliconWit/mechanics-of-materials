@@ -1,10 +1,10 @@
 ---
 title: "Lesson 2.3: Beam Deflections and Stiffness Analysis"
-description: "Master beam deflection analysis for precision engineering applications including PCBs, medical imaging systems, and linear actuators"
+description: "Master beam deflection analysis for precision engineering applications including PCBs, medical imaging C-arms, and CNC machine gantry rails"
 contributors: "sam-macharia,jack-kojiro"
-pubDate: 2025-11-13
-tags: ["solid-mechanics", "beam-deflection", "elastic-deformation", "stiffness-analysis", "precision-engineering", "PCB-design", "medical-imaging", "linear-actuators"]
-excerpt: "Learn beam deflection analysis through real-world precision applications: PCB sagging, CT scanner gantry arms, and linear actuator guide beams. Master elastic curve equations, support configuration effects, and stiffness design strategies for mechanical, electronics, and medical systems."
+pubDate: 2025-11-23
+tags: ["solid-mechanics", "beam-deflection", "elastic-deformation", "stiffness-analysis", "precision-engineering", "PCB-design", "medical-imaging", "CNC-machining", "mechatronics"]
+excerpt: "Learn beam deflection analysis through real-world precision applications: PCB sagging under component weight, C-arm fluoroscopy positioning, and CNC gantry rail stiffness. Master elastic curve equations, support configuration effects, and stiffness design strategies for electronics, medical, and manufacturing systems."
 ---
 
 import MechanicsOfMaterialsComments from '../../../../components/mechanics-of-materials/MechanicsOfMaterialsComments.astro';
@@ -16,11 +16,11 @@ import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
 
-<UniversalContentContributors
+<UniversalContentContributors 
   contributors={frontmatter.contributors}
 />
 
-Master beam deflection analysis through real-world precision applications: PCB sagging, CT scanner gantry arms, and linear actuator guide beams. Learn elastic curve equations, support configuration effects, and stiffness design strategies for mechanical, electronics, and medical systems.
+Master beam deflection analysis through real-world precision applications: PCB sagging under component weight, mobile C-arm fluoroscopy positioning accuracy, and CNC gantry rail stiffness. Learn elastic curve equations, support configuration effects (fixed-fixed, cantilever, simply supported), and stiffness design strategies for electronics, medical, and manufacturing systems.
 
 ## 🎯 Learning Objectives
 
@@ -34,7 +34,7 @@ By the end of this lesson, you will be able to:
 ## 🔧 Engineering Challenge: Deflection in Precision Systems
 
 <BionicText method="advanced" intensity="medium" class="highlight">
-Beam deflection is a critical design consideration across diverse engineering applications—from electronic circuit boards sagging under component weight, to medical imaging gantries requiring sub-millimeter positioning accuracy, to precision linear motion systems. Understanding deflection theory enables engineers to predict elastic deformations, establish appropriate design limits, and optimize structural stiffness for functionality and reliability.
+Beam deflection is a critical design consideration across diverse engineering applications—from electronic circuit boards sagging under component weight, to medical imaging C-arms requiring sub-millimeter positioning accuracy, to CNC machine gantry rails maintaining cutting precision. Understanding deflection theory enables engineers to predict elastic deformations, establish appropriate design limits, and optimize structural stiffness for functionality and reliability.
 </BionicText>
 
 ### The Universal Deflection Challenge
@@ -54,9 +54,9 @@ Across mechanical, electronics, and medical engineering, beam structures must re
 ### Why Deflection Analysis Matters
 
 **Consequences of Inadequate Stiffness Design:**
-- **Electronics:** Solder joint cracking from excessive PCB flexure
-- **Medical imaging:** Blurred images and artifacts from gantry arm deflection
-- **Precision machinery:** Positioning errors compromising manufacturing tolerances
+- **Electronics:** Solder joint cracking from excessive PCB flexure under component weight
+- **Medical imaging:** Blurred images and artifacts from C-arm deflection during surgical procedures
+- **Precision machining:** Positioning errors in CNC systems compromising part tolerances and surface finish
 - **Material waste:** Over-design from conservative assumptions without analytical validation
 
 **Benefits of Proper Deflection Analysis:**
@@ -69,100 +69,337 @@ Across mechanical, electronics, and medical engineering, beam structures must re
 
 ### The Elastic Curve Equation
 
-Beam deflection is governed by the fundamental relationship between curvature and bending moment:
+When a beam bends under load, it forms a curved shape called the **elastic curve**. Understanding this curve is the key to predicting deflections.
 
-<Card title="📋 Elastic Curve Equation" icon="document">
+<Card title="📋 Deriving the Elastic Curve Equation" icon="document">
+
+**Step 1: Relationship between curvature and moment**
+
+From solid mechanics, a bending moment M causes a beam to curve. The fundamental relationship is:
+
 $$\frac{1}{\rho} = \frac{M}{EI}$$
 
-**For small deflections:**
+**Where:**
+- $\rho$ = Radius of curvature (m) - the radius of the circle that the bent beam follows at any point
+- $M(x)$ = Bending moment as a function of position along the beam (N·m)
+- $E$ = Young's modulus - material stiffness (Pa)
+- $I$ = Second moment of area - geometric property of cross-section (m⁴)
+- $EI$ = Flexural rigidity - combined stiffness of the beam (N·m²)
+
+**What this means:** A larger bending moment creates tighter curvature (smaller radius $\rho$). A stiffer beam (higher $EI$) resists curvature more (larger radius $\rho$).
+
+**Step 2: Converting curvature to deflection**
+
+From calculus, the curvature of a curve $y(x)$ is:
+
+$$\frac{1}{\rho} = \frac{\frac{d^2y}{dx^2}}{\left[1 + \left(\frac{dy}{dx}\right)^2\right]^{3/2}}$$
+
+This exact formula is complex, but for **small deflections** (which applies to most engineering beams), the slope $\frac{dy}{dx}$ is very small, so $\left(\frac{dy}{dx}\right)^2 \ll 1$.
+
+**Small deflection approximation:** When slopes are small (typically less than 10°), we can simplify:
+
+$$\frac{1}{\rho} \approx \frac{d^2y}{dx^2}$$
+
+**Step 3: Combining the relationships**
+
+Setting the two expressions for curvature equal:
+
 $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
 
-**Where:**
-- $\rho$ = Radius of curvature (m)
-- $M(x)$ = Bending moment as a function of position (N·m)
-- $E$ = Young's modulus (Pa)
-- $I$ = Second moment of area (m⁴)
-- $y$ = Deflection (m)
+**This is the fundamental elastic curve equation!**
 
-**Physical Meaning:** Curvature is directly proportional to bending moment and inversely proportional to flexural rigidity (EI).
+**Physical Meaning:**
+- **Left side** $\frac{d^2y}{dx^2}$ = **curvature** of the deflected beam (how much it bends)
+- **Right side** $\frac{M(x)}{EI}$ = **bending moment** divided by **flexural rigidity**
+
+**Key insights:**
+- Where moment is large → curvature is large → beam bends more sharply
+- Where moment is zero → curvature is zero → beam is straight
+- Higher $EI$ → less curvature for same moment → stiffer beam
+- This equation tells us: "The shape the beam takes is determined by the moment distribution along its length"
+
 </Card>
 
 ### Double Integration Method
 
+The double integration method is a systematic procedure to find beam deflections by integrating the elastic curve equation twice.
+
 <Tabs>
   <TabItem label="Integration Steps">
-    
-    **Step 1:** Start with moment equation M(x)
-    
-    **Step 2:** Integrate once to get slope:
-    
+
+    **Step 1: Start with the moment equation M(x)**
+
+    Determine the bending moment as a function of position along the beam using equilibrium equations (from earlier lessons).
+
+    Example: For a cantilever beam with tip load P:
+    $$M(x) = -P(L-x)$$
+
+    **Step 2: Write the elastic curve equation**
+
+    $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
+
+    For our cantilever example:
+    $$\frac{d^2y}{dx^2} = \frac{-P(L-x)}{EI}$$
+
+    **Step 3: First integration → Slope equation**
+
+    Integrate both sides with respect to x:
+
+    $$\int \frac{d^2y}{dx^2} \, dx = \int \frac{M(x)}{EI} \, dx$$
+
+    This gives:
+
     <Card title="📈 Slope Equation" icon="document">
     $$\frac{dy}{dx} = \int \frac{M(x)}{EI} dx + C_1$$
-    
-    **Physical Meaning:** First integration gives the slope of the deflected beam.
+
+    **Physical Meaning:**
+    - $\frac{dy}{dx}$ is the **slope** (angle) of the deflected beam at position x
+    - $C_1$ is an integration constant determined by boundary conditions
+    - The slope tells us how tilted the beam is at each point
+
+    **For our cantilever example:**
+    $$\frac{dy}{dx} = \frac{1}{EI}\int -P(L-x) \, dx + C_1$$
+    $$\frac{dy}{dx} = \frac{1}{EI}\left[-PLx + \frac{Px^2}{2}\right] + C_1$$
+    $$\frac{dy}{dx} = \frac{P}{EI}\left[-Lx + \frac{x^2}{2}\right] + C_1$$
     </Card>
-    
-    **Step 3:** Integrate again to get deflection:
-    
+
+    **Step 4: Second integration → Deflection equation**
+
+    Integrate the slope equation to get deflection:
+
+    $$\int \frac{dy}{dx} \, dx = \int \left[\int \frac{M(x)}{EI} dx + C_1\right] dx$$
+
+    This gives:
+
     <Card title="📉 Deflection Equation" icon="document">
     $$y = \int\int \frac{M(x)}{EI} dx \, dx + C_1 x + C_2$$
-    
-    **Physical Meaning:** Second integration gives the actual displacement of the beam.
+
+    **Physical Meaning:**
+    - $y$ is the **deflection** (vertical displacement) of the beam at position x
+    - $C_1 x$ represents the contribution from the initial slope
+    - $C_2$ is another integration constant (initial deflection)
+    - The deflection tells us how far the beam has moved from its original position
+
+    **For our cantilever example:**
+    $$y = \frac{P}{EI}\int \left[-Lx + \frac{x^2}{2}\right] dx + C_1 x + C_2$$
+    $$y = \frac{P}{EI}\left[-\frac{Lx^2}{2} + \frac{x^3}{6}\right] + C_1 x + C_2$$
     </Card>
-    
-    **Step 4:** Apply boundary conditions to find C₁ and C₂
-    
+
+    **Step 5: Apply boundary conditions to find C₁ and C₂**
+
+    Use the known conditions at supports to solve for the integration constants (see Boundary Conditions tab).
+
+    **For our cantilever (fixed at x=0):**
+    - At x = 0: y = 0 (no deflection at fixed end)
+    - At x = 0: dy/dx = 0 (no rotation at fixed end)
+
+    From dy/dx = 0 at x = 0:
+    $$0 = \frac{P}{EI}\left[0 + 0\right] + C_1 \quad \Rightarrow \quad C_1 = 0$$
+
+    From y = 0 at x = 0:
+    $$0 = \frac{P}{EI}\left[0 + 0\right] + 0 + C_2 \quad \Rightarrow \quad C_2 = 0$$
+
+    **Final deflection equation:**
+    $$y = \frac{P}{EI}\left[-\frac{Lx^2}{2} + \frac{x^3}{6}\right] = \frac{P}{6EI}\left[-3Lx^2 + x^3\right]$$
+
+    **Tip deflection (at x = L):**
+    $$y(L) = \frac{P}{6EI}\left[-3L(L^2) + L^3\right] = \frac{P}{6EI}\left[-3L^3 + L^3\right] = \frac{-PL^3}{3EI}$$
+
+    The negative sign indicates downward deflection (same direction as load P).
+
   </TabItem>
   <TabItem label="Boundary Conditions">
-    
-    **Simply Supported:**
-    - At supports: y = 0
-    - No applied moments: y'' = 0 at supports
-    
-    **Cantilever:**
-    - At fixed end: y = 0 and dy/dx = 0
-    - At free end: M = 0 and V = applied load
-    
-    **Fixed-Fixed:**
-    - At both ends: y = 0 and dy/dx = 0
-    
+
+    **Boundary conditions** are the known constraints at supports that allow us to solve for the integration constants C₁ and C₂.
+
+    <Card title="🔗 Simply Supported (Pin-Roller)" icon="document">
+
+    **Physical constraints:**
+    - Pin and roller supports prevent vertical movement but allow rotation
+    - No external moments are applied at the supports
+
+    **Mathematical boundary conditions:**
+    - **At both supports (x = 0 and x = L):** $y = 0$ (zero deflection)
+    - **At both supports:** $M = 0$ which means $\frac{d^2y}{dx^2} = 0$ (zero moment)
+
+    **What this means:**
+    - The beam can't move up or down at support points
+    - The beam is free to rotate at supports (dy/dx ≠ 0)
+    - The beam touches but doesn't "stick" to the supports
+
+    **Example application:**
+    For a simply supported beam, use y(0) = 0 and y(L) = 0 to find C₁ and C₂.
+    </Card>
+
+    <Card title="🔒 Cantilever (Fixed-Free)" icon="document">
+
+    **Physical constraints:**
+    - Fixed end prevents both movement and rotation (fully restrained)
+    - Free end has no constraints
+
+    **Mathematical boundary conditions:**
+    - **At fixed end (x = 0):** $y = 0$ (zero deflection)
+    - **At fixed end (x = 0):** $\frac{dy}{dx} = 0$ (zero slope/rotation)
+
+    **Alternative conditions at free end (if needed):**
+    - **At free end (x = L):** $M = 0$ means $\frac{d^2y}{dx^2} = 0$ (unless there's an applied moment)
+    - **At free end (x = L):** $V = \frac{dM}{dx}$ equals applied load
+
+    **What this means:**
+    - The beam is completely locked at the fixed end - can't move or rotate
+    - The free end can deflect and rotate freely
+    - Maximum deflection occurs at the free end
+
+    **Example application:**
+    Use y(0) = 0 and dy/dx(0) = 0 to find C₁ and C₂ (as shown in Integration Steps).
+    </Card>
+
+    <Card title="🔗🔒 Fixed-Fixed (Clamped-Clamped)" icon="document">
+
+    **Physical constraints:**
+    - Both ends are rigidly clamped (like built-in beams)
+    - Neither end can move or rotate
+
+    **Mathematical boundary conditions:**
+    - **At both ends (x = 0 and x = L):** $y = 0$ (zero deflection)
+    - **At both ends (x = 0 and x = L):** $\frac{dy}{dx} = 0$ (zero slope/rotation)
+
+    **What this means:**
+    - The beam is fully locked at both ends
+    - This creates **reaction moments** at the supports (not just forces)
+    - The beam is much stiffer than simply supported (up to 5× stiffer)
+    - Maximum deflection occurs near the center
+
+    **Example application:**
+    Use y(0) = 0, dy/dx(0) = 0, y(L) = 0, and dy/dx(L) = 0. Note: For complex loading, you may need to find reaction moments first using equilibrium.
+    </Card>
+
+    **Summary table:**
+
+    | Support Type | Deflection y | Slope dy/dx | Moment M |
+    |--------------|--------------|-------------|----------|
+    | **Pin/Roller** | = 0 (fixed) | ≠ 0 (free) | = 0 (free to rotate) |
+    | **Fixed/Clamped** | = 0 (fixed) | = 0 (fixed) | ≠ 0 (reaction moment) |
+    | **Free end** | ≠ 0 (free) | ≠ 0 (free) | = 0 (no applied moment) |
+
   </TabItem>
   <TabItem label="Standard Cases">
+
+    These formulas are the results of applying the double integration method to common beam configurations. You can use them directly without re-deriving each time.
 
     <Card title="🎢 Standard Deflection Formulas" icon="document">
 
     **Cantilever Beams (Fixed-Free):**
-    - Point load at tip: $\delta_{max} = \frac{PL^3}{3EI}$ (at free end)
-    - Uniform load: $\delta_{max} = \frac{wL^4}{8EI}$ (at free end)
+    - **Point load P at tip:** $\delta_{max} = \frac{PL^3}{3EI}$ (at free end, x = L)
+      - *Derivation basis:* Fixed at x=0 (y=0, dy/dx=0), moment M(x) = -P(L-x)
+    - **Uniform load w:** $\delta_{max} = \frac{wL^4}{8EI}$ (at free end, x = L)
+      - *Derivation basis:* Fixed at x=0, moment M(x) = -w(L-x)²/2
 
     **Simply Supported Beams (Pin-Roller):**
-    - Center point load: $\delta_{max} = \frac{PL^3}{48EI}$ (at center)
-    - Uniform load: $\delta_{max} = \frac{5wL^4}{384EI}$ (at center)
+    - **Center point load P:** $\delta_{max} = \frac{PL^3}{48EI}$ (at center, x = L/2)
+      - *Derivation basis:* Supports at x=0 and x=L (y=0 at both), symmetric moment distribution
+      - *Note:* 16× stiffer than cantilever with same load!
+    - **Uniform load w:** $\delta_{max} = \frac{5wL^4}{384EI}$ (at center, x = L/2)
+      - *Derivation basis:* Supports at x=0 and x=L, parabolic moment distribution
 
     **Fixed-Fixed Beams (Clamped-Clamped):**
-    - Center point load: $\delta_{max} = \frac{PL^3}{192EI}$ (at center)
-    - Uniform load: $\delta_{max} = \frac{wL^4}{384EI}$ (at center)
+    - **Center point load P:** $\delta_{max} = \frac{PL^3}{192EI}$ (at center, x = L/2)
+      - *Derivation basis:* Both ends clamped (y=0, dy/dx=0), develops reaction moments
+      - *Note:* 4× stiffer than simply supported, 64× stiffer than cantilever!
+    - **Uniform load w:** $\delta_{max} = \frac{wL^4}{384EI}$ (at center, x = L/2)
+      - *Derivation basis:* Both ends clamped, reaction moments reduce midspan moment
+
+    **Understanding the denominators:**
+
+    Notice the patterns in denominators:
+    - Cantilever point load: **3** (least stiff - only one constraint)
+    - Simply supported point load: **48** = 3 × 16 (moderate stiffness)
+    - Fixed-fixed point load: **192** = 3 × 64 (most stiff - four constraints)
+
+    The **support configuration** changes the denominator by 16× to 64×!
 
     **Key Insights:**
-    - Deflection scales with **L³ or L⁴** (length has dramatic effect)
-    - Deflection is **inversely proportional to EI** (flexural rigidity)
-    - **Fixed-fixed** beams are ~5× stiffer than simply supported
-    - **Cantilevers** are ~48× more flexible than fixed-fixed beams
-    </Card>
 
+    1. **Length effect is HUGE:**
+       - Point loads: δ ∝ L³ (doubling length → 8× more deflection)
+       - Uniform loads: δ ∝ L⁴ (doubling length → 16× more deflection)
+       - This is why short beams are inherently much stiffer
+
+    2. **Flexural rigidity EI:**
+       - δ ∝ 1/(EI) - inversely proportional
+       - Doubling E or I → halves the deflection
+       - Since I ∝ h³ for rectangular sections, doubling height → reduces δ by 8×
+
+    3. **Support configuration hierarchy:**
+       - **Fixed-fixed** beams are ~5× stiffer than simply supported (for uniform load)
+       - **Simply supported** beams are ~16× stiffer than cantilevers (for point load)
+       - **Cantilevers** are ~48× more flexible than fixed-fixed beams (for point load)
+       - Adding constraints dramatically increases stiffness!
+
+    4. **Where maximum deflection occurs:**
+       - Cantilever: always at the free end (x = L)
+       - Simply supported: at center for symmetric loading (x = L/2)
+       - Fixed-fixed: at or near center for symmetric loading (x = L/2)
+
+    **When to use each formula:**
+    - Use these directly when your loading matches exactly
+    - For other cases, use superposition (next section) or double integration method
+    - Always verify: units must work out to length (meters)
+
+    </Card>
 
   </TabItem>
 </Tabs>
 
 ### Superposition Principle
 
-For multiple loads, deflections can be added algebraically:
+When a beam experiences multiple loads simultaneously, we can find the total deflection by calculating each load's contribution separately and then **adding them together**.
+
+<Card title="📊 Superposition for Beam Deflections" icon="document">
+
+**The principle:**
 
 $$\delta_{total} = \delta_1 + \delta_2 + \delta_3 + \ldots$$
 
-This allows analysis of complex loading by combining standard cases.
+**Why this works:**
+- The elastic curve equation is **linear** in deflection y
+- This means: deflection from load A + deflection from load B = deflection from both loads together
+- This is only valid for **small deflections** and **elastic behavior** (no yielding)
 
+**Step-by-step procedure:**
 
+1. **Identify each load separately** (point loads, distributed loads, moments)
+2. **Calculate deflection from each load** using standard formulas (treating other loads as zero)
+3. **Add all deflections algebraically** (pay attention to signs: downward = negative, upward = positive)
+4. **The result is the total deflection** at any point of interest
+
+**Example: Simply supported beam with center point load P AND uniform load w**
+
+For a beam with length L, both loads act together:
+
+- Deflection from point load P alone: $\delta_P = \frac{PL^3}{48EI}$
+- Deflection from uniform load w alone: $\delta_w = \frac{5wL^4}{384EI}$
+- **Total deflection at center:** $\delta_{total} = \frac{PL^3}{48EI} + \frac{5wL^4}{384EI}$
+
+**Important notes:**
+- All deflections must be calculated **at the same point** (e.g., midspan, or a specific location x)
+- Use the **same coordinate system** for all loads
+- If loads act in opposite directions, their deflections have opposite signs
+- This method works for **any linear-elastic beam problem**
+
+**When superposition is especially useful:**
+- Complex loading patterns (multiple point loads + distributed loads)
+- Unsymmetric loading (loads at different positions)
+- Combination of loads and applied moments
+- Finding deflection at specific points (not just maximum)
+
+**Limitations:**
+- Only valid for **linear elastic materials** (stress ∝ strain)
+- Only valid for **small deflections** (slope $\ll$ 1)
+- Cannot use if beam yields or deforms plastically
+- Cannot use if deflections are large enough to change geometry significantly
+
+</Card>
 
 ## 🏭 Application 1: PCB Sagging in Rack (Electronics)
 
@@ -170,7 +407,7 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
 :::note[System Problem Statement]
 - **Loading condition:** Uniformly distributed load (UDL) from component weight
-- **Support configuration:** Simply supported (both ends supported)
+- **Support configuration:** Fixed-fixed (both ends clamped/screwed down)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
 	![PCB Standoff Deflection](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/pcb-standoff-deflection.png)
@@ -187,16 +424,16 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 <Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![PCB Standoff Simply Supported](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/pcb-standoff-simply-supported.png)
+	![PCB Standoff Simply Supported](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/fixed-fixed-udl-beam.png)
   </TailwindWrapper>
 </div>
 **Given:**
 - PCB dimensions: Length L = 200 mm, width b = 100 mm, thickness h = 1.6 mm
-- Uniformly distributed load: w = 12 N total weight (components)
-- UDL intensity: q = 12 N / 0.2 m = 60 N/m
+- Uniformly distributed load: 12 N total weight (components)
+- UDL intensity: W = 12 N / 0.2 m = 60 N/m
 - Material: FR4 composite (E = 20 GPa)
 - Second moment of area: I = bh³/12 = (100 × 1.6³)/12 = 34.13 mm⁴ = 3.413 × 10⁻¹¹ m⁴
-- Support type: Simply supported at both ends (pins at x = 0 and x = 200 mm)
+- Support type: Fixed-fixed at both ends (screwed/clamped at x = 0 and x = 200 mm)
 
 </Card>
 
@@ -207,17 +444,19 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
 <Steps>
 
-1. **Identify the deflection formula for simply supported beam with UDL:**
+1. **Identify the deflection formula for fixed-fixed beam with UDL:**
 
-   For uniform load across entire span:
+   For uniform load across entire span with both ends clamped:
 
-   $$\delta_{max} = \frac{5wL^4}{384EI}$$
+   $$\delta_{max} = \frac{wL^4}{384EI}$$
 
    Where:
    - w = distributed load intensity (N/m)
    - L = span length (m)
    - E = Young's modulus (Pa)
    - I = second moment of area (m⁴)
+
+   **Note:** This is 5× stiffer than simply supported (which has coefficient 5/384 instead of 1/384)
 
 2. **Convert units to SI:**
 
@@ -228,15 +467,15 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
 3. **Calculate maximum deflection at midspan:**
 
-   $$\delta_{max} = \frac{5 \times 60 \times (0.2)^4}{384 \times 20 \times 10^9 \times 3.413 \times 10^{-11}}$$
+   $$\delta_{max} = \frac{60 \times (0.2)^4}{384 \times 20 \times 10^9 \times 3.413 \times 10^{-11}}$$
 
-   $$\delta_{max} = \frac{5 \times 60 \times 0.0016}{384 \times 20 \times 10^9 \times 3.413 \times 10^{-11}}$$
+   $$\delta_{max} = \frac{60 \times 0.0016}{384 \times 20 \times 10^9 \times 3.413 \times 10^{-11}}$$
 
-   $$\delta_{max} = \frac{0.48}{262.12} = 0.00183 \text{ m} = 1.83 \text{ mm}$$ ✅
+   $$\delta_{max} = \frac{0.096}{262,118.4} = 0.000366 \text{ m} = 0.366 \text{ mm}$$ ✅
 
 4. **Calculate deflection as percentage of span:**
 
-   $$\frac{\delta_{max}}{L} = \frac{1.83}{200} = 0.00915 = \frac{L}{109}$$ ✅
+   $$\frac{\delta_{max}}{L} = \frac{0.366}{200} = 0.00183 = \frac{L}{546}$$ ✅
 
 </Steps>
 
@@ -252,17 +491,20 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 1. **Understand PCB deflection limits:**
 
    Industry standards for PCB deflection:
-   - **IPC-2221 guideline:** Maximum deflection < L/100 for boards with components
+   - **IPC-2221 guideline:** Maximum deflection less than L/100 for boards with components
    - **Conservative limit:** L/150 for boards with sensitive components (BGAs, fine-pitch ICs)
-   - **Calculated deflection:** L/109 ✅
+   - **Calculated deflection:** L/546 ✅
 
 2. **Assess deflection against standards:**
 
-   - Current deflection: 1.83 mm = L/109
+   - Current deflection: 0.366 mm = L/546
    - Recommended limit: L/100 = 2.0 mm
-   - **Status:** Borderline acceptable ⚠️
+   - Conservative limit: L/150 = 1.33 mm
+   - **Status:** Excellent - well within both limits ✅
 
-   The PCB deflection is close to the limit, with only 9% margin (1.83 mm vs 2.0 mm) ✅
+   The PCB deflection is excellent, with large safety margins:
+   - vs L/100 limit: 0.366 mm vs 2.0 mm (82% margin) ✅
+   - vs L/150 limit: 0.366 mm vs 1.33 mm (72% margin) ✅
 
 3. **Solder joint stress mechanisms:**
 
@@ -281,10 +523,11 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
 5. **Risk assessment:**
 
-   **At current deflection (1.83 mm):**
-   - ✅ Acceptable for: Through-hole components with compliant leads
-   - ⚠️ Marginal for: Standard SMD components (resistors, capacitors, SOICs)
-   - ❌ Unacceptable for: BGAs, QFNs, high-reliability applications (medical, aerospace)
+   **At current deflection (0.366 mm):**
+   - ✅ Excellent for: Through-hole components with compliant leads
+   - ✅ Acceptable for: Standard SMD components (resistors, capacitors, SOICs)
+   - ✅ Good for: BGAs, QFNs, fine-pitch components
+   - ⚠️ May need review for: Ultra-high reliability applications (medical, aerospace) which may require L/200 or better
 
 </Steps>
 
@@ -297,7 +540,7 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
 <Steps>
 
-1. **Strategy 1: Increase PCB thickness**
+1. **Strategy 1: Increase PCB thickness (if even more stiffness needed)**
 
    Deflection is proportional to I = bh³/12, so increasing thickness has cubic effect:
 
@@ -305,26 +548,28 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
    $$I_{new} = \frac{100 \times (2.0)^3}{12} = 66.67 \text{ mm}^4$$
 
-   $$\delta_{new} = \delta_{old} \times \frac{I_{old}}{I_{new}} = 1.83 \times \frac{34.13}{66.67} = 0.94 \text{ mm}$$ ✅
+   $$\delta_{new} = \delta_{old} \times \frac{I_{old}}{I_{new}} = 0.366 \times \frac{34.13}{66.67} = 0.187 \text{ mm}$$ ✅
 
-   **Improvement:** 49% deflection reduction → L/213 (well within L/150 limit)
+   **Improvement:** 49% deflection reduction → L/1070 (extremely stiff)
 
    **Trade-offs:**
    - ✅ Simple solution, standard thickness available
+   - ✅ Provides extra margin for high-reliability applications
    - ❌ Increased material cost (~25%)
    - ❌ Heavier board (25% weight increase)
+   - ⚠️ **May be unnecessary** - current design already meets standards
 
 2. **Strategy 2: Add intermediate support/stiffener**
 
    Adding a central support effectively creates two 100 mm spans:
 
-   $$\delta_{new} = \frac{5wL^4}{384EI} \text{ with } L = 0.1 \text{ m}$$
+   $$\delta_{new} = \frac{wL^4}{384EI} \text{ with } L = 0.1 \text{ m}$$
 
-   $$\delta_{new} = \frac{5 \times 60 \times (0.1)^4}{384 \times 20 \times 10^9 \times 3.413 \times 10^{-11}}$$
+   $$\delta_{new} = \frac{60 \times (0.1)^4}{384 \times 20 \times 10^9 \times 3.413 \times 10^{-11}}$$
 
-   $$\delta_{new} = \frac{0.003}{262,118.4} = 0.0000114 \text{ m} = 0.0114 \text{ mm}$$ ✅
+   $$\delta_{new} = \frac{0.0006}{262,118.4} = 0.00000229 \text{ m} = 0.00229 \text{ mm}$$ ✅
 
-   **Improvement:** 99.4% deflection reduction → L/17,544 (excellent)
+   **Improvement:** 99.4% deflection reduction → L/87,336 (extremely stiff)
 
    **Implementation options:**
    - Metal stiffening rail bonded to PCB underside
@@ -336,6 +581,7 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
    - ✅ No change to PCB material or thickness
    - ❌ Requires mechanical redesign of rack
    - ❌ Adds assembly complexity
+   - ⚠️ **Likely unnecessary** - current fixed-fixed mounting already provides excellent stiffness
 
 3. **Strategy 3: Use composite stiffener strips**
 
@@ -351,9 +597,9 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
    $$I_{composite} \approx \frac{170 \times 1.6^3}{12} = 58.0 \text{ mm}^4$$
 
-   $$\delta_{new} = 1.83 \times \frac{34.13}{58.0} = 1.08 \text{ mm}$$ ✅
+   $$\delta_{new} = 0.366 \times \frac{34.13}{58.0} = 0.215 \text{ mm}$$ ✅
 
-   **Improvement:** 41% deflection reduction → L/185 (acceptable)
+   **Improvement:** 41% deflection reduction → L/930 (excellent)
 
    **Trade-offs:**
    - ✅ Moderate improvement without major redesign
@@ -377,17 +623,22 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
    - ❌ Limited by circuit routing constraints
    - ❌ May conflict with thermal management
 
-5. **Recommended combined approach:**
+5. **Assessment and recommendations:**
 
-   **For high-reliability applications:**
-   1. Increase PCB thickness to 2.0 mm (primary solution)
-   2. Optimize component placement (secondary benefit)
-   3. Target deflection: < 1.0 mm (L/200 or better)
+   **Current design status:**
+   - Deflection: 0.366 mm = L/546
+   - **The current fixed-fixed mounting already provides excellent stiffness** ✅
+   - Meets IPC-2221 standard (L/100) with 82% margin
+   - Meets conservative limit (L/150) with 72% margin
 
-   **For cost-sensitive applications:**
-   1. Add edge stiffeners (aluminum strips)
-   2. Optimize component placement
-   3. Target deflection: < 1.3 mm (L/150)
+   **If additional improvements are needed (high-reliability applications):**
+   1. **Keep current design** - it's already excellent for most applications
+   2. **If ultra-high reliability required (L/200 or better):**
+      - Increase to 2.0 mm thickness → δ = 0.187 mm (L/1070)
+      - Or add edge stiffeners → δ = 0.215 mm (L/930)
+   3. **Optimize component placement** - always a good practice regardless
+
+   **Key insight:** Fixed-fixed mounting is 5× stiffer than simply supported would be, making this design inherently robust.
 
 </Steps>
 
@@ -395,34 +646,40 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 
 ---
 
-## 🏭 Application 2: CT Scanner Rotating Arm (Mechatronics/Medical)
+## 🏭 Application 2: Mobile C-Arm Fluoroscopy System (Mechatronics/Medical)
 
-A computed tomography (CT) scanner uses a rotating gantry arm to position the X-ray source and detector array around the patient. The cantilever arm must maintain precise positioning despite the weight of the scanner head.
+A mobile C-arm fluoroscopy system is used in operating rooms and clinics for real-time X-ray imaging during surgical procedures. The C-shaped cantilever arm extends from a vertical support column, holding the X-ray source on one end and the detector panel on the opposite end. The arm must maintain precise alignment between source and detector despite their combined weight to produce clear images.
 
 :::note[System Problem Statement]
-- **Loading condition:** Tip load (scanner head weight)
-- **Support configuration:** Cantilever (fixed at base, free at tip)
-
+- **Loading condition:** Tip load (combined weight of X-ray source and detector assembly)
+- **Support configuration:** Cantilever (fixed at vertical column, free at detector end)
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![C-Arm Cantilever Configuration](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/mobile-c-arm-fluoroscopy-system.webp)
+  </TailwindWrapper>
+</div>
 **What we need to analyze:**
-1. **Tip deflection** under scanner head weight
-2. **Stiffness requirements** for imaging precision
-3. **Allowable deflection limit** using L/250 rule
+1. **Tip deflection** under combined X-ray source and detector weight
+2. **Stiffness requirements** for imaging precision and source-detector alignment
+3. **Allowable deflection limit** for medical imaging applications
 
-**Key Question:** Does the cantilever arm meet stiffness requirements for sub-millimeter imaging precision, and what deflection limit should be enforced?
+**Key Question:** Does the cantilever arm meet stiffness requirements for sub-millimeter imaging precision during surgical procedures, and what design improvements are needed?
 :::
 
 <Card title="🔧 Equivalent System Model" icon="document">
-
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Mobile C-Arm Fluoroscopy System Fixed-free Supported](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/fixed-free-point-load-c-arm-fluoroscopy-system.png)
+  </TailwindWrapper>
+</div>
 **Given:**
-- Cantilever arm length: L = 2.0 m
-- Tip load: P = 1000 N (scanner head assembly weight)
-- Cross-section: Hollow aluminum tube
-  - Outer diameter: OD = 100 mm
-  - Wall thickness: t = 5 mm
-  - Inner diameter: ID = OD - 2t = 90 mm
-- Material: Aluminum alloy (E = 70 GPa)
-- Second moment of area: I = π(OD⁴ - ID⁴)/64 = π(100⁴ - 90⁴)/64 = 1.69 × 10⁶ mm⁴ = 1.69 × 10⁻⁶ m⁴
-- Support type: Fixed (cantilevered from gantry rotation mechanism)
+- Cantilever arm length (from column to detector): L = 1.2 m
+- Tip load: P = 800 N (combined X-ray source ~400 N + detector assembly ~400 N at effective center)
+- Cross-section: Hollow steel C-shaped channel
+  - Outer diameter (circular arc approximation): OD = 120 mm
+  - Wall thickness: t = 8 mm
+  - Inner diameter: ID = OD - 2t = 104 mm
+- Material: High-strength steel (E = 210 GPa)
 
 </Card>
 
@@ -447,30 +704,30 @@ A computed tomography (CT) scanner uses a rotating gantry arm to position the X-
 
 2. **Calculate second moment of area for hollow circular section:**
 
-   $$I = \frac{\pi}{64}(OD^4 - ID^4) = \frac{\pi}{64}(100^4 - 90^4) \text{ mm}^4$$
+   $$I = \frac{\pi}{64}(OD^4 - ID^4) = \frac{\pi}{64}(120^4 - 104^4) \text{ mm}^4$$
 
-   $$I = \frac{\pi}{64}(100,000,000 - 65,610,000) = \frac{\pi \times 34,390,000}{64}$$
+   $$I = \frac{\pi}{64}(207,360,000 - 116,985,856) = \frac{\pi \times 90,374,144}{64}$$
 
-   $$I = 1,689,000 \text{ mm}^4 = 1.69 \times 10^6 \text{ mm}^4 = 1.69 \times 10^{-6} \text{ m}^4$$ ✅
+   $$I = 4,436,230 \text{ mm}^4 = 4.44 \times 10^6 \text{ mm}^4$$ ✅
 
 3. **Convert units to SI:**
 
-   - P = 1000 N
-   - L = 2.0 m
-   - E = 70 GPa = 70 × 10⁹ Pa
-   - I = 1.69 × 10⁻⁶ m⁴ ✅
+   - P = 800 N
+   - L = 1.2 m
+   - E = 210 GPa = 210 × 10⁹ Pa
+   - I = 4.44 × 10⁻⁶ m⁴ ✅
 
 4. **Calculate tip deflection:**
 
-   $$\delta_{tip} = \frac{1000 \times (2.0)^3}{3 \times 70 \times 10^9 \times 1.69 \times 10^{-6}}$$
+   $$\delta_{tip} = \frac{800 \times (1.2)^3}{3 \times 210 \times 10^9 \times 4.44 \times 10^{-6}}$$
 
-   $$\delta_{tip} = \frac{1000 \times 8}{3 \times 70 \times 10^9 \times 1.69 \times 10^{-6}}$$
+   $$\delta_{tip} = \frac{800 \times 1.728}{3 \times 210 \times 10^9 \times 4.44 \times 10^{-6}}$$
 
-   $$\delta_{tip} = \frac{8000}{354,900,000} = 0.02253 \text{ m} = 22.5 \text{ mm}$$ ✅
+   $$\delta_{tip} = \frac{1382.4}{2,797,200,000} = 0.000494 \text{ m} = 0.494 \text{ mm}$$ ✅
 
 5. **Calculate deflection as fraction of span:**
 
-   $$\frac{\delta_{tip}}{L} = \frac{22.5}{2000} = 0.01125 = \frac{L}{89}$$ ✅
+   $$\frac{\delta_{tip}}{L} = \frac{0.494}{1200} = 0.000412 = \frac{L}{2429}$$ ✅
 
 </Steps>
 
@@ -483,84 +740,99 @@ A computed tomography (CT) scanner uses a rotating gantry arm to position the X-
 
 <Steps>
 
-1. **CT scanner precision requirements:**
+1. **C-arm fluoroscopy precision requirements:**
 
-   Modern CT scanners require:
-   - **Spatial resolution:** 0.5-1.0 mm (ability to distinguish adjacent structures)
-   - **Positioning accuracy:** ±0.5 mm (to maintain focal point alignment)
-   - **Slice thickness:** 0.5-10 mm (depending on scan protocol)
-   - **Detector pixel size:** 0.5-1.0 mm (typical detector element spacing) ✅
+   Mobile C-arm fluoroscopy systems require:
+   - **Spatial resolution:** 1.0-2.0 mm (ability to visualize bones, instruments, contrast agents)
+   - **Source-detector alignment:** ±1.0 mm (to maintain image geometry and prevent distortion)
+   - **Image intensifier positioning:** ±0.5-1.0 mm (for consistent image quality)
+   - **Detector pixel size:** 0.2-0.4 mm (typical flat-panel detector element spacing)
+
+   **Note:** C-arms have less stringent requirements than CT scanners because they produce 2D projection images rather than 3D reconstructions ✅
+
+   **Why the C-shape design?**
+   - **Structural efficiency:** The curved C-section provides a continuous load path from source to detector, distributing loads more evenly than a straight cantilever
+   - **Simplification for analysis:** We model the C-arm as an equivalent straight cantilever beam because the bending behavior is dominated by the cantilever length (base to detector), and the curved geometry has similar flexural rigidity to a straight beam of the same cross-section. This simplification is valid for calculating maximum deflection at the detector end ✅
 
 2. **Impact of arm deflection on image quality:**
 
-   **Calculated deflection: 22.5 mm**
+   **Calculated deflection: 0.494 mm**
 
    **Effects on imaging:**
-   - **Geometric distortion:** Tip deflection of 22.5 mm causes severe X-ray source and detector misalignment relative to patient
-   - **Focal point drift:** 22.5 mm deflection creates catastrophic misalignment between source and detector
-   - **Image artifacts:** This level of deflection completely destroys projection geometry → severe reconstruction errors
-   - **Resolution degradation:** Massive position errors render fine details completely unresolvable ✅
+   - **Source-detector misalignment:** 0.494 mm deflection creates minor geometric distortion
+   - **Focal point stability:** Acceptable for real-time fluoroscopy guidance
+   - **Image sharpness:** Within tolerance for surgical navigation and fracture reduction
+   - **Overall assessment:** Borderline acceptable, but close to design limits ⚠️
 
 3. **Deflection contribution to total positioning error:**
 
    **Total positioning error budget:**
-   - Mechanical deflection: 22.5 mm (calculated) ✅
-   - Bearing clearances: ±0.2 mm (rotational play)
-   - Thermal expansion: ±0.3 mm (during operation)
-   - Vibration amplitude: ±0.1 mm (gantry rotation)
-   - **Total error (RSS):** √(22.5² + 0.2² + 0.3² + 0.1²) = 22.5 mm (deflection dominates) ❌
+   - Mechanical deflection (static): 0.494 mm (calculated) ✅
+   - C-arm rotation clearances: ±0.3 mm (bearing play and orbital track tolerance)
+   - Thermal expansion: ±0.2 mm (during extended procedures)
+   - Vibration amplitude: ±0.15 mm (from positioning motors and floor vibration)
+   - **Total error (RSS):** √(0.494² + 0.3² + 0.2² + 0.15²) = 0.63 mm ⚠️
 
 4. **Assessment against precision requirements:**
 
    **Current design performance:**
-   - Required positioning accuracy: ±0.5 mm
-   - Calculated total error: 22.5 mm
-   - **Deflection alone exceeds requirement by 45×** ❌
+   - Required source-detector alignment: ±1.0 mm
+   - Calculated total error: 0.63 mm
+   - **Safety margin:** 37% margin below requirement ✅
+
+   **However, consider dynamic loading:**
+   - During repositioning: Dynamic loads can increase deflection by 1.5-2×
+   - Estimated maximum deflection: 0.494 × 1.5 = 0.74 mm
+   - Total error with dynamics: ~0.86 mm (14% margin remaining) ⚠️
 
    **Impact on imaging:**
-   - ❌ Completely unacceptable for: All medical imaging applications
-   - ❌ Would produce: Severe image blur, distortion, and artifacts
-   - ❌ Clinical usability: Zero - images would be diagnostically worthless
+   - ✅ Acceptable for: Orthopedic procedures, vascular imaging, general fluoroscopy
+   - ⚠️ Marginal for: Neuro-interventional procedures requiring high precision
+   - ❌ Insufficient for: Cardiac catheterization labs (require less than 0.3 mm deflection)
 
 5. **Stiffness-driven design considerations:**
 
-   **Why stiffness dominates CT scanner arm design:**
-   - **Stress is not the issue:** Calculated bending stress is very low (~19 MPa < < yield of 275 MPa)
-   - **Deflection controls design:** Must maintain sub-millimeter positioning, current design has 22.5 mm deflection
-   - **Dynamic effects:** Rotation at 1-3 RPM creates additional deflection from centrifugal loads
+   **Why stiffness dominates C-arm design:**
+   - **Stress is not the issue:** Calculated bending stress ≈ 12 MPa ≪ yield of 350+ MPa
+   - **Deflection controls design:** Must maintain source-detector alignment within 1 mm
+   - **Dynamic effects:** C-arm repositioning creates transient loads and vibrations
    - **Design is stiffness-limited, not strength-limited** ✅
-   - **Current design is grossly inadequate** - requires complete redesign ❌
+   - **Current design meets basic requirements but has limited safety margin** ⚠️
 
 6. **Recommendations for improved precision:**
 
-   **To achieve ±0.5 mm positioning target (45× improvement needed):**
+   **To achieve high-precision target (0.25 mm deflection for cardiac/neuro applications):**
 
-   **Option 1: Dramatically increase tube diameter**
-   - Target I needed: I_needed = 22.5/0.5 × 1.69×10⁶ = 76.1×10⁶ mm⁴
-   - For hollow tube with t=5mm: Requires OD ≈ 220 mm
-   - **Improvement:** δ reduces to 0.50 mm ✅
+   **Option 1: Increase tube diameter**
+   - Target I needed: I_needed = 0.494/0.25 × 4.44×10⁻⁶ = 8.77×10⁻⁶ m⁴
+   - For hollow tube with t=8mm: Requires OD ≈ 149 mm
+   - **Improvement:** δ reduces to 0.25 mm ✅
+   - **Trade-off:** 24% larger diameter, ~45% heavier
 
-   **Option 2: Much thicker wall**
-   - Keep OD = 100 mm, increase wall to t = 25 mm (ID = 50 mm)
-   - I = π(100⁴-50⁴)/64 = 9.20×10⁶ mm⁴
-   - **Improvement:** δ reduces to 4.1 mm (still 8× too large) ⚠️
+   **Option 2: Thicker wall section**
+   - Keep OD = 120 mm, increase wall to t = 12 mm (ID = 96 mm)
+   - I = π(120⁴-96⁴)/64 = 6.01×10⁶ mm⁴
+   - **Improvement:** δ reduces to 0.37 mm ✅
+   - **Trade-off:** 50% heavier, reduced internal cable routing space, still marginal for high-precision
 
-   **Option 3: Use carbon fiber composite**
-   - Carbon fiber: E = 150 GPa (2.14× stiffer), ρ = 1600 kg/m³ (60% lighter)
-   - With OD = 150 mm, t = 8 mm: I ≈ 15×10⁶ mm⁴
-   - **Improvement:** δ reduces to 0.7 mm (acceptable) ✅
+   **Option 3: Add counterweight system**
+   - Reduce net tip load from 800 N to ~296 N (63% counterweighting)
+   - **Improvement:** δ reduces to 0.18 mm ✅
+   - **Trade-off:** Increases system weight, requires larger motor torques
 
-   **Option 4: Add counterweight system**
-   - Reduce net tip load from 1000 N to ~50 N (95% counterweighting)
-   - **Improvement:** δ reduces to 1.1 mm (still 2× too large) ⚠️
+   **Option 4: Use carbon fiber composite**
+   - Carbon fiber/epoxy: E = 140 GPa (67% of steel), ρ = 1600 kg/m³ (20% of steel)
+   - With OD = 140 mm, t = 10 mm: I = 8.68×10⁶ mm⁴, lighter weight
+   - **Improvement:** δ reduces to 0.38 mm, 50% weight reduction ✅
+   - **Trade-off:** Higher cost, X-ray transparency concerns (good for imaging, bad for structural visibility), still marginal
 
-   **Recommended solution:** Large diameter carbon fiber tube (OD = 180-200 mm, t = 10 mm) with partial counterweighting to achieve target deflection < 0.5 mm
+   **Recommended solution:** For general fluoroscopy, current design is adequate. For high-precision cardiac/neuro applications, either increase diameter to 149 mm or add 63% counterweighting to achieve less than 0.25 mm deflection target.
 
 </Steps>
 
 </details>
 
-### Step 3: Estimate Allowable Deflection Limit (L/250 Rule)
+### Step 3: Establish Allowable Deflection Limits for Medical Imaging
 
 <details>
 <summary>**Click to reveal allowable deflection analysis**</summary>
@@ -576,71 +848,71 @@ A computed tomography (CT) scanner uses a rotating gantry arm to position the X-
 
    The L/250 rule is a **general guideline** for structures where visible sagging or functional issues should be avoided ✅
 
-2. **Apply L/250 rule to CT scanner arm:**
+2. **Apply L/250 rule to C-arm:**
 
-   $$\delta_{allowable} = \frac{L}{250} = \frac{2000}{250} = 8.0 \text{ mm}$$ ✅
+   $$\delta_{allowable} = \frac{L}{250} = \frac{1200}{250} = 4.8 \text{ mm}$$ ✅
 
 3. **Compare calculated deflection to L/250 limit:**
 
-   - Calculated deflection: 22.5 mm
-   - L/250 limit: 8.0 mm
-   - **Ratio:** 22.5 / 8.0 = 2.81 (281% of allowable)
-   - **Deflection FAILS even the general L/250 structural rule** ❌
+   - Calculated deflection: 0.494 mm
+   - L/250 limit: 4.8 mm
+   - **Ratio:** 0.494 / 4.8 = 0.103 (10.3% of allowable)
+   - **Deflection EASILY PASSES the general L/250 structural rule** ✅
 
-4. **Critical assessment: Is L/250 appropriate for CT scanners?**
+4. **Critical assessment: Is L/250 appropriate for C-arm fluoroscopy?**
 
-   **NO - L/250 is far too lenient for precision medical imaging, but this design fails even that basic structural criterion!**
+   **NO - L/250 is far too lenient for precision medical imaging. However, it's useful as a baseline structural check.**
 
    **Why L/250 is inadequate for medical imaging:**
    - L/250 is designed for **structural deflection limits** (preventing damage, visible sagging)
-   - CT scanners require **precision positioning limits** (sub-millimeter accuracy)
-   - L/250 = 8.0 mm would cause severe image artifacts and degradation
-   - **For CT scanners, L/4000 is more appropriate** (0.5 mm target) ✅
+   - C-arm fluoroscopy requires **precision positioning limits** (source-detector alignment)
+   - L/250 = 4.8 mm would cause unacceptable image distortion and blur
+   - **For C-arms, application-specific limits of 0.5-1.0 mm are more appropriate** ✅
 
-   **Why this design fails spectacularly:**
-   - Current deflection (22.5 mm) is **2.8× worse than even basic structural limits**
-   - This is **45× worse than required medical imaging precision** (0.5 mm)
-   - The tube is far too thin-walled and small-diameter for this application
+5. **Establish appropriate deflection limit for C-arm fluoroscopy:**
 
-5. **Establish appropriate deflection limit for medical imaging:**
+   **Recommended deflection limit hierarchy for C-arms:**
 
-   **Recommended deflection limit hierarchy:**
+   **High-precision interventional (cardiac/neuro):**
+   - Target: L/4000 to L/6000 = 0.20-0.30 mm
+   - Maximum: L/2400 = 0.50 mm
+   - Current design: 0.494 mm → **fails maximum limit** ❌
 
-   **High-precision diagnostic CT:**
-   - Target: L/4000 = 0.5 mm
-   - Maximum: L/2000 = 1.0 mm
-   - Current design: L/89 = 22.5 mm → **catastrophically inadequate** ❌
+   **Standard surgical fluoroscopy:**
+   - Target: L/2000 = 0.60 mm
+   - Maximum: L/1200 = 1.0 mm
+   - Current design: 0.494 mm → **acceptable (51% margin)** ✅
 
-   **Standard diagnostic CT:**
-   - Target: L/2000 = 1.0 mm
-   - Maximum: L/1000 = 2.0 mm
-   - Current design: **fails by 22.5× / 11.25×** ❌
-
-   **Low-resolution screening CT:**
-   - Target: L/1000 = 2.0 mm
-   - Maximum: L/500 = 4.0 mm
-   - Current design: **fails by 11.25× / 5.6×** ❌
+   **General orthopedic/trauma imaging:**
+   - Target: L/1200 = 1.0 mm
+   - Maximum: L/800 = 1.5 mm
+   - Current design: 0.494 mm → **excellent (67% margin)** ✅
 
 6. **Design adequacy summary:**
 
-   | Criterion | Limit | Calculated | Status |
-   |-----------|-------|------------|--------|
-   | L/250 structural rule | 8.0 mm | 22.5 mm | ❌ Fail (281% over limit) |
-   | High-precision imaging | 0.5 mm | 22.5 mm | ❌ Catastrophic failure (4500% over) |
-   | Standard diagnostic imaging | 1.0 mm | 22.5 mm | ❌ Catastrophic failure (2250% over) |
-   | Low-resolution screening | 2.0 mm | 22.5 mm | ❌ Catastrophic failure (1125% over) |
+   | Application Type | Target Limit | Maximum Limit | Calculated | Status |
+   |------------------|--------------|---------------|------------|--------|
+   | L/250 structural rule | — | 4.8 mm | 0.494 mm | ✅ Pass (90% margin) |
+   | High-precision interventional | 0.25 mm | 0.50 mm | 0.494 mm | ❌ Fail (exceeds by 1%) |
+   | Standard surgical | 0.60 mm | 1.0 mm | 0.494 mm | ✅ Good (51% margin) |
+   | General orthopedic | 1.0 mm | 1.5 mm | 0.494 mm | ✅ Excellent (67% margin) |
 
-   **Conclusion:** The L/250 structural rule is **not appropriate** for medical imaging equipment, but this design fails even that basic criterion. The current design is **completely unsuitable** for any medical imaging application and requires fundamental redesign with much larger cross-section or different material.
+   **Conclusion:** The L/250 structural rule is **not appropriate** as a design criterion for medical imaging equipment, but it serves as a useful baseline check. The current design is **adequate for general surgical and orthopedic fluoroscopy** but **fails requirements for high-precision cardiac/neuro interventional procedures**.
 
-7. **Recommended design modifications:**
+7. **Application-specific design recommendations:**
 
-   **To achieve high-precision target (0.5 mm) - requires 45× stiffness increase:**
-   - Increase outer diameter to 220 mm (t=5mm): δ = 0.50 mm ✅
-   - Use large carbon fiber tube OD=180mm (t=10mm, E=150 GPa): δ ≈ 0.45 mm ✅
-   - Reduce arm length to 1.0 m (if clinically acceptable): δ = 2.8 mm (still 5.6× too large) ❌
-   - Add 95% counterweight system (very heavy): Reduce load to 50 N → δ = 1.1 mm (still inadequate) ❌
+   **For general surgical applications (current design is adequate):**
+   - Current δ = 0.494 mm meets requirements ✅
+   - Consider 20-30% safety margin for dynamic loads
+   - Monitor deflection during service life (bearing wear increases deflection)
 
-   **Realistic solution:** Large diameter (OD = 200-220 mm) aluminum or carbon fiber tube with optimized wall thickness, combined with partial counterweighting to achieve δ < 0.5 mm target.
+   **For high-precision interventional applications (improvement needed):**
+   - Target δ less than 0.25 mm (requires ~50% deflection reduction)
+   - **Option 1:** Increase OD to 149 mm (t=8mm) → δ = 0.25 mm ✅
+   - **Option 2:** Increase wall thickness to 12 mm → δ = 0.37 mm (still insufficient) ❌
+   - **Option 3:** Add 63% counterweighting → δ = 0.18 mm ✅
+
+   **Key insight:** Unlike general structural design where L/250 is a universal rule, medical imaging requires **application-specific deflection limits** based on image quality requirements. C-arms for orthopedic surgery can tolerate 1.0 mm deflection, while cardiac catheterization labs require less than 0.3 mm - a 3× difference driven by clinical needs, not arbitrary rules.
 
 </Steps>
 
@@ -648,180 +920,187 @@ A computed tomography (CT) scanner uses a rotating gantry arm to position the X-
 
 ---
 
-## 🏭 Application 3: Linear Actuator Guide Beam (Mechanical)
+## 🏭 Application 3: CNC Machine Gantry Rail (Mechatronics)
 
-A linear actuator system uses a fixed-fixed beam as a precision guide rail. The beam experiences distributed frictional forces as the actuator carriage travels along its length during operation.
+A CNC router or laser cutter uses a simply supported beam as the Y-axis gantry support rail. The moving gantry (carrying motors, linear guides, and tool head) creates a concentrated load that travels along the beam during machining operations. The rail must maintain stiffness to preserve cutting accuracy.
 
 :::note[System Problem Statement]
-- **Loading condition:** Uniformly distributed load (distributed frictional force)
-- **Support configuration:** Fixed–fixed (both ends rigidly clamped)
-
+- **Loading condition:** Point load at center (gantry assembly at midspan - worst-case deflection position)
+- **Support configuration:** Simply supported (pin-roller) at both ends
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![CNC Gantry Rail Simply Supported](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/CNC-machine-gantry-rail.png)
+  </TailwindWrapper>
+</div>
 **What we need to analyze:**
-1. **Maximum deflection** in the fixed-fixed configuration
-2. **Comparison** with equivalent cantilever design
-3. **Stiffness improvement strategies** for precision applications
+1. **Maximum midspan deflection** under gantry load
+2. **Comparison** with fixed-fixed and cantilever configurations
+3. **Stiffness improvement strategies** for high-precision machining
 
-**Key Question:** How does the fixed-fixed support configuration improve stiffness compared to cantilever or simply supported alternatives, and what further improvements are possible?
+**Key Question:** Does the simply supported rail meet precision requirements for CNC machining, and how do different support configurations affect positioning accuracy?
 :::
 
 <Card title="🔧 Equivalent System Model" icon="document">
-
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Simply Supported Point Load Beam](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/gantry-rail-loading-diagram.png)
+  </TailwindWrapper>
+</div>
 **Given:**
-- Beam length: L = 1.5 m
-- Uniformly distributed load: w = 300 N/m (frictional force along guide rail)
-- Total load: W = wL = 300 × 1.5 = 450 N
-- Cross-section: Rectangular steel bar
-  - Width: b = 100 mm
-  - Height: h = 20 mm
-  - Area: A = 2000 mm²
+- Rail length (Y-axis span): L = 1.0 m
+- Point load at center: P = 500 N (gantry assembly: motors + linear guides + tool head)
+- Cross-section: Rectangular steel rail/extrusion
+  - Width: b = 80 mm
+  - Height: h = 30 mm
+  - Area: A = 2400 mm²
 - Material: Steel (E = 210 GPa)
-- Second moment of area: I = bh³/12 = (100 × 20³)/12 = 66,667 mm⁴ = 6.67 × 10⁻⁸ m⁴
-- Support type: Fixed at both ends (fully clamped, no rotation or translation)
 
 </Card>
 
-### Step 1: Calculate Maximum Deflection
+### Step 1: Calculate Maximum Midspan Deflection
 
 <details>
 <summary>**Click to reveal maximum deflection calculations**</summary>
 
 <Steps>
 
-1. **Identify the deflection formula for fixed-fixed beam with UDL:**
+1. **Identify the deflection formula for simply supported beam with center point load:**
 
-   For uniform load across entire span with both ends fixed:
+   For concentrated load P at the center of a simply supported span:
 
-   $$\delta_{max} = \frac{wL^4}{384EI}$$
+   $$\delta_{max} = \frac{PL^3}{48EI}$$
 
    Where:
-   - w = distributed load intensity (N/m)
+   - P = point load at center (N)
    - L = span length (m)
    - E = Young's modulus (Pa)
    - I = second moment of area (m⁴)
 
-   **Note:** This formula gives maximum deflection at midspan (x = L/2) ✅
+   **Note:** This formula gives maximum deflection at midspan (x = L/2) where the load is applied ✅
 
 2. **Calculate second moment of area for rectangular section:**
 
-   $$I = \frac{bh^3}{12} = \frac{100 \times (20)^3}{12} = \frac{100 \times 8000}{12} = 66,667 \text{ mm}^4$$
+   $$I = \frac{bh^3}{12} = \frac{80 \times (30)^3}{12} = \frac{80 \times 27,000}{12} = 180,000 \text{ mm}^4$$
 
-   $$I = 6.67 \times 10^{-8} \text{ m}^4$$ ✅
+   $$I = 1.80 \times 10^{-7} \text{ m}^4$$ ✅
 
 3. **Convert units to SI:**
 
-   - w = 300 N/m
-   - L = 1.5 m
+   - P = 500 N
+   - L = 1.0 m
    - E = 210 GPa = 210 × 10⁹ Pa
-   - I = 6.67 × 10⁻⁸ m⁴ ✅
+   - I = 1.80 × 10⁻⁷ m⁴ ✅
 
 4. **Calculate maximum deflection at midspan:**
 
-   $$\delta_{max} = \frac{300 \times (1.5)^4}{384 \times 210 \times 10^9 \times 6.67 \times 10^{-8}}$$
+   $$\delta_{max} = \frac{500 \times (1.0)^3}{48 \times 210 \times 10^9 \times 1.80 \times 10^{-7}}$$
 
-   $$\delta_{max} = \frac{300 \times 5.0625}{384 \times 210 \times 10^9 \times 6.67 \times 10^{-8}}$$
+   $$\delta_{max} = \frac{500 \times 1.0}{48 \times 210 \times 10^9 \times 1.80 \times 10^{-7}}$$
 
-   $$\delta_{max} = \frac{1518.75}{5,382,720} = 0.000282 \text{ m} = 0.282 \text{ mm}$$ ✅
+   $$\delta_{max} = \frac{500}{1,814,400,000} = 0.0002756 \text{ m} = 0.276 \text{ mm}$$ ✅
 
 5. **Calculate deflection as fraction of span:**
 
-   $$\frac{\delta_{max}}{L} = \frac{0.282}{1500} = 0.000188 = \frac{L}{5319}$$ ✅
+   $$\frac{\delta_{max}}{L} = \frac{0.276}{1000} = 0.000276 = \frac{L}{3623}$$ ✅
 
-   This represents excellent stiffness (L/5319 $\ll$ typical L/250 limit)
+   This represents good stiffness for CNC applications (L/3623 is better than typical L/1000 minimum)
 
 </Steps>
 
 </details>
 
-### Step 2: Compare with Equivalent Cantilever Design
+### Step 2: Compare with Other Support Configurations
 
 <details>
-<summary>**Click to reveal cantilever comparison analysis**</summary>
+<summary>**Click to reveal support configuration comparison analysis**</summary>
 
 <Steps>
 
-1. **Calculate deflection for cantilever with same loading:**
+1. **Calculate deflection for fixed-fixed configuration with same loading:**
 
-   **Cantilever configuration:** One end fixed, one end free, same UDL
+   **Fixed-fixed configuration:** Both ends clamped (no rotation or translation)
 
-   Deflection formula for cantilever with uniform load:
+   Deflection formula for fixed-fixed beam with center point load:
 
-   $$\delta_{cantilever} = \frac{wL^4}{8EI}$$
-
-   **Calculation:**
-
-   $$\delta_{cantilever} = \frac{300 \times (1.5)^4}{8 \times 210 \times 10^9 \times 6.67 \times 10^{-8}}$$
-
-   $$\delta_{cantilever} = \frac{1518.75}{112,560} = 0.0135 \text{ m} = 13.5 \text{ mm}$$ ✅
-
-2. **Calculate deflection for simply supported beam with same loading:**
-
-   **Simply supported configuration:** Pin and roller supports, same UDL
-
-   Deflection formula for simply supported beam with uniform load:
-
-   $$\delta_{simply} = \frac{5wL^4}{384EI}$$
+   $$\delta_{fixed} = \frac{PL^3}{192EI}$$
 
    **Calculation:**
 
-   $$\delta_{simply} = \frac{5 \times 300 \times (1.5)^4}{384 \times 210 \times 10^9 \times 6.67 \times 10^{-8}}$$
+   $$\delta_{fixed} = \frac{500 \times (1.0)^3}{192 \times 210 \times 10^9 \times 1.80 \times 10^{-7}}$$
 
-   $$\delta_{simply} = \frac{5 \times 1518.75}{5,382,720} = 0.00141 \text{ m} = 1.41 \text{ mm}$$ ✅
+   $$\delta_{fixed} = \frac{500}{7,257,600,000} = 0.0000689 \text{ m} = 0.069 \text{ mm}$$ ✅
+
+2. **Calculate deflection for cantilever configuration with same loading:**
+
+   **Cantilever configuration:** One end fixed, load at free end (tip)
+
+   Deflection formula for cantilever with tip point load:
+
+   $$\delta_{cantilever} = \frac{PL^3}{3EI}$$
+
+   **Calculation:**
+
+   $$\delta_{cantilever} = \frac{500 \times (1.0)^3}{3 \times 210 \times 10^9 \times 1.80 \times 10^{-7}}$$
+
+   $$\delta_{cantilever} = \frac{500}{113,400,000} = 0.00441 \text{ m} = 4.41 \text{ mm}$$ ✅
 
 3. **Comparative analysis of support configurations:**
 
    | Configuration | Deflection Formula | Calculated Deflection | Relative Stiffness |
    |---------------|--------------------|-----------------------|--------------------|
-   | **Fixed-Fixed** | wL⁴/(384EI) | **0.282 mm** | **1.0× (baseline)** ✅ |
-   | **Simply Supported** | 5wL⁴/(384EI) | 1.41 mm | 0.2× (5× more deflection) |
-   | **Cantilever** | wL⁴/(8EI) | 13.5 mm | 0.021× (48× more deflection) |
+   | **Fixed-Fixed** | PL³/(192EI) | **0.069 mm** | **4.0× stiffer than simply supported** ✅ |
+   | **Simply Supported** | PL³/(48EI) | **0.276 mm (baseline)** | **1.0×** ✅ |
+   | **Cantilever** | PL³/(3EI) | 4.41 mm | 0.063× (16× more flexible) |
 
 4. **Understand the physics of support stiffness:**
 
-   **Why fixed-fixed is much stiffer:**
-
    **Fixed-Fixed beam:**
-   - ✅ **No rotation** at supports (moment resistance)
+   - ✅ **No rotation** at supports (moment resistance at both ends)
    - ✅ **No translation** at supports (full constraint)
-   - ✅ **Develops negative moments** at supports (counteracts midspan sagging)
-   - ✅ **Midspan moment reduced** by support moments
-   - Result: Maximum deflection is **5× less** than simply supported ✅
+   - ✅ **Develops reaction moments** at supports (counteracts midspan sagging)
+   - ✅ **Midspan moment reduced** significantly by support moments
+   - Result: **4× stiffer** than simply supported ✅
 
-   **Simply supported beam:**
+   **Simply supported beam (current design):**
    - ✅ No translation at supports
    - ❌ Free rotation at supports (no moment resistance)
-   - ❌ Full moment carried by beam bending
-   - Result: Deflection is **5× more** than fixed-fixed
+   - ✅ Allows thermal expansion (roller end can slide longitudinally)
+   - ✅ Easier to manufacture and assemble
+   - Result: **Baseline stiffness** - good balance of performance and practicality ✅
 
    **Cantilever beam:**
    - ✅ No rotation or translation at fixed end
    - ❌ Free end completely unconstrained
-   - ❌ Maximum moment at fixed end with no relief
-   - Result: Deflection is **48× more** than fixed-fixed ✅
+   - ❌ Maximum moment at fixed end, zero at tip
+   - Result: **16× more flexible** than simply supported ✅
 
-5. **Deflection reduction factors:**
+5. **Deflection comparison factors:**
 
-   **Fixed-fixed vs. Simply supported:**
-   - Reduction factor: 5.0×
-   - Formula relationship: $\frac{wL^4}{384EI}$ vs. $\frac{5wL^4}{384EI}$
-   - **Coefficient ratio: 1:5** ✅
+   **Simply supported vs. Fixed-fixed:**
+   - Stiffness ratio: 1:4 (fixed-fixed is 4× stiffer)
+   - Formula relationship: $\frac{PL^3}{48EI}$ vs. $\frac{PL^3}{192EI}$
+   - **Coefficient ratio: 192:48 = 4:1** ✅
 
-   **Fixed-fixed vs. Cantilever:**
-   - Reduction factor: 47.9×
-   - Formula relationship: $\frac{wL^4}{384EI}$ vs. $\frac{wL^4}{8EI}$
-   - **Coefficient ratio: 8:384 = 1:48** ✅
+   **Simply supported vs. Cantilever:**
+   - Stiffness ratio: 16:1 (simply supported is 16× stiffer)
+   - Formula relationship: $\frac{PL^3}{48EI}$ vs. $\frac{PL^3}{3EI}$
+   - **Coefficient ratio: 48:3 = 16:1** ✅
 
-6. **Practical implications for linear actuator design:**
+6. **Practical implications for CNC gantry design:**
 
-   **Why fixed-fixed is preferred:**
-   - **Precision positioning:** Minimal deflection = accurate carriage positioning
-   - **Uniform stiffness:** Symmetric support creates consistent behavior along rail
-   - **Vibration resistance:** Higher natural frequency due to boundary constraints
-   - **Bi-directional loading:** Works equally well for loads in both directions ✅
+   **Why simply supported is commonly used:**
+   - **Thermal management:** Roller end allows linear thermal expansion without inducing stress
+   - **Ease of assembly:** Simpler mounting than fixed-fixed (no moment connections required)
+   - **Cost-effective:** Standard linear rail mounting blocks provide pin-roller support
+   - **Good stiffness:** 16× better than cantilever, adequate for most CNC applications ✅
 
    **When to use other configurations:**
-   - **Cantilever:** When only one end mounting is possible (compact spaces)
-   - **Simply supported:** When thermal expansion must be accommodated
-   - **Fixed-fixed:** When maximum stiffness is required (precision applications) ✅
+   - **Fixed-fixed:** When maximum stiffness is required (high-precision machining, heavy cutting forces)
+      - Requires rigid moment connections at both ends
+      - Must account for thermal expansion stresses
+   - **Cantilever:** When only one-side mounting is possible (space constraints, overhung load)
+      - 16× more flexible - avoid unless necessary
+   - **Simply supported:** Standard choice for most CNC machines (good balance) ✅
 
 </Steps>
 
@@ -834,140 +1113,118 @@ A linear actuator system uses a fixed-fixed beam as a precision guide rail. The 
 
 <Steps>
 
-1. **Strategy 1: Increase beam height (most effective)**
+1. **Strategy 1: Increase rail height (most effective for cost)**
 
    Deflection is proportional to I = bh³/12, so **height has cubic effect:**
 
-   **Option: Increase height from 20 mm to 30 mm**
+   **Option: Increase height from 30 mm to 40 mm**
 
-   $$I_{new} = \frac{100 \times (30)^3}{12} = 225,000 \text{ mm}^4$$
+   $$I_{new} = \frac{80 \times (40)^3}{12} = 426,667 \text{ mm}^4$$
 
-   $$\delta_{new} = \delta_{old} \times \frac{I_{old}}{I_{new}} = 0.282 \times \frac{66,667}{225,000} = 0.083 \text{ mm}$$ ✅
+   $$\delta_{new} = \delta_{old} \times \frac{I_{old}}{I_{new}} = 0.276 \times \frac{180,000}{426,667} = 0.116 \text{ mm}$$ ✅
 
-   **Improvement: 70% deflection reduction (from 0.282 mm to 0.083 mm)**
-
-   **Trade-offs:**
-   - ✅ **Most efficient improvement** per added material
-   - ✅ Increases section modulus for bending strength
-   - ❌ Increases weight by 50% (20mm → 30mm)
-   - ❌ May require larger mounting fixtures
-   - ✅ **Recommended for precision applications** ✅
-
-2. **Strategy 2: Use higher-modulus material**
-
-   **Option: Replace steel (E = 210 GPa) with titanium alloy (E = 110 GPa) ❌**
-   - This actually **reduces** stiffness (lower E → higher δ)
-   - Not recommended
-
-   **Better option: Replace with tool steel or pre-hardened steel (E ≈ 210 GPa)**
-   - Same stiffness, higher hardness for wear resistance ✅
-
-   **Alternative: Carbon fiber composite (E = 150 GPa, but anisotropic)**
-   - Lower density (lighter)
-   - Lower E reduces stiffness slightly
-   - May be beneficial if weight is critical ⚠️
-
-3. **Strategy 3: Optimize cross-section shape**
-
-   **Current section: Rectangular (100 mm × 20 mm)**
-
-   **Option A: I-beam profile**
-   - Concentrate material at top and bottom flanges (away from neutral axis)
-   - For same material volume, I can increase 2-3×
-   - **Challenge:** Complex to manufacture, requires machining or extrusion
-
-   **Option B: Box section (hollow rectangular)**
-   - Outer: 100 mm × 30 mm
-   - Wall thickness: 5 mm
-   - Material saved: ~30% lighter
-   - I increases while weight decreases
-
-   $$I_{box} = \frac{100 \times 30^3 - 90 \times 20^3}{12} = \frac{2,700,000 - 720,000}{12} = 165,000 \text{ mm}^4$$
-
-   $$\delta_{box} = 0.282 \times \frac{66,667}{165,000} = 0.114 \text{ mm}$$ ✅
-
-   **Improvement: 60% deflection reduction + 30% weight reduction**
+   **Improvement: 58% deflection reduction (from 0.276 mm to 0.116 mm)**
 
    **Trade-offs:**
-   - ✅ Excellent stiffness-to-weight ratio
-   - ✅ Reduces inertia for dynamic systems
-   - ❌ More expensive to manufacture (extrusion or welding required)
-   - ✅ **Recommended for high-performance applications** ✅
+   - ✅ **Most cost-effective improvement** per added material
+   - ✅ Increases section modulus for bending strength (resists cutting forces better)
+   - ❌ Increases weight by 33% (30mm → 40mm)
+   - ❌ May require taller linear guide blocks
+   - ✅ **Recommended for high-precision CNC machining** ✅
 
-4. **Strategy 4: Add pre-tension (active stiffening)**
+2. **Strategy 2: Use aluminum extrusion (weight reduction)**
 
-   **Concept:** Apply tensile axial force to beam
-   - Tension creates "string effect" that resists bending
-   - Effective for long slender beams
-   - Requires tension mechanism at one or both ends
+   **Option: Aluminum extrusion 100 mm × 40 mm**
 
-   **Limitations:**
-   - Only effective for very slender beams (L/h > 50)
-   - Current beam: L/h = 1500/20 = 75 (marginal benefit)
-   - Adds complexity and cost
-   - ⚠️ **Not recommended for this application**
+   - Material: 6061-T6 Aluminum, E = 70 GPa (1/3 of steel)
+   - Larger cross-section compensates for lower E
 
-5. **Strategy 5: Reduce span length (add intermediate support)**
+   $$I_{al} = \frac{100 \times (40)^3}{12} = 533,333 \text{ mm}^4$$
 
-   **Option: Add center support (creates two 0.75 m spans)**
+   $$\delta_{al} = \frac{500 \times (1.0)^3}{48 \times 70 \times 10^9 \times 5.33 \times 10^{-7}} = 0.000279 \text{ m} = 0.279 \text{ mm}$$ ✅
 
-   For fixed-fixed beam, adding center support creates complex multi-span analysis, but deflection scales as L⁴:
-
-   **Approximate deflection for half-length spans:**
-
-   $$\delta_{half} \approx \delta_{full} \times \left(\frac{L/2}{L}\right)^4 = 0.282 \times (0.5)^4 = 0.282 \times 0.0625 = 0.018 \text{ mm}$$ ✅
-
-   **Improvement: 94% deflection reduction (from 0.282 mm to 0.018 mm)**
+   **Result: Similar deflection (0.279 mm vs 0.276 mm) but 66% lighter**
 
    **Trade-offs:**
-   - ✅ **Most dramatic stiffness improvement**
-   - ✅ No change to beam material or cross-section
-   - ❌ Requires intermediate support structure
-   - ❌ May interfere with actuator travel range
-   - ⚠️ **Only feasible if actuator carriage can pass over support**
+   - ✅ **66% weight reduction** (important for moving gantry masses)
+   - ✅ Lower inertia → faster acceleration, less motor torque required
+   - ✅ Excellent machinability and standard extrusion profiles available
+   - ❌ Lower wear resistance than steel (may need hardened inserts for rail mounting)
+   - ✅ **Recommended for high-speed CNC routers** where weight matters ✅
 
-6. **Strategy 6: Improve fixity at supports**
+3. **Strategy 3: Change support configuration to fixed-fixed**
 
-   **Concept:** Ensure true fixed-end conditions
-   - Use large bolted or welded connections
-   - Increase connection stiffness relative to beam stiffness
-   - Eliminate gaps, compliance, or looseness at mounts
+   **Option: Rigidly clamp both ends (moment connections)**
 
-   **Why this matters:**
-   - Real "fixed" supports are never perfectly rigid
-   - Support flexibility effectively increases deflection
-   - Poor fixity can reduce stiffness by 20-50%
+   From Step 2, we calculated: $\delta_{fixed} = 0.069$ mm
 
-   **Implementation:**
-   - Use multiple bolts in mounting plates (minimum 4 bolts per end)
-   - Ensure mounting surface flatness (< 0.05 mm deviation)
-   - Use rigid mounting structure (much stiffer than beam)
-   - Add stiffening ribs or gussets at beam-to-mount interface ✅
+   **Improvement: 75% deflection reduction (from 0.276 mm to 0.069 mm) - 4× stiffer**
 
-7. **Recommended combined approach:**
+   **Trade-offs:**
+   - ✅ **Dramatic stiffness improvement** with no material changes
+   - ❌ Requires rigid moment-resisting connections at both ends
+   - ❌ **Thermal expansion problem:** Must accommodate thermal growth or risk buckling
+   - ❌ More complex assembly (alignment critical)
+   - ⚠️ **Not recommended for CNC machines** - thermal stress outweighs stiffness benefit
 
-   **For precision linear actuators (target < 0.1 mm deflection):**
+   **Why CNC machines avoid fixed-fixed:**
+   - Machine tools experience thermal cycling (motors, cutting heat, coolant)
+   - Steel expands ~12 μm/m/°C → 1 m rail grows 120 μm over 10°C change
+   - Fixed-fixed would induce large thermal stresses → frame distortion
+   - **Simply supported with roller allows free thermal expansion** ✅
 
-   **Primary modifications:**
-   1. Increase beam height to 25 mm → δ = 0.145 mm
-   2. Ensure robust fixed-end connections → 10-20% further improvement
-   3. Target deflection: ~0.12 mm ✅
+4. **Strategy 4: Reduce span length (add intermediate support)**
 
-   **Alternative for high-performance applications:**
-   1. Use box section (100×30×5 mm wall) → δ = 0.114 mm
-   2. High-stiffness end fixity → δ ≈ 0.09 mm
-   3. Achieves < 0.1 mm target with 30% weight savings ✅
+   **Option: Add center support beam (creates two 0.5 m spans)**
 
-8. **Comparison summary:**
+   For simply supported beam, deflection scales as L³:
 
-   | Strategy | Deflection | Weight Change | Cost Impact | Effectiveness |
-   |----------|------------|---------------|-------------|---------------|
-   | **Baseline (current)** | 0.282 mm | — | — | — |
-   | Increase height to 30mm | 0.083 mm | +50% | Low | ⭐⭐⭐⭐⭐ |
-   | Box section (100×30×5) | 0.114 mm | -30% | Medium | ⭐⭐⭐⭐ |
-   | Add center support | 0.018 mm | 0% | High | ⭐⭐⭐⭐⭐ |
-   | Improve end fixity | 0.226 mm | 0% | Low | ⭐⭐⭐ |
-   | Higher-modulus material | No benefit | Variable | High | ❌ |
+   $$\delta_{half} = \frac{P \times (0.5)^3}{48EI} = 0.276 \times (0.5)^3 = 0.276 \times 0.125 = 0.034 \text{ mm}$$ ✅
+
+   **Improvement: 88% deflection reduction (from 0.276 mm to 0.034 mm) - 8× stiffer**
+
+   **Trade-offs:**
+   - ✅ **Most dramatic stiffness improvement** without changing rail
+   - ✅ No change to rail material or cross-section
+   - ❌ Requires intermediate support structure (center beam or post)
+   - ❌ Reduces usable work envelope (support obstructs center area)
+   - ⚠️ **Not practical for most CNC applications** - blocks workspace
+
+5. **Recommended approach for CNC machines:**
+
+   **For general CNC routing/laser cutting (current design adequate):**
+   - Current δ = 0.276 mm meets typical L/1000 requirement (L/3623 achieved) ✅
+   - Monitor for dynamic loads during rapid traverses
+   - Ensure support mounting is rigid (proper bolt torque, flat mounting surfaces)
+
+   **For high-precision machining (target less than 0.15 mm deflection):**
+   - **Best option:** Increase rail height to 40 mm → δ = 0.116 mm ✅
+   - **Alternative:** Use aluminum extrusion 100×40 mm → δ = 0.279 mm (similar stiffness, 66% lighter for high-speed applications)
+   - Avoid fixed-fixed (thermal expansion problems)
+   - Avoid center supports (obstructs workspace)
+
+6. **Design decision matrix:**
+
+   | Application | Target δ | Recommended Solution | Rationale |
+   |-------------|----------|---------------------|-----------|
+   | **General CNC routing** | less than 1.0 mm (L/1000) | Current design (80×30 mm steel) ✅ | Adequate stiffness, cost-effective |
+   | **High-precision milling** | less than 0.15 mm | Increase to 80×40 mm steel ✅ | 2.4× stiffer, minimal cost increase |
+   | **High-speed routing** | less than 0.3 mm | Aluminum extrusion 100×40 mm ✅ | Similar stiffness, 66% lighter (faster accel) |
+   | **Ultra-precision (less than 0.1 mm)** | less than 0.1 mm | 80×40 mm + linear guides on both sides ❌ | Requires major redesign |
+
+7. **Key insights for CNC design:**
+
+   **Why simply supported is standard:**
+   - ✅ Allows thermal expansion (critical for machine tools)
+   - ✅ Easy assembly (no moment connections required)
+   - ✅ Adequate stiffness (16× better than cantilever)
+   - ✅ Compatible with standard linear rail mounting
+
+   **When stiffness improvements are worth it:**
+   - Machining hard materials (high cutting forces)
+   - Fine surface finish requirements (less than 1 μm Ra)
+   - Tight dimensional tolerances (± 0.01 mm or better)
+   - High spindle speeds with dynamic loads
 
 </Steps>
 
@@ -985,26 +1242,29 @@ In this lesson, you learned to:
 ### Key Takeaways from Applications
 
 **Application 1: PCB Sagging (Electronics)**
-- Simply supported PCB with UDL: δ = 1.83 mm ≈ L/109
-- IPC-2221 guideline: deflection < L/100 for component reliability
-- Most effective improvement: Center support (99.4% reduction) or thicker board
+- Fixed-fixed PCB with UDL: δ = 0.366 mm ≈ L/546
+- IPC-2221 guideline: deflection less than L/100 for component reliability
+- Current design exceeds standards with large safety margins (82% margin vs L/100)
+- Key insight: Fixed-fixed mounting (screwed both ends) provides 5× better stiffness than simply supported
 
-**Application 2: CT Scanner Arm (Medical Imaging)**
-- Cantilever tube with tip load: δ = 22.5 mm (grossly inadequate)
-- Medical imaging requires: δ < 0.5 mm (L/4000), not L/250 structural rule
-- Solution requires: Large diameter tube (OD = 200-220 mm) or carbon fiber composite
+**Application 2: Mobile C-Arm Fluoroscopy (Medical Imaging)**
+- Cantilever C-arm with tip load: δ = 0.494 mm (adequate for general surgery, fails high-precision interventional)
+- C-arm fluoroscopy requires: δ = 0.5-1.0 mm depending on application (not L/250 structural rule)
+- Current design: Good for orthopedic/surgical use; exceeds 0.50 mm limit for cardiac/neuro applications
+- Key insight: Stiffness-limited design (stress only 12 MPa vs 350+ MPa yield); shows importance of application-specific limits
 
-**Application 3: Linear Actuator Guide (Mechanical)**
-- Fixed-fixed beam with UDL: δ = 0.282 mm (excellent stiffness)
-- Fixed-fixed is 5× stiffer than simply supported, 48× stiffer than cantilever
-- Best improvements: Increase height (70% reduction) or box section (60% reduction + weight savings)
+**Application 3: CNC Machine Gantry Rail (Precision Manufacturing)**
+- Simply supported beam with center point load: δ = 0.276 mm (good stiffness, L/3623)
+- Simply supported is 4× more flexible than fixed-fixed, but 16× stiffer than cantilever
+- Key insight: Simply supported is standard for CNC machines (allows thermal expansion, easy assembly)
+- Best improvements: Increase height to 40 mm (δ = 0.116 mm) or use aluminum extrusion (66% lighter, same stiffness)
 
 ### Critical Design Principles
 
-- <Badge text="Support configuration is paramount" variant="tip" /> Fixed-fixed >> Simply supported >> Cantilever
+- <Badge text="Support configuration is paramount" variant="tip" /> Fixed-fixed (4-5× stiffer) >> Simply supported (16× stiffer) >> Cantilever
 - <Badge text="Length dominates deflection" variant="caution" /> δ ∝ L³ or L⁴ (doubling length increases δ by 8-16×)
 - <Badge text="Height is most effective" variant="tip" /> δ ∝ 1/I ∝ 1/h³ (doubling height reduces δ by 8×)
-- <Badge text="Application-specific limits" variant="note" /> PCBs: L/100, Medical: L/4000, General: L/250
+- <Badge text="Application-specific limits" variant="note" /> PCBs: L/100, C-arms: L/1200-L/2400, CNC: L/1000, Structural: L/250
 
 **Critical Formulas:**
 

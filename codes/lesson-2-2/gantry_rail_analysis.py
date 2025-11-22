@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 """
 3D Printer Gantry Rail Bending Analysis
-Application 1: Simply supported beam with moving concentrated load
+Application 3: Simply supported beam with point load at different positions
 
-This script generates:
-1. Loading diagram showing moving print head
-2. Shear force diagram for critical load position (midspan)
-3. Bending moment diagram for critical load position (midspan)
+This script generates diagrams showing ALL THREE load positions analyzed in the lesson:
+1. Loading diagram showing print head at positions a = 300, 600, 900 mm
+2. Shear force diagram for all three positions
+3. Bending moment diagram for all three positions
+
+Students compare the three positions to discover that midspan (a=600mm)
+gives maximum bending moment and stress.
+
+Expected Results:
+- Position 1 (a=300mm): M_max = 56.25 N·m, σ = 0.639 MPa
+- Position 2 (a=600mm): M_max = 75.0 N·m,  σ = 0.852 MPa ⭐ CRITICAL
+- Position 3 (a=900mm): M_max = 56.25 N·m, σ = 0.639 MPa
 
 Author: SiliconWit Engineering Team
 Date: 2025-10-17
+Updated: 2025-11-23 (Updated to show all three positions)
 """
 
 import numpy as np
@@ -66,12 +75,19 @@ class GantryRailAnalysis:
         # Loading conditions
         self.P = 250  # Print head load (N)
 
-        # Critical position for diagrams (midspan - worst case)
-        self.a = 600  # Load position (mm) - at midspan for maximum moment
+        # Three load positions analyzed in the lesson
+        self.positions = [
+            {'a': 300, 'name': 'Position 1 (a=300 mm)'},
+            {'a': 600, 'name': 'Position 2 (a=600 mm)'},
+            {'a': 900, 'name': 'Position 3 (a=900 mm)'}
+        ]
 
-        # Calculate support reactions at critical position
-        self.R_A = self.P * (self.L - self.a) / self.L  # Reaction at A
-        self.R_B = self.P * self.a / self.L              # Reaction at B
+        # Calculate reactions and moments for all three positions
+        for pos in self.positions:
+            a = pos['a']
+            pos['R_A'] = self.P * (self.L - a) / self.L
+            pos['R_B'] = self.P * a / self.L
+            pos['M_max'] = pos['R_A'] * a  # N·mm
 
         # Cross-section properties
         self.I = 2.2e6  # mm^4
@@ -83,7 +99,7 @@ class GantryRailAnalysis:
         self.E = 69000  # MPa (Aluminum 6061-T6)
 
     def plot_loading_diagram(self):
-        """Generate loading diagram showing simply supported beam with moving load"""
+        """Generate loading diagram showing simply supported beam with three load positions"""
         fig, ax = plt.subplots(1, 1, figsize=(16, 10))
 
         # Draw beam
@@ -129,44 +145,33 @@ class GantryRailAnalysis:
             ax.plot([support_B_x + i*0.02, support_B_x + i*0.02 - 0.02],
                    [-0.12, -0.14], color=COLORS['support'], linewidth=2)
 
-        # Draw print head load at critical position (midspan)
-        load_x = self.a / 1000
+        # Draw print head loads at all three positions
         load_y = beam_y + beam_height/2
         arrow_length = 0.15
         arrow_width = 0.18
 
-        # Load arrow
-        ax.arrow(load_x, load_y + arrow_length, 0, -arrow_length + 0.01,
-                head_width=arrow_width*0.22, head_length=0.03, fc=COLORS['load_arrow'],
-                ec=COLORS['load_arrow'], linewidth=3, zorder=5)
+        for i, pos in enumerate(self.positions):
+            load_x = pos['a'] / 1000
+            # Load arrow
+            ax.arrow(load_x, load_y + arrow_length, 0, -arrow_length + 0.01,
+                    head_width=arrow_width*0.22, head_length=0.03, fc=COLORS['load_arrow'],
+                    ec=COLORS['load_arrow'], linewidth=3, zorder=5, alpha=0.7)
 
-        # Load label
-        ax.text(load_x, load_y + arrow_length + 0.05, f'P = {self.P} N\n(Print Head)',
+            # Load position label
+            ax.text(load_x, load_y + arrow_length + 0.05, f'a={pos["a"]} mm',
+                   ha='center', va='bottom', fontsize=20, fontweight='bold',
+                   color=COLORS['load_arrow'],
+                   bbox=dict(boxstyle='round,pad=0.4', facecolor='#F8FAFC',
+                            edgecolor=COLORS['load_arrow'], alpha=0.8))
+
+        # Add general load label above
+        ax.text(self.L/2000, load_y + arrow_length + 0.18, f'P = {self.P} N (Print Head)',
                ha='center', va='bottom', fontsize=24, fontweight='bold',
                color=COLORS['load_arrow'],
                bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
                         edgecolor=COLORS['load_arrow'], alpha=0.9))
 
-        # Draw reaction forces
-        # Reaction at A
-        ax.arrow(0, support_A_y - 0.25, 0, 0.13,
-                head_width=arrow_width*0.22, head_length=0.03, fc=COLORS['moment_pos'],
-                ec=COLORS['moment_pos'], linewidth=3, zorder=5)
-        ax.text(0, support_A_y - 0.28, f'R_A = {self.R_A:.0f} N',
-               ha='center', va='top', fontsize=22, fontweight='bold',
-               color=COLORS['text'],
-               bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
-                        edgecolor=COLORS['text'], alpha=0.9))
-
-        # Reaction at B
-        ax.arrow(support_B_x, support_B_y - 0.25, 0, 0.13,
-                head_width=arrow_width*0.22, head_length=0.03, fc=COLORS['moment_pos'],
-                ec=COLORS['moment_pos'], linewidth=3, zorder=5)
-        ax.text(support_B_x, support_B_y - 0.28, f'R_B = {self.R_B:.0f} N',
-               ha='center', va='top', fontsize=22, fontweight='bold',
-               color=COLORS['text'],
-               bbox=dict(boxstyle='round,pad=0.6', facecolor='#F8FAFC',
-                        edgecolor=COLORS['text'], alpha=0.9))
+        # Note: Reactions vary by position, shown in shear diagram
 
         # Add support labels
         ax.text(0, support_A_y - 0.18, 'A (Pin)', ha='center', va='top',
@@ -185,17 +190,6 @@ class GantryRailAnalysis:
         ax.text(self.L/2000, dim_y - 0.04, f'L = {self.L} mm', ha='center', va='top',
                fontsize=22, color=COLORS['dimension'], weight='bold')
 
-        # Distance to load (a)
-        dim_y2 = 0.28
-        ax.plot([0, load_x], [dim_y2, dim_y2], color=COLORS['dimension'],
-               linewidth=2, linestyle='--')
-        ax.plot([0, 0], [dim_y2 - 0.02, dim_y2 + 0.02], color=COLORS['dimension'], linewidth=2)
-        ax.plot([load_x, load_x], [dim_y2 - 0.02, dim_y2 + 0.02],
-               color=COLORS['dimension'], linewidth=2)
-        ax.text(load_x/2, dim_y2 + 0.03, f'a = {self.a} mm',
-               ha='center', va='bottom', fontsize=20, color=COLORS['dimension'],
-               style='italic', weight='bold')
-
         # Add cross-section details
         ax.text(self.L/1000 + 0.3, beam_y - 0.5,
                f'Aluminum 6061-T6\nI = {self.I/1e6:.1f}×10⁶ mm⁴\nσ_yield = {self.sigma_yield} MPa',
@@ -213,19 +207,22 @@ class GantryRailAnalysis:
         return fig
 
     def plot_shear_diagram(self):
-        """Generate shear force diagram for critical load position (midspan)"""
+        """Generate shear force diagram for center position only"""
         fig, ax = plt.subplots(1, 1, figsize=(16, 10))
 
+        # Use only the center position (a=600mm)
+        pos = self.positions[1]  # Position 2: midspan
+        a = pos['a'] / 1000  # meters
+        R_A = pos['R_A'] / 1000  # kN
+        R_B = pos['R_B'] / 1000  # kN
+
         # Create x points for regions
-        x_region1 = np.linspace(0, self.a/1000, 50)  # 0 to a (load position)
-        x_region2 = np.linspace(self.a/1000, self.L/1000, 50)  # a to L
+        x_region1 = np.linspace(0, a, 50)
+        x_region2 = np.linspace(a, self.L/1000, 50)
 
         # Calculate shear forces
-        # Region 1 (0 to a): V = +R_A (constant)
-        V_region1 = np.full_like(x_region1, self.R_A / 1000)  # Convert to kN
-
-        # Region 2 (a to L): V = R_A - P = -R_B (constant, negative)
-        V_region2 = np.full_like(x_region2, -self.R_B / 1000)  # Convert to kN
+        V_region1 = np.full_like(x_region1, R_A)
+        V_region2 = np.full_like(x_region2, -R_B)
 
         # Plot shear force regions
         ax.plot(x_region1, V_region1, color=COLORS['shear_pos'], linewidth=4, zorder=4)
@@ -235,39 +232,37 @@ class GantryRailAnalysis:
         ax.fill_between(x_region2, V_region2, 0, alpha=0.3, color=COLORS['shear_neg'], zorder=1)
 
         # Vertical discontinuity line at load position
-        ax.plot([self.a/1000, self.a/1000], [self.R_A/1000, -self.R_B/1000],
-               color=COLORS['shear_pos'], linewidth=4, zorder=4)
+        ax.plot([a, a], [R_A, -R_B], color=COLORS['shear_pos'], linewidth=4, zorder=4)
 
         # Zero line
         ax.axhline(y=0, color=COLORS['text'], linewidth=4, alpha=0.8)
 
-        # Mark critical points with enhanced visibility (matching pantograph style)
+        # Mark critical points
         critical_points = [
-            (0, self.R_A/1000),
-            (self.a/1000, self.R_A/1000),
-            (self.a/1000, -self.R_B/1000),
-            (self.L/1000, -self.R_B/1000),
+            (0, R_A),
+            (a, R_A),
+            (a, -R_B),
+            (self.L/1000, -R_B),
         ]
 
         for x, y in critical_points:
-            # White background circle with orange center
             ax.plot(x, y, 'o', markersize=18, color='#FFFFFF',
                    markeredgewidth=5, markerfacecolor=COLORS['moment_neg'],
                    markeredgecolor=COLORS['text'], zorder=5)
 
         # Add annotations
-        ax.annotate(f'+{self.R_A/1000:.2f} kN', (0, self.R_A/1000), xytext=(40, 50),
+        ax.annotate(f'+{R_A:.3f} kN', (0, R_A), xytext=(40, 50),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
                    weight='bold', ha='left',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
-        ax.annotate(f'{-self.R_B/1000:.2f} kN', (self.L/1000, -self.R_B/1000), xytext=(-80, 20),
+        ax.annotate(f'{-R_B:.3f} kN', (self.L/1000, -R_B), xytext=(-40, -50),
                    textcoords='offset points', fontsize=26, color=COLORS['text'],
                    weight='bold', ha='right',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
-        # Add vertical dashed lines at critical positions (orange color like pantograph)
-        for x_pos in [0, self.a/1000, self.L/1000]:
+        # Add vertical dashed lines at critical positions
+        for x_pos in [0, a, self.L/1000]:
             ax.axvline(x=x_pos, color=COLORS['load_arrow'], linewidth=4,
                       linestyle='--', alpha=0.6, zorder=2)
 
@@ -288,73 +283,65 @@ class GantryRailAnalysis:
 
         # Set axis limits
         ax.set_xlim(-0.05, self.L/1000 + 0.05)
-        y_max = max(abs(self.R_A/1000), abs(self.R_B/1000)) * 1.3
+        # Find maximum shear force from all positions
+        max_R = max(max(pos['R_A'], pos['R_B']) for pos in self.positions)
+        y_max = (max_R / 1000) * 1.3
         ax.set_ylim(-y_max, y_max)
 
         plt.subplots_adjust(left=0.15, right=0.95, top=0.92, bottom=0.15)
         return fig
 
     def plot_moment_diagram(self):
-        """Generate bending moment diagram for critical load position (midspan)"""
+        """Generate bending moment diagram connecting moments at three load positions"""
         fig, ax = plt.subplots(1, 1, figsize=(16, 10))
-
-        # Create x points for regions
-        x_region1 = np.linspace(0, self.a/1000, 100)  # 0 to a
-        x_region2 = np.linspace(self.a/1000, self.L/1000, 100)  # a to L
-
-        # Calculate moment values
-        # Region 1 (0 to a): M(x) = R_A * x
-        M_region1 = (self.R_A * x_region1 * 1000) / 1e6  # Convert to kN·m
-
-        # Region 2 (a to L): M(x) = R_A * x - P * (x - a)
-        M_region2 = (self.R_A * x_region2 * 1000 - self.P * (x_region2 * 1000 - self.a)) / 1e6
-
-        # Plot moment curves
-        ax.plot(x_region1, M_region1, color=COLORS['moment_pos'], linewidth=4, zorder=4)
-        ax.fill_between(x_region1, M_region1, 0, alpha=0.3, color=COLORS['moment_pos'], zorder=1)
-
-        ax.plot(x_region2, M_region2, color=COLORS['moment_pos'], linewidth=4, zorder=4)
-        ax.fill_between(x_region2, M_region2, 0, alpha=0.3, color=COLORS['moment_pos'], zorder=1)
 
         # Zero line
         ax.axhline(y=0, color=COLORS['text'], linewidth=4, alpha=0.8)
 
-        # Calculate maximum moment (at load position, x = a)
-        M_max = (self.R_A * self.a) / 1e6  # kN·m
+        # Create points: (0,0) -> (0.3, M1) -> (0.6, M2) -> (0.9, M3) -> (1.2, 0)
+        x_points = [0]
+        y_points = [0]
 
-        # Mark critical points (matching pantograph style)
-        critical_points = [
-            (0, 0, '0 kN·m\n(Support A)'),
-            (self.a/1000, M_max, f'{M_max:.3f} kN·m\n(MAX)'),
-            (self.L/1000, 0, '0 kN·m\n(Support B)'),
-        ]
+        for pos in self.positions:
+            x_points.append(pos['a'] / 1000)  # meters
+            y_points.append(pos['M_max'] / 1e6)  # kN·m
 
-        for x, y, label in critical_points:
-            # White background circle with orange center
+        x_points.append(self.L / 1000)
+        y_points.append(0)
+
+        # Plot single line connecting all points
+        ax.plot(x_points, y_points, color=COLORS['moment_pos'], linewidth=4, zorder=4)
+        ax.fill_between(x_points, y_points, 0, alpha=0.3, color=COLORS['moment_pos'], zorder=1)
+
+        # Mark all critical points
+        for i, (x, y) in enumerate(zip(x_points, y_points)):
             ax.plot(x, y, 'o', markersize=18, color='#FFFFFF',
                    markeredgewidth=5, markerfacecolor=COLORS['moment_neg'],
                    markeredgecolor=COLORS['text'], zorder=5)
 
-        # Add annotations
-        ax.annotate(critical_points[0][2], (0, 0), xytext=(40, -60),
-                   textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left',
-                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
+            # Add annotations only for non-zero moments
+            if y > 0.001:
+                # Offset positioning for readability
+                if i == 1:  # First moment point
+                    offset = (-40, 50)
+                    ha = 'right'
+                elif i == 2:  # Middle moment point (max)
+                    offset = (50, -10)
+                    ha = 'left'
+                else:  # Third moment point
+                    offset = (40, 50)
+                    ha = 'left'
 
-        ax.annotate(critical_points[1][2], (self.a/1000, M_max), xytext=(50, -10),
-                   textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='left',
-                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
+                ax.annotate(f'{y:.3f} kN·m',
+                           (x, y), xytext=offset,
+                           textcoords='offset points', fontsize=26, color=COLORS['text'],
+                           weight='bold', ha=ha,
+                           arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
-        ax.annotate(critical_points[2][2], (self.L/1000, 0), xytext=(-80, -60),
-                   textcoords='offset points', fontsize=26, color=COLORS['text'],
-                   weight='bold', ha='right',
-                   arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
-
-        # Add vertical dashed lines at critical positions (orange color like pantograph)
-        for x_pos in [0, self.a/1000, self.L/1000]:
-            ax.axvline(x=x_pos, color=COLORS['load_arrow'], linewidth=4,
-                      linestyle='--', alpha=0.6, zorder=2)
+        # Add vertical dashed lines at load positions only (not at supports)
+        for pos in self.positions:
+            ax.axvline(x=pos['a']/1000, color=COLORS['load_arrow'], linewidth=3,
+                      linestyle='--', alpha=0.5, zorder=2)
 
         # Customize plot (NO TITLE!)
         ax.grid(True, alpha=0.3, color=COLORS['grid'], linewidth=2)
@@ -373,7 +360,9 @@ class GantryRailAnalysis:
 
         # Set axis limits
         ax.set_xlim(-0.05, self.L/1000 + 0.05)
-        ax.set_ylim(-0.015, M_max * 1.4)
+        # Find maximum moment from all positions
+        max_M = max(pos['M_max'] for pos in self.positions) / 1e6  # Convert to kN·m
+        ax.set_ylim(-0.015, max_M * 1.4)
 
         plt.subplots_adjust(left=0.15, right=0.95, top=0.92, bottom=0.15)
         return fig
@@ -386,20 +375,23 @@ class GantryRailAnalysis:
         print(f"\nSystem Parameters:")
         print(f"  Beam span: L = {self.L} mm")
         print(f"  Print head load: P = {self.P} N")
-        print(f"  Critical load position: a = {self.a} mm (midspan)")
-        print(f"\nSupport Reactions (at a = {self.a} mm):")
-        print(f"  R_A = {self.R_A:.1f} N")
-        print(f"  R_B = {self.R_B:.1f} N")
-        print(f"\nMaximum Moment:")
-        M_max = (self.R_A * self.a) / 1e6  # kN·m
-        print(f"  M_max = {M_max:.3f} kN·m = {M_max*1e6:.0f} N·mm")
-        print(f"  Location: x = {self.a} mm (at load position)")
-        print(f"\nMaximum Stress:")
-        sigma_max = (M_max * 1e6) / self.S  # MPa
-        print(f"  σ_max = {sigma_max:.3f} MPa")
-        print(f"\nSafety Factor:")
-        SF = self.sigma_yield / sigma_max
-        print(f"  SF = {SF:.1f}")
+
+        print(f"\nAnalyzing THREE load positions:")
+        for i, pos in enumerate(self.positions, 1):
+            print(f"\n  Position {i}: a = {pos['a']} mm")
+            print(f"    R_A = {pos['R_A']:.1f} N")
+            print(f"    R_B = {pos['R_B']:.1f} N")
+            print(f"    M_max = {pos['M_max']/1e6:.5f} kN·m = {pos['M_max']:.1f} N·mm")
+            sigma = pos['M_max'] / self.S
+            print(f"    σ_max = {sigma:.3f} MPa")
+
+        # Find overall maximum
+        max_pos = max(self.positions, key=lambda p: p['M_max'])
+        print(f"\n  CRITICAL POSITION: a = {max_pos['a']} mm")
+        print(f"  Maximum stress: σ = {max_pos['M_max']/self.S:.3f} MPa")
+        SF = self.sigma_yield / (max_pos['M_max'] / self.S)
+        print(f"  Safety Factor: SF = {SF:.1f}")
+
         print(f"\nGenerating diagrams...")
 
         # Generate loading diagram
