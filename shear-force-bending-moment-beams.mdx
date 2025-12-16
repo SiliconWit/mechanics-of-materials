@@ -35,6 +35,9 @@ By the end of this lesson, you will be able to:
 
 ## 🔧 Real-World Engineering Challenge: Beam Analysis in Industrial Automation Systems
 
+<InArticleAd />
+
+
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
 	![Industrial Beam Structures](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-analysis-animation.gif)
@@ -55,9 +58,6 @@ Industrial automation systems rely on structural beam elements that must safely 
 ### The Structural Challenge
 
 All industrial beam structures experience **internal shear forces and bending moments** that determine structural adequacy. Different support types (fixed, pinned, roller) and loading patterns (point loads, distributed loads, combined) create varying internal force distributions requiring careful analysis for safe design.
-
-
-<InArticleAd />
 
 > **Engineering Question 1:** How do we determine where maximum bending stresses occur in different beam configurations and what governs the critical design section?
 > **Engineering Question 2:** How do support types and loading patterns affect internal force distributions and structural requirements?
@@ -236,6 +236,7 @@ $$M(x) = \frac{P}{2} \cdot x \text{ (for 0 ≤ x ≤ L/2)}$$
 - Overhang region: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2} + R_B(x - L_{span})$
 
 **Key Characteristics:**
+
 - **Both positive and negative moments** occur
 - Maximum negative moment typically at **intermediate support**
 - Zero moment at pin/roller supports
@@ -317,6 +318,9 @@ Use these instant checks derived from support types and equilibrium:
 :::
 
 ## 🏭 Application 1: Semi-Automatic Robotic Arm Cantilever Analysis (Mechatronics)
+
+<InArticleAd />
+
 
 A material handling robotic arm is modeled as a cantilever beam carrying both its own weight and a payload at the tip.
 
