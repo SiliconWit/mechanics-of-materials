@@ -495,8 +495,19 @@ For a hollow circular tube with outer diameter D and inner diameter d:
 
 4. **Stress contribution analysis:**
 
-   - Bending contributes: $\frac{32.5^2}{1,087.94} \times 100\% = 98.5\%$ of von Mises stress
-   - Torsion contributes: $\frac{3 \times 3.25^2}{1,087.94} \times 100\% = 1.5\%$ of von Mises stress
+   From the von Mises stress formula $\sigma_{vm} = \sqrt{\sigma_b^2 + 3\tau^2}$, we can determine each component's contribution:
+
+   **Bending contribution:**
+
+   $$\text{Bending \%} = \frac{\sigma_b^2}{\sigma_b^2 + 3\tau^2} \times 100\%$$
+
+   **Torsion contribution:**
+
+   $$\text{Torsion \%} = \frac{3\tau^2}{\sigma_b^2 + 3\tau^2} \times 100\%$$
+
+   **For our drone arm:**
+   - Bending contributes: $\frac{32.5^2}{32.5^2 + 3 \times 3.25^2} \times 100\% = \frac{1,056.25}{1,087.94} \times 100\% = 97.1\%$ of von Mises stress
+   - Torsion contributes: $\frac{3 \times 3.25^2}{32.5^2 + 3 \times 3.25^2} \times 100\% = \frac{31.69}{1,087.94} \times 100\% = 2.9\%$ of von Mises stress
    - **Key insight:** Bending dominates — motor torque has minimal structural impact
 
 5. **Design recommendations:**
@@ -528,7 +539,11 @@ The main shaft of a horizontal-axis wind turbine transmits power from the rotor 
 - **Support configuration:** Simply supported (bearings at both ends)
 - **Loading conditions:** Uniformly distributed load (wind + rotor weight) + constant transmitted torque
 - **Cross-section:** Hollow circular steel shaft
-
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Wind Turbine Power Transmission](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/wind-turbine-transmits-power.jpg)
+  </TailwindWrapper>
+</div>
 **What we need to analyze:**
 1. **Critical section location** (where maximum bending moment occurs for simply supported beam)
 2. **Section properties** of the hollow steel shaft (I, J for circular cross-section)
