@@ -436,8 +436,8 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
 </div>
 **Given:**
 - PCB dimensions: Length L = 200 mm, width b = 100 mm, thickness h = 1.6 mm
-- Uniformly distributed load: 12 N total weight (components)
-- UDL intensity: W = 12 N / 0.2 m = 60 N/m
+- Total component weight: W = 12 N (well distributed across the span)
+- Uniformly Distributed Load (UDL) intensity: w = W/L = 12 N / 0.2 m = 60 N/m
 - Material: FR4 composite (E = 20 GPa)
 - Second moment of area: I = bh³/12 = (100 × 1.6³)/12 = 34.13 mm⁴ = 3.413 × 10⁻¹¹ m⁴
 - Support type: Fixed-fixed at both ends (screwed/clamped at x = 0 and x = 200 mm)
@@ -463,14 +463,20 @@ A printed circuit board (PCB) is mounted between two supports in an electronics 
    - E = Young's modulus (Pa)
    - I = second moment of area (m⁴)
 
-   **Note:** This is 5× stiffer than simply supported (which has coefficient 5/384 instead of 1/384)
+   **Note:** This is the standard formula for **fixed-fixed beams** with UDL. It differs from simply supported beams:
+   - **Fixed-fixed:** δ = wL⁴/(384EI) ← coefficient = 1/384
+   - **Simply supported:** δ = 5wL⁴/(384EI) ← coefficient = 5/384
+
+   Fixed-fixed is **5× stiffer** (ratio: 5/384 ÷ 1/384 = 5). Although fixed-fixed beams are statically indeterminate (cannot solve for reaction moments using equilibrium alone), this formula is pre-derived using the 4 boundary conditions (y=0 and dy/dx=0 at both ends). **In practice:** Use this formula directly. You don't need to solve the indeterminate system yourself.
 
 2. **Convert units to SI:**
 
    - L = 200 mm = 0.2 m
-   - w = 60 N/m
+   - w = 60 N/m (distributed load intensity - already calculated from 12 N total / 0.2 m span)
    - E = 20 GPa = 20 × 10⁹ Pa
    - I = 3.413 × 10⁻¹¹ m⁴ ✅
+
+   **Note:** The formula requires distributed load intensity w (N/m), not total load W (N).
 
 3. **Calculate maximum deflection at midspan:**
 
