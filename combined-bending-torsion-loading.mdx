@@ -525,11 +525,11 @@ For a hollow circular tube with outer diameter D and inner diameter d:
 <InArticleAd />
 
 
-The main shaft of a horizontal-axis wind turbine transmits power from the rotor to the gearbox while supporting the rotor weight and wind loads. This shaft experiences combined bending from distributed aerodynamic forces and torsion from power transmission.
+The main shaft of a horizontal-axis wind turbine transmits power from the rotor to the gearbox while supporting the rotor weight and wind loads. This shaft experiences combined bending from distributed loads and torsion from power transmission.
 
 :::note[System Problem Statement]
-- **Support configuration:** Simply supported (bearings at both ends)
-- **Loading conditions:** Uniformly distributed load (wind + rotor weight) + constant transmitted torque
+- **Support configuration:** Overhang beam (pinned support at bearing A, roller support at bearing B, rotor assembly overhangs beyond B)
+- **Loading conditions:** Point load P1 at tip (rotor assembly weight) + distributed load W (shaft self-weight) + constant transmitted torque T
 - **Cross-section:** Hollow circular steel shaft
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
@@ -537,27 +537,36 @@ The main shaft of a horizontal-axis wind turbine transmits power from the rotor 
   </TailwindWrapper>
 </div>
 **What we need to analyze:**
-1. **Critical section location** (where maximum bending moment occurs for simply supported beam)
-2. **Section properties** of the hollow steel shaft (I, J for circular cross-section)
-3. **Maximum bending moment** from distributed load analysis
-4. **Individual stress components** (bending stress and torsional shear stress at outer surface)
-5. **Von Mises equivalent stress** and safety factor assessment
+1. **Support reactions** for overhang beam with both point load (rotor) and distributed load (shaft weight) on cantilevered portion
+2. **Critical section location** (where maximum bending moment occurs in overhang configuration)
+3. **Section properties** of the hollow steel shaft (I, J for circular cross-section)
+4. **Maximum bending moment** from combined loading (P1 + W) creating negative moment at support B
+5. **Individual stress components** (bending stress and torsional shear stress at outer surface)
+6. **Von Mises equivalent stress** and safety factor assessment
 
-**Key Question:** Can this shaft safely transmit rated power while simultaneously supporting wind loads without yielding, considering the combined stress state from both bending and torsion?
+**Key Question:** Can this shaft safely transmit rated power while simultaneously supporting the rotor assembly weight and shaft self-weight on the overhang without yielding, considering the combined stress state from both bending and torsion?
 :::
 
 <Card title="🔧 Equivalent System Model" icon="document">
-
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Wind Turbine Overhanging Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar-tracker-arm-loading-diagram.png)
+  </TailwindWrapper>
+</div>
 **Geometric Configuration:**
 - Hollow steel shaft: Outer Diameter (OD) = 100 mm, Inner Diameter (ID) = 80 mm
 - Wall thickness: t = 10 mm
-- Shaft length between bearings: L = 2.0 m (2000 mm)
-- Critical section: Mid-span (x = 1.0 m) where bending moment is maximum
+- **Total shaft length: L = 2.0 m (2000 mm)** from bearing A to point P1
+- Span between bearings: AB = 1.5 m (1500 mm) from bearing A (pinned) to bearing B (roller)
+- Overhang length: BP1 = 0.5 m (500 mm) from bearing B to rotor at P1
+- Critical section: At support B where maximum negative bending moment occurs
 
 **Loading Conditions:**
-- Distributed load: w = 800 N/m uniform along shaft (from wind forces and rotor weight)
-- Transmitted torque: T = 5000 N·m constant along shaft (from rotor power transmission)
-- Support reactions: R_A = R_B = wL/2 = 800 N (by symmetry)
+- **Point load P1** = 1200 N at tip of overhang (x = L = 2.0 m) - rotor assembly weight (hub + blades)
+- **Distributed load W** = 300 N/m along entire shaft (0 ≤ x ≤ L = 2.0 m) - shaft self-weight
+- Total distributed load: W_total = W × L = 300 × 2.0 = 600 N
+- **Transmitted torque T** = 5000 N·m constant along entire shaft (from rotor power transmission)
+- Support reactions: R_A (to be calculated), R_B (to be calculated)
 
 **Cross-Section Properties:**
 - Second moment of area: I = π(D⁴ - d⁴)/64 = 2.896 × 10⁶ mm⁴
@@ -571,40 +580,75 @@ The main shaft of a horizontal-axis wind turbine transmits power from the rotor 
 
 </Card>
 
-### Step 1: Determine Critical Section Location
+### Step 1: Calculate Support Reactions and Determine Critical Section
 
 <details>
-<summary>**Click to reveal critical section analysis**</summary>
+<summary>**Click to reveal support reactions and critical section analysis**</summary>
 
-For a **simply supported beam** with **uniformly distributed load**, the critical section is at **mid-span** where bending moment is maximum.
+For an **overhang beam** with **point load P1 at the tip** and **uniformly distributed load W along the entire shaft**, we must first find support reactions, then determine where maximum bending moment occurs.
 
 <Steps>
 
-1. **Calculate support reactions** (symmetry):
+1. **Given loads:**
 
-   For uniform load w over length L:
-   $$R_A = R_B = \frac{wL}{2} = \frac{800 \times 2.0}{2} = 800 \text{ N}$$
+   - Point load: $P_1 = 1200$ N at tip (x = L = 2.0 m)
+   - Distributed load: $W = 300$ N/m along entire shaft (0 ≤ x ≤ L = 2.0 m)
+   - Total distributed load: $W_{total} = W \times L = 300 \times 2.0 = 600$ N
+   - **Total shaft length: $L = 2.0$ m**
+   - Span between bearings: $AB = 1.5$ m
+   - Overhang length: $BP_1 = 0.5$ m
 
-2. **Maximum bending moment location:**
+2. **Calculate support reaction at B using moment equilibrium about A:**
 
-   For simply supported beam with uniform load, maximum moment occurs at **center** (x = L/2):
+   **Taking moments about support A** (counterclockwise positive):
+   $$\sum M_A = 0$$
+   $$R_B \times AB - P_1 \times L - W \times L \times \frac{L}{2} = 0$$
 
-   $$M_{max} = \frac{wL^2}{8}$$
+   $$R_B = \frac{P_1 \times L + W \times L^2 / 2}{AB}$$
 
-3. **Calculate maximum bending moment:**
+   $$R_B = \frac{1200 \times 2.0 + 300 \times (2.0)^2 / 2}{1.5}$$
 
-   $$M_{max} = \frac{800 \times (2.0)^2}{8} = \frac{800 \times 4.0}{8} = 400 \text{ N·m}$$
+   $$R_B = \frac{2400 + 300 \times 2.0}{1.5} = \frac{2400 + 600}{1.5} = \frac{3000}{1.5} = 2000 \text{ N} \uparrow$$
 
-   Converting to N·mm: $M_{max} = 400,000$ N·mm
+3. **Calculate reaction at A from vertical equilibrium:**
 
-4. **Torsional moment:**
+   $$\sum F_y = 0$$
+   $$R_A + R_B - P_1 - W \times L = 0$$
+   $$R_A = P_1 + W \times L - R_B$$
+   $$R_A = 1200 + 300 \times 2.0 - 2000 = 1200 + 600 - 2000 = -200 \text{ N}$$
+
+   **Result:** $R_A = 200$ N ↓ (downward reaction - overhang lifts the beam at A!)
+
+4. **Maximum bending moment location:**
+
+   For overhang beams with load on overhang, the **critical section is at support B** where the maximum negative moment occurs (tension on top fiber, compression on bottom).
+
+5. **Calculate maximum bending moment at support B:**
+
+   Using the overhang section (from B to P1) for clarity:
+
+   The overhang has:
+   - Point load $P_1$ at distance $BP_1$ from B
+   - Distributed load $W$ over length $BP_1$, with resultant at $BP_1/2$ from B
+
+   $$M_B = -P_1 \times BP_1 - W \times BP_1 \times \frac{BP_1}{2}$$
+
+   $$M_B = -1200 \times 0.5 - 300 \times 0.5 \times \frac{0.5}{2}$$
+
+   $$M_B = -600 - 300 \times 0.125 = -600 - 37.5 = -637.5 \text{ N·m}$$
+
+   Converting to N·mm: $|M_B| = 637,500$ N·mm (magnitude used for stress calculations)
+
+6. **Torsional moment:**
 
    Torque is constant along entire shaft:
    $$T = 5000 \text{ N·m} = 5,000,000 \text{ N·mm}$$
 
 </Steps>
 
-**Critical section identified:** **Mid-span** (center of shaft) where bending moment is maximum and torsion is present.
+**Critical section identified:** **At support B** (bearing closest to rotor) where maximum negative bending moment of 637.5 N·m occurs. The overhang configuration is more realistic for wind turbines where the rotor hub extends beyond the forward bearing.
+
+**Physical insight:** The combined effect of rotor weight (P1 = 1200 N at distance L from A) and shaft self-weight (W = 300 N/m along entire length L) creates a significant negative moment at bearing B. The overhang portion (BP1 = 0.5 m) causes tension on the top fiber at B. The downward reaction at bearing A (200 N ↓) shows how the overhang lifts the rear of the shaft.
 
 </details>
 
@@ -651,17 +695,17 @@ For a hollow circular shaft with outer diameter D and inner diameter d:
 <details>
 <summary>**Click to reveal stress calculations at critical section**</summary>
 
-At the critical section (mid-span, outer surface):
+At the critical section (support B, outer surface):
 
 <Steps>
 
 1. **Bending stress at outer fiber:**
 
-   Using flexure formula $\sigma_b = \frac{Mc}{I}$:
+   Using flexure formula $\sigma_b = \frac{Mc}{I}$ with moment magnitude $|M_B| = 637,500$ N·mm:
 
-   $$\sigma_{bending} = \frac{400,000 \times 50}{2.896 \times 10^6} = \frac{20,000,000}{2,896,000} = 6.91 \text{ MPa}$$
+   $$\sigma_{bending} = \frac{637,500 \times 50}{2.896 \times 10^6} = \frac{31,875,000}{2,896,000} = 11.0 \text{ MPa}$$
 
-   **Location:** Maximum at top and bottom of shaft (tension on bottom, compression on top under wind/gravity)
+   **Location:** Maximum at top and bottom of shaft. At support B with negative moment, **tension occurs on top fiber** (opposite of typical simply-supported beam)
 
 2. **Torsional shear stress at outer surface:**
 
@@ -673,21 +717,21 @@ At the critical section (mid-span, outer surface):
 
 3. **Identify critical stress state:**
 
-   The **outer surface on the tension side** of bending experiences:
-   - Normal stress: $\sigma_x = +6.91$ MPa (tension)
+   The **outer surface on the tension side** (top fiber at support B) experiences:
+   - Normal stress: $\sigma_x = +11.0$ MPa (tension)
    - Shear stress: $\tau_{xy} = 43.2$ MPa (torsion)
 
 4. **Stress comparison:**
 
-   Notice that **torsional stress dominates** over bending stress:
+   Notice that **torsional stress still dominates** over bending stress:
    - $\tau_{torsion} = 43.2$ MPa (much larger)
-   - $\sigma_{bending} = 6.91$ MPa (relatively small)
+   - $\sigma_{bending} = 11.0$ MPa (moderate, but still significantly smaller than torsion)
 
-   This is typical for power transmission shafts where torque is the primary design consideration.
+   This is typical for power transmission shafts where torque is the primary design consideration. However, the overhang configuration creates higher bending moment (637.5 N·m) than a simply-supported beam would (400 N·m), making the combined loading (P1 + W) effect more pronounced.
 
 </Steps>
 
-**Physical interpretation:** The shaft is primarily loaded in torsion (power transmission), with relatively minor bending from wind and rotor weight.
+**Physical interpretation:** The shaft is primarily loaded in torsion (power transmission), with significant bending from the combined rotor assembly weight (P1) and shaft self-weight (W) on the overhang. The overhang configuration creates 59% higher bending moment than a simply-supported beam, making the rotor weight placement critical.
 
 </details>
 
@@ -698,9 +742,9 @@ At the critical section (mid-span, outer surface):
 
 <Steps>
 
-1. **Stress state at critical point** (outer surface, tension side at mid-span):
+1. **Stress state at critical point** (outer surface, top fiber at support B):
 
-   - Normal stress: $\sigma_x = 6.91$ MPa
+   - Normal stress: $\sigma_x = 11.0$ MPa (tension on top due to negative moment)
    - Shear stress: $\tau_{xy} = 43.2$ MPa
    - Other components: $\sigma_y = 0$, $\sigma_z = 0$
 
@@ -710,15 +754,15 @@ At the critical section (mid-span, outer surface):
 
    Substituting values:
 
-   $$\sigma_{von\ Mises} = \sqrt{(6.91)^2 + 3(43.2)^2}$$
+   $$\sigma_{von\ Mises} = \sqrt{(11.0)^2 + 3(43.2)^2}$$
 
-   $$\sigma_{von\ Mises} = \sqrt{47.75 + 5,598.72} = \sqrt{5,646.47}$$
+   $$\sigma_{von\ Mises} = \sqrt{121.0 + 5,598.72} = \sqrt{5,719.72}$$
 
-   $$\sigma_{von\ Mises} = 75.1 \text{ MPa}$$
+   $$\sigma_{von\ Mises} = 75.6 \text{ MPa}$$
 
 3. **Physical meaning:**
 
-   The combined effect produces an equivalent uniaxial stress of 75.1 MPa. Notice this is dominated by the torsional component (43.2 MPa contributes most).
+   The combined effect produces an equivalent uniaxial stress of 75.6 MPa. Notice this is still dominated by the torsional component (43.2 MPa), but the bending contribution (11.0 MPa) is now more significant due to the overhang loading. The realistic loading (P1 + W) creates higher equivalent stress than simplified models.
 
 </Steps>
 
@@ -735,42 +779,47 @@ At the critical section (mid-span, outer surface):
 
 1. **Calculate safety factor:**
 
-   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{310}{75.1} = 4.13$$
+   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{310}{75.6} = 4.10$$
 
 2. **Design assessment:**
 
    | Criterion | Value | Status |
    |-----------|-------|--------|
-   | **Von Mises stress** | 75.1 MPa | ✅ |
+   | **Von Mises stress** | 75.6 MPa | ✅ |
    | **Material yield** | 310 MPa | ✅ |
-   | **Safety factor** | 4.13 | ✅ Excellent |
+   | **Safety factor** | 4.10 | ✅ Excellent |
    | **Typical turbine SF target** | 2.5–4.0 | ✅ Met |
 
 3. **Design margin analysis:**
 
-   - **Stress utilization:** $\frac{75.1}{310} \times 100\% = 24.2\%$ of material capacity
-   - **Available margin:** 4.13× the actual stress
+   - **Stress utilization:** $\frac{75.6}{310} \times 100\% = 24.4\%$ of material capacity
+   - **Available margin:** 4.10× the actual stress
    - **Conclusion:** Design has **appropriate safety margin** for rotating machinery
 
 4. **Design evaluation:**
 
    ✅ **Design is adequate** with good safety margins
 
-   **Why SF = 4.13 is appropriate:**
+   **Why SF = 4.10 is appropriate:**
    - Wind turbines experience **fatigue loading** (cyclic stress from rotation)
    - **Dynamic loads** from gusts and turbulence require margin
    - **Longer service life** (20+ years) needs conservative design
    - **Consequence of failure** is severe (turbine collapse, downtime)
 
    **Stress contribution breakdown:**
-   - Torsion contributes: $\frac{3 \times 43.2^2}{5,646.47} \times 100\% = 99.2\%$
-   - Bending contributes: $\frac{6.91^2}{5,646.47} \times 100\% = 0.8\%$
+   - Torsion contributes: $\frac{3 \times 43.2^2}{5,719.72} \times 100\% = 97.9\%$
+   - Bending contributes: $\frac{11.0^2}{5,719.72} \times 100\% = 2.1\%$
+
+   **Overhang configuration insights:**
+   - ✅ More realistic for wind turbines (rotor extends beyond forward bearing)
+   - ✅ Negative moment at B (637.5 N·m) creates tension on top fiber
+   - ✅ 59% higher bending moment than simply-supported configuration
+   - ✅ Downward reaction at A (200 N ↓) demonstrates overhang lifting effect
 
    **Design verification:**
-   - ✅ Shaft diameter appropriate for torque transmission
-   - ✅ Hollow section provides strength with reduced weight
-   - ✅ Safety factor adequate for fatigue and dynamic loads
-   - ✅ Bending stresses negligible — design is driven by torsional capacity
+   - ✅ Safety factor (4.10) adequate for fatigue and dynamic loads
+   - ✅ Torsion dominates (97.9%), but bending contribution (2.1%) is realistic
+   - ✅ Hollow section optimizes strength-to-weight ratio
 
 </Steps>
 
