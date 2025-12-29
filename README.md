@@ -53,7 +53,7 @@ Chapter 2 has been completely restructured to emphasize pure engineering problem
 - **Support configuration:** <state support config>
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Double Girder Gantry Crane](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/double-girder-gantry-crane.png)
+	![Double Girder Gantry Crane](https://cdn.siliconwit.com/education/solid-mechanics/double-girder-gantry-crane.png)
   </TailwindWrapper>
 </div>
 **What we need to analyze:**

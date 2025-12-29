@@ -40,7 +40,7 @@ By the end of this lesson, you will be able to:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Industrial Beam Structures](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-analysis-animation.gif)
+	![Industrial Beam Structures](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-analysis-animation.gif)
   </TailwindWrapper>
 </div>
 
@@ -63,8 +63,7 @@ All industrial beam structures experience **internal shear forces and bending mo
 > **Engineering Question 2:** How do support types and loading patterns affect internal force distributions and structural requirements?
 > **Engineering Question 3:** What analytical tools enable optimized designs that balance safety, cost, and performance?
 
-<details>
-<summary>**Click to Reveal: Why Beam Analysis Matters**</summary>
+#### Why Beam Analysis Matters
 **Consequences of Inadequate Analysis:**
 - **Structural failure** causing downtime, equipment damage, and safety hazards
 - **Excessive deflection** compromising positioning accuracy
@@ -74,7 +73,6 @@ All industrial beam structures experience **internal shear forces and bending mo
 - **Safe, reliable structures** with appropriate safety factors
 - **Material optimization** through accurate critical section identification
 - **Foundation for advanced analysis** including stress and deflection prediction
-</details>
 
 ## 📚 Fundamental Theory: Shear Force and Bending Moment
 
@@ -84,7 +82,7 @@ Before analyzing shear forces and bending moments, it's essential to understand 
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Beam Support Types Comparison](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/support-comparison.gif)
+    ![Beam Support Types Comparison](https://cdn.siliconwit.com/education/solid-mechanics/support-comparison.gif)
   </TailwindWrapper>
 </div>
 
@@ -184,7 +182,7 @@ $$\frac{dM}{dx} = V(x)$$
 
 <Card title="🛡️ Cantilever Beam (Fixed-Free)" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-  ![Cantilever Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/cantilever_beam.svg)
+  ![Cantilever Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/cantilever_beam.svg)
 </div>
 
 **For cantilever with distributed load w and point load P at tip:**
@@ -203,7 +201,7 @@ $$M(x) = -M_{base} + R_y \cdot x - w \cdot \frac{x^2}{2}$$
 
 <Card title="⚖️ Simply Supported Beam (Pin-Roller)" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-  ![Simply Supported Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/simply_supported_beam.svg)
+  ![Simply Supported Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/simply_supported_beam.svg)
 </div>
 
 **For simply supported beam with central point load P:**
@@ -222,7 +220,7 @@ $$M(x) = \frac{P}{2} \cdot x \text{ (for 0 ≤ x ≤ L/2)}$$
 
 <Card title="🔗 Overhanging Beam" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-  ![Overhanging Beam Diagram](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/overhanging_beam.svg)
+  ![Overhanging Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/overhanging_beam.svg)
 </div>
 
 **For overhanging beam with UDL across entire length:**
@@ -260,7 +258,7 @@ Since shear "integrates" from loading ($\frac{dV}{dx} = -w$) and moment "integra
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Integration Pattern Rule](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/sketching_integration_pattern.svg)
+    ![Integration Pattern Rule](https://cdn.siliconwit.com/education/solid-mechanics/sketching_integration_pattern.svg)
   </TailwindWrapper>
 </div>
 
@@ -277,7 +275,7 @@ When sketching moment diagrams from shear diagrams, the **slope direction** in t
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Slope Direction Guide](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/sketching_slope_direction_guide.svg)
+    ![Slope Direction Guide](https://cdn.siliconwit.com/education/solid-mechanics/sketching_slope_direction_guide.svg)
   </TailwindWrapper>
 </div>
 
@@ -329,7 +327,7 @@ A material handling robotic arm is modeled as a cantilever beam carrying both it
 - **Support configuration:** Cantilever beam (fixed at base)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Semi-Automatic Robotic Arm Cantilever](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-cantilever.png)
+	![Semi-Automatic Robotic Arm Cantilever](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-cantilever.png)
   </TailwindWrapper>
 </div>
 **What we need to analyze:**
@@ -343,7 +341,7 @@ A material handling robotic arm is modeled as a cantilever beam carrying both it
 <Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Robotic Arm Segment Under Load](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic-arm-segment-under-load.png)
+	![Robotic Arm Segment Under Load](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-segment-under-load.png)
   </TailwindWrapper>
 </div>
 **Given:**
@@ -414,7 +412,7 @@ Just after tip: V = -1200 + 1200 = 0 N ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Semi-Automatic Robotic Arm Shear Force Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic_arm_shear_diagram.svg)
+	![Semi-Automatic Robotic Arm Shear Force Plot](https://cdn.siliconwit.com/education/solid-mechanics/robotic_arm_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
@@ -445,7 +443,7 @@ $$M(x) = -3234.375 + 1387.5x - 37.5x^2$$
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Semi-Automatic Robotic Arm Moment Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/robotic_arm_moment_diagram.svg)
+	![Semi-Automatic Robotic Arm Moment Plot](https://cdn.siliconwit.com/education/solid-mechanics/robotic_arm_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
@@ -501,7 +499,7 @@ A conveyor beam supports five equally spaced boxes during material handling oper
 - **Support configuration:** Simply supported (pinned + roller)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Conveyor Beam with Multiple Loads](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-loads.png)
+	![Conveyor Beam with Multiple Loads](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-loads.png)
   </TailwindWrapper>
 </div>
 **What we need to analyze:**
@@ -516,7 +514,7 @@ A conveyor beam supports five equally spaced boxes during material handling oper
 <Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Loaded Conveyor Beam Support Equivalent System Model](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
+	![Loaded Conveyor Beam Support Equivalent System Model](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
   </TailwindWrapper>
 </div>
 **Given:**
@@ -607,7 +605,7 @@ $$V(x) = -1000 \text{ N}$$ ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Conveyor Beam with Multiple Loads Shear Force Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor_beam_shear_diagram.svg)
+	![Conveyor Beam with Multiple Loads Shear Force Plot](https://cdn.siliconwit.com/education/solid-mechanics/conveyor_beam_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
@@ -659,7 +657,7 @@ $$
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Conveyor Beam with Multiple Loads Bending Moment Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/conveyor_beam_moment_diagram.svg)
+	![Conveyor Beam with Multiple Loads Bending Moment Plot](https://cdn.siliconwit.com/education/solid-mechanics/conveyor_beam_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
@@ -707,7 +705,7 @@ A solar tracker support beam adjusts panel orientation to track the sun, experie
 - **Support configuration:** Overhanging simply supported beam
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Overhanging Beam](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar-panel-tracking-system-mounting-rack-for-single-axis-solar-tracker.png)
+	![Solar Tracker Overhanging Beam](https://cdn.siliconwit.com/education/solid-mechanics/solar-panel-tracking-system-mounting-rack-for-single-axis-solar-tracker.png)
   </TailwindWrapper>
 </div>
 **What we need to analyze:**
@@ -722,7 +720,7 @@ A solar tracker support beam adjusts panel orientation to track the sun, experie
 <Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Parameters](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar-tracker-arm-loading-diagram.png)
+	![Solar Tracker Parameters](https://cdn.siliconwit.com/education/solid-mechanics/solar-tracker-arm-loading-diagram.png)
   </TailwindWrapper>
 </div>
 **Given:**
@@ -805,7 +803,7 @@ $$V(x) = R_A - wx + R_B = 240 - 300x + 1260 = 1500 - 300x$$
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Overhanging Beam Shear Force Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar_tracker_arm_shear_diagram.svg)
+	![Solar Tracker Overhanging Beam Shear Force Plot](https://cdn.siliconwit.com/education/solid-mechanics/solar_tracker_arm_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
@@ -850,7 +848,7 @@ $$M(x) = 1500x - 150x^2 - 3150$$
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Overhanging Beam Bending Moment Plot](https://pub-b1eb899abc464b5baf5b9521d163efd9.r2.dev/solid-mechanics/solar_tracker_arm_moment_diagram.svg)
+	![Solar Tracker Overhanging Beam Bending Moment Plot](https://cdn.siliconwit.com/education/solid-mechanics/solar_tracker_arm_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
