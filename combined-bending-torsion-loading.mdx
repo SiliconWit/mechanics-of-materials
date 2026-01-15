@@ -740,7 +740,7 @@ At the critical section (support B, outer surface):
 
 </Steps>
 
-**Physical interpretation:** The shaft is primarily loaded in torsion (power transmission), with significant bending from the combined rotor assembly weight (P1) and shaft self-weight (W) on the overhang. The overhang configuration creates 59% higher bending moment than a simply-supported beam, making the rotor weight placement critical.
+**Physical interpretation:** The shaft is primarily loaded in torsion (power transmission), with significant bending from the combined rotor assembly weight (P1) and shaft self-weight (W) on the overhang. The overhang configuration creates higher bending moment than a simply-supported beam, making the rotor weight placement critical.
 
 </details>
 
@@ -771,7 +771,7 @@ At the critical section (support B, outer surface):
 
 3. **Physical meaning:**
 
-   The combined effect produces an equivalent uniaxial stress of 75.6 MPa. Notice this is still dominated by the torsional component (43.2 MPa), but the bending contribution (11.0 MPa) is now more significant due to the overhang loading. The realistic loading (P1 + W) creates higher equivalent stress than simplified models.
+   The combined loading results in an equivalent uniaxial (von Mises) stress of 75.6 MPa. While the stress state remains dominated by torsion (43.2 MPa), the overhang loading introduces an additional bending moment at the support, increasing the bending stress to 11.0 MPa compared with what would be obtained under a simply supported idealization. As a result, the realistic loading case (P1 + W) produces a higher equivalent stress than simplified models.
 
 </Steps>
 
@@ -822,7 +822,7 @@ At the critical section (support B, outer surface):
    **Overhang configuration insights:**
    - ✅ More realistic for wind turbines (rotor extends beyond forward bearing)
    - ✅ Negative moment at B (637.5 N·m) creates tension on top fiber
-   - ✅ 59% higher bending moment than simply-supported configuration
+   - ✅ Higher bending moment than simply-supported configuration
    - ✅ Downward reaction at A (200 N ↓) demonstrates overhang lifting effect
 
    **Design verification:**
