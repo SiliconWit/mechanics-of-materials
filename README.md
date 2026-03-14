@@ -12,6 +12,8 @@ sidebar:
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
 [![Contributors](https://img.shields.io/badge/contributors-welcome-orange)]()
 
+**Read this course at:** [https://siliconwit.com/education/mechanics-of-materials/](https://siliconwit.com/education/mechanics-of-materials/)
+
 A comprehensive, systems-based approach to teaching solid mechanics through real-world mechatronic applications. This curriculum transforms traditional theoretical concepts into practical engineering knowledge using interactive learning components.
 
 ## 📚 Course Overview
