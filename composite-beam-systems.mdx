@@ -15,7 +15,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -23,7 +23,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 
 
 
-## 🎯 Learning Objectives
+A CNC machine bed built from a single material is always a compromise: steel is stiff but heavy, aluminum is light but deflects more. Bonding or bolting two materials together gives you the best of both, but the standard flexural formula no longer applies because each material has a different elastic modulus and carries a different share of the bending stress. The transformed section method resolves this by converting the composite cross-section into an equivalent single-material section, letting you reuse the same bending equations you already know. In this lesson you will analyze a hybrid aluminum-steel CNC machine bed, locate the shifted neutral axis, and calculate the true stress in each material. #CompositeBeams #TransformedSection #CNCDesign
+
+## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
@@ -32,7 +34,7 @@ By the end of this lesson, you will be able to:
 3. **Calculate** bending stresses in each material of a composite system
 4. **Design** hybrid structures for optimal strength-to-weight performance
 
-## 🔧 Real-World System Problem: CNC Machine Bed Structure
+## Real-World System Problem: CNC Machine Bed Structure
 
 <InArticleAd />
 
@@ -78,7 +80,7 @@ During machining operations, the CNC bed experiences:
 - **Enhanced structural performance** compared to single materials
 - **Cost-effective design** balancing performance and economics
 
-## 📚 Fundamental Theory: Composite Beam Mechanics
+## Fundamental Theory: Composite Beam Mechanics
 
 <InArticleAd />
 
@@ -168,7 +170,7 @@ The steel section is replaced by an aluminum section **2.86 times wider**.
   </TabItem>
 </Tabs>
 
-## 🔧 Application: CNC Bed Composite Beam Analysis
+## Application: CNC Bed Composite Beam Analysis
 
 <InArticleAd />
 
@@ -303,7 +305,7 @@ Let's analyze a realistic CNC bed cross-section step by step.
 
 </details>
 
-## 🔧 Engineering Problems
+## Engineering Problems
 
 <InArticleAd />
 
@@ -459,7 +461,7 @@ A high-performance beam uses carbon fiber reinforcement bonded to aluminum struc
 
 </details>
 
-## 📋 Summary and Next Steps
+## Summary and Next Steps
 
 <InArticleAd />
 

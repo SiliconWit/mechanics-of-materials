@@ -16,7 +16,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -24,9 +24,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 
 
 
-Master structural analysis through hands-on laboratory experiments that integrate analytical calculations, Python programming, and finite element analysis. These three progressive labs provide practical experience with real engineering applications in robotics, additive manufacturing, and aerospace systems.
+Hand calculations tell you the stress at a single point under idealized loading. Real structures have complex geometry, multiple load paths, and boundary conditions that are difficult to capture analytically. Finite element analysis handles that complexity, but trusting its output blindly is dangerous: a wrong mesh, a misapplied boundary condition, or a misunderstood result can produce numbers that look plausible but are wrong. The only reliable check is to solve a simplified version analytically, compare it to FEA, and understand where and why they diverge. These three progressive labs do exactly that for a robotic arm cantilever, a 3D printer gantry rail, and a drone arm under combined loading.
 
-## 🎯 Laboratory Series Overview
+## Laboratory Series Overview
 
 This laboratory series provides comprehensive training in structural analysis methods essential for modern engineering practice. You will analyze real engineering components using both analytical methods (Python) and finite element analysis (FreeCAD), developing skills directly applicable to mechatronics, automation, and structural design.
 
@@ -190,7 +190,7 @@ E022-01-1234-2023-Lab1/
 <InArticleAd />
 
 
-### 🤖 Application: Robotic Arm Design
+### Application: Robotic Arm Design
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
@@ -637,7 +637,7 @@ This lab focuses on visualization and familiarity with FreeCAD. FEM analysis wil
 <InArticleAd />
 
 
-### 🖨️ Application: 3D Printer Gantry Rail Design
+### Application: 3D Printer Gantry Rail Design
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
@@ -1041,7 +1041,7 @@ plt.show()
 <InArticleAd />
 
 
-### ✈️ Application: Drone Arm Under Multi-Axis Loading
+### Application: Drone Arm Under Multi-Axis Loading
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
@@ -1524,7 +1524,7 @@ print(f'Total savings for 4 arms: {4*(masses[list(OD_range).index(20)] - optimal
 
 ---
 
-## 📚 Appendices
+## Appendices
 
 <InArticleAd />
 
@@ -1896,7 +1896,7 @@ Rectangular: $I = \frac{bh^3}{12}, \quad J = \beta bh^3$ (β depends on b/h rati
 
 ---
 
-## 📋 Summary and Course Integration
+## Summary and Course Integration
 
 <InArticleAd />
 

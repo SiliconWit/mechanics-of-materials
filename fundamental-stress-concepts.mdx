@@ -15,7 +15,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -23,9 +23,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 
 
 
-Learn fundamental mechanics of materials concepts by analyzing the connecting rod in a crank-slider mechanism, covering stress-strain relations, Young's modulus, and Poisson's ratio.
+A connecting rod that looks strong enough can fail in service if the designer did not account for the stress concentration at a fillet, the fatigue limit of the material, or the difference between tensile and compressive loading. Predicting whether a part will survive requires more than intuition: it requires stress analysis. In this lesson you will learn the fundamental quantities (stress, strain, Young's modulus, Poisson's ratio) by analyzing the connecting rod in a crank-slider mechanism, the same component that converts combustion pressure into crankshaft rotation in every piston engine. #StressAnalysis #MechanicsOfMaterials #ConnectingRod
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this unit, you will be able to:
 
@@ -34,7 +34,7 @@ By the end of this unit, you will be able to:
 3. <Badge text="Apply" variant="tip" /> Hooke's Law to predict material behavior under loading
 4. <Badge text="Solve" variant="caution" /> connecting rod stress problems during peak compression in crank-slider systems
 
-## 🔧 Real-World System Problem: The Crank-Slider Mechanism
+## Real-World System Problem: The Crank-Slider Mechanism
 
 <InArticleAd />
 
@@ -77,7 +77,7 @@ But if the connecting rod fails mechanically, no amount of sophisticated control
 In mechatronic systems, **mechanical failure modes often dominate over electrical or software failures**. A single mechanical component failure can render the entire system inoperable, making mechanics of materials analysis essential for system reliability.
 :::
 
-## 📚 Fundamental Theory: Stress, Strain, and Material Properties
+## Fundamental Theory: Stress, Strain, and Material Properties
 
 <InArticleAd />
 
@@ -182,7 +182,7 @@ $$\nu = -\frac{\epsilon_{lateral}}{\epsilon_{longitudinal}}$$
 - **Critical for** multi-axial stress analysis in complex geometries
 :::
 
-## 🔧 Application: Crank-Slider Connecting Rod Analysis
+## Application: Crank-Slider Connecting Rod Analysis
 
 <InArticleAd />
 
@@ -293,7 +293,7 @@ Now let's return to our crank-slider system and apply what we've learned to solv
 
 </details>
 
-## 🎯 Key Material Properties for Mechatronics
+## Key Material Properties for Mechatronics
 
 <InArticleAd />
 
@@ -316,7 +316,7 @@ Now let's return to our crank-slider system and apply what we've learned to solv
   </Card>
 </CardGrid>
 
-## 📋 Summary and Next Steps
+## Summary and Next Steps
 
 <InArticleAd />
 

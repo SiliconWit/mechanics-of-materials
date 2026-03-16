@@ -15,7 +15,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -23,9 +23,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 
 
 
-Learn torsional analysis through Geneva mechanism crankshafts, covering shear stress distribution, angle of twist calculations, and design principles for rotating mechanical components.
+A shaft that transmits torque without breaking can still fail functionally if it twists too much: the angular deflection throws off the timing in a Geneva indexing mechanism, causes vibration in a coupling, or misaligns a sensor mounting. Designing against torsional failure means checking both the shear stress (will it yield?) and the angle of twist (will it stay accurate?). In this lesson you will analyze Geneva mechanism crankshafts, learning shear stress distribution, angle of twist calculations, and the design principles that keep rotating shafts strong and stiff. #Torsion #ShearStress #ShaftDesign
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
@@ -34,7 +34,7 @@ By the end of this lesson, you will be able to:
 3. <Badge text="Apply" variant="caution" /> torsion theory to Geneva mechanism analysis
 4. <Badge text="Design" variant="tip" /> shafts for both strength and stiffness requirements
 
-## 🔧 Real-World System Problem: Geneva Mechanism Crankshaft
+## Real-World System Problem: Geneva Mechanism Crankshaft
 
 <InArticleAd />
 
@@ -78,7 +78,7 @@ During operation, the Geneva mechanism crankshaft experiences:
 - **Long service life** with appropriate safety factors
 - **Predictable performance** under varying loads
 
-## 📚 Fundamental Theory: Torsional Mechanics
+## Fundamental Theory: Torsional Mechanics
 
 <InArticleAd />
 
@@ -188,7 +188,7 @@ $$\theta = \frac{TL}{GJ}$$
 - **Practical limits:** Typically limit to 1°/meter for precision mechanisms
 :::
 
-## 🔧 Application: Geneva Mechanism Crankshaft Analysis
+## Application: Geneva Mechanism Crankshaft Analysis
 
 <InArticleAd />
 
@@ -320,7 +320,7 @@ $$d = \left(\frac{32 J_{required}}{\pi}\right)^{1/4} = \left(\frac{32 \times 4.3
 
 **Final Design:** Use **50 mm diameter** shaft.
 
-## 📊 Design Comparison Summary
+## Design Comparison Summary
 
 <InArticleAd />
 
@@ -346,7 +346,7 @@ $$d = \left(\frac{32 J_{required}}{\pi}\right)^{1/4} = \left(\frac{32 \times 4.3
   </Card>
 </CardGrid>
 
-## 🎯 Design Guidelines for Torsional Loading
+## Design Guidelines for Torsional Loading
 
 <InArticleAd />
 
@@ -409,7 +409,7 @@ $$d = \left(\frac{32 J_{required}}{\pi}\right)^{1/4} = \left(\frac{32 \times 4.3
   </TabItem>
 </Tabs>
 
-## 🛠️ Advanced Analysis: Variable Torque and Fatigue
+## Advanced Analysis: Variable Torque and Fatigue
 
 <InArticleAd />
 
@@ -440,7 +440,7 @@ For variable torque applications:
 For shafts with variable torque, use **endurance limit** (typically 40-50% of ultimate strength) instead of yield strength for allowable stress calculations.
 :::
 
-## 📋 Summary and Next Steps
+## Summary and Next Steps
 
 <InArticleAd />
 

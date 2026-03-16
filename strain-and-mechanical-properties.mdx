@@ -15,7 +15,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -23,9 +23,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 
 
 
-Learn axial stress and strain analysis through a CNC actuator shaft system, covering material selection criteria for precision mechatronic applications.
+A CNC actuator shaft that stretches even a few micrometers under load throws off positioning accuracy, and choosing a material by cost alone risks either over-designing (heavy, expensive) or under-designing (flexible, imprecise). Selecting the right material requires comparing elastic modulus, yield strength, and elongation at failure across candidates, then computing the actual deformation under your expected loads. In this lesson you will perform that analysis on a CNC actuator shaft system, learning axial stress and strain calculations alongside practical material selection criteria. #AxialStress #MaterialSelection #CNCDesign
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this unit, you will be able to:
 
@@ -34,7 +34,7 @@ By the end of this unit, you will be able to:
 3. <Badge text="Compare" variant="caution" /> material properties (aluminum vs steel) for actuator applications
 4. <Badge text="Solve" variant="tip" /> shaft sizing problems for CNC positioning systems
 
-## 🔧 Real-World System Problem: CNC Z-Axis Actuator Shaft
+## Real-World System Problem: CNC Z-Axis Actuator Shaft
 
 <InArticleAd />
 
@@ -83,7 +83,7 @@ The choice affects system performance, cost, and precision.
 <Badge text="Durability" variant="caution" />: Steel offers better long-term wear resistance
 :::
 
-## 📚 Fundamental Theory: Axial Stress and Strain
+## Fundamental Theory: Axial Stress and Strain
 
 <InArticleAd />
 
@@ -167,7 +167,7 @@ $$\delta = \frac{FL}{AE} = \frac{\sigma L}{E}$$
   </TabItem>
 </Tabs>
 
-## 🔧 Application: CNC Actuator Shaft Analysis
+## Application: CNC Actuator Shaft Analysis
 
 <InArticleAd />
 
@@ -319,7 +319,7 @@ Steel's <Badge text="2.86× higher E" variant="success" /> compared to aluminum 
 
 </details>
 
-## 🎯 Material Selection Guidelines for Mechatronics
+## Material Selection Guidelines for Mechatronics
 
 <InArticleAd />
 
@@ -354,7 +354,7 @@ Steel's <Badge text="2.86× higher E" variant="success" /> compared to aluminum 
 - <Badge text="Budget constraints" variant="note" />: Higher material and machining costs
 :::
 
-## 📋 Summary and Next Steps
+## Summary and Next Steps
 
 <InArticleAd />
 

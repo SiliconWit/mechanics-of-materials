@@ -15,7 +15,7 @@ import Copyright from '../../../../components/Copyright.astro';
 import BionicText from '../../../../components/BionicText.astro';
 import TailwindWrapper from '../../../../components/TailwindWrapper.jsx';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
-import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/components';
+import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/starlight/components';
 
 <UniversalContentContributors 
   contributors={frontmatter.contributors}
@@ -23,9 +23,9 @@ import { Card, CardGrid, Badge, Steps, LinkButton } from '@astrojs/starlight/com
 
 
 
-Learn thermal stress analysis through heated piston-cylinder systems, covering thermal expansion, constrained deformation, and stress development in mechatronic applications.
+A piston that fits perfectly at room temperature can seize in the cylinder at operating temperature if the designer neglected differential thermal expansion between materials. Conversely, a rail that is free to expand causes no stress, but bolt it to a rigid frame and the same temperature rise generates forces large enough to buckle the rail or shear the bolts. In this lesson you will analyze heated piston-cylinder systems and constrained structures, learning to calculate thermal expansion, predict stress in constrained components, and design for safe operation across a range of temperatures. #ThermalStress #ThermalExpansion #MechatronicDesign
 
-## 🎯 Learning Objectives
+## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
@@ -34,7 +34,7 @@ By the end of this lesson, you will be able to:
 3. <Badge text="Apply" variant="caution" /> thermal stress principles to piston-cylinder interfaces
 4. <Badge text="Design" variant="tip" /> for thermal expansion in mechatronic systems
 
-## 🔧 Real-World System Problem: Heated Piston-Cylinder Interface
+## Real-World System Problem: Heated Piston-Cylinder Interface
 
 <InArticleAd />
 
@@ -78,7 +78,7 @@ During heating from room temperature (20°C) to operating temperature (200°C):
 - **Extended component life** with controlled stress levels
 - **Predictable performance** in varying thermal environments
 
-## 📚 Fundamental Theory: Thermal Expansion and Stress
+## Fundamental Theory: Thermal Expansion and Stress
 
 <InArticleAd />
 
@@ -177,7 +177,7 @@ $$\sigma_T = E \alpha \Delta T \times (1 - \frac{\delta_{allowed}}{\delta_{free}
 **Physical Meaning:** When thermal expansion is prevented, materials develop internal stress proportional to their stiffness and expansion tendency.
 </Card>
 
-## 🔧 Application: Piston-Cylinder Thermal Analysis
+## Application: Piston-Cylinder Thermal Analysis
 
 <InArticleAd />
 
@@ -290,7 +290,7 @@ Let's analyze our heated extruder system step by step.
 
 </details>
 
-## 🎯 Advanced Analysis: Bi-Material System
+## Advanced Analysis: Bi-Material System
 
 <InArticleAd />
 
@@ -320,7 +320,7 @@ $$F_{Al} + F_{steel} = 0$$ (internal forces balance)
 - **Aluminum experiences compression** (wants to expand more but is held back)
 - **Steel experiences tension** (is pulled to expand more than it naturally would)
 
-## 🛠️ Design Guidelines for Thermal Systems
+## Design Guidelines for Thermal Systems
 
 <InArticleAd />
 
@@ -375,7 +375,7 @@ $$F_{Al} + F_{steel} = 0$$ (internal forces balance)
 5. **Assuming room temperature operation** in heated environments
 :::
 
-## 📊 Thermal Analysis Summary
+## Thermal Analysis Summary
 
 <InArticleAd />
 
@@ -401,7 +401,7 @@ $$F_{Al} + F_{steel} = 0$$ (internal forces balance)
   </Card>
 </CardGrid>
 
-## 📋 Summary and Next Steps
+## Summary and Next Steps
 
 <InArticleAd />
 
