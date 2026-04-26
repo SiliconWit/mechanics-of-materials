@@ -242,26 +242,69 @@ All follow identical step-by-step methodology with professional LaTeX formatting
 
 ### How to Contribute
 
-1. **Fork the Repository**
+All commands below work on Linux, macOS, and Windows (using Git Bash, PowerShell, or Command Prompt with Git installed).
+
+#### For Team Members (with push access)
+
+**First time setup (clone the repo once):**
+
+```bash
+git clone https://github.com/SiliconWit/mechanics-of-materials.git
+cd mechanics-of-materials
+```
+
+**Every time you start working:**
+
+```bash
+git pull origin main
+```
+
+Always pull before making changes. This avoids conflicts with other contributors.
+
+**After making your changes:**
+
+```bash
+git add .
+git commit -m "Brief description of what you changed"
+git push origin main
+```
+
+**If you get a push error** (someone pushed before you):
+
+```bash
+git pull origin main
+```
+
+Git will merge the changes automatically in most cases. If there is a conflict, Git will mark the conflicting lines in the file. Open the file, choose which version to keep, then:
+
+```bash
+git add .
+git commit -m "Resolve merge conflict"
+git push origin main
+```
+
+**Tips to avoid conflicts:**
+
+- Always `git pull origin main` before you start working
+- Push your changes as soon as you are done, do not hold onto uncommitted work for long
+- Coordinate with other contributors so two people are not editing the same file at the same time
+
+#### For External Contributors (without push access)
+
+1. Fork the repository: [SiliconWit/mechanics-of-materials](https://github.com/SiliconWit/mechanics-of-materials)
+2. Clone your fork:
    ```bash
-   git clone https://github.com/SiliconWit/mechanics-of-materials
+   git clone https://github.com/YOUR-USERNAME/mechanics-of-materials.git
    cd mechanics-of-materials
    ```
-
-2. **Create a Feature Branch**
+3. Make your changes and commit:
    ```bash
-   git checkout -b feature/mechanics-improvement
+   git add .
+   git commit -m "Brief description of what you changed"
+   git push origin main
    ```
-
-3. **Make Your Changes**
-   - Follow the established format patterns
-   - Test your changes locally
-   - Ensure proper MDX syntax
-
-4. **Submit Pull Request**
-   - Provide clear description of changes
-   - Reference any related issues
-   - Include screenshots if UI changes
+4. Open a Pull Request against `main` on the original repository
+5. Describe what you changed and why in the PR description
 
 ### Contribution Areas
 
