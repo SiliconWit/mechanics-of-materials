@@ -24,7 +24,7 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-Master combined bending and torsion analysis through practical applications in drone arms, wind turbine shafts, and robotic grippers, covering von Mises failure theory, principal stress transformation, and safety factor design for multi-axis loading conditions. #VonMisesStress #CombinedLoading #FailureTheory
+A shaft is checked for bending and passes. It is checked for twisting and passes. In service it still yields, because both loads act on the same metal at the same moment and nobody combined them. The two stresses cannot simply be added, because bending pulls on the metal and twisting slides it. This lesson shows how to find both stresses at the worst point of a shaft and combine them into one number, the von Mises stress, which you compare with the strength of the material. You use it on a drone arm, a wind turbine shaft and a robot gripper finger. #VonMisesStress #CombinedLoading #FailureTheory
 
 ## Learning Objectives
 
@@ -32,1108 +32,581 @@ By the end of this lesson, you will be able to:
 
 1. Analyze simultaneous bending and torsional stresses in shaft components
 2. Calculate equivalent stresses using von Mises and maximum shear stress theories
-3. Apply combined loading analysis to robotic wrist joint design
-4. Predict failure modes under multi-axis loading conditions
+3. Apply combined loading analysis to a drone arm, a turbine shaft and a gripper finger
+4. Judge a design from its safety factor, and say which load governs it
 
 :::tip[Try it as you read]
-This lesson pairs with two simulators: the [Shaft Torsion Simulator](/product-development/shaft-torsion-simulator/) for the torsional part, and the [Mohr's Circle Simulator](/product-development/mohrs-circle-simulator/) to turn the combined surface stress into principal stresses and a safety factor. The [Stress Transformation Experiments](/education/mechanics-of-materials/stress-transformation-experiments) reproduce the combined-loading case step by step with Python.
+This lesson pairs with two simulators: the [Shaft Torsion Simulator](/product-development/shaft-torsion-simulator/) for the torsional part, and the [Mohr's Circle Simulator](/product-development/mohrs-circle-simulator/) to turn the combined surface stress into principal stresses and a safety factor. The [Stress Transformation Experiments](/education/mechanics-of-materials/stress-transformation-experiments/) reproduce the combined-loading case step by step with Python.
 :::
 
-## Engineering Challenge: Combined Loading in Mechanical Systems
+## Engineering challenge: combined loading in mechanical systems
 
 <InArticleAd />
 
 
-<BionicText method="advanced" intensity="medium" class="highlight">
-Combined loading is a critical design consideration across diverse engineering applications, from robotic manipulators handling multi-axis forces, to wind turbine shafts transmitting power while supporting blade weight, to drone arms balancing thrust loads with motor torque. Understanding combined stress analysis enables engineers to predict failure modes under complex loading, assess equivalent stresses against material limits, and optimize structural designs for reliability under simultaneous bending, torsion, and axial forces.
-</BionicText>
+Few machine parts carry one load only. A drone arm is bent by the thrust of its rotor and twisted by its motor. A turbine shaft is twisted by the power it carries and bent by the weight of the rotor. A gripper finger is bent by the grip force and twisted by friction.
 
-### The Universal Combined Loading Challenge
+```text
+ fixed end                       force F bends the shaft
+   ║                                    │
+   ║  A (top surface, fixed end)        ▼
+   ║──●─────────────────────────────────┐
+   ║              shaft                 │ ↻ torque T
+   ║────────────────────────────────────┘   twists it
+   ║◄──────────── length L ────────────►│
+```
 
-Across mechanical, aerospace, and robotics engineering, structural members must resist multiple simultaneous loads to maintain:
+At point A the stress from bending and the stress from twisting are both at their largest, and they act on the same small piece of metal.
 
-:::note[Critical Performance Requirements]
-- **Structural integrity** (preventing yielding or fracture under combined stresses)
-- **Component reliability** (avoiding failure from underestimating equivalent stress)
-- **Functional performance** (maintaining precision under multi-axis loading conditions)
-- **Long-term durability** (resisting fatigue from cyclic combined loading)
-- **Design optimization** (balancing strength requirements against weight and cost)
-:::
+> **Engineering Question:** A shaft is bent and twisted at the same time. How do we find the two stresses at its worst point, combine them into one number, and compare that number with the strength of the material?
 
-> **Engineering Question:** How do we analyze shafts and structural members experiencing simultaneous bending moments, torsional loads, and axial forces, assess them against material strength limits using equivalent stress theories, and design safe solutions that meet performance requirements?
-
-### Why Combined Loading Analysis Matters
-
-**Consequences of Inadequate Combined Stress Analysis:**
-- **Unexpected failures:** Structural collapse from underestimating equivalent stress
-- **Safety hazards:** Catastrophic failure in wind turbines, aircraft, or robotic systems
-- **Shortened service life:** Premature fatigue failure under cyclic multi-axis loading
-- **Performance degradation:** Excessive deflection compromising precision and functionality
-- **Material waste:** Over-design from conservative assumptions without proper analysis
-
-**Benefits of Proper Combined Loading Analysis:**
-- **Predictable performance** within established safety margins using validated failure theories
-- **Optimized material usage** through accurate equivalent stress calculations
-- **Informed design trade-offs** between weight, strength, and reliability
-- **Application-specific safety factors** tailored to loading conditions (not arbitrary rules)
-- **Reliable fatigue life prediction** for cyclic combined loading scenarios
-
-## Fundamental Theory: Combined Stress Analysis
+## Fundamental Theory: Combined stress analysis
 
 <InArticleAd />
 
 
-### The Principle of Stress Superposition
+The method has three parts: find the stress from each load alone, put both stresses on the same small piece of metal, then combine them into one number.
 
-When multiple loads act simultaneously on a structural member, the **principle of superposition** allows us to calculate the total stress state by combining individual stress components algebraically.
+### Stress from each load
 
-<Card title="📋 Why Superposition Works" icon="document">
+Bending stretches one side of a shaft and squeezes the other. The stress is zero on the neutral axis, the line across the middle of the section that is neither stretched nor squeezed, and it is largest at the surface.
 
-**Foundation:** Superposition is valid when:
-1. **Material behaves linearly** (stress proportional to strain within elastic range)
-2. **Deformations are small** (geometry doesn't significantly change under load)
-3. **Loads are independent** (one load doesn't affect how another is applied)
+<Card title="Bending stress" icon="document">
 
-**Practical Implication:** Calculate stresses from each load type separately, then combine them to get total stress state.
+$$\sigma = \frac{Mc}{I}$$
 
-</Card>
-
-### Stress Components in Combined Loading
-
-<Card title="📊 Combined Normal Stress" icon="document">
-
-**Individual stress components:**
-
-1. **From axial loading:**
-   $$\sigma_{axial} = \frac{P}{A}$$
-   Where $P$ = axial force, $A$ = cross-sectional area
-
-2. **From bending moment:**
-   $$\sigma_{bending} = \frac{My}{I}$$
-   Where $M$ = bending moment, $y$ = distance from neutral axis, $I$ = second moment of area
-
-**Combined normal stress (at any point):**
-$$\sigma_x = \frac{P}{A} \pm \frac{My}{I}$$
-
-**Sign convention:**
-- Tension: **positive (+)**
-- Compression: **negative (−)**
-- Use **+** on tension side of beam, **−** on compression side
-
-**Critical insight:** Maximum normal stress occurs at the **outer fiber** farthest from the neutral axis.
+- $\sigma$ (sigma) = normal stress from bending, in MPa (1 MPa = 1 N/mm²)
+- $M$ = bending moment at the section (N·mm)
+- $c$ = distance from the neutral axis to the surface (mm)
+- $I$ = second moment of area of the section (mm⁴), which measures how far the metal sits from the neutral axis
 
 </Card>
 
-<Card title="🌀 Combined Shear Stress" icon="document">
+Torsion (twisting) slides each cross-section over the next one, which is a shear stress. It is zero at the centre of a round shaft and largest at the surface.
 
-**Individual shear stress components:**
+<Card title="Torsional shear stress" icon="document">
 
-1. **From torsion:**
-   $$\tau_{torsion} = \frac{Tr}{J}$$
-   Where $T$ = torque, $r$ = radial distance, $J$ = polar moment of inertia
+$$\tau = \frac{Tr}{J}$$
 
-2. **From transverse shear force:**
-   $$\tau_{shear} = \frac{VQ}{It}$$
-   Where $V$ = shear force, $Q$ = first moment of area, $t$ = width
-
-**Combined shear stress:**
-$$\tau_{xy} = \tau_{torsion} + \tau_{shear}$$
-
-**For most shaft problems:** Torsional shear dominates, and transverse shear is negligible.
-
-**Critical insight:** Maximum shear stress from torsion occurs at the **outer surface** of circular shafts.
+- $\tau$ (tau) = shear stress from torsion (MPa)
+- $T$ = torque (N·mm)
+- $r$ = distance from the centre of the shaft (mm)
+- $J$ = polar second moment of area (mm⁴). For a round section, solid or hollow, $J = 2I$
 
 </Card>
 
-### Principal Stress Transformation
+Each stress is calculated as if the other load were absent, and both then act together. This is the principle of superposition. It holds while the material is elastic (it returns to its shape when unloaded) and the deflections are small.
 
-When normal and shear stresses act together, the actual maximum stress occurs on **different planes** than the original coordinate system.
+Two other loads can be present. A force $P$ along the shaft adds $P/A$ to the normal stress, where $A$ is the area of the cross-section (mm²). A force across the shaft gives a shear stress of its own, but that stress is zero at the top and bottom of the section, where the bending stress is largest, so a shaft check usually leaves it out.
 
-<Card title="🔱 Principal Stress Formulas" icon="document">
+### The critical point
 
-**For 2D stress state** (σₓ, σᵧ, τₓᵧ):
+```text
+               A   top: bending pulls hardest
+            ───●───
+          ╱         ╲
+         │           │
+   B ────●─ ─ ─ ─ ─ ─●──── neutral axis: no bending stress
+         │           │
+          ╲         ╱
+            ───●───
+               C   bottom: bending squeezes hardest
 
-$$\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
+   Torsion gives the same shear at every point of the surface.
+```
 
-**Where:**
-- $\sigma_1$ = **Maximum principal stress** (largest normal stress on any plane)
-- $\sigma_2$ = **Minimum principal stress** (smallest normal stress on any plane)
-- Principal planes have **zero shear stress**
+The check is made at A or C, the surface points farthest from the neutral axis. There one piece of metal carries the largest $\sigma$ and the largest $\tau$ together. At B it carries the shear stress alone.
 
-**For combined bending + torsion** (common case: σᵧ = 0):
+### Combining the two stresses
 
-$$\sigma_{1,2} = \frac{\sigma_x}{2} \pm \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau_{xy}^2}$$
-
-**Physical meaning:** These are the "true" maximum and minimum stresses at the point, accounting for stress direction.
-
-</Card>
-
-<Card title="🌀 Maximum Shear Stress" icon="document">
-
-**In-plane maximum shear stress:**
-$$\tau_{max} = \frac{\sigma_1 - \sigma_2}{2} = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
-
-**Absolute maximum shear stress** (considering all 3D principal stresses):
-$$\tau_{abs,max} = \frac{\sigma_1 - \sigma_3}{2}$$
-
-Where $\sigma_3$ = third principal stress (often zero for surface stresses)
-
-**Critical insight:** Maximum shear occurs on planes oriented **45° from principal stress directions**.
-
-</Card>
-
-### Failure Theories for Combined Loading
-
-Different materials fail through different mechanisms. We use **failure theories** to predict when combined stresses will cause yielding or fracture.
+A normal stress and a shear stress load the metal in different ways, so $\sigma + \tau$ has no meaning. They combine as two walks at right angles do: 30 m east and then 40 m north leave you 50 m from the start, which is more than either walk and less than their sum. The comparison is not exact in one respect: shear brings a metal to yield sooner than its size suggests, so it is counted three times under the square root.
 
 <Tabs>
-  <TabItem label="Von Mises (Recommended)">
+  <TabItem label="Von Mises">
 
-    <Card title="⚙️ Von Mises (Distortion Energy Theory)" icon="document">
+The von Mises stress is the single pulling stress that brings a ductile metal (one that stretches before it breaks, such as steel or aluminum) as close to yielding as the real combination does.
 
-    **Theory basis:** Material yields when **distortion energy** reaches a critical value.
+$$\sigma_{von\ Mises} = \sqrt{\sigma^2 + 3\tau^2}$$
 
-    **Equivalent stress formula:**
-    $$\sigma_{von\ Mises} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}$$
+The safety factor ($SF$) is the yield strength $\sigma_{yield}$ divided by this number. It has no unit.
 
-    **For combined bending + torsion** (σᵧ = 0):
-    $$\sigma_{von\ Mises} = \sqrt{\sigma_x^2 + 3\tau_{xy}^2}$$
+$$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}}$$
 
-    **Failure criterion:**
-    $$\sigma_{von\ Mises} \leq \frac{\sigma_{yield}}{SF}$$
-
-    **When to use:**
-    - ✅ **Ductile materials** (steel, aluminum, most metals)
-    - ✅ **Most accurate** for multi-axis stress states
-    - ✅ **Industry standard** for mechanical design
-
-    **Why it works:** Accounts for all stress components' contribution to material distortion.
-
-    </Card>
+Tests on ductile metals agree best with this theory, so it is the usual choice in machine design.
 
   </TabItem>
+  <TabItem label="Tresca">
 
-  <TabItem label="Tresca (Conservative)">
+The Tresca theory, also called the maximum shear stress theory, says that a ductile metal yields when the largest shear stress on any plane reaches the value it has at yield in a tension test. For bending with torsion:
 
-    <Card title="⚡ Tresca (Maximum Shear Stress Theory)" icon="document">
+$$\sigma_{Tresca} = \sqrt{\sigma^2 + 4\tau^2}$$
 
-    **Theory basis:** Material yields when **maximum shear stress** reaches shear strength.
-
-    **Equivalent stress:**
-    $$\sigma_{Tresca} = \sigma_1 - \sigma_2 = 2\tau_{max}$$
-
-    **Failure criterion:**
-    $$\sigma_{Tresca} \leq \frac{\sigma_{yield}}{SF}$$
-
-    Or equivalently:
-    $$\tau_{max} \leq \frac{\sigma_{yield}}{2 \cdot SF}$$
-
-    **When to use:**
-    - ✅ **Quick conservative estimate**
-    - ✅ **Ductile materials** (but more conservative than von Mises)
-    - ✅ When you want **extra safety margin**
-
-    **Note:** Tresca predicts lower allowable stress than von Mises (about 15% more conservative).
-
-    </Card>
+Shear is counted four times in place of three, so Tresca is never below von Mises, and it is at most 15% above. Use it as a cautious second check.
 
   </TabItem>
+  <TabItem label="Maximum normal stress">
 
-  <TabItem label="Maximum Normal Stress">
+Brittle materials, such as cast iron and ceramics, crack when the largest pulling stress on any plane reaches the ultimate strength of the material. That largest pulling stress is the first principal stress:
 
-    <Card title="📊 Maximum Normal Stress Theory" icon="document">
+$$\sigma_1 = \frac{\sigma}{2} + \sqrt{\left(\frac{\sigma}{2}\right)^2 + \tau^2}$$
 
-    **Theory basis:** Material fails when **largest normal stress** exceeds strength.
-
-    **Failure criterion:**
-    $$\sigma_1 \leq \frac{\sigma_{ultimate}}{SF}$$
-
-    **When to use:**
-    - ✅ **Brittle materials** (cast iron, ceramics, concrete)
-    - ❌ **NOT for ductile materials** under combined loading
-
-    **Why limited:** Ignores beneficial effects of compressive stresses and doesn't account for shear-induced yielding.
-
-    </Card>
+Do not use this theory for ductile metals. It misses yielding that shear causes.
 
   </TabItem>
 </Tabs>
 
-### Comparison of Failure Theories
+These formulas are for one normal stress and one shear stress, which is the case at the surface of a shaft. [Principal Stresses and Failure Analysis](/education/mechanics-of-materials/principal-stresses-failure-analysis/) covers the general case and shows where the 3 and the 4 come from.
 
-<Card title="📊 Which Theory to Use?" icon="seti:config">
+How large should the safety factor be? For a steady, well-known load, 1.5 to 3. For loads that repeat or shock, 3 to 6, because a part can crack from fatigue (damage from millions of load cycles) at a stress far below yield.
 
-| Criterion | Von Mises | Tresca | Max Normal Stress |
-|-----------|-----------|---------|-------------------|
-| **Best for** | Ductile metals (steel, Al) | Quick conservative check | Brittle materials |
-| **Accuracy** | Most accurate | ~15% conservative | Poor for ductile |
-| **Complexity** | Moderate | Simple | Very simple |
-| **Industry use** | ✅ Standard | ✅ Common backup | ⚠️ Limited |
-| **Safety factor** | Typical: 1.5–3.0 | Can use lower SF | Higher SF needed |
+:::tip[Sizing a solid round shaft]
+For a solid shaft of diameter $d$, put $\sigma = 32M/(\pi d^3)$ and $\tau = 16T/(\pi d^3)$ into the von Mises formula and solve for the diameter:
 
-**Design recommendation:**
-1. **Primary analysis:** Use **von Mises** for ductile materials (99% of mechanical design)
-2. **Verification:** Check with **Tresca** as conservative backup
-3. **Brittle materials:** Use **Maximum Normal Stress** for ceramics, cast iron, concrete
+$$d = \sqrt[3]{\frac{32 \cdot SF}{\pi \, \sigma_{yield}} \sqrt{M^2 + 0.75\,T^2}}$$
+:::
 
-</Card>
-
-### Practical Design Guidelines
-
-<CardGrid>
-  <Card title="🎯 Critical Stress Locations" icon="open-book">
-
-    **For circular shafts under bending + torsion:**
-    - Check **outer surface** (maximum r)
-    - On **tension side** of bending
-    - Combined σ and τ are both maximum there
-
-  </Card>
-
-  <Card title="⚖️ Typical Safety Factors" icon="setting">
-
-    **Static loading:**
-    - Well-known loads: SF = 1.5–2.0
-    - Uncertain loads: SF = 2.0–3.0
-
-    **Dynamic/fatigue loading:**
-    - SF = 3.0–6.0 (higher for critical)
-
-  </Card>
-
-  <Card title="🔄 Simplified Formula" icon="rocket">
-
-    **For shaft design** (bending + torsion):
-    $$d = \sqrt[3]{\frac{32 \cdot SF}{\pi \sigma_{yield}} \sqrt{M^2 + 0.75T^2}}$$
-
-    Quick diameter sizing!
-
-  </Card>
-</CardGrid>
-
-## Application 1: Drone Arm Design (Mechatronics)
+## Application 1: Drone arm design (mechatronics)
 
 <InArticleAd />
 
 
-A lightweight quadcopter drone uses hollow carbon fiber arms to support the motor and propeller assemblies. Each arm must withstand both vertical thrust forces from the rotor and torsional moments from motor operation during flight.
+A quadcopter carries each motor and propeller on a hollow carbon fiber arm. The thrust of the rotor bends the arm, and the reaction of the motor twists it about its own axis.
 
 :::note[System Problem Statement]
-- **Support configuration:** Fixed at drone body (cantilever), free at motor end
-- **Loading conditions:** Vertical rotor thrust at tip + motor torque about arm axis
-- **Cross-section:** Hollow circular carbon fiber tube
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Drone Arm Design](https://cdn.siliconwit.com/education/spatial-mechanics/drone-arm-design.jpg)
-  </TailwindWrapper>
-</div>
-**What we need to analyze:**
-1. **Section properties** of the hollow carbon fiber tube (I, J for circular cross-section)
-2. **Internal forces** at the critical section (bending moment from thrust, applied torque)
-3. **Individual stress components** (bending stress and torsional shear stress at outer surface)
-4. **Von Mises equivalent stress** combining bending and torsion effects
-5. **Safety factor assessment** for flight loading conditions
+- **Support:** fixed at the drone body, free at the motor end (a cantilever)
+- **Section:** hollow round tube, outside diameter $D = 20$ mm, inside diameter $d = 16$ mm
+- **Length:** $L = 300$ mm from the body to the motor
+- **Loads:** thrust force $F = 50$ N across the arm at its free end, and motor torque $T = 3$ N·m about the axis of the arm
+- **Material:** carbon fiber composite, limit stress $\sigma_{yield} = 400$ MPa
+- **Target:** a safety factor of 3 to 5, usual for a drone arm with vibration and landing shocks
 
-**Key Question:** Can this lightweight carbon fiber arm safely support the rotor thrust and motor torque simultaneously with adequate safety margin for dynamic flight loads?
+**Key Question:** Can the arm carry the thrust and the motor torque together with a safety factor of at least 3?
 :::
 
-Enter the combined surface stress (the bending sigma and the torsional tau) into the Mohr's circle simulator and read the principal stresses and the safety factor:
+```text
+ drone body                         F = 50 N
+   ║                                    │
+   ║  A                                 ▼
+   ║──●─────────────────────────────────┐
+   ║  hollow tube, D = 20 mm, d = 16 mm │ ↻ T = 3 N·m
+   ║────────────────────────────────────┘
+   ║◄─────────── L = 300 mm ───────────►│
+```
+
+Carbon fiber does not yield as a metal does, and its strength depends on the direction of the fibers. Here the 400 MPa limit is used as if it were a yield strength, which is good for a first estimate only.
+
+After Step 2, enter the two surface stresses (the bending sigma and the torsional tau) into the Mohr's circle simulator and read the principal stresses and the safety factor:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/mohrs-circle-simulator/" target="_blank" variant="primary">Open the Mohr's Circle Simulator</LinkButton>
 </div>
 
-<Card title="🔧 Equivalent System Model" icon="document">
-
-**Geometric Configuration:**
-- Hollow carbon fiber tube: Outer Diameter (OD) = 20 mm, wall thickness t = 2 mm
-- Inner diameter: d = 16 mm
-- Arm length: L = 300 mm from body (fixed support) to motor mounting point
-
-**Loading Conditions:**
-- Rotor thrust: F = 50 N downward at free end (perpendicular to arm axis)
-- Motor torque: T = 3 N·m constant along arm (about arm longitudinal axis)
-- Critical section: Fixed end where stresses are maximum
-
-**Cross-Section Properties:**
-- Second moment of area: I = π(D⁴ - d⁴)/64 = 4,618 mm⁴
-- Polar moment of inertia: J = π(D⁴ - d⁴)/32 = 9,236 mm⁴
-- Distance to extreme fiber: c = 10 mm
-
-**Material & Safety:**
-- Material: Carbon fiber composite (σ_yield = 400 MPa)
-- Safety factor target: 3.0–5.0 (typical for drone applications with dynamic loads)
-- Operating conditions: Flight loads with vibration and impact
-
-</Card>
-
-### Step 1: Calculate Section Properties
+### Step 1: Calculate section properties
 
 <details>
 <summary>**Click to reveal section property calculations**</summary>
 
-For a hollow circular tube with outer diameter D and inner diameter d:
-
 <Steps>
 
-1. **Cross-sectional area:**
+1. **Second moment of area** of the hollow tube, for the bending stress. It is the value for the outside circle minus the value for the hole:
 
-   $$A = \frac{\pi(D^2 - d^2)}{4} = \frac{\pi(20^2 - 16^2)}{4} = \frac{\pi(400 - 256)}{4} = 113.1 \text{ mm}^2$$
+   $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(20^4 - 16^4)\ \text{mm}^4}{64} = \frac{\pi \times 94{,}464}{64} = 4{,}637 \text{ mm}^4$$ ✅
 
-2. **Second moment of area** (for bending stress):
+2. **Polar second moment of area**, for the torsional stress. For a round section it is twice $I$:
 
-   $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(20^4 - 16^4)}{64}$$
+   $$J = 2I = 2 \times 4{,}637 = 9{,}274 \text{ mm}^4$$ ✅
 
-   $$I = \frac{\pi(160,000 - 65,536)}{64} = \frac{\pi \times 94,464}{64} = 4,618 \text{ mm}^4$$
-
-3. **Polar moment of inertia** (for torsional stress):
-
-   $$J = \frac{\pi(D^4 - d^4)}{32} = \frac{\pi(20^4 - 16^4)}{32} = 2I = 9,236 \text{ mm}^4$$
-
-4. **Critical dimensions:**
-
-   - Outer radius: $r_o = 10$ mm (where stresses are maximum)
-   - Distance from neutral axis to outer fiber: $c = 10$ mm
+3. **Distance to the surface.** Both stresses are largest at the outside radius: $c = r = D/2 = 10$ mm. ✅
 
 </Steps>
 
-**Design insight:** The hollow tube maximizes bending and torsional stiffness while minimizing weight—critical for drone performance.
-
 </details>
 
-### Step 2: Calculate Internal Forces and Individual Stresses
+### Step 2: Calculate internal forces and individual stresses
 
 <details>
 <summary>**Click to reveal stress component calculations**</summary>
 
 <Steps>
 
-1. **Calculate bending moment at fixed end** (from cantilever beam analysis):
+1. **Bending moment at the fixed end.** The force acts at the free end, so its moment is largest at the drone body: force times length.
 
-   For a cantilever with point load F at the free end:
-   $$M = F \times L = 50 \times 0.3 = 15 \text{ N·m} = 15,000 \text{ N·mm}$$
+   $$M = F \times L = 50 \text{ N} \times 300 \text{ mm} = 15{,}000 \text{ N·mm} \ (15 \text{ N·m})$$ ✅
 
-2. **Bending stress at outer fiber** (maximum tension/compression):
+2. **Bending stress at the surface**, from $\sigma = Mc/I$. It is tension on the top of the tube and compression on the bottom:
 
-   Using flexure formula $\sigma_b = \frac{Mc}{I}$:
+   $$\sigma = \frac{15{,}000 \text{ N·mm} \times 10 \text{ mm}}{4{,}637 \text{ mm}^4} = 32.3 \text{ MPa}$$ ✅
 
-   $$\sigma_{bending} = \frac{15,000 \times 10}{4,618} = 32.5 \text{ MPa}$$
+3. **Torsional shear stress at the surface**, from $\tau = Tr/J$, with 3 N·m written as 3,000 N·mm:
 
-   **Location:** Occurs at top and bottom of tube (tension on one side, compression on other)
+   $$\tau = \frac{3{,}000 \text{ N·mm} \times 10 \text{ mm}}{9{,}274 \text{ mm}^4} = 3.23 \text{ MPa}$$ ✅
 
-3. **Torsional shear stress at outer surface:**
-
-   Using torsion formula $\tau = \frac{Tr}{J}$:
-
-   $$\tau_{torsion} = \frac{3,000 \times 10}{9,236} = 3.25 \text{ MPa}$$
-
-   **Location:** Maximum at outer surface, acts circumferentially
-
-4. **Identify critical stress location:**
-
-   The **outer surface on the tension side** of bending experiences:
-   - Maximum normal stress: $\sigma_x = +32.5$ MPa (tension)
-   - Maximum shear stress: $\tau_{xy} = 3.25$ MPa (torsion)
-
-   These combine to create the highest equivalent stress.
+4. **Critical point.** Point A, on the tension side at the fixed end, carries $\sigma = 32.3$ MPa and $\tau = 3.23$ MPa together. ✅
 
 </Steps>
 
-**Physical interpretation:** The arm bends downward under rotor thrust (creating tension on top surface) while simultaneously twisting about its axis from motor torque.
-
 </details>
 
-### Step 3: Apply Von Mises Failure Theory
+### Step 3: Apply von Mises failure theory
 
 <details>
 <summary>**Click to reveal von Mises equivalent stress calculation**</summary>
 
 <Steps>
 
-1. **Stress state at critical point** (outer surface, tension side):
+1. **Stress state at point A:** $\sigma = 32.3$ MPa and $\tau = 3.23$ MPa. No other stress acts on the surface of the tube. ✅
 
-   - Normal stress: $\sigma_x = 32.5$ MPa
-   - Shear stress: $\tau_{xy} = 3.25$ MPa
-   - Other components: $\sigma_y = 0$, $\sigma_z = 0$ (thin-walled assumption)
+2. **Von Mises stress**, the two stresses combined with shear counted three times:
 
-2. **Von Mises equivalent stress formula** (for combined bending + torsion):
+   $$\sigma_{von\ Mises} = \sqrt{\sigma^2 + 3\tau^2} = \sqrt{(32.3)^2 + 3(3.23)^2}\ \text{MPa}$$
 
-   $$\sigma_{von\ Mises} = \sqrt{\sigma_x^2 + 3\tau_{xy}^2}$$
+   $$\sigma_{von\ Mises} = \sqrt{1{,}043.29 + 31.30} = \sqrt{1{,}074.59} = 32.8 \text{ MPa}$$ ✅
 
-   Substituting values:
-
-   $$\sigma_{von\ Mises} = \sqrt{(32.5)^2 + 3(3.25)^2}$$
-
-   $$\sigma_{von\ Mises} = \sqrt{1,056.25 + 31.69} = \sqrt{1,087.94}$$
-
-   $$\sigma_{von\ Mises} = 33.0 \text{ MPa}$$
-
-3. **Physical meaning:**
-
-   The combined effect of bending and torsion produces an equivalent uniaxial stress of 33.0 MPa. This is the "effective" stress that the material experiences.
+3. **Read the result.** The arm is as close to its limit as a bar pulled with a plain stress of 32.8 MPa. The torque raised the number by only 0.5 MPa above the bending stress. ✅
 
 </Steps>
 
-**Why von Mises?** Carbon fiber composites in the fiber direction behave similarly to ductile materials, making von Mises theory appropriate for this analysis.
-
 </details>
 
-### Step 4: Safety Factor Assessment and Design Evaluation
+### Step 4: Safety factor assessment and design evaluation
 
 <details>
 <summary>**Click to reveal safety factor analysis**</summary>
 
 <Steps>
 
-1. **Calculate safety factor:**
+1. **Safety factor**, the limit stress over the von Mises stress:
 
-   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{400}{33.0} = 12.1$$
+   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{400 \text{ MPa}}{32.8 \text{ MPa}} = 12.2$$ ✅
 
-2. **Design assessment:**
+2. **Compare with the target.** The target was 3 to 5. At 12.2 the arm uses $32.8/400 = 8.2\%$ of the limit stress, so it is safe and heavier than it must be. ✅
 
-   | Criterion | Value | Status |
-   |-----------|-------|--------|
-   | **Von Mises stress** | 33.0 MPa | ✅ |
-   | **Material yield** | 400 MPa | ✅ |
-   | **Safety factor** | 12.1 | ✅ Excellent |
-   | **Typical drone SF target** | 3.0–5.0 | ✅ Exceeded |
+3. **Share of bending.** Under the square root, bending gives $\sigma^2$ and torsion gives $3\tau^2$:
 
-3. **Design margin analysis:**
+   $$\frac{\sigma^2}{\sigma^2 + 3\tau^2} = \frac{1{,}043.29}{1{,}074.59} = 97.1\%$$ ✅
 
-   - **Stress utilization:** $\frac{33.0}{400} \times 100\% = 8.25\%$ of material capacity
-   - **Available margin:** Nearly 12× the actual stress
-   - **Conclusion:** Design is **highly conservative** (very safe but possibly overdesigned)
+4. **Share of torsion.** Bending governs this arm, and a change to the motor torque would hardly move the result:
 
-4. **Stress contribution analysis:**
+   $$\frac{3\tau^2}{\sigma^2 + 3\tau^2} = \frac{31.30}{1{,}074.59} = 2.9\%$$ ✅
 
-   From the von Mises stress formula $\sigma_{vm} = \sqrt{\sigma_b^2 + 3\tau^2}$, we can determine each component's contribution:
-
-   **Bending contribution:**
-
-   $$\text{Bending \%} = \frac{\sigma_b^2}{\sigma_b^2 + 3\tau^2} \times 100\%$$
-
-   **Torsion contribution:**
-
-   $$\text{Torsion \%} = \frac{3\tau^2}{\sigma_b^2 + 3\tau^2} \times 100\%$$
-
-   **For our drone arm:**
-   - Bending contributes: $\frac{32.5^2}{32.5^2 + 3 \times 3.25^2} \times 100\% = \frac{1,056.25}{1,087.94} \times 100\% = 97.1\%$ of von Mises stress
-   - Torsion contributes: $\frac{3 \times 3.25^2}{32.5^2 + 3 \times 3.25^2} \times 100\% = \frac{31.69}{1,087.94} \times 100\% = 2.9\%$ of von Mises stress
-   - **Key insight:** Bending dominates — motor torque has minimal structural impact
-
-5. **Design recommendations:**
-
-   ✅ **Current design is safe** with excellent margins (SF = 12.1 >> 3.0 target)
-
-   **Potential optimizations** (if weight reduction needed):
-   - Could reduce wall thickness to t = 1.5 mm (stress increases ~33%, still SF > 8)
-   - Could use smaller diameter (D = 18 mm) for weight savings
-   - Current design provides excellent margin for dynamic loads, vibration, and fatigue
-
-   **When to keep current conservative design:**
-   - Crash resistance is critical (landing impacts, collisions)
-   - Vibration and dynamic loads significant (rotor imbalance, wind gusts)
-   - Fatigue life important (SF > 10 excellent for high-cycle loading from rotor operation)
+5. **Design decision.** A wall of 1.5 mm in place of 2 mm raises the stress by about 24% and still leaves a safety factor near 9.9. Keep the thicker wall if crash loads, vibration and fatigue matter more than weight: this safety factor covers a steady load only. ✅
 
 </Steps>
 
 </details>
 
-## Application 2: Wind Turbine Main Shaft (Mechanical)
+## Application 2: Wind turbine main shaft (mechanical)
 
 <InArticleAd />
 
 
-The main shaft of a horizontal-axis wind turbine transmits power from the rotor to the gearbox while supporting the rotor weight and wind loads. This shaft experiences combined bending from distributed loads and torsion from power transmission.
+The main shaft of a wind turbine carries the power of the rotor to the gearbox. It also holds the weight of the rotor, which hangs beyond the front bearing. So the shaft is twisted by the power and bent by the weight.
+
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <TailwindWrapper>
+	![Cutaway drawing of the top of a wind turbine: the blades and the rotor hub at the front, then the low speed shaft, the brake, the gear box, the high speed shaft and the generator, all on top of the tower. The low speed shaft is the main shaft of this application. The drawing does not show its two bearings](https://cdn.siliconwit.com/education/solid-mechanics/wind-turbine-transmits-power.jpg)
+  </TailwindWrapper>
+</div>
 
 :::note[System Problem Statement]
-- **Support configuration:** Overhang beam (pinned support at bearing A, roller support at bearing B, rotor assembly overhangs beyond B)
-- **Loading conditions:** Point load P1 at tip (rotor assembly weight) + distributed load W (shaft self-weight) + constant transmitted torque T
-- **Cross-section:** Hollow circular steel shaft
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Wind Turbine Power Transmission](https://cdn.siliconwit.com/education/solid-mechanics/wind-turbine-transmits-power.jpg)
-  </TailwindWrapper>
-</div>
-**What we need to analyze:**
-1. **Support reactions** for overhang beam with both point load (rotor) and distributed load (shaft weight) on cantilevered portion
-2. **Critical section location** (where maximum bending moment occurs in overhang configuration)
-3. **Section properties** of the hollow steel shaft (I, J for circular cross-section)
-4. **Maximum bending moment** from combined loading (P1 + W) creating negative moment at support B
-5. **Individual stress components** (bending stress and torsional shear stress at outer surface)
-6. **Von Mises equivalent stress** and safety factor assessment
+- **Support:** bearing A (a pin support) at the rear, and bearing B (a roller support) 1.5 m in front of it. The shaft continues 0.5 m beyond B to the rotor: an overhang
+- **Section:** hollow steel shaft, outside diameter $D = 100$ mm, inside diameter $d = 80$ mm
+- **Loads:** rotor weight $P_1 = 1200$ N at the tip; weight of the shaft itself, $W = 300$ N for each metre along the whole length $L = 2.0$ m; torque $T = 5000$ N·m along the whole shaft
+- **Material:** AISI 1045 steel, $\sigma_{yield} = 310$ MPa
+- **Target:** a safety factor of 2.5 to 4, usual for a rotating shaft whose loads repeat for 20 years
 
-**Key Question:** Can this shaft safely transmit rated power while simultaneously supporting the rotor assembly weight and shaft self-weight on the overhang without yielding, considering the combined stress state from both bending and torsion?
+**Key Question:** Can the shaft carry the torque and the weight on the overhang together without yielding?
 :::
 
-<Card title="🔧 Equivalent System Model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Wind Turbine Overhanging Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/solar-tracker-arm-loading-diagram.png)
+	![Beam diagram of the shaft: support A, a pin, at the left end; support B, a roller, about three quarters of the way along; a distributed load W over the whole length; a point load P1 at the right tip; and the total length L marked below](https://cdn.siliconwit.com/education/solid-mechanics/solar-tracker-arm-loading-diagram.png)
   </TailwindWrapper>
 </div>
-**Geometric Configuration:**
-- Hollow steel shaft: Outer Diameter (OD) = 100 mm, Inner Diameter (ID) = 80 mm
-- Wall thickness: t = 10 mm
-- **Total shaft length: L = 2.0 m (2000 mm)** from bearing A to point P1
-- Span between bearings: AB = 1.5 m (1500 mm) from bearing A (pinned) to bearing B (roller)
-- Overhang length: BP1 = 0.5 m (500 mm) from bearing B to rotor at P1
-- Critical section: At support B where maximum negative bending moment occurs
 
-**Loading Conditions:**
-- **Point load P1** = 1200 N at tip of overhang (x = L = 2.0 m) - rotor assembly weight (hub + blades)
-- **Distributed load W** = 300 N/m along entire shaft (0 ≤ x ≤ L = 2.0 m) - shaft self-weight
-- Total distributed load: W_total = W × L = 300 × 2.0 = 600 N
-- **Transmitted torque T** = 5000 N·m constant along entire shaft (from rotor power transmission)
-- Support reactions: R_A (to be calculated), R_B (to be calculated)
+The diagram has no dimensions: from A to B is 1.5 m, from B to $P_1$ is 0.5 m, and $L = 2.0$ m.
 
-**Cross-Section Properties:**
-- Second moment of area: I = π(D⁴ - d⁴)/64 = 2.896 × 10⁶ mm⁴
-- Polar moment of inertia: J = π(D⁴ - d⁴)/32 = 5.792 × 10⁶ mm⁴
-- Distance to extreme fiber: c = 50 mm
-
-**Material & Safety:**
-- Material: AISI 1045 steel (σ_yield = 310 MPa)
-- Safety factor target: 2.5–4.0 (typical for power transmission with fatigue loading)
-- Operating conditions: Rotating shaft, cyclic wind loads, 20+ year service life
-
-</Card>
-
-### Step 1: Calculate Support Reactions and Determine Critical Section
+### Step 1: Calculate support reactions and determine critical section
 
 <details>
 <summary>**Click to reveal support reactions and critical section analysis**</summary>
 
-For an **overhang beam** with **point load P1 at the tip** and **uniformly distributed load W along the entire shaft**, we must first find support reactions, then determine where maximum bending moment occurs.
-
 <Steps>
 
-1. **Given loads:**
+1. **Reaction at B.** Take moments about A, so that the unknown reaction at A drops out. The weight of the shaft, $W \times L = 300 \times 2.0 = 600$ N, acts at the middle of the shaft, 1.0 m from A:
 
-   - Point load: $P_1 = 1200$ N at tip (x = L = 2.0 m)
-   - Distributed load: $W = 300$ N/m along entire shaft (0 ≤ x ≤ L = 2.0 m)
-   - Total distributed load: $W_{total} = W \times L = 300 \times 2.0 = 600$ N
-   - **Total shaft length: $L = 2.0$ m**
-   - Span between bearings: $AB = 1.5$ m
-   - Overhang length: $BP_1 = 0.5$ m
+   $$R_B \times AB = P_1 \times L + (W \times L) \times \frac{L}{2}$$
 
-2. **Calculate support reaction at B using moment equilibrium about A:**
+   $$R_B = \frac{1200 \text{ N} \times 2.0 \text{ m} + 600 \text{ N} \times 1.0 \text{ m}}{1.5 \text{ m}} = \frac{3000 \text{ N·m}}{1.5 \text{ m}} = 2000 \text{ N (upward)}$$ ✅
 
-   **Taking moments about support A** (counterclockwise positive):
-   $$\sum M_A = 0$$
-   $$R_B \times AB - P_1 \times L - W \times L \times \frac{L}{2} = 0$$
+2. **Reaction at A.** The upward forces equal the downward forces. The minus sign in the result means that bearing A pushes down with 200 N: the weight on the overhang tries to lift the rear end of the shaft.
 
-   $$R_B = \frac{P_1 \times L + W \times L^2 / 2}{AB}$$
+   $$R_A = P_1 + W \times L - R_B = 1200 + 600 - 2000 = -200 \text{ N}$$ ✅
 
-   $$R_B = \frac{1200 \times 2.0 + 300 \times (2.0)^2 / 2}{1.5}$$
+3. **Critical section.** The loads beyond B have their longest lever arm at B, so the bending moment is largest there. ✅
 
-   $$R_B = \frac{2400 + 300 \times 2.0}{1.5} = \frac{2400 + 600}{1.5} = \frac{3000}{1.5} = 2000 \text{ N} \uparrow$$
+4. **Bending moment at B.** Look at the overhang alone. The rotor weight acts 0.5 m from B. The weight of the overhang itself, $300 \times 0.5 = 150$ N, acts at its middle, 0.25 m from B:
 
-3. **Calculate reaction at A from vertical equilibrium:**
+   $$M_B = 1200 \text{ N} \times 0.5 \text{ m} + 150 \text{ N} \times 0.25 \text{ m} = 600 + 37.5 = 637.5 \text{ N·m}$$
 
-   $$\sum F_y = 0$$
-   $$R_A + R_B - P_1 - W \times L = 0$$
-   $$R_A = P_1 + W \times L - R_B$$
-   $$R_A = 1200 + 300 \times 2.0 - 2000 = 1200 + 600 - 2000 = -200 \text{ N}$$
+   This moment bends the shaft downward over the bearing, so the top surface at B is in tension. For the stress, use $637{,}500$ N·mm. ✅
 
-   **Result:** $R_A = 200$ N ↓ (downward reaction - overhang lifts the beam at A!)
-
-4. **Maximum bending moment location:**
-
-   For overhang beams with load on overhang, the **critical section is at support B** where the maximum negative moment occurs (tension on top fiber, compression on bottom).
-
-5. **Calculate maximum bending moment at support B:**
-
-   Using the overhang section (from B to P1) for clarity:
-
-   The overhang has:
-   - Point load $P_1$ at distance $BP_1$ from B
-   - Distributed load $W$ over length $BP_1$, with resultant at $BP_1/2$ from B
-
-   $$M_B = -P_1 \times BP_1 - W \times BP_1 \times \frac{BP_1}{2}$$
-
-   $$M_B = -1200 \times 0.5 - 300 \times 0.5 \times \frac{0.5}{2}$$
-
-   $$M_B = -600 - 300 \times 0.125 = -600 - 37.5 = -637.5 \text{ N·m}$$
-
-   Converting to N·mm: $|M_B| = 637,500$ N·mm (magnitude used for stress calculations)
-
-6. **Torsional moment:**
-
-   Torque is constant along entire shaft:
-   $$T = 5000 \text{ N·m} = 5,000,000 \text{ N·mm}$$
+5. **Torque.** It is the same at every section: $T = 5000$ N·m $= 5{,}000{,}000$ N·mm. ✅
 
 </Steps>
 
-**Critical section identified:** **At support B** (bearing closest to rotor) where maximum negative bending moment of 637.5 N·m occurs. The overhang configuration is more realistic for wind turbines where the rotor hub extends beyond the forward bearing.
-
-**Physical insight:** The combined effect of rotor weight (P1 = 1200 N at distance L from A) and shaft self-weight (W = 300 N/m along entire length L) creates a significant negative moment at bearing B. The overhang portion (BP1 = 0.5 m) causes tension on the top fiber at B. The downward reaction at bearing A (200 N ↓) shows how the overhang lifts the rear of the shaft.
-
 </details>
 
-### Step 2: Calculate Section Properties
+### Step 2: Calculate section properties
 
 <details>
 <summary>**Click to reveal section property calculations**</summary>
 
-For a hollow circular shaft with outer diameter D and inner diameter d:
-
 <Steps>
 
-1. **Cross-sectional area:**
+1. **Second moment of area** of the hollow shaft:
 
-   $$A = \frac{\pi(D^2 - d^2)}{4} = \frac{\pi(100^2 - 80^2)}{4} = \frac{\pi(10,000 - 6,400)}{4}$$
+   $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(100^4 - 80^4)\ \text{mm}^4}{64} = \frac{\pi \times 59{,}040{,}000}{64} = 2.898 \times 10^6 \text{ mm}^4$$ ✅
 
-   $$A = \frac{\pi \times 3,600}{4} = 2,827 \text{ mm}^2$$
+2. **Polar second moment of area**, twice $I$ for a round section:
 
-2. **Second moment of area** (for bending stress):
+   $$J = 2I = 5.796 \times 10^6 \text{ mm}^4$$ ✅
 
-   $$I = \frac{\pi(D^4 - d^4)}{64} = \frac{\pi(100^4 - 80^4)}{64}$$
-
-   $$I = \frac{\pi(100,000,000 - 40,960,000)}{64} = \frac{\pi \times 59,040,000}{64}$$
-
-   $$I = 2,896,000 \text{ mm}^4 = 2.896 \times 10^6 \text{ mm}^4$$
-
-3. **Polar moment of inertia** (for torsional stress):
-
-   $$J = \frac{\pi(D^4 - d^4)}{32} = 2I = 5,792,000 \text{ mm}^4 = 5.792 \times 10^6 \text{ mm}^4$$
-
-4. **Critical dimensions:**
-
-   - Outer radius: $r_o = 50$ mm (where stresses are maximum)
-   - Distance from neutral axis to outer fiber: $c = 50$ mm
+3. **Distance to the surface:** $c = r = D/2 = 50$ mm. ✅
 
 </Steps>
 
-**Design note:** The 10 mm wall thickness provides good balance between strength and weight for power transmission applications.
-
 </details>
 
-### Step 3: Calculate Individual Stress Components
+### Step 3: Calculate individual stress components
 
 <details>
 <summary>**Click to reveal stress calculations at critical section**</summary>
 
-At the critical section (support B, outer surface):
-
 <Steps>
 
-1. **Bending stress at outer fiber:**
+1. **Bending stress at the surface**, at B:
 
-   Using flexure formula $\sigma_b = \frac{Mc}{I}$ with moment magnitude $|M_B| = 637,500$ N·mm:
+   $$\sigma = \frac{Mc}{I} = \frac{637{,}500 \text{ N·mm} \times 50 \text{ mm}}{2.898 \times 10^6 \text{ mm}^4} = 11.0 \text{ MPa}$$ ✅
 
-   $$\sigma_{bending} = \frac{637,500 \times 50}{2.896 \times 10^6} = \frac{31,875,000}{2,896,000} = 11.0 \text{ MPa}$$
+2. **Torsional shear stress at the surface:**
 
-   **Location:** Maximum at top and bottom of shaft. At support B with negative moment, **tension occurs on top fiber** (opposite of typical simply-supported beam)
+   $$\tau = \frac{Tr}{J} = \frac{5{,}000{,}000 \text{ N·mm} \times 50 \text{ mm}}{5.796 \times 10^6 \text{ mm}^4} = 43.1 \text{ MPa}$$ ✅
 
-2. **Torsional shear stress at outer surface:**
-
-   Using torsion formula $\tau = \frac{Tr}{J}$:
-
-   $$\tau_{torsion} = \frac{5,000,000 \times 50}{5.792 \times 10^6} = \frac{250,000,000}{5,792,000} = 43.2 \text{ MPa}$$
-
-   **Location:** Maximum at outer surface, uniform around circumference
-
-3. **Identify critical stress state:**
-
-   The **outer surface on the tension side** (top fiber at support B) experiences:
-   - Normal stress: $\sigma_x = +11.0$ MPa (tension)
-   - Shear stress: $\tau_{xy} = 43.2$ MPa (torsion)
-
-4. **Stress comparison:**
-
-   Notice that **torsional stress still dominates** over bending stress:
-   - $\tau_{torsion} = 43.2$ MPa (much larger)
-   - $\sigma_{bending} = 11.0$ MPa (moderate, but still significantly smaller than torsion)
-
-   This is typical for power transmission shafts where torque is the primary design consideration. However, the overhang configuration creates higher bending moment (637.5 N·m) than a simply-supported beam would (400 N·m), making the combined loading (P1 + W) effect more pronounced.
+3. **Critical point.** The top surface at B carries $\sigma = 11.0$ MPa of tension and $\tau = 43.1$ MPa of shear. Here the shear stress is about four times the bending stress, the opposite of the drone arm. ✅
 
 </Steps>
 
-**Physical interpretation:** The shaft is primarily loaded in torsion (power transmission), with significant bending from the combined rotor assembly weight (P1) and shaft self-weight (W) on the overhang. The overhang configuration creates higher bending moment than a simply-supported beam, making the rotor weight placement critical.
-
 </details>
 
-### Step 4: Apply Von Mises Failure Theory
+### Step 4: Apply von Mises failure theory
 
 <details>
 <summary>**Click to reveal von Mises equivalent stress calculation**</summary>
 
 <Steps>
 
-1. **Stress state at critical point** (outer surface, top fiber at support B):
+1. **Von Mises stress** at the top surface at B:
 
-   - Normal stress: $\sigma_x = 11.0$ MPa (tension on top due to negative moment)
-   - Shear stress: $\tau_{xy} = 43.2$ MPa
-   - Other components: $\sigma_y = 0$, $\sigma_z = 0$
+   $$\sigma_{von\ Mises} = \sqrt{\sigma^2 + 3\tau^2} = \sqrt{(11.0)^2 + 3(43.1)^2}\ \text{MPa}$$
 
-2. **Von Mises equivalent stress formula** (for combined bending + torsion):
+   $$\sigma_{von\ Mises} = \sqrt{121.0 + 5{,}572.83} = \sqrt{5{,}693.83} = 75.5 \text{ MPa}$$ ✅
 
-   $$\sigma_{von\ Mises} = \sqrt{\sigma_x^2 + 3\tau_{xy}^2}$$
-
-   Substituting values:
-
-   $$\sigma_{von\ Mises} = \sqrt{(11.0)^2 + 3(43.2)^2}$$
-
-   $$\sigma_{von\ Mises} = \sqrt{121.0 + 5,598.72} = \sqrt{5,719.72}$$
-
-   $$\sigma_{von\ Mises} = 75.6 \text{ MPa}$$
-
-3. **Physical meaning:**
-
-   The combined loading results in an equivalent uniaxial (von Mises) stress of 75.6 MPa. While the stress state remains dominated by torsion (43.2 MPa), the overhang loading introduces an additional bending moment at the support, increasing the bending stress to 11.0 MPa compared with what would be obtained under a simply supported idealization. As a result, the realistic loading case (P1 + W) produces a higher equivalent stress than simplified models.
+2. **Compare with torsion alone.** With no bending the result would be $\sqrt{3} \times 43.1 = 74.7$ MPa. The weight on the overhang adds less than 1 MPa. ✅
 
 </Steps>
 
-**Key insight:** When $3\tau^2 >> \sigma^2$, the von Mises stress is approximately $\sqrt{3}\tau \approx 1.732\tau$, confirming torsion dominates.
-
 </details>
 
-### Step 5: Safety Factor Assessment and Design Evaluation
+### Step 5: Safety factor assessment and design evaluation
 
 <details>
 <summary>**Click to reveal safety factor analysis**</summary>
 
 <Steps>
 
-1. **Calculate safety factor:**
+1. **Safety factor**, the yield strength over the von Mises stress:
 
-   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{310}{75.6} = 4.10$$
+   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{310 \text{ MPa}}{75.5 \text{ MPa}} = 4.11$$ ✅
 
-2. **Design assessment:**
+2. **Compare with the target.** The target was 2.5 to 4, so 4.11 passes. The shaft uses $75.5/310 = 24.4\%$ of the yield strength. ✅
 
-   | Criterion | Value | Status |
-   |-----------|-------|--------|
-   | **Von Mises stress** | 75.6 MPa | ✅ |
-   | **Material yield** | 310 MPa | ✅ |
-   | **Safety factor** | 4.10 | ✅ Excellent |
-   | **Typical turbine SF target** | 2.5–4.0 | ✅ Met |
+3. **Share of each load** under the square root:
 
-3. **Design margin analysis:**
+   $$\text{torsion: } \frac{3 \times 43.1^2}{5{,}693.83} = 97.9\% \qquad \text{bending: } \frac{11.0^2}{5{,}693.83} = 2.1\%$$ ✅
 
-   - **Stress utilization:** $\frac{75.6}{310} \times 100\% = 24.4\%$ of material capacity
-   - **Available margin:** 4.10× the actual stress
-   - **Conclusion:** Design has **appropriate safety margin** for rotating machinery
-
-4. **Design evaluation:**
-
-   ✅ **Design is adequate** with good safety margins
-
-   **Why SF = 4.10 is appropriate:**
-   - Wind turbines experience **fatigue loading** (cyclic stress from rotation)
-   - **Dynamic loads** from gusts and turbulence require margin
-   - **Longer service life** (20+ years) needs conservative design
-   - **Consequence of failure** is severe (turbine collapse, downtime)
-
-   **Stress contribution breakdown:**
-   - Torsion contributes: $\frac{3 \times 43.2^2}{5,719.72} \times 100\% = 97.9\%$
-   - Bending contributes: $\frac{11.0^2}{5,719.72} \times 100\% = 2.1\%$
-
-   **Overhang configuration insights:**
-   - ✅ More realistic for wind turbines (rotor extends beyond forward bearing)
-   - ✅ Negative moment at B (637.5 N·m) creates tension on top fiber
-   - ✅ Higher bending moment than simply-supported configuration
-   - ✅ Downward reaction at A (200 N ↓) demonstrates overhang lifting effect
-
-   **Design verification:**
-   - ✅ Safety factor (4.10) adequate for fatigue and dynamic loads
-   - ✅ Torsion dominates (97.9%), but bending contribution (2.1%) is realistic
-   - ✅ Hollow section optimizes strength-to-weight ratio
+4. **Design decision.** Torque governs, so a stronger shaft needs a larger diameter. Moving the rotor closer to bearing B lowers the bending moment and changes the result very little. This safety factor covers yielding only. The shaft turns, so its bending stress reverses on every turn, and a fatigue check is still needed. ✅
 
 </Steps>
 
 </details>
 
-## Application 3: Robotic Gripper Finger (Mechatronics)
+## Application 3: Robotic gripper finger (mechatronics)
 
 <InArticleAd />
 
 
-A precision robotic gripper uses aluminum fingers to grasp and manipulate objects. Each finger must withstand bending forces from gripping pressure and torsional moments from surface friction when holding cylindrical parts.
+A robot gripper holds a round part between two aluminum fingers. The grip force bends each finger, and friction on the round part twists it. The finger is a flat bar, and a rectangle does not carry torsion as a round shaft does: its corners carry no shear stress, and the largest shear stress is at the middle of the long sides.
 
 :::note[System Problem Statement]
-- **Support configuration:** Fixed at gripper palm (cantilever), free at contact point
-- **Loading conditions:** Point load from grip force at tip + friction torque from gripping
-- **Cross-section:** Rectangular aluminum beam (non-circular geometry)
+- **Support:** fixed at the palm of the gripper, free at the tip (a cantilever)
+- **Section:** rectangle, short side $b = 8$ mm, long side $h = 12$ mm
+- **Length:** $L = 60$ mm from the palm to the tip
+- **Loads:** grip force $F = 20$ N across the finger at its tip, which bends it across the 12 mm depth; friction torque $T = 0.5$ N·m $= 500$ N·mm about the axis of the finger
+- **Material:** aluminum 6061-T6, $\sigma_{yield} = 275$ MPa
+- **Target:** a safety factor of 3 to 5, usual for a gripper that closes many thousands of times
 
-**What we need to analyze:**
-1. **Section properties** for rectangular cross-section (I for bending, torsional constant K)
-2. **Bending moment** at fixed end from cantilever tip load
-3. **Individual stress components** (bending stress and torsional shear stress for rectangular sections)
-4. **Critical stress location** (where bending and torsion combine for rectangular geometry)
-5. **Von Mises equivalent stress** and safety factor assessment
-
-**Key Question:** Can this rectangular aluminum finger safely grip objects without yielding under combined bending and torsional loads, considering the unique stress distribution in rectangular sections?
+**Key Question:** Can the finger carry the grip force and the friction torque together without yielding?
 :::
 
-<Card title="🔧 Equivalent System Model" icon="document">
+```text
+        top face: bending stress largest
+              ┌─────●─────┐  ▲
+              │           │  │
+              │           │  │
+ torsion ───► ● ─ ─ ─ ─ ─ ● ◄│── neutral axis
+ shear        │           │  │   h = 12 mm
+ largest      │           │  │
+              └─────●─────┘  ▼
+              ◄─ b = 8 mm ─►
+        corners: no torsion shear
+```
 
-**Geometric Configuration:**
-- Rectangular cross-section: width b = 8 mm, height h = 12 mm
-- Finger length: L = 60 mm from palm (fixed support) to tip (free end)
-- Critical section: Fixed end where bending moment is maximum
+The drawing shows the cross-section of the finger at the palm.
 
-**Loading Conditions:**
-- Grip force: F = 20 N perpendicular to finger at tip (causes bending)
-- Friction torque: T = 0.5 N·m = 500 N·mm about finger axis (from gripping cylindrical objects)
-- Bending moment at fixed end: M = FL = 20 × 60 = 1200 N·mm
-
-**Cross-Section Properties:**
-- Area: A = bh = 96 mm²
-- Second moment of area (bending): I = bh³/12 = 1,152 mm⁴
-- Distance to extreme fiber: c = h/2 = 6 mm
-- Torsional constant (rectangular): K ≈ 2,710 mm⁴ (using β = 0.196 for aspect ratio h/b = 1.5)
-
-**Material & Safety:**
-- Material: Aluminum 6061-T6 (σ_yield = 275 MPa)
-- Safety factor target: 3.0–5.0 (typical for robotic grippers with repeated loading)
-- Operating conditions: High-cycle fatigue from repeated gripping operations
-
-**Note:** Rectangular sections use different torsion formulas than circular shafts!
-
-</Card>
-
-### Step 1: Calculate Rectangular Section Properties
+### Step 1: Calculate rectangular section properties
 
 <details>
 <summary>**Click to reveal section property calculations**</summary>
 
-For a **rectangular cross-section** (width b, height h), formulas differ from circular sections:
-
 <Steps>
 
-1. **Cross-sectional area:**
+1. **Second moment of area** for bending. The finger bends across its 12 mm depth, so $h$ is cubed:
 
-   $$A = b \times h = 8 \times 12 = 96 \text{ mm}^2$$
+   $$I = \frac{bh^3}{12} = \frac{8 \text{ mm} \times (12 \text{ mm})^3}{12} = \frac{8 \times 1{,}728}{12} = 1{,}152 \text{ mm}^4$$ ✅
 
-2. **Second moment of area** (bending about horizontal neutral axis):
+2. **Distance to the surface:** $c = h/2 = 6$ mm. ✅
 
-   For bending about the axis parallel to width b:
-   $$I = \frac{bh^3}{12} = \frac{8 \times 12^3}{12} = \frac{8 \times 1,728}{12} = 1,152 \text{ mm}^4$$
+3. **Torsion coefficients.** The formula $\tau = Tr/J$ is for round sections only. For a rectangle, tables give two coefficients that depend on the ratio of the sides:
 
-3. **Distance to extreme fiber:**
+   | $h/b$ | 1.0 | 1.2 | 1.5 | 2.0 | 3.0 |
+   |-------|-----|-----|-----|-----|-----|
+   | $\alpha$ (alpha, for stress) | 0.208 | 0.219 | 0.231 | 0.246 | 0.267 |
+   | $\beta$ (beta, for twist) | 0.141 | 0.166 | 0.196 | 0.229 | 0.263 |
 
-   $$c = \frac{h}{2} = \frac{12}{2} = 6 \text{ mm}$$
+   Here $h/b = 12/8 = 1.5$, so $\alpha = 0.231$ and $\beta = 0.196$. ✅
 
-4. **Torsional constant for rectangular sections:**
+4. **Torsional constant** $K$, which takes the place of $J$ when you need the angle of twist ($b$ is the short side). The stress does not need $K$: it uses $\alpha$ in Step 3.
 
-   For rectangles, torsional resistance is **NOT** given by polar moment J. Instead:
-
-   For aspect ratio $\gamma = h/b = 12/8 = 1.5$:
-
-   Using torsional constant formula for rectangles:
-   $$K = \beta \times b \times h^3$$
-
-   Where $\beta$ depends on aspect ratio. For $h/b = 1.5$, $\beta \approx 0.196$ (from tables)
-
-   $$K = 0.196 \times 8 \times 12^3 = 0.196 \times 8 \times 1,728 = 2,710 \text{ mm}^4$$
-
-5. **Maximum torsional shear stress location:**
-
-   For rectangular sections, maximum shear stress occurs at the **midpoint of the longer side** (h = 12 mm).
+   $$K = \beta\, h\, b^3 = 0.196 \times 12 \times 8^3 = 0.196 \times 12 \times 512 = 1{,}204 \text{ mm}^4$$ ✅
 
 </Steps>
 
-**Key difference:** Rectangular sections are **less efficient** at resisting torsion than circular sections of similar area.
-
 </details>
 
-### Step 2: Calculate Bending Moment and Bending Stress
+### Step 2: Calculate bending moment and bending stress
 
 <details>
 <summary>**Click to reveal bending stress calculations**</summary>
 
 <Steps>
 
-1. **Calculate bending moment at fixed end** (cantilever with tip load):
+1. **Bending moment at the fixed end**, force times length:
 
-   For a cantilever beam with point load F at free end:
-   $$M = F \times L = 20 \times 60 = 1,200 \text{ N·mm}$$
+   $$M = F \times L = 20 \text{ N} \times 60 \text{ mm} = 1{,}200 \text{ N·mm}$$ ✅
 
-2. **Bending stress at extreme fiber:**
+2. **Bending stress** at the top and bottom faces (the 8 mm faces), at the fixed end:
 
-   Using flexure formula $\sigma = \frac{Mc}{I}$:
-
-   $$\sigma_{bending} = \frac{1,200 \times 6}{1,152} = \frac{7,200}{1,152} = 6.25 \text{ MPa}$$
-
-   **Location:** Maximum at top and bottom surfaces at the fixed end (tension on one side, compression on other)
-
-3. **Critical location for bending:**
-
-   The outer fiber (top or bottom surface) at the **fixed end** experiences maximum bending stress.
+   $$\sigma = \frac{Mc}{I} = \frac{1{,}200 \text{ N·mm} \times 6 \text{ mm}}{1{,}152 \text{ mm}^4} = 6.25 \text{ MPa}$$ ✅
 
 </Steps>
 
-**Physical interpretation:** The finger bends like a diving board when the grip force is applied at the tip.
-
 </details>
 
-### Step 3: Calculate Torsional Shear Stress (Rectangular Section)
+### Step 3: Calculate torsional shear stress (rectangular section)
 
 <details>
 <summary>**Click to reveal torsional stress calculations for rectangular section**</summary>
 
-**Important:** Torsion in rectangular sections uses different formulas than circular shafts!
-
 <Steps>
 
-1. **Torsional shear stress formula for rectangular sections:**
+1. **Largest shear stress**, at the middle of each long side. For a rectangle the torque is divided by $\alpha b^2 h$, with $b$ the short side:
 
-   $$\tau_{max} = \frac{T}{\alpha \times b^2 \times h}$$
+   $$\tau_{max} = \frac{T}{\alpha\, b^2 h} = \frac{500 \text{ N·mm}}{0.231 \times (8 \text{ mm})^2 \times 12 \text{ mm}} = \frac{500}{177.4} = 2.82 \text{ MPa}$$ ✅
 
-   Where $\alpha$ is a coefficient depending on aspect ratio $h/b$.
+2. **Shear stress at the middle of each short side.** It is lower. For $h/b = 1.5$ it is about 0.86 of the largest value:
 
-2. **Determine coefficient α:**
-
-   For aspect ratio $\gamma = h/b = 12/8 = 1.5$:
-
-   Using standard tables for rectangular torsion, $\alpha \approx 0.196$
-
-3. **Calculate maximum torsional shear stress:**
-
-   $$\tau_{torsion} = \frac{T}{\alpha \times b^2 \times h} = \frac{500}{0.196 \times 8^2 \times 12}$$
-
-   $$\tau_{torsion} = \frac{500}{0.196 \times 64 \times 12} = \frac{500}{150.5} = 3.32 \text{ MPa}$$
-
-   **Location:** Maximum at the **midpoint of the longer side** (middle of the 12 mm edge)
-
-4. **Alternative formula verification:**
-
-   Using torsional constant K:
-   $$\tau_{max} = \frac{T \times h}{2K} = \frac{500 \times 12}{2 \times 2,710} = \frac{6,000}{5,420} = 1.11 \text{ MPa}$$
-
-   **Note:** Different formulas give different values because stress varies around the perimeter. We use the more conservative first formula: **τ = 3.32 MPa**.
+   $$\tau_{short} = 0.86 \times 2.82 = 2.42 \text{ MPa}$$ ✅
 
 </Steps>
 
-**Key insight:** Rectangular sections have **non-uniform shear stress** distribution along the perimeter, unlike circular sections where it's uniform.
-
 </details>
 
-### Step 4: Identify Critical Stress Location
+### Step 4: Identify critical stress location
 
 <details>
 <summary>**Click to reveal critical location analysis**</summary>
 
+The largest bending stress and the largest shear stress are at different points, so check both.
+
 <Steps>
 
-1. **Bending stress locations:**
-   - Maximum: Top/bottom surfaces at fixed end = 6.25 MPa
-   - Zero: Neutral axis (center of section)
+1. **Middle of the top or bottom face.** The bending stress is largest here, with the lower shear stress:
 
-2. **Torsional stress locations:**
-   - Maximum: Midpoint of long edges (h = 12 mm sides) = 3.32 MPa
-   - Lower: Midpoint of short edges (b = 8 mm sides)
-   - Zero: Corners of rectangle
+   $$\sigma_{von\ Mises} = \sqrt{6.25^2 + 3(2.42)^2} = 7.53 \text{ MPa}$$ ✅
 
-3. **Where do bending and torsion combine?**
+2. **Middle of a side face.** This point is on the neutral axis, so it has no bending stress, with the largest shear stress:
 
-   The **critical point** is at the **top or bottom surface, near the midpoint of the long edge**, where:
-   - Bending stress is near maximum: $\sigma \approx 6.25$ MPa
-   - Torsional stress is maximum: $\tau = 3.32$ MPa
+   $$\sigma_{von\ Mises} = \sqrt{3} \times 2.82 = 4.88 \text{ MPa}$$ ✅
 
-   **For conservative analysis**, we assume both maximum values occur at the same point:
-   - $\sigma_x = 6.25$ MPa
-   - $\tau_{xy} = 3.32$ MPa
+3. **Values for design.** The top and bottom faces govern. The usual cautious shortcut takes both largest values as if they were at one point: $\sigma = 6.25$ MPa with $\tau = 2.82$ MPa. The result is about 5% above the true 7.53 MPa. ✅
 
 </Steps>
 
-**Note:** In rectangular sections, exact critical location is more complex than circular sections, but this approach is conservative and standard for design.
-
 </details>
 
-### Step 5: Apply Von Mises Failure Theory
+### Step 5: Apply von Mises failure theory
 
 <details>
 <summary>**Click to reveal von Mises equivalent stress calculation**</summary>
 
 <Steps>
 
-1. **Stress state at critical point:**
+1. **Von Mises stress** with the two largest values:
 
-   - Normal stress: $\sigma_x = 6.25$ MPa
-   - Shear stress: $\tau_{xy} = 3.32$ MPa
-   - Other components: $\sigma_y = 0$, $\sigma_z = 0$
+   $$\sigma_{von\ Mises} = \sqrt{(6.25)^2 + 3(2.82)^2} = \sqrt{39.06 + 23.86} = \sqrt{62.92} = 7.93 \text{ MPa}$$ ✅
 
-2. **Von Mises equivalent stress:**
+2. **Share of each load** under the square root. Neither load governs alone here, so both must be in the check:
 
-   $$\sigma_{von\ Mises} = \sqrt{\sigma_x^2 + 3\tau_{xy}^2}$$
-
-   Substituting values:
-
-   $$\sigma_{von\ Mises} = \sqrt{(6.25)^2 + 3(3.32)^2}$$
-
-   $$\sigma_{von\ Mises} = \sqrt{39.06 + 33.07} = \sqrt{72.13}$$
-
-   $$\sigma_{von\ Mises} = 8.49 \text{ MPa}$$
-
-3. **Physical meaning:**
-
-   The combined bending and torsional loads create an equivalent uniaxial stress of 8.49 MPa in the gripper finger.
+   $$\text{bending: } \frac{39.06}{62.92} = 62.1\% \qquad \text{torsion: } \frac{23.86}{62.92} = 37.9\%$$ ✅
 
 </Steps>
 
 </details>
 
-### Step 6: Safety Factor Assessment and Design Evaluation
+### Step 6: Safety factor assessment and design evaluation
 
 <details>
 <summary>**Click to reveal safety factor analysis**</summary>
 
 <Steps>
 
-1. **Calculate safety factor:**
+1. **Safety factor**, the yield strength over the von Mises stress:
 
-   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{275}{8.49} = 32.4$$
+   $$SF = \frac{\sigma_{yield}}{\sigma_{von\ Mises}} = \frac{275 \text{ MPa}}{7.93 \text{ MPa}} = 34.7$$ ✅
 
-2. **Design assessment:**
+2. **Compare with the target.** The target was 3 to 5. The finger uses $7.93/275 = 2.9\%$ of the yield strength, far less than the strength check allows. ✅
 
-   | Criterion | Value | Status |
-   |-----------|-------|--------|
-   | **Von Mises stress** | 8.49 MPa | ✅ |
-   | **Material yield** | 275 MPa | ✅ |
-   | **Safety factor** | 32.4 | ✅ Extremely high |
-   | **Typical gripper SF target** | 3.0–5.0 | ✅ Far exceeded |
+3. **A smaller section.** With $b = 5$ mm and $h = 8$ mm ($\alpha \approx 0.234$ for $h/b = 1.6$), the same steps give $\sigma = 22.5$ MPa, $\tau = 10.7$ MPa and $\sigma_{von\ Mises} = 29.1$ MPa, so $SF = 9.4$. ✅
 
-3. **Design margin analysis:**
-
-   - **Stress utilization:** $\frac{8.49}{275} \times 100\% = 3.1\%$ of material capacity
-   - **Available margin:** 32.4× the actual stress
-   - **Conclusion:** Design is **extremely conservative** (vastly overdesigned)
-
-4. **Stress contribution analysis:**
-
-   - Bending contributes: $\frac{6.25^2}{72.13} \times 100\% = 54.2\%$ of von Mises stress
-   - Torsion contributes: $\frac{3 \times 3.32^2}{72.13} \times 100\% = 45.8\%$ of von Mises stress
-   - **Key insight:** Nearly balanced loading — both bending and torsion are significant (unlike previous applications where one dominated)
-
-5. **Design recommendations:**
-
-   **Current design:** Vastly overdesigned with SF = 32.4
-
-   **Optimization opportunities:**
-   - **Reduce cross-section:** Could use b = 5 mm, h = 8 mm (stress increases ~2.5×, still SF > 12)
-   - **Use lighter material:** Could switch to plastic or composite for weight savings
-   - **Increase grip force:** Design can handle 20× current force safely
-
-   **When to keep current conservative design:**
-   - **Repeated use:** High-cycle fatigue from millions of grip operations
-   - **Impact loading:** Accidental collisions or dropped objects
-   - **Safety critical:** Handling fragile or expensive parts
-   - **Wear allowance:** Material loss from abrasion over time
-
-   **Note on rectangular sections:**
-   - Rectangular torsion formulas differ from circular shafts
-   - Non-uniform shear stress distribution around perimeter
-   - Less torsion-efficient than circular sections of similar area
-   - Simpler manufacturing and assembly in many gripper designs
+4. **Design decision.** Stress rises in step with the load, so both loads could be $34.7/5.0 = 6.9$ times as large before $SF$ falls to 5. But other limits usually size a finger: how far it bends, wear, an accidental knock, and fatigue from many grip cycles. Check those before you remove metal. ✅
 
 </Steps>
 
 </details>
 
 :::tip[Instrument it]
-A shaft carrying both bending and torque has a stress state no single gauge can read, but a strain-gauge rosette can. Bond a 0/45/90 rosette to the shaft surface at the critical section; its three strains give the principal strains and their direction, and through Hooke's law the principal stresses your combined-loading check needs. Wire the three channels into an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [stream the principal stress and its angle to siliconwit.io](https://siliconwit.io) and alarm as it climbs toward the yield envelope.
+No single strain gauge can read a combined stress, but a rosette can: three gauges on one patch, at 0°, 45° and 90°. Bond it to the shaft surface at the critical section. Its three strains give, through Hooke's law, the normal stress and the shear stress that this lesson combines. Read the three channels with an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [trend the von Mises stress on siliconwit.io](https://siliconwit.io) and set an alarm well below the yield strength.
 :::
 
 ## Summary and Next Steps
@@ -1141,21 +614,14 @@ A shaft carrying both bending and torque has a stress state no single gauge can 
 <InArticleAd />
 
 
-In this lesson, you learned to:
+### Key concepts
 
-1. **Analyze** combined bending and torsion loading using equivalent stress methods
-2. **Apply** von Mises and maximum shear stress failure theories
-3. **Calculate** safety factors for multi-axis loading conditions
-4. **Consider** fatigue effects in combined loading scenarios
+1. **Bending** gives a normal stress $\sigma = Mc/I$ and **torsion** gives a shear stress $\tau = Tr/J$. Both are largest at the surface, and each is found as if the other load were absent.
+2. **The von Mises stress** $\sqrt{\sigma^2 + 3\tau^2}$ combines them into one number for a ductile metal. The safety factor is the yield strength divided by it.
+3. **One load usually governs.** Bending gave 97% of the result in the drone arm, and torsion gave 98% in the turbine shaft. Find which one before you change a design.
+4. **A rectangle in torsion** needs coefficients from a table, and its largest shear stress is at the middle of the long sides.
 
-**Key Design Insights:**
-- von Mises theory is most accurate for ductile materials
-- Combined loading often governs design over individual loads
-- Fatigue considerations are critical for cyclic combined loading
-
-**Critical Formula:** $\sigma_{eq} = \sqrt{\sigma^2 + 3\tau^2}$ (von Mises equivalent stress)
-
-**Coming Next**: In Lesson 2.5, we'll analyze composite and built-up beam systems in CNC machine beds, exploring how different materials work together to resist complex loading conditions.
+Next, [Composite and Built-up Beam Systems](/education/mechanics-of-materials/composite-beam-systems/) looks at a beam made of two materials, where the stiffer one takes more than its share of the stress.
 
 
 

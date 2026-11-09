@@ -24,41 +24,39 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-A stress element is a bookkeeping choice, not a physical fact. The same point in a loaded part has tension on one pair of faces if you draw it one way and pure shear if you turn the element forty-five degrees, and the plane that actually cracks is set by the stress, not by the axes you happened to pick. Mohr's circle is the device that makes every one of those orientations a single point on one circle, so instead of re-deriving the algebra for each angle you just read the point off. These six experiments turn that idea into a habit: build the circle from a state, rotate the element and watch the point move, find the orientations that matter, and let the failure criteria decide whether the part survives. #MohrsCircle #StressTransformation #FailureAnalysis
+A shaft is checked for the stress along its axis, passes, and then cracks on a plane at forty-five degrees that nobody calculated. The stress at a point depends on the plane you look at: a small square element drawn one way shows only tension, and the same element turned by forty-five degrees can show only shear. The part fails on the worst plane, not on the plane of your drawing. Mohr's circle shows the stress on every plane through the point. In these six experiments you build the circle, turn the element, find the planes that matter and let two failure criteria judge the part. #MohrsCircle #StressTransformation #FailureAnalysis
 
 :::tip[What you need]
 The [Mohr's Circle Simulator](/product-development/mohrs-circle-simulator/), and Python 3 with NumPy and Matplotlib for the analysis scripts (`pip install numpy matplotlib`).
+
+The simulator sets each stress in steps of 5 MPa and the element angle $\theta$ from 0 to 180 degrees in steps of 1 degree, and shows stresses to 0.1 MPa. A script value and a simulator value can differ in the last digit.
 :::
 
 :::note[Related resources]
-The theory behind these experiments lives in [Principal Stresses and Failure Criteria](/education/mechanics-of-materials/principal-stresses-failure-analysis). The combined state in Experiment 5 comes straight out of [Torsion of Circular Shafts](/education/mechanics-of-materials/fundamentals-of-shaft-torsion) and [Combined Bending and Torsion](/education/mechanics-of-materials/combined-bending-torsion-loading). See the full tool set on the [Solid Mechanics Analyzer](/product-development/solid-mechanics-analyzer/) page.
+The theory is in [Principal Stresses and Failure Criteria](/education/mechanics-of-materials/principal-stresses-failure-analysis/). The state in Experiment 5 comes from [Torsion of Circular Shafts](/education/mechanics-of-materials/fundamentals-of-shaft-torsion/) and [Combined Bending and Torsion](/education/mechanics-of-materials/combined-bending-torsion-loading/). The other tools are on the [Solid Mechanics Analyzer](/product-development/solid-mechanics-analyzer/) page.
 :::
 
 ## Reference
 
+All stresses are in megapascals (MPa) and all angles in degrees.
+
 | Term | Meaning |
 |------|---------|
-| **Plane stress** | A two-dimensional stress state (σx, σy, τxy) with the out-of-plane stresses zero, true on any free surface |
-| **Stress transformation** | The face stresses (σx', σy', τx'y') on an element rotated by angle θ from the reference axes |
-| **Principal stresses** | The maximum and minimum normal stresses σ1, σ2, acting on planes where the shear is zero |
-| **Principal angle (θp)** | The rotation from the x-axis to the plane carrying σ1 |
-| **Maximum in-plane shear** | τmax, the radius of the circle, acting on planes forty-five degrees from the principal planes |
-| **Mohr's circle** | A circle of centre (σavg, 0) and radius R whose every point is the (σ, τ) on one plane through the point |
-| **von Mises / Tresca** | Two yield criteria that collapse a multiaxial state into one equivalent stress to compare with the yield strength |
+| **Plane stress** | Two normal stresses $\sigma_x$, $\sigma_y$ and one shear stress $\tau_{xy}$, with no stress out of the plane. It is true on any free surface |
+| **Stress transformation** | The stresses $(\sigma_{x'}, \sigma_{y'}, \tau_{x'y'})$ on an element turned by the angle $\theta$ from the reference axes |
+| **Principal stresses** | The largest and smallest normal stresses $\sigma_1$, $\sigma_2$, on the planes where the shear stress is zero |
+| **Principal angle ($\theta_p$)** | The rotation from the x-axis to the plane that carries $\sigma_1$ |
+| **Maximum in-plane shear** | $\tau_{\max}$, the radius of the circle, on planes forty-five degrees from the principal planes |
+| **Mohr's circle** | A circle with centre $(\sigma_{\text{avg}}, 0)$ and radius $R$. Each point is the pair $(\sigma, \tau)$ on one plane through the point |
+| **von Mises / Tresca** | Two yield criteria. Each gives one equivalent stress to compare with the yield strength |
 
-### Experiment Workflow
+**Shear sign convention.** In this lesson and in the simulator, $\tau_{xy}$ is positive when the shear stress on the positive x-face points in the positive y direction, and the element angle $\theta$ is positive counterclockwise. The circle is drawn with $\tau$ positive upward, and the rotated x-face is plotted as the point $(\sigma_{x'}, \tau_{x'y'})$. At $\theta = 0$ the x-face is therefore the point $(\sigma_x, +\tau_{xy})$ and the y-face is the point $(\sigma_y, -\tau_{xy})$. With this convention, turning the element counterclockwise by $\theta$ moves the point clockwise by $2\theta$ around the circle. Some textbooks draw $\tau$ positive downward. Their circle is the mirror image of this one, and the principal stresses and $\tau_{\max}$ are the same.
 
-```mermaid
-flowchart TD
-    A[Set the stress state] --> B[Configure Simulator]
-    B --> C[Rotate the element]
-    C --> D[Read principal stress and shear]
-    D --> E[Record in CSV]
-    E --> F[Run Python Script]
-    F --> G[Compare and Decide]
-```
+### How every experiment runs
 
-### Workspace Setup
+Each experiment is one short sitting: set the stress state in the simulator, predict by hand, read the simulator, record the values in a CSV file, run the Python script, and compare the three.
+
+### Workspace setup
 
 <FileTree>
 - stress-transformation-experiments/
@@ -68,31 +66,31 @@ flowchart TD
 </FileTree>
 
 :::tip[Instrument it]
-You cannot read a stress directly, but you can read the strain that goes with it, and the right instrument is a strain-gauge rosette bonded to the free surface at the critical point. A rectangular 0/45/90 rosette (for example a Micro-Measurements CEA-series or an HBM RY series) gives three surface strains, and from them you compute the principal strains, the principal direction, and through Hooke's law the principal stresses, exactly the quantities this simulator reports. Wire each gauge into a Wheatstone bridge, amplify with an instrumentation amplifier or an HX711-class bridge ADC, and have an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample the three channels. On a running machine that board can [log the principal stress and its direction](/education/iot-systems/) and [warn when either drifts toward the yield envelope](https://siliconwit.io) before a crack starts.
+You cannot read a stress directly, but you can read the strain that goes with it, with a strain gauge rosette bonded to the free surface at the critical point. A rectangular 0/45/90 rosette gives three surface strains. From them you compute the principal strains, their direction and, through Hooke's law, the principal stresses. Wire each gauge into a Wheatstone bridge with an instrumentation amplifier, and let an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample the three channels. On a running machine that board can [log the principal stress and its direction](/education/iot-systems/) and [warn when either moves toward the yield limit](https://siliconwit.io).
 :::
 
 ---
 
-## Experiment 1: Build Mohr's Circle from a Stress State
+## Experiment 1: Build Mohr's circle from a stress state
 
 <InArticleAd />
 
 
-Every Mohr's analysis starts the same way: turn three numbers (σx, σy, τxy) into a circle, and read the principal stresses off where it crosses the axis. Doing it once by hand fixes the construction in memory; doing it next to the simulator shows you that the circle is not an analogy but the actual locus of every stress state at the point.
+A stress report gives three numbers for a point: $\sigma_x$, $\sigma_y$ and $\tau_{xy}$. None of them is the largest stress at the point. To find it, turn the three numbers into a circle and read where it crosses the horizontal axis.
 
 :::note[Objective]
-For a general plane-stress state, compute the circle centre and radius, the principal stresses σ1 and σ2, and the principal angle θp, and confirm them against the simulator's diagram and readouts.
+For a general plane-stress state, compute the circle centre and radius, the principal stresses $\sigma_1$ and $\sigma_2$, and the principal angle $\theta_p$, and confirm them against the simulator's diagram and readouts.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Open the simulator and select the General plane stress preset (σx = 80, σy = -20, τxy = 40 MPa). Leave the element angle θ at 0.
+   Open the simulator and select the General plane stress preset ($\sigma_x = 80$, $\sigma_y = -20$, $\tau_{xy} = 40\ \text{MPa}$). Leave the element angle $\theta$ at 0.
 
 2. **Predict**
-   Before reading the panel, compute by hand: σavg = (σx + σy)/2, R = sqrt(((σx - σy)/2)² + τxy²), then σ1,2 = σavg ± R and θp from tan(2θp) = 2τxy/(σx - σy).
+   Before reading the panel, compute by hand. The centre is the average of the two normal stresses, $\sigma_{\text{avg}} = (\sigma_x + \sigma_y)/2$. The radius is the distance from the centre to the x-face point, $R = \sqrt{((\sigma_x - \sigma_y)/2)^2 + \tau_{xy}^2}$. Then $\sigma_{1,2} = \sigma_{\text{avg}} \pm R$, and $\theta_p$ follows from $\tan(2\theta_p) = 2\tau_{xy}/(\sigma_x - \sigma_y)$.
 
 3. **Read the circle**
-   On the diagram, confirm the circle centre sits at σavg on the horizontal axis and that the circle crosses the axis at your σ1 and σ2. Read σ1, σ2, and θp from the panel.
+   On the diagram, confirm the circle centre sits at $\sigma_{\text{avg}}$ on the horizontal axis and that the circle crosses the axis at your $\sigma_1$ and $\sigma_2$. Read $\sigma_1$, $\sigma_2$, and $\theta_p$ from the panel.
 
 4. **Change the state**
    Switch to Custom and try two more states of your own. Each time, predict first, then check.
@@ -101,14 +99,14 @@ For a general plane-stress state, compute the circle centre and radius, the prin
    Create `data/exp1_circle.csv` with columns: sx, sy, txy, sigma_avg, R, sigma_1, sigma_2, theta_p_deg.
 </Steps>
 
-### Data Collection Table
+### Data collection table
 
 | σx (MPa) | σy (MPa) | τxy (MPa) | σavg (MPa) | R (MPa) | σ1 (MPa) | σ2 (MPa) | θp (deg) |
 |---|---|---|---|---|---|---|---|
 | 80 | -20 | 40 | | | | | |
 | | | | | | | | |
 
-### Python Analysis
+### Python analysis
 
 ```python title="experiment_1_circle.py"
 # Stress Transformation Experiment 1: build Mohr's circle from a state
@@ -134,7 +132,7 @@ print(f"sigma_1 = {s1:.2f} MPa, sigma_2 = {s2:.2f} MPa, theta_p = {theta_p:.2f} 
 phi = np.linspace(0, 2 * np.pi, 400)
 fig, ax = plt.subplots(figsize=(7, 7))
 ax.plot(avg + R * np.cos(phi), R * np.sin(phi), color='#2A9D8F', lw=2)
-ax.plot([sx, sy], [-txy, txy], 'o-', color='#E76F51', lw=1.5, label='x-face / y-face (diameter)')
+ax.plot([sx, sy], [txy, -txy], 'o-', color='#E76F51', lw=1.5, label='x-face / y-face (diameter)')
 ax.plot([s1, s2], [0, 0], 's', color='#264653', label='principal stresses')
 ax.axhline(0, color='gray', lw=0.8); ax.axvline(0, color='gray', lw=0.8)
 ax.set_aspect('equal'); ax.grid(True, alpha=0.3)
@@ -143,25 +141,33 @@ ax.set_title("Mohr's circle for the stress state"); ax.legend(fontsize=8)
 plt.tight_layout(); plt.savefig('plots/exp1_circle.png', dpi=150, bbox_inches='tight'); plt.show()
 ```
 
-### Expected Results
+### Expected results
 
-For (80, -20, 40): σavg = 30.0 MPa, R = 64.0 MPa, σ1 = 94.0 MPa, σ2 = -34.0 MPa, θp = 19.33 deg. The x-face point (80, -40) and the y-face point (-20, +40) sit at opposite ends of a diameter, and the circle crosses the axis exactly at σ1 and σ2.
+For $(80, -20, 40)$: $\sigma_{\text{avg}} = 30.0\ \text{MPa}$, $R = 64.0\ \text{MPa}$, $\sigma_1 = 94.0\ \text{MPa}$, $\sigma_2 = -34.0\ \text{MPa}$, $\theta_p = 19.33$ deg (the simulator shows 19.3). The x-face point $(80, +40)$ and the y-face point $(-20, -40)$ sit at opposite ends of a diameter, and the circle crosses the axis exactly at $\sigma_1$ and $\sigma_2$.
 
-### Design Question
+As a check, $\sigma_1 + \sigma_2$ must equal $\sigma_x + \sigma_y$: $94.0 + (-34.0) = 60 = 80 + (-20)$.
 
-If you doubled only τxy, would σ1 grow faster or slower than the increase in τxy? Use the R expression to argue why a state already dominated by shear is less sensitive to extra shear than a state dominated by normal stress.
+### Design question
+
+If you doubled only $\tau_{xy}$, would $\sigma_1$ grow faster or slower than the increase in $\tau_{xy}$? Use the $R$ expression to argue why a state already dominated by shear is less sensitive to extra shear than a state dominated by normal stress.
 
 ---
 
-## Experiment 2: Stress on an Inclined Plane
+## Experiment 2: Stress on an inclined plane
 
 <InArticleAd />
 
 
-The whole reason the circle exists is to answer one question quickly: given the stresses on the reference faces, what are the stresses on a face turned to some other angle? This experiment sweeps the element through a half-turn and confirms that the transformed face stress traces the circle exactly, never leaving it.
+A weld seam or a glued joint lies at its own angle in the part, and the stress on that plane decides if it holds. This experiment turns the element through a quarter turn and confirms that the face stress never leaves the circle.
+
+The two transformation equations give the normal and the shear stress on the face turned by $\theta$. Both swing with twice the angle:
+
+$$\sigma_{x'} = \sigma_{\text{avg}} + \frac{\sigma_x - \sigma_y}{2}\cos 2\theta + \tau_{xy}\sin 2\theta$$
+
+$$\tau_{x'y'} = -\frac{\sigma_x - \sigma_y}{2}\sin 2\theta + \tau_{xy}\cos 2\theta$$
 
 :::note[Objective]
-Rotate the stress element and verify that the pair (σx', τx'y') for every angle θ lies on the Mohr circle, and that σx'(θ) and τx'y'(θ) are the sinusoids the transformation equations predict.
+Rotate the stress element and verify that the pair $(\sigma_{x'}, \tau_{x'y'})$ for every angle $\theta$ lies on the Mohr circle, and that $\sigma_{x'}(\theta)$ and $\tau_{x'y'}(\theta)$ follow the two equations above.
 :::
 
 <Steps>
@@ -169,19 +175,19 @@ Rotate the stress element and verify that the pair (σx', τx'y') for every angl
    Keep the General plane stress preset. Open the Normal stress vs angle and Shear stress vs angle charts.
 
 2. **Predict**
-   The normal stress should peak at θ = θp and the shear should cross zero there. The shear should peak forty-five degrees later. Predict the angle at which σx' equals σavg.
+   The normal stress should peak at $\theta = \theta_p$ and the shear should cross zero there. The shear should peak forty-five degrees later. Predict the angle at which $\sigma_{x'}$ equals $\sigma_{\text{avg}}$.
 
 3. **Sweep the angle**
-   Drag θ from 0 to 90 degrees in steps of 15. At each step record σx' and τx'y' from the readout.
+   Drag $\theta$ from 0 to 90 degrees in steps of 15. At each step record $\sigma_{x'}$ and $\tau_{x'y'}$ from the readout.
 
 4. **Check the circle**
-   For each recorded pair, the distance from (σavg, 0) should equal R. Confirm a few by hand.
+   For each recorded pair, the distance from $(\sigma_{\text{avg}}, 0)$ should equal $R$. Confirm a few by hand.
 
 5. **Save data**
    Create `data/exp2_incline.csv` with columns: theta_deg, sigma_xprime, tau_xprime.
 </Steps>
 
-### Data Collection Table
+### Data collection table
 
 | θ (deg) | σx' (MPa) | τx'y' (MPa) | Distance from centre (MPa) |
 |---|---|---|---|
@@ -193,7 +199,7 @@ Rotate the stress element and verify that the pair (σx', τx'y') for every angl
 | 75 | | | |
 | 90 | | | |
 
-### Python Analysis
+### Python analysis
 
 ```python title="experiment_2_incline.py"
 # Stress Transformation Experiment 2: stress on an inclined plane
@@ -225,60 +231,62 @@ ax[0].set_xlabel('element angle theta (deg)'); ax[0].set_ylabel('stress (MPa)')
 ax[0].grid(True, alpha=0.3); ax[0].legend(fontsize=8); ax[0].set_title('Face stresses vs rotation')
 
 ax[1].plot(avg + R * np.cos(np.linspace(0, 2*np.pi, 400)),
-           R * np.sin(np.linspace(0, 2*np.pi, 400)), color='#999', lw=1)
+           R * np.sin(np.linspace(0, 2*np.pi, 400)), color='#999999', lw=1)
 ax[1].scatter(sxp[::20], txp[::20], c=theta[::20], cmap='viridis', s=30)
 ax[1].set_aspect('equal'); ax[1].grid(True, alpha=0.3)
 ax[1].set_xlabel('sigma (MPa)'); ax[1].set_ylabel('tau (MPa)'); ax[1].set_title('The points ride the circle')
 plt.tight_layout(); plt.savefig('plots/exp2_incline.png', dpi=150, bbox_inches='tight'); plt.show()
 ```
 
-### Expected Results
+### Expected results
 
-The deviation of every transformed point from the circle is zero to machine precision (around 1e-13 MPa). σx'(θ) is a sinusoid centred on σavg = 30 MPa with amplitude R = 64 MPa; it peaks at θp = 19.33 deg, exactly where τx'y' crosses zero. A rotation of θ on the element corresponds to a rotation of 2θ around the circle.
+The script prints a largest distance between the points and the circle of about $10^{-14}\ \text{MPa}$, which is zero within the rounding of the computer. $\sigma_{x'}(\theta)$ is a sine curve centred on $\sigma_{\text{avg}} = 30\ \text{MPa}$ with amplitude $R = 64\ \text{MPa}$. It peaks at $\theta_p = 19.33$ deg, exactly where $\tau_{x'y'}$ crosses zero.
 
-### Design Question
+Your table must read 70.0 and $-50.0$ MPa at 45 degrees, and $-20.0$ and $-40.0$ MPa at 90 degrees, where the x-face has taken the place of the y-face.
 
-A rosette is bonded with its reference axis 30 degrees off the principal direction. By how many degrees does the measured σx' differ from the true σ1, and why does a small misalignment in angle cause only a second-order error in the peak normal stress?
+### Design question
+
+A rosette is bonded with its reference axis 30 degrees off the principal direction. For the General plane stress preset, by how many megapascals does the measured $\sigma_{x'}$ fall below the true $\sigma_1$, and why does a small misalignment in angle cause only a second-order error in the peak normal stress?
 
 ---
 
-## Experiment 3: Maximum Shear and Its Plane
+## Experiment 3: Maximum shear and its plane
 
 <InArticleAd />
 
 
-Ductile parts yield in shear, so the plane of maximum shear is often the plane that matters most, and it is never the plane of maximum normal stress. This experiment finds τmax, the orientation it acts on, and the normal stress that rides along with it.
+Ductile metals such as mild steel and aluminum yield by shear, so for them the plane of maximum shear is the plane where failure starts, and it is never the plane of maximum normal stress. This experiment finds $\tau_{\max}$, the plane it acts on, and the normal stress that acts on the same plane.
 
 :::note[Objective]
-Locate the maximum in-plane shear stress and the angle θs at which it acts, and show that the normal stress on the maximum-shear planes equals σavg, not zero.
+Locate the maximum in-plane shear stress and the angle $\theta_s$ at which it acts, and show that the normal stress on the maximum-shear planes equals $\sigma_{\text{avg}}$, not zero.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Keep the General plane stress preset. Read θp from the panel, then set the element angle to θs = θp - 45 degrees.
+   Keep the General plane stress preset and read $\theta_p$. The plane of maximum shear is at $\theta_s = \theta_p - 45 = -25.67$ degrees. The slider starts at 0, so add 180 degrees, which gives the same plane, and set the angle to 154 degrees.
 
 2. **Predict**
-   Predict that the shear readout reaches its largest magnitude here, equal to R, and that the normal stress on this plane equals σavg rather than zero.
+   Predict that the shear readout reaches its largest magnitude here, equal to $R$, and that the normal stress on this plane equals $\sigma_{\text{avg}}$ rather than zero.
 
 3. **Confirm**
-   Read τx'y' and σx' at θs. Compare τmax with R from Experiment 1.
+   Read $\tau_{x'y'}$ and $\sigma_{x'}$ at 154 degrees, then at 155 degrees. Compare $\tau_{\max}$ with $R$ from Experiment 1.
 
 4. **Contrast**
-   Note that at the principal planes the shear is zero but the normal stress is extreme, while at θs the shear is extreme but the normal stress is the average. The two critical orientations are forty-five degrees apart.
+   Note that at the principal planes the shear is zero but the normal stress is extreme, while at $\theta_s$ the shear is extreme but the normal stress is the average. The two critical orientations are forty-five degrees apart.
 
 5. **Save data**
    Create `data/exp3_maxshear.csv` with columns: theta_s_deg, tau_max, sigma_on_maxshear_plane.
 </Steps>
 
-### Data Collection Table
+### Data collection table
 
 | Quantity | Hand value | Simulator |
 |---|---|---|
-| θs = θp - 45 (deg) | | |
+| θs, from θp minus 45 (deg) | | |
 | τmax (MPa) | | |
 | Normal stress on that plane (MPa) | | |
 
-### Python Analysis
+### Python analysis
 
 ```python title="experiment_3_maxshear.py"
 # Stress Transformation Experiment 3: maximum shear and its plane
@@ -300,22 +308,24 @@ print(f"tau_max (= R) = {R:.2f} MPa, measured shear at theta_s = {txp:.2f} MPa")
 print(f"normal stress on the max-shear plane = {sxp:.2f} MPa (should equal sigma_avg = {avg:.2f})")
 ```
 
-### Expected Results
+### Expected results
 
-θp = 19.33 deg, θs = -25.67 deg. The shear magnitude at θs equals R = 64.0 MPa, and the normal stress on that plane is 30.0 MPa, exactly σavg. This is why a maximum-shear (Tresca) check uses τmax = R and why the average stress, not zero, accompanies the worst shear.
+$\theta_p = 19.33$ deg, $\theta_s = -25.67$ deg. The shear magnitude at $\theta_s$ equals $R = 64.0\ \text{MPa}$, and the normal stress on that plane is $30.0\ \text{MPa}$, exactly $\sigma_{\text{avg}}$. This is why a maximum-shear (Tresca) check uses $\tau_{\max} = R$ and why the average stress, not zero, accompanies the worst shear.
 
-### Design Question
+In the simulator the shear reads 64.0 MPa at 154 and at 155 degrees, and the normal stress 29.3 and 31.5 MPa: the exact angle lies between them. As a check, $\tau_{\max}$ must equal half of $\sigma_1 - \sigma_2$: $(94.0 + 34.0)/2 = 64.0$ MPa.
 
-For a shaft in pure torsion the normal stresses σx and σy are both zero. Where do the maximum-shear planes lie relative to the shaft axis, and how does that explain a ductile shaft failing on a flat transverse face?
+### Design question
+
+For a shaft in pure torsion the normal stresses $\sigma_x$ and $\sigma_y$ are both zero. Where do the maximum-shear planes lie relative to the shaft axis, and how does that explain a ductile shaft failing on a flat transverse face?
 
 ---
 
-## Experiment 4: Pure Shear and the Forty-Five-Degree Failure
+## Experiment 4: Pure shear and the forty-five-degree failure
 
 <InArticleAd />
 
 
-A bar of chalk twisted in your fingers breaks on a clean helical surface at forty-five degrees, while a steel shaft of the same shape shears off flat. Both are in pure shear; the difference is which stress each material fears. This experiment uses the circle to explain a failure you can see with your own eyes.
+Twist a stick of chalk until it breaks, and it breaks on a spiral surface (a helix) at forty-five degrees. A steel shaft twisted until it breaks shears off flat. Both are in pure shear. The difference is the stress that each material is weak against.
 
 :::note[Objective]
 Set a pure-shear state and show that its principal stresses are equal and opposite at forty-five degrees, then connect that to why brittle materials in torsion fail on a forty-five-degree helix while ductile ones shear transversely.
@@ -323,28 +333,28 @@ Set a pure-shear state and show that its principal stresses are equal and opposi
 
 <Steps>
 1. **Configure the simulator**
-   Select the Pure shear preset (σx = 0, σy = 0, τxy = 80 MPa).
+   Select the Pure shear preset ($\sigma_x = 0$, $\sigma_y = 0$, $\tau_{xy} = 80\ \text{MPa}$).
 
 2. **Predict**
-   With σx = σy = 0 the circle is centred at the origin. Predict σ1 = +τ, σ2 = -τ and θp = 45 degrees.
+   With $\sigma_x = \sigma_y = 0$ the circle is centred at the origin. Predict $\sigma_1 = +\tau$, $\sigma_2 = -\tau$ and $\theta_p = 45$ degrees.
 
 3. **Read the principal state**
-   Confirm σ1 = +80, σ2 = -80, and that the principal planes sit at 45 degrees. Note that the maximum tensile stress and maximum shear are equal in magnitude here.
+   Confirm $\sigma_1 = +80$, $\sigma_2 = -80$, and that the principal planes sit at 45 degrees. Note that the maximum tensile stress and maximum shear are equal in magnitude here.
 
 4. **Reason about failure**
-   A brittle material fails when σ1 reaches its tensile limit, so it cracks on the plane normal to σ1: the forty-five-degree helix. A ductile material yields when τmax reaches its shear limit, so it fails on the transverse plane of maximum shear.
+   A brittle material fails when $\sigma_1$ reaches its tensile limit, so it cracks on the plane normal to $\sigma_1$: the forty-five-degree helix. A ductile material yields when $\tau_{\max}$ reaches its shear limit, so it fails on the transverse plane of maximum shear.
 
 5. **Save data**
    Create `data/exp4_pureshear.csv` with columns: txy, sigma_1, sigma_2, theta_p_deg.
 </Steps>
 
-### Data Collection Table
+### Data collection table
 
 | τxy (MPa) | σ1 (MPa) | σ2 (MPa) | θp (deg) | Brittle crack plane | Ductile shear plane |
 |---|---|---|---|---|---|
 | 80 | | | | | |
 
-### Python Analysis
+### Python analysis
 
 ```python title="experiment_4_pureshear.py"
 # Stress Transformation Experiment 4: pure shear and the 45-degree failure
@@ -367,7 +377,7 @@ print("Ductile: shears on the transverse plane of maximum shear.")
 phi = np.linspace(0, 2 * np.pi, 400)
 fig, ax = plt.subplots(figsize=(6.5, 6.5))
 ax.plot(avg + R * np.cos(phi), R * np.sin(phi), color='#2A9D8F', lw=2)
-ax.plot([0, 0], [-txy, txy], 'o-', color='#E76F51', label='x / y faces (pure shear)')
+ax.plot([0, 0], [txy, -txy], 'o-', color='#E76F51', label='x / y faces (pure shear)')
 ax.plot([s1, s2], [0, 0], 's', color='#264653', label='principal: +/- tau')
 ax.axhline(0, color='gray', lw=0.8); ax.axvline(0, color='gray', lw=0.8)
 ax.set_aspect('equal'); ax.grid(True, alpha=0.3); ax.legend(fontsize=8)
@@ -375,51 +385,51 @@ ax.set_xlabel('sigma (MPa)'); ax.set_ylabel('tau (MPa)'); ax.set_title('Pure she
 plt.tight_layout(); plt.savefig('plots/exp4_pureshear.png', dpi=150, bbox_inches='tight'); plt.show()
 ```
 
-### Expected Results
+### Expected results
 
-σ1 = +80 MPa, σ2 = -80 MPa, θp = 45 deg. The circle is centred on the origin with radius 80 MPa, so the largest tensile, compressive, and shear stresses are all 80 MPa. The orientation of σ1 at 45 degrees is the helix on which brittle torsion specimens crack.
+$\sigma_1 = +80\ \text{MPa}$, $\sigma_2 = -80\ \text{MPa}$, $\theta_p = 45$ deg. The circle is centred on the origin with radius $80\ \text{MPa}$, so the largest tensile, compressive, and shear stresses are all $80\ \text{MPa}$. The orientation of $\sigma_1$ at 45 degrees is the helix on which brittle torsion specimens crack.
 
-### Design Question
+### Design question
 
-Cast iron is roughly four times stronger in compression than in tension. Using the principal stresses of pure shear, predict which forty-five-degree surface (the one normal to σ1 or the one normal to σ2) a cast-iron shaft cracks on, and sketch the helix direction.
+Cast iron is roughly four times stronger in compression than in tension. Using the principal stresses of pure shear, predict which forty-five-degree surface (the one normal to $\sigma_1$ or the one normal to $\sigma_2$) a cast-iron shaft cracks on, and sketch the helix direction.
 
 ---
 
-## Experiment 5: Combined Bending and Torsion on a Shaft Surface
+## Experiment 5: Combined bending and torsion on a shaft surface
 
 <InArticleAd />
 
 
-The state that sends most engineers to Mohr's circle for real is a rotating shaft: bending from the load gives a normal stress along the axis, torque gives a shear, and the surface of the shaft carries both at once. This experiment builds that state from the shaft loads and finds the principal stresses that govern the design.
+The force on a pulley bends its shaft, and the torque it transmits twists the shaft. The surface carries a normal stress from the bending and a shear stress from the torque at the same point, and neither alone is the stress that the shaft must survive. This experiment builds that state from the shaft loads and finds the principal stresses that govern the design.
 
 :::note[Objective]
-Compute the surface stress state of a solid circular shaft under a bending moment M and torque T, build its Mohr's circle, and find the principal stresses and maximum shear that a failure check will use.
+Compute the surface stress state of a solid circular shaft under a bending moment $M$ and torque $T$, build its Mohr's circle, and find the principal stresses and maximum shear that a failure check will use.
 :::
 
 <Steps>
 1. **Compute the state**
-   For a solid shaft of diameter d, the surface bending stress is σx = 32M/(πd³) and the torsional shear is τxy = 16T/(πd³), with σy = 0. Work these out for M = 200 N·m, T = 350 N·m, d = 25 mm.
+   For a solid shaft of diameter $d$, the bending stress at the surface is $\sigma_x = 32M/(\pi d^3)$ and the shear stress from the torque is $\tau_{xy} = 16T/(\pi d^3)$, with $\sigma_y = 0$. Work these out for $M = 200\ \text{N·m}$, $T = 350\ \text{N·m}$, $d = 25\ \text{mm}$. With N·mm and mm the result is in MPa.
 
 2. **Configure the simulator**
-   Select the Bending + torsion preset, then switch to Custom and enter your computed σx and τxy with σy = 0.
+   Select the Bending + torsion preset, then switch to Custom and set $\sigma_y = 0$. The sliders move in steps of 5 MPa, so set the nearest values to your results: $\sigma_x = 130$ and $\tau_{xy} = 115\ \text{MPa}$.
 
 3. **Read the principal state**
-   Record σ1, σ2, θp, and τmax from the panel.
+   Record $\sigma_1$, $\sigma_2$, $\theta_p$, and $\tau_{\max}$ from the panel.
 
-4. **Sanity check**
-   σ2 should be negative even though there is no applied compression: the shear pulls one principal stress below zero. Confirm the sign.
+4. **Check the sign**
+   $\sigma_2$ should be negative even though there is no applied compression: the shear pulls one principal stress below zero. Confirm the sign.
 
 5. **Save data**
    Create `data/exp5_shaft.csv` with columns: M_Nm, T_Nm, d_mm, sigma_x, tau_xy, sigma_1, sigma_2, tau_max.
 </Steps>
 
-### Data Collection Table
+### Data collection table
 
 | M (N·m) | T (N·m) | d (mm) | σx (MPa) | τxy (MPa) | σ1 (MPa) | σ2 (MPa) | τmax (MPa) |
 |---|---|---|---|---|---|---|---|
 | 200 | 350 | 25 | | | | | |
 
-### Python Analysis
+### Python analysis
 
 ```python title="experiment_5_shaft.py"
 # Stress Transformation Experiment 5: combined bending and torsion on a shaft
@@ -450,22 +460,26 @@ T_eq = np.hypot(M, T)               # equivalent torque
 print(f"equivalent bending moment M_eq = {M_eq:.1f} N*m, equivalent torque T_eq = {T_eq:.1f} N*m")
 ```
 
-### Expected Results
+### Expected results
 
-σx = 130.4 MPa, τxy = 114.1 MPa. The principal stresses are σ1 = 196.6 MPa and σ2 = -66.2 MPa, with τmax = 131.4 MPa at θp = 30.2 deg. The negative σ2 is the key lesson: torsion drags a principal stress into compression even though nothing pushes on the shaft, so a normal-stress-only check would miss it.
+From the script: $\sigma_x = 130.4\ \text{MPa}$, $\tau_{xy} = 114.1\ \text{MPa}$, $\sigma_1 = 196.6\ \text{MPa}$, $\sigma_2 = -66.2\ \text{MPa}$, $\tau_{\max} = 131.4\ \text{MPa}$ and $\theta_p = 30.1$ deg. With the slider values 130 and 115 MPa the simulator shows 197.1, $-67.1$ and 132.1 MPa and 30.3 deg. The script also prints an equivalent bending moment of 301.6 N·m and an equivalent torque of 403.1 N·m, a shorthand that shaft design codes use.
 
-### Design Question
+Torsion brings one principal stress into compression although nothing pushes on the shaft, and $\sigma_1$ is 51% higher than the bending stress. A check of the bending stress alone would miss both. As a check, $\sigma_1 + \sigma_2$ must equal $\sigma_x$: $196.6 - 66.2 = 130.4$ MPa.
 
-Hold T fixed and increase M. As bending grows, does θp move toward the shaft axis or away from it, and what does that say about where a fatigue crack will start to point as a shaft becomes bending-dominated?
+### Design question
+
+Hold $T$ fixed and increase $M$. As bending grows, does $\theta_p$ move toward the shaft axis or away from it, and what does that say about where a fatigue crack will start to point as a shaft becomes bending-dominated?
 
 ---
 
-## Experiment 6: von Mises versus Tresca and the Safety Factor
+## Experiment 6: von Mises versus Tresca and the safety factor
 
 <InArticleAd />
 
 
-Two engineers analyze the same shaft and quote two different safety factors, and neither is wrong: one used von Mises and the other Tresca. This experiment maps the gap between the two criteria so you know when the choice is harmless and when it decides whether a part passes.
+Two engineers analyze the same shaft and report two different safety factors, and neither is wrong: one used von Mises and the other Tresca. This experiment measures the gap between the two, so that you know when the choice decides if a part passes.
+
+Both criteria give one equivalent stress, and the safety factor is the yield strength divided by it. Here Tresca takes the full diameter of the circle, $\sigma_1 - \sigma_2$, and von Mises takes $\sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}$.
 
 :::note[Objective]
 For a sweep of stress states, compute the von Mises and Tresca equivalent stresses and their safety factors against a fixed yield strength, and quantify how much more conservative Tresca is across the range.
@@ -473,13 +487,13 @@ For a sweep of stress states, compute the von Mises and Tresca equivalent stress
 
 <Steps>
 1. **Configure the simulator**
-   Use the Bending + torsion preset. Set the yield strength to 250 MPa. Toggle the criterion between von Mises and Tresca and read the equivalent stress and safety factor for each.
+   Use the Bending + torsion preset ($\sigma_x = 140$, $\sigma_y = 0$, $\tau_{xy} = 70\ \text{MPa}$). Set the yield strength to 250 MPa. Change the criterion between von Mises and Tresca and read the equivalent stress and safety factor for each.
 
 2. **Predict**
-   Tresca uses σ1 - σ2 (the full diameter of the circle) while von Mises uses a quadratic combination. Predict that Tresca always reports the lower safety factor.
+   Predict that Tresca always reports the lower safety factor.
 
 3. **Sweep the shear**
-   Hold σx at 140 MPa and σy at 0, and step τxy from 0 to 120 MPa. At each step record both safety factors.
+   Hold $\sigma_x$ at $140\ \text{MPa}$ and $\sigma_y$ at 0, and step $\tau_{xy}$ from 0 to $120\ \text{MPa}$. At each step record both safety factors.
 
 4. **Quantify the gap**
    Find the state in your sweep where the two criteria disagree most as a percentage. Note whether the difference ever crosses the safe/unsafe line for your yield.
@@ -488,7 +502,7 @@ For a sweep of stress states, compute the von Mises and Tresca equivalent stress
    Create `data/exp6_criteria.csv` with columns: txy, sigma_vm, sigma_tresca, SF_vm, SF_tresca.
 </Steps>
 
-### Data Collection Table
+### Data collection table
 
 | τxy (MPa) | σ_vm (MPa) | σ_tresca (MPa) | SF (von Mises) | SF (Tresca) |
 |---|---|---|---|---|
@@ -497,7 +511,7 @@ For a sweep of stress states, compute the von Mises and Tresca equivalent stress
 | 80 | | | | |
 | 120 | | | | |
 
-### Python Analysis
+### Python analysis
 
 ```python title="experiment_6_criteria.py"
 # Stress Transformation Experiment 6: von Mises vs Tresca
@@ -538,22 +552,26 @@ ax.grid(True, alpha=0.3); ax.legend(); ax.set_title('Tresca is always the more c
 plt.tight_layout(); plt.savefig('plots/exp6_criteria.png', dpi=150, bbox_inches='tight'); plt.show()
 ```
 
-### Expected Results
+### Expected results
 
-Tresca always reports the lower (more conservative) safety factor. The gap is zero at τxy = 0 (uniaxial tension) and widens as shear grows, reaching about 11 percent at τxy = 120 MPa in this sweep; the theoretical maximum, at pure shear, is about 15.5 percent (the classic 1/sqrt(3) versus 1/2 shear-yield difference). The criterion you pick can move a marginal design across the line: at τxy = 120 MPa, von Mises gives SF = 1.00 while Tresca gives 0.90, so Tresca already calls the part a failure where von Mises calls it exactly marginal.
+For the preset in step 1, von Mises gives 185.2 MPa (safety factor 1.35) and Tresca gives 198.0 MPa (1.26).
 
-### Design Question
+Tresca always reports the lower (more conservative) safety factor. The gap is zero at $\tau_{xy} = 0$ and widens as the shear grows, to about 11 percent at $\tau_{xy} = 120\ \text{MPa}$. The largest possible gap, at pure shear, is about 15.5 percent: von Mises puts yield in shear at $1/\sqrt{3}$ of the yield strength and Tresca at $1/2$.
+
+At $\tau_{xy} = 120\ \text{MPa}$ the von Mises stress is 250.6 MPa, just above yield (safety factor 1.00), and Tresca gives 0.90. At $\tau_{xy} = 80\ \text{MPa}$ the factors are 1.27 and 1.18: a design that needs 1.25 passes by one criterion and fails by the other.
+
+### Design question
 
 Your shaft has a von Mises safety factor of 1.30 and a Tresca safety factor of 1.15. The design code you must follow specifies Tresca. Is the part acceptable for a required safety factor of 1.25, and what is the cheapest single change (material, diameter, or load path) to bring it into compliance?
 
 ---
 
-## What You Built
+## What you built
 
 <InArticleAd />
 
 
-Across the six experiments you turned a stress state into a circle, read the stress on any plane off that circle, found the orientations that govern yielding and fracture, and watched two failure criteria diverge. The same chain (state, transform, principal stresses, criterion) is what every combined-loading check in the rest of the course reduces to. Carry it into [combined bending and torsion](/education/mechanics-of-materials/combined-bending-torsion-loading) and the [principal-stress and failure lesson](/education/mechanics-of-materials/principal-stresses-failure-analysis), where the same circle decides whether a real part survives.
+You turned a stress state into a circle, read the stress on any plane from it, found the planes that govern yielding and fracture, and saw two failure criteria disagree. Every combined-loading check uses the same chain: stress state, transformation, principal stresses, criterion. Use it in [combined bending and torsion](/education/mechanics-of-materials/combined-bending-torsion-loading/) and in [principal stresses and failure analysis](/education/mechanics-of-materials/principal-stresses-failure-analysis/).
 
 
 

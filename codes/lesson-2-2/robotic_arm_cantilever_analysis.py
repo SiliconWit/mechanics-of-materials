@@ -156,9 +156,9 @@ class RoboticArmCantileverAnalysis:
         V = np.zeros_like(x_points)
 
         for i, x in enumerate(x_points):
-            # V(x) = -(wL + P) + w×x
-            # V(x) = -1387.5 + 75×x
-            V[i] = -(self.w * (self.L/1000) + self.P) + self.w * x
+            # V(x) = (wL + P) - w×x, so that dM/dx = V
+            # V(x) = 1387.5 - 75×x
+            V[i] = (self.w * (self.L/1000) + self.P) - self.w * x
 
         return V
 
@@ -206,9 +206,9 @@ class RoboticArmCantileverAnalysis:
 
         print(f"\n📈 CRITICAL VALUES:")
         print(f"\nShear force distribution:")
-        print(f"• At fixed support (x=0): V = {V_min:.1f} N (most negative)")
-        print(f"• At free end (x={self.L/1000:.1f}m): V = {V_max:.1f} N (least negative)")
-        print(f"• Linear variation: V(x) = -{self.R_y:.1f} + {self.w}×x")
+        print(f"• At fixed support (x=0): V = {V_max:.1f} N (largest)")
+        print(f"• At free end (x={self.L/1000:.1f}m): V = {V_min:.1f} N (smallest)")
+        print(f"• Linear variation: V(x) = {self.R_y:.1f} - {self.w}×x")
 
         print(f"\nBending moment distribution:")
         print(f"• At fixed support (x=0): M = {M_min:.3f} N·m (maximum magnitude, negative)")
@@ -379,7 +379,7 @@ class RoboticArmCantileverAnalysis:
                 ax.fill_between(x_array, V_kN, 0, alpha=0.3, color=COLORS['shear_neg'])
 
         # Mark critical points
-        # At x=0 (fixed support): V = -1.39 kN
+        # At x=0 (fixed support): V = +1.39 kN
         ax.plot(0, V_kN[0], 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
                markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
         ax.annotate(f'{V_kN[0]:.2f} kN', (0, V_kN[0]), xytext=(40, 50),
@@ -387,7 +387,7 @@ class RoboticArmCantileverAnalysis:
                    weight='bold', ha='left',
                    arrowprops=dict(arrowstyle='->', color=COLORS['text'], lw=2))
 
-        # At x=L (free end): V = -1.20 kN
+        # At x=L (free end): V = +1.20 kN
         ax.plot(self.L/1000, V_kN[-1], 'o', markersize=18, color='#FFFFFF', markeredgewidth=5,
                markerfacecolor=COLORS['moment_neg'], markeredgecolor=COLORS['text'], zorder=5)
         ax.annotate(f'{V_kN[-1]:.2f} kN', (self.L/1000, V_kN[-1]), xytext=(-80, -50),
@@ -518,7 +518,7 @@ def main():
     print(f"\n📋 SUMMARY:")
     print(f"• Vertical reaction: {robotic_arm.R_y:.1f} N (upward)")
     print(f"• Moment reaction: {robotic_arm.M_base:.1f} N·m (counterclockwise)")
-    print(f"• Maximum |shear|: {abs(robotic_arm.critical_results['V_min']):.1f} N at fixed support (x=0m)")
+    print(f"• Maximum |shear|: {abs(robotic_arm.critical_results['V_max']):.1f} N at fixed support (x=0m)")
     print(f"• Maximum moment: {abs(robotic_arm.critical_results['M_min']):.1f} N·m at fixed support (x=0m)")
     print(f"• Maximum stress: {robotic_arm.sigma_max:.1f} MPa at fixed support")
     print(f"• Safety factor: {robotic_arm.safety_factor:.1f}")

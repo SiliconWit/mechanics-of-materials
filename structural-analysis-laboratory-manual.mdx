@@ -25,137 +25,69 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-Hand calculations tell you the stress at a single point under idealized loading. Real structures have complex geometry, multiple load paths, and boundary conditions that are difficult to capture analytically. Finite element analysis handles that complexity, but trusting its output blindly is dangerous: a wrong mesh, a misapplied boundary condition, or a misunderstood result can produce numbers that look plausible but are wrong. The only reliable check is to solve a simplified version analytically, compare it to FEA, and understand where and why they diverge. These three progressive labs do exactly that for a robotic arm cantilever, a 3D printer gantry rail, and a drone arm under combined loading.
+A stress picture from a finite element model always looks convincing. The finite element method (FEM) cuts a part into many small elements and lets a computer solve them together. A support that is fixed the wrong way, or a load that points the wrong way, still gives a smooth colour picture, and the stress in it can be wrong by a factor of two. The safe habit is to solve a simple version of the part by hand first, then make a Python script and the FEM model repeat it, and explain every difference. These three labs build that habit on a robotic arm, a 3D printer rail and a drone arm. #StructuralAnalysis #EngineeringLabs #FEMAnalysis
 
-## Laboratory Series Overview
+## Laboratory series overview
 
-This laboratory series provides comprehensive training in structural analysis methods essential for modern engineering practice. You will analyze real engineering components using both analytical methods (Python) and finite element analysis (FreeCAD), developing skills directly applicable to mechatronics, automation, and structural design.
+Each lab stands alone and is planned for one week: one sitting for the hand solution and its Python script, and one for FreeCAD. Choose a lab and go to it.
 
-### What Makes These Labs Essential
+| Lab | The worry | What you find | What you need |
+|---|---|---|---|
+| [Lab 1](#lab-1-shear-force-and-bending-moment-analysis) | Does a robotic arm yield at the elbow? | Reactions, shear force and bending moment diagrams, bending stress, safety factor | Python. FreeCAD for a model and a drawing only |
+| [Lab 2](#lab-2-bending-stresses-and-fem-introduction) | Where is the print head when a printer rail is stressed most? | Worst load position, bending stress, a first FEM run, a mesh study | Python. FreeCAD with FEM |
+| [Lab 3](#lab-3-combined-loading-and-failure-analysis) | A drone arm is bent and twisted. Which strength is used up first? | Principal stresses, Mohr's circle, safety factors, the lightest tube | Python. FreeCAD with FEM |
 
-<BionicText method="advanced" intensity="medium" class="highlight">
-Modern engineering requires proficiency in multiple analysis methods: hand calculations for understanding fundamentals, programming for automation and parametric studies, and finite element methods for complex geometries and loading conditions. This laboratory series develops all three competencies through practical applications.
-</BionicText>
+You need Python 3.8 or later (the install command is in [Appendix B](#appendix-b-python-environment-setup)) and FreeCAD 0.20 or later, which includes the CalculiX solver for FEM. Both are free and run on Windows, macOS and Linux.
 
-**Core Laboratory Skills:**
-- **Analytical Methods** - Apply equilibrium principles and stress formulas to real structures
-- **Python Programming** - Automate calculations and create professional engineering plots
-- **FEM Simulation** - Validate designs using FreeCAD and CalculiX solver
-- **Engineering Communication** - Document findings in technical reports and presentations
+### Symbols and units used in all three labs
 
-### Laboratory Structure
+Work in newtons (N) and millimetres (mm). Then a stress comes out in N/mm², which is the megapascal (MPa).
 
-<CardGrid>
-  <Card title="Lab 1: Shear Force and Bending Moment" icon="rocket">
-    **Application:** Robotic Arm Cantilever Analysis
+| Symbol | Meaning | Unit |
+|---|---|---|
+| $V$ | Shear force: tries to slide one part of the beam past the other at a cut | N |
+| $M$ | Bending moment: the turning effect that bends the beam at a cut | N·mm |
+| $T$ | Torque: twists the beam about its own axis | N·mm |
+| $I$ | Second moment of area (moment of inertia): how well the cross-section resists bending | mm⁴ |
+| $J$ | Polar second moment of area: how well it resists twisting | mm⁴ |
+| $c$ | Distance from the centre of the cross-section to its surface | mm |
+| $\sigma$ | Normal stress: pulls or pushes on a surface | MPa |
+| $\tau$ | Shear stress: acts along a surface | MPa |
+| $SF$ | Safety factor: strength divided by stress | none |
 
-    - Calculate reaction forces and internal loads
-    - Generate SFD/BMD using Python
-    - Create 3D visualization in FreeCAD
-    - Duration: 1 week
-  </Card>
+The worked numbers in each lab are the base case. Your instructor gives your group its own values from [Appendix A](#appendix-a-group-parameter-assignments). Use them in every part of the lab.
 
-  <Card title="Lab 2: Bending Stresses and FEM" icon="seti:python">
-    **Application:** 3D Printer Gantry Rail Design
+### File naming and submission standards
 
-    - Apply flexure formula for stress analysis
-    - Determine critical load positions
-    - Perform FEM analysis with mesh convergence
-    - Duration: 1 week
-  </Card>
-
-  <Card title="Lab 3: Combined Loading Analysis" icon="approve-check-circle">
-    **Application:** Drone Arm Multi-Axis Loading
-
-    - Analyze bending and torsion superposition
-    - Calculate principal stresses
-    - Apply failure criteria for design verification
-    - Duration: 1 week
-  </Card>
-</CardGrid>
-
-:::tip[Required Software]
-**Python Environment:**
-- Python 3.8 or later
-- Libraries: numpy, matplotlib, scipy, pandas
-
-**CAD/FEM Software:**
-- FreeCAD 0.20 or later (free and open source)
-- Built-in CalculiX solver for FEM analysis
-
-**Installation:** All software is freely available and runs on Windows, macOS, and Linux.
-:::
-
-### File Naming and Submission Standards
-
-All submitted files must follow a strict naming convention to ensure proper organization and grading.
-
-<Card title="📁 Standard File Naming Format" icon="document">
+<Card title="Standard file naming format" icon="document">
 
 **Format:** `E022-01-XXXX-YYYY-LabN-Type.extension`
 
-**Components:**
-- `E022-01` = Course code 
-- `XXXX` = Your 4-digit registration number (e.g., 1234)
-- `YYYY` = Registration year (e.g., 2023)
-- `LabN` = Lab number (Lab1, Lab2, or Lab3)
-- `Type` = File type descriptor
-- `.extension` = Appropriate file extension
+`E022-01` is the course code, `XXXX` your 4-digit registration number, `YYYY` your registration year, `LabN` the lab (Lab1, Lab2 or Lab3) and `Type` the kind of file.
 
 **Example:** `E022-01-1234-2023-Lab1-Model.glb`
 
 </Card>
 
-<Card title="📋 Required File Types and Naming" icon="information">
+<Card title="Files to submit for every lab" icon="information">
 
-**For Each Lab, Submit:**
+Every name starts with `E022-01-XXXX-YYYY-LabN`.
 
-1. **3D Model (GLB format)**
-   - Name: `E022-01-XXXX-YYYY-LabN-Model.glb`
-   - Export from FreeCAD: File → Export → Select GLB format
-   - This is the primary 3D deliverable for web visualization
-
-2. **Technical Drawing (PDF format)**
-   - Name: `E022-01-XXXX-YYYY-LabN-Drawing.pdf`
-   - Create in FreeCAD: TechDraw workbench
-   - Must include: dimensions, section views, material specification
-   - Professional engineering drawing standards (ISO or ANSI)
-
-3. **Rendered Images (PNG format)**
-   - Name: `E022-01-XXXX-YYYY-LabN-Isometric.png`
-   - Name: `E022-01-XXXX-YYYY-LabN-SideView.png`
-   - Resolution range: 1600×900 – 2560×1440 pixels
-   - Show load visualizations and boundary conditions
-
-4. **Python Script (PY format)**
-   - Name: `E022-01-XXXX-YYYY-LabN-Analysis.py`
-   - Must include comments explaining each section
-   - Should run without errors when parameters are set
-
-5. **Analysis Plots (PNG format)**
-   - Lab 1: `E022-01-XXXX-YYYY-Lab1-SFD-BMD.png`
-   - Lab 2: `E022-01-XXXX-YYYY-Lab2-StressAnalysis.png`
-   - Lab 2: `E022-01-XXXX-YYYY-Lab2-Convergence.png`
-   - Lab 3: `E022-01-XXXX-YYYY-Lab3-MohrsCircle.png`
-   - Lab 3: `E022-01-XXXX-YYYY-Lab3-Optimization.png`
-
-6. **Hand Calculations (PDF format)**
-   - Name: `E022-01-XXXX-YYYY-LabN-Calculations.pdf`
-   - Scanned from lab notebook (clear, legible scans)
-   - Must show FBD, equations, and step-by-step work
-
-7. **Technical Report (PDF format)**
-   - Name: `E022-01-XXXX-YYYY-LabN-Report.pdf`
-   - Professional formatting with sections as specified
-   - Include all plots and tables in report
+| File | Name ends with | What it must show |
+|---|---|---|
+| 3D model | `-Model.glb` | The part, its loads and supports (export steps: Lab 1, Part 3) |
+| Drawing | `-Drawing.pdf` | Views, dimensions, section, material, loads, supports ([Appendix E](#appendix-e-creating-technical-drawings-in-freecad)) |
+| Two images | `-Isometric.png`, `-SideView.png` | Loads and supports, 1600×900 to 2560×1440 pixels |
+| Python script | `-Analysis.py` | Comments, and no errors when it runs |
+| Plots | Named in each lab | PNG files from your scripts |
+| Hand calculations | `-Calculations.pdf` | A clear scan: free body diagram, equations, every step |
+| Report | `-Report.pdf` | The sections listed in each lab, with all plots and tables |
 
 </Card>
 
-<Card title="📦 Submission Package Structure" icon="document">
+<Card title="Submission package" icon="document">
 
-**Create a folder named:** `E022-01-XXXX-YYYY-LabN` (the group leader's Reg. No.)
-
-**Inside the folder, organize files:**
+Put the files in a folder named `E022-01-XXXX-YYYY-LabN`, with the registration number of the group leader:
 
 ```
 E022-01-1234-2023-Lab1/
@@ -169,166 +101,125 @@ E022-01-1234-2023-Lab1/
 └── E022-01-1234-2023-Lab1-Report.pdf
 ```
 
-**Compress to ZIP:** `E022-01-XXXX-YYYY-LabN.zip`
-
-**Submit to the instructor before deadline**
+Compress the folder to `E022-01-XXXX-YYYY-LabN.zip` and submit it to the instructor before the deadline.
 
 </Card>
 
-:::caution[Important Submission Rules]
-- **Late submissions** lose 10% per day
-- **Incorrect file naming** results in 5% penalty
-- **Missing files** cannot be added after deadline
-- **Group members** ensure your reg. no. appears in at least one file in the ZIP, otherwise, you’ll be marked absent
-- **File size limit:** Maximum 50 MB per ZIP file
-- **Verify before submitting:** Check all files open correctly
+:::caution[Submission rules]
+- A late submission loses 10% for each day.
+- A wrong file name costs 5%.
+- A missing file cannot be added after the deadline.
+- The registration number of every group member must appear in at least one file in the ZIP. A member whose number is missing is marked absent.
+- The ZIP file is 50 MB at most.
+- Open every file once before you submit.
 :::
 
 ---
 
-## Lab 1: Shear Force and Bending Moment Analysis
+## Lab 1: Shear force and bending moment analysis
 
 <InArticleAd />
 
 
-### Application: Robotic Arm Design
+### Application: robotic arm design
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Robotic Arm Segment Under Load](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-segment-under-load.png)
+	![A beam fixed in a wall at its left end, point 0, and free at its right end, point L. A point load P presses down on the free end and a spread load W presses down along the whole length](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-segment-under-load.png)
   </TailwindWrapper>
 </div>
 
-**Lab Duration:** 1 week
+The picture also shows a spread load W along the arm. This lab has only the point load $P$ at the tip. The weight of the arm itself is left out.
 
 ### Learning Objectives
 
-By the end of this laboratory, you will be able to:
+By the end of this lab you can:
 
-1. **Calculate** reaction forces using equilibrium equations for cantilever beam configurations
-2. **Write** Python code to generate shear force and bending moment diagrams automatically
-3. **Identify** critical sections in beam structures where maximum internal forces occur
-4. **Create** professional engineering plots with proper labels, units, and formatting
-5. **Relate** analysis results to practical robot design decisions and safety requirements
+1. Calculate the reactions of a cantilever from the equilibrium equations
+2. Write Python code that draws the shear force and bending moment diagrams
+3. Find the section of a beam where the internal forces are largest
+4. Make plots with labels, units and a title that another engineer can read
+5. Use the results to decide if the arm is safe
 
-### Real-World Engineering Context
+### The engineering worry
 
-You are designing a 6-DOF industrial robotic manipulator for material handling operations. The forearm segment connects the wrist joint to the gripper and must support the payload while maintaining sufficient rigidity to ensure positioning accuracy. The arm is modeled as a cantilever beam fixed at the elbow joint.
+The forearm of a material handling robot carries the gripper and payload at its tip and is bolted to the elbow joint at the other end. A beam held at one end only is a cantilever. If the arm yields at the elbow (it bends and stays bent), the robot loses its accuracy permanently. A thicker arm is not a free answer, because every gram needs more motor torque.
 
-**Design Challenge:** The beam must safely support operational loads while minimizing weight to reduce motor torque requirements and improve dynamic response. Excessive deflection would compromise positioning accuracy, while insufficient strength could lead to structural failure.
+### Problem statement
 
-### Problem Statement
+<Card title="Robotic arm data" icon="document">
 
-<Card title="📋 Robotic Arm Specifications" icon="document">
-
-**Geometry:**
-- Beam Length (L): **500 mm**
-- Cross-section: **Rectangular 60 mm × 20 mm** (width × height)
-- Moment of Inertia (I): **4.0 × 10⁴ mm⁴** (calculated as bh³/12 = 60×20³/12)
-- Distance to outer fiber (c): **10 mm** (half of height)
-
-**Loading:**
-- Point Load at Free End (P): **500 N** (gripper + payload weight)
-- Applied at: x = 500 mm (free end)
-
-**Material:**
-- Material: **Aluminum alloy 6061-T6**
-- Yield Strength (σ_yield): **275 MPa**
-- Young's Modulus (E): **69 GPa**
-
-**Support Configuration:**
-- **Cantilever** (fixed at x = 0, free at x = 500 mm)
-- Fixed support provides both vertical reaction force and reaction moment
-
-:::note[Group-Specific Parameters]
-Your instructor will assign specific parameters to your group from the [Group Parameter Table](#appendix-group-parameter-assignments) at the end of this document. Each group receives slightly different beam length and load values to ensure independent work while maintaining consistent difficulty.
-:::
+| Quantity | Symbol | Value |
+|---|---|---|
+| Beam length | $L$ | 500 mm |
+| Cross-section, a flat rectangle | $b \times h$ | 60 mm wide × 20 mm tall |
+| Second moment of area, $bh^3/12$ | $I$ | $4.0 \times 10^4\ \text{mm}^4$ |
+| Distance to the surface, $h/2$ | $c$ | 10 mm |
+| Load at the free end: gripper and payload | $P$ | 500 N, downward |
+| Material | | Aluminum alloy 6061-T6 |
+| Yield strength: the stress at which the metal stays bent | $\sigma_{\text{yield}}$ | 275 MPa |
+| Young's modulus: the stiffness of the material | $E$ | 69 GPa |
+| Support | | Cantilever: fixed at $x = 0$, free at $x = 500\ \text{mm}$ |
 
 </Card>
 
-**Critical Question:** What are the maximum shear force and bending moment for this robotic arm, and where do they occur?
+**Critical question:** What are the largest shear force and the largest bending moment in this arm, and where are they?
 
-### Part 1: Analytical Solution
+**You record:** the two reactions, the shear force, the bending moment at three points, the largest bending stress and the safety factor.
 
-Before writing any code, develop fundamental understanding through hand calculations.
+### Part 1: Analytical solution
+
+Solve the arm by hand first. Signs follow the course: the shear force $V$ is positive when the forces to the left of a cut push up, and the bending moment $M$ is positive when it stretches the bottom of the beam.
 
 <Steps>
 
-1. **Draw Free Body Diagram (Equivalent System Model)**
+1. **Draw the free body diagram**, a sketch of the beam alone with every force on it: the reaction force $R_y$ and the reaction moment $M_A$ at the fixed end, and the load $P = 500\ \text{N}$ at the free end. ✅
 
-   Sketch the beam showing:
-   - Fixed support at left end (x = 0) with reaction force R_y and reaction moment M_A
-   - Downward force P = 500 N at right end (x = 500 mm)
-   - Coordinate system with x-axis along beam length
+2. **Vertical reaction.** The beam does not move, so the upward forces equal the downward forces:
 
-2. **Calculate Reaction Forces**
+   $$\sum F_y = 0: \quad R_y - P = 0 \quad \Rightarrow \quad R_y = P = 500\ \text{N (upward)}$$ ✅
 
-   For cantilever beam with end load, apply equilibrium:
+3. **Reaction moment.** The beam does not turn, so the wall balances the moment of the load, force times distance:
 
-   **Vertical force equilibrium (↑ positive):**
-   $$\sum F_y = 0: R_y - P = 0$$
-   $$R_y = P = 500 \text{ N (upward)}$$
+   $$M_A = P \times L = 500\ \text{N} \times 0.5\ \text{m} = 250\ \text{N·m (counterclockwise)}$$ ✅
 
-   **Moment equilibrium about fixed support (counterclockwise positive):**
-   $$\sum M_A = 0: M_A - P \times L = 0$$
-   $$M_A = 500 \text{ N} \times 0.5 \text{ m} = 250 \text{ N·m (counterclockwise)}$$
+4. **Shear force.** Cut the beam anywhere. The only vertical force to the left of the cut is the wall reaction, which pushes up:
 
-3. **Determine Shear Force Distribution**
+   $$V(x) = R_y = +500\ \text{N} \quad \text{for } 0 \leq x < 500\ \text{mm}$$
 
-   For cantilever with end load, shear force is constant along length:
+   At the tip the load brings the shear force back to zero. ✅
 
-   $$V(x) = -500 \text{ N for } 0 \leq x < 500 \text{ mm}$$
+5. **Bending moment.** At a cut at $x$, the load acts at a distance $L - x$ to the right and stretches the top of the beam, so the moment is negative:
 
-   (Negative because load creates downward shear on right side of any cut)
+   $$M(x) = -P \times (L - x) = -500\ \text{N} \times (0.5\ \text{m} - x)$$
 
-   At free end after load point: V = 0 N
+   - Fixed end, $x = 0$: $M = -500 \times 0.5 = -250\ \text{N·m}$
+   - Middle, $x = 250\ \text{mm}$: $M = -500 \times 0.25 = -125\ \text{N·m}$
+   - Free end, $x = 500\ \text{mm}$: $M = 0\ \text{N·m}$ ✅
 
-4. **Determine Bending Moment Distribution**
+6. **Largest bending stress.** By the flexure formula, the stress at the surface is the moment times the distance $c$ to the surface, divided by $I$. The largest moment, 250 N·m, is 250,000 N·mm:
 
-   Bending moment varies linearly from support to free end:
+   $$\sigma_{\max} = \frac{M_{\max} \times c}{I} = \frac{250{,}000\ \text{N·mm} \times 10\ \text{mm}}{4.0 \times 10^4\ \text{mm}^4} = 62.5\ \text{MPa}$$ ✅
 
-   $$M(x) = -P \times (L - x) = -500 \times (0.5 - x) \text{ N·m}$$
+7. **Safety factor**, the yield strength divided by the largest stress:
 
-   **At key points:**
-   - At x = 0 (fixed end): M(0) = **-250 N·m**
-   - At x = 250 mm (midpoint): M(0.25) = **-125 N·m**
-   - At x = 500 mm (free end): M(0.5) = **0 N·m**
-
-5. **Calculate Maximum Bending Stress**
-
-   Use the flexure formula:
-
-   $$\sigma_{max} = \frac{M_{max} \times c}{I}$$
-
-   $$\sigma_{max} = \frac{250 \times 10^3 \text{ N·mm} \times 10 \text{ mm}}{4.0 \times 10^4 \text{ mm}^4}$$
-
-   $$\sigma_{max} = 62.5 \text{ MPa}$$
-
-6. **Calculate Safety Factor**
-
-   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{275 \text{ MPa}}{62.5 \text{ MPa}} = 4.4$$
+   $$SF = \frac{\sigma_{\text{yield}}}{\sigma_{\max}} = \frac{275\ \text{MPa}}{62.5\ \text{MPa}} = 4.4$$ ✅
 
 </Steps>
 
-**Engineering Insight:** This safety factor of 4.4 is appropriate for robotic applications. In practice, SF = 3-5 is typical for robotics where dynamic loads, impact, and reliability are important considerations. This design balances safety with reasonable material usage.
+Factors of 3 to 5 are usual in robotics, because the arm also meets loads from acceleration and impact that this static calculation leaves out.
 
-:::note[Checkpoint]
-Complete these hand calculations in your lab notebook. These values will validate your Python code in the next section.
+:::tip[Is your answer reasonable?]
+- The wall carries the whole load, so $R_y = P$.
+- The moment is zero at the free end and largest at the wall.
+- Aluminum machine parts work at tens of MPa. A result of 0.0625 MPa or 62,500 MPa means mixed units: m with mm, or cm⁴ with mm⁴.
+
+The Python script must reproduce your values.
 :::
 
-### Part 2: Python Analysis
+### Part 2: Python analysis
 
-Now automate this analysis using Python for rapid design iteration and parametric studies.
-
-#### Step 2.1: Setup Python Environment
-
-Install required libraries:
-
-```bash
-pip install numpy matplotlib scipy pandas
-```
-
-#### Step 2.2: Complete Python Analysis Code
+The script repeats the hand solution and draws the two diagrams.
 
 ```python
 import numpy as np
@@ -358,7 +249,7 @@ print(f'Distance to outer fiber: {c:.1f} mm')
 x = np.linspace(0, L, 100)
 
 # Shear force (constant for cantilever with end load)
-V = -np.ones_like(x) * P  # Negative shear throughout
+V = np.ones_like(x) * P  # Positive: the wall pushes the left part up
 
 # Bending moment (linear variation)
 M = -P * (L - x)  # Negative indicates tension on top fiber
@@ -412,7 +303,7 @@ plt.show()
 print('\nPlots saved as SFD_BMD_RoboticArm.png')
 ```
 
-**Expected Console Output:**
+**Expected console output:**
 ```
 Moment of Inertia: 4.00e+04 mm^4
 Distance to outer fiber: 10.0 mm
@@ -425,348 +316,176 @@ Maximum Bending Stress: 62.50 MPa
 Safety Factor: 4.40
 ```
 
-:::tip[Validation]
-Compare these values with your hand calculations. They should match within rounding errors. If not, check your equations carefully.
-:::
+These values must agree with your hand solution. The plots must show:
 
-**Your Plots Should Show:**
+- Shear force: a level line at $V = +500\ \text{N}$ from the wall to the tip.
+- Bending moment: a straight line from $-250\ \text{N·m}$ at the fixed end to 0 at the free end. A negative moment means the top of the beam is in tension.
 
-**Shear Force Diagram:**
-- Horizontal line at V = -500 N (constant negative shear)
-- Blue filled area below zero line
-- Clear axis labels and grid
+### Part 3: FreeCAD model
 
-**Bending Moment Diagram:**
-- Linear decrease from -250 N·m at fixed end to 0 at free end
-- Red filled area below zero line (negative moment indicates tension on top fiber)
-- Maximum moment clearly visible at x = 0
+Build a 3D model of the arm, to learn the FreeCAD steps that Lab 2 needs. There is no FEM in this lab. The model uses these axes:
 
-### Part 3: FreeCAD Visualization
+```text
+            Z (height, 20 mm)          P = 500 N
+            ^                              |
+            |                              v
+  wall ///  +------------------------------+
+       ///  |             beam             | ----> X (length)
+       ///  +------------------------------+
+          x = 0                        x = 500 mm
 
-Create a 3D model of the robotic arm in FreeCAD to visualize the component and understand its geometry.
-
-**Beam Geometry and Orientation**:
-
-```
-Coordinate System (FreeCAD Standard):
-┌─────────────────────────────────────────────────┐
-│  X-axis: Beam LENGTH (500 mm) → extends left-right
-│  Y-axis: Beam WIDTH (60 mm) → extends front-back
-│  Z-axis: Beam HEIGHT (20 mm) → extends up-down
-│
-│  Cross-section: 60 mm (Y) × 20 mm (Z) rectangle
-│  Extrusion: Along X-axis for 500 mm
-│
-│  Load: P = 500 N pointing DOWN (-Z direction)
-│        at x = 500 mm (free end, right side)
-│
-│  Support: Fixed at x = 0 mm (left side)
-└─────────────────────────────────────────────────┘
+  Y (width, 60 mm) points into the page.
 ```
 
-:::tip[FreeCAD Sketch Reference]
-- **Horizontal** in sketch view = **Y-axis** (width = 60 mm)
-- **Vertical** in sketch view = **Z-axis** (height = 20 mm)
-- **Extrude/Pad** direction = **X-axis** (length = 500 mm)
-:::
+In the sketch, horizontal is the Y-axis and vertical is the Z-axis. The Pad tool then extends the sketch along the X-axis.
 
 <Steps>
 
-1. **Create Basic Beam Model**
+1. **Sketch the cross-section.** Create a new document (File → New). In the Part Design workbench, right-click in the tree → Create Body, and create a sketch on the **YZ plane**. Draw a rectangle centered on the origin, constrain it to 60 mm horizontal and 20 mm vertical, and close the sketch.
 
-   - Open FreeCAD and create new document (File → New)
-   - Switch to Part Design workbench
-   - Create new body (right-click in tree → Create Body)
-   - Create sketch on **XY plane** (this will be the cross-section face)
+2. **Extend the beam.** Click Pad and enter a length of 500 mm. The beam is now 500 mm long (X), 60 mm wide (Y) and 20 mm tall (Z).
 
-2. **Draw Rectangular Cross-Section (60 mm wide × 20 mm tall)**
+3. **Set the material.** Right-click the part → Appearance → Set Material, and choose Aluminum.
 
-   - Click **Rectangle tool**
-   - Draw rectangle centered on origin (or from origin)
-   - Constrain **horizontal dimension** (width): **60 mm** (Y-direction)
-   - Constrain **vertical dimension** (height): **20 mm** (Z-direction)
-   - Close sketch
+4. **Show the load as an arrow that points down** (negative Z). In the Part workbench, make a cylinder (radius 8 mm, height 80 mm) above the free end and a cone (base radius 15 mm, height 25 mm) with its point on the beam. Join them with Part → Boolean → Union, color the arrow orange and label it "P = 500 N" with the Draft workbench.
 
-3. **Extrude Beam Along Length (500 mm)**
+5. **Show the fixed support.** Part → Box, 30 mm × 70 mm × 50 mm, at the left end of the beam. Color it gray and label it "Fixed Support".
 
-   - Click **'Pad'** button (extrusion tool)
-   - Enter **length: 500 mm**
-     - This extrudes the cross-section along the **X-axis** (beam length direction)
-   - Click OK
-   - **Result**: You now have a beam 500 mm long (X) × 60 mm wide (Y) × 20 mm tall (Z)
+6. **Make the technical drawing** with the steps of [Appendix E](#appendix-e-creating-technical-drawings-in-freecad): a front view, a top view and a section, the dimensions 500 mm, 60 mm and 20 mm, and notes for the material, the load and the support.
 
-4. **Add Material Properties**
+7. **Save the two images.** View → Standard Views → Isometric, then View → Screenshot. Do the same for a side view that shows the beam length and the load arrow.
 
-   - Right-click part → Appearance → Set Material
-   - Choose 'Aluminum' from material library
-   - Set aluminum silver color
-
-5. **Add Load Visualization (Arrow Pointing Downward)**
-
-   - Switch to **Part workbench**
-   - Create arrow shaft: **Part → Primitives → Cylinder**
-     - Radius: 8 mm, Height: 80 mm
-     - Position: Above beam at free end (x = 500 mm, z = top of beam + 80 mm)
-     - **Rotate 180°** around Y-axis to point **downward**
-   - Create arrow head: **Part → Primitives → Cone**
-     - Base radius: 15 mm, Height: 25 mm
-     - Position: At bottom of shaft, pointing at beam
-     - **Rotate 180°** around Y-axis to point **downward**
-   - Fuse shaft and head: Select both → **Part → Boolean → Union**
-   - Color it **orange/red** (right-click → Appearance → Shape color)
-   - Add text label using **Draft workbench**: Text = "P = 500 N"
-
-   :::tip[Load Direction]
-   The arrow must point **downward** (negative Z-direction) to represent the gravitational load from the gripper and payload.
-   :::
-
-6. **Add Fixed Support Visualization**
-
-   - At the left end (x = 0), add a wall/block to represent the fixed support
-   - Use **Part → Box** with dimensions 30 mm × 70 mm × 50 mm
-   - Position it at the left end of beam
-   - Color it **gray** to distinguish from beam
-   - Add text label: "Fixed Support"
-
-7. **Create Technical Drawing (TechDraw Workbench)**
-
-   - Switch to **TechDraw workbench**
-   - Insert → Default Page (A4 landscape)
-   - Insert View → Insert View → Select your beam body
-
-   **Add Multiple Views**:
-   - **Front view**: Shows length (500 mm, X-axis) and height (20 mm, Z-axis)
-   - **Top view**: Shows length (500 mm, X-axis) and width (60 mm, Y-axis)
-   - **Right side view**: Shows width (60 mm, Y-axis) and height (20 mm, Z-axis)
-   - **Section A-A**: Cut through beam to show rectangular cross-section clearly
-
-   **Add Dimensions**:
-   - Insert → Dimensions → Length: 500 mm (beam length)
-   - Insert → Dimensions → Width: 60 mm (cross-section width)
-   - Insert → Dimensions → Height: 20 mm (cross-section height)
-
-   **Add Annotations**:
-   - Insert → Annotation → Material: "Aluminum Alloy 6061-T6"
-   - Insert → Annotation → Load: "P = 500 N (downward) at x = 500 mm"
-   - Insert → Annotation → Support: "Fixed support at x = 0 mm"
-
-   **Export Drawing**:
-   - File → Export as PDF
-   - Save as: `E022-01-XXXX-YYYY-Lab1-Drawing.pdf`
-
-8. **Export 3D Model and Images**
-
-   **Set Isometric View**:
-   - Click **View → Standard Views → Isometric**
-   - Or press **"0"** on numpad for isometric view
-   - Adjust camera to show beam, load arrow, and support clearly
-
-   **Take Screenshots**:
-   - **Isometric view**: View → Screenshot → Save as `E022-01-XXXX-YYYY-Lab1-Isometric.png`
-     - Resolution: according to the [File Naming and Submission Standards](#file-naming-and-submission-standards) above
-   - **Side view**: Rotate to side → Screenshot → Save as `E022-01-XXXX-YYYY-Lab1-SideView.png`
-     - Should clearly show beam length and load arrow
-
-   **Export 3D Model (GLB for Web)**:
-   - Select all model objects in tree view (Ctrl+A or select individually)
-   - File → Export
-   - In the file type dropdown, select **"glTF 2.0 (*.glb *.gltf)"**
-   - **Important**: Change the extension from `.gltf` to `.glb` before saving
-     - Default filename: `E022-01-XXXX-YYYY-Lab1-Model.gltf`
-     - Change to: `E022-01-XXXX-YYYY-Lab1-Model.glb`
-   - Click **Export** or **Save**
-   - **Verify your GLB file**: Visit https://siliconwit.com/product-development/glb-viewer/
-     - Drag and drop your `.glb` file to confirm it displays correctly
+8. **Export the 3D model.** Select all objects in the tree (Ctrl+A), then File → Export with the file type "glTF 2.0 (*.glb *.gltf)". Change the end of the file name from `.gltf` to `.glb` before you save. To check the file, open https://siliconwit.com/product-development/glb-viewer/ and drop it on the page.
 
 </Steps>
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '2rem 0' }}>
   <TailwindWrapper>
     <figure>
-      ![FreeCAD Robotic Arm Model - Isometric View](https://cdn.siliconwit.com/education/solid-mechanics/lab1-freecad-robotic-arm-isometric.png)
+      ![A FreeCAD window with the finished model: a flat beam 500 mm long, a box at its left end labelled Fixed, and an orange arrow labelled P = 500.0 N that points down on its free end](https://cdn.siliconwit.com/education/solid-mechanics/lab1-freecad-robotic-arm-isometric.png)
       <figcaption style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', fontStyle: 'italic', color: '#666' }}>
-        Example FreeCAD model showing beam, fixed support, and load arrow
+        Example FreeCAD model with the beam, the fixed support and the load arrow
       </figcaption>
     </figure>
   </TailwindWrapper>
 </div>
 
-:::note[Important]
-This lab focuses on visualization and familiarity with FreeCAD. FEM analysis will be introduced in Lab 2.
-:::
-
 :::tip[Instrument it]
-This lab calculates and simulates the bending stress; on the real beam you would close the loop and measure it. A foil strain gauge bonded at the section of maximum moment, read through an HX711 or an instrumentation amplifier, gives the strain directly, and multiplying by the modulus gives a stress to compare against your analytical and FEM numbers. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) reads the gauge and [logs the readings](https://siliconwit.io), turning the lab from a calculation into a measurement you can trust.
+On the real arm you would measure the bending stress. A foil strain gauge bonded at the section of largest moment, read through an HX711 or an instrumentation amplifier, gives the strain, and the strain times Young's modulus is the stress. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) reads the gauge and [logs the readings](https://siliconwit.io).
 :::
 
-### Lab 1 Deliverables
+### Design question
 
-**Submit according to the [File Naming and Submission Standards](#file-naming-and-submission-standards) above.**
+The bar lies flat, and its tip moves down by $PL^3/(3EI) = 7.5\ \text{mm}$ under the load, too far for accurate work. Stand the same bar on its edge, 20 mm wide and 60 mm tall, and calculate the new $I$, stress, safety factor and tip movement. Which decides the cross-section of a robotic arm, strength or stiffness?
 
-**Required Files:**
+### Lab 1 deliverables
 
-1. **3D Model** - `E022-01-XXXX-YYYY-Lab1-Model.glb`
-   - Exported from FreeCAD showing beam geometry with load visualization
+Submit the seven files listed in the [file naming and submission standards](#file-naming-and-submission-standards), in `E022-01-XXXX-YYYY-Lab1.zip`. For this lab:
 
-2. **Technical Drawing** - `E022-01-XXXX-YYYY-Lab1-Drawing.pdf`
-   - Created using FreeCAD TechDraw workbench
-   - Must include: orthographic views, dimensions (500mm length, 60×20mm section), material specification (Al 6061-T6), load annotation (500 N)
-
-3. **Rendered Images**
-   - `E022-01-XXXX-YYYY-Lab1-Isometric.png` (isometric view showing load and support)
-   - `E022-01-XXXX-YYYY-Lab1-SideView.png` (side elevation showing beam dimensions)
-
-4. **Python Script** - `E022-01-XXXX-YYYY-Lab1-Analysis.py`
-   - Complete code with comments for SFD and BMD analysis
-
-5. **Analysis Plot** - `E022-01-XXXX-YYYY-Lab1-SFD-BMD.png`
-   - Combined shear force and bending moment diagrams
-
-6. **Hand Calculations** - `E022-01-XXXX-YYYY-Lab1-Calculations.pdf`
-   - Scanned lab notebook pages with FBD, equilibrium equations, and results
-
-7. **Technical Report** - `E022-01-XXXX-YYYY-Lab1-Report.pdf` (2-3 pages)
-   - Introduction (robotic arm application and analysis importance)
-   - Problem statement with specifications
-   - Methodology (key equations used)
-   - Results (comparison table, plots, safety factor)
-   - Discussion (SF appropriateness, weight reduction strategies, load sensitivity)
-   - Conclusion (key findings and design recommendations)
-
-**Submission:** Compress all files into `E022-01-XXXX-YYYY-Lab1.zip` and submit to the instructor.
+- Plot: `E022-01-XXXX-YYYY-Lab1-SFD-BMD.png`, the two diagrams together.
+- Report, 2 to 3 pages: introduction, problem statement with the data, method (the equations used), results (hand against Python, the plots, the safety factor), discussion (is the safety factor suitable, how to save weight, the design question) and conclusion.
 
 ---
 
-## Lab 2: Bending Stresses and FEM Introduction
+## Lab 2: Bending stresses and FEM introduction
 
 <InArticleAd />
 
 
-### Application: 3D Printer Gantry Rail Design
+### Application: 3D printer gantry rail design
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Gantry Rail Loading Diagram](https://cdn.siliconwit.com/education/solid-mechanics/gantry-rail-loading-diagram.png)
+	![A beam of length L on a pinned support A at its left end and a roller support B at its right end. One point load, labelled P1, presses down at the middle of the beam](https://cdn.siliconwit.com/education/solid-mechanics/gantry-rail-loading-diagram.png)
   </TailwindWrapper>
 </div>
 
-**Lab Duration:** 1 week
+The load that the picture labels P1 is the print head weight $P$ of this lab.
 
 ### Learning Objectives
 
-By the end of this laboratory, you will be able to:
+By the end of this lab you can:
 
-1. **Apply** the flexure formula σ = Mc/I to calculate bending stresses in beam structures
-2. **Determine** critical load positions that produce maximum stress in simply supported beams
-3. **Create and mesh** 3D models in FreeCAD for finite element analysis
-4. **Set up and run** FEM analyses using CalculiX solver with appropriate boundary conditions
-5. **Validate** FEM results against analytical calculations and understand sources of discrepancy
-6. **Understand** mesh convergence concepts and perform convergence studies
+1. Calculate a bending stress with the flexure formula $\sigma = Mc/I$
+2. Find the position of a moving load that gives the largest stress
+3. Build, mesh and solve an FEM model in FreeCAD with the correct supports
+4. Compare an FEM result with a hand result and explain the difference
+5. Run a mesh convergence study
 
-### Real-World Engineering Context
+### The engineering worry
 
-Desktop 3D printers use a horizontal rail (gantry) that supports the print head as it moves back and forth during the additive manufacturing process. The rail must be stiff enough to prevent deflection during printing, which would cause layer misalignment and poor print quality. The print head weight creates a moving concentrated load that varies in position during operation.
+The print head of a desktop 3D printer moves along a horizontal rail, the gantry. Its weight is a point load that changes position all the time. If the rail bends too much, the layers of the print do not line up, and if the stress is too high, the rail fails after many cycles. The printer needs a positioning accuracy of $\pm 0.05\ \text{mm}$ and a light rail, so that the head can move fast.
 
-**Design Challenge:** The gantry must maintain positioning accuracy within ±0.05 mm while minimizing weight to enable faster print speeds. Understanding where maximum stresses occur is critical for optimizing the rail cross-section and selecting appropriate materials.
+### Problem statement
 
-### Problem Statement
+<Card title="3D printer gantry data" icon="document">
 
-<Card title="📋 3D Printer Gantry Specifications" icon="document">
-
-**Geometry:**
-- Rail Length (L): **800 mm**
-- Cross-section: **Aluminum tube OD 30 mm × ID 24 mm × 3 mm wall thickness** (hollow circular)
-- Moment of Inertia (I): **2.35 × 10⁴ mm⁴** (hollow circular: I = π(OD⁴-ID⁴)/64)
-- Distance to outer fiber (c): **15 mm** (outer radius)
-
-**Loading:**
-- Print Head Weight (P): **200 N** (includes extruder, hotend, cooling fans, wiring)
-- Load position: **Variable** (0 ≤ x ≤ 800 mm during operation)
-
-**Material:**
-- Material: **Aluminum alloy 6061-T6**
-- Young's Modulus (E): **70 GPa**
-- Poisson's Ratio (ν): **0.33**
-- Yield Strength (σ_yield): **275 MPa**
-
-**Support Configuration:**
-- **Simply supported** (pinned at x = 0, roller at x = 800 mm)
-- Supports provide vertical reactions only, allowing thermal expansion
-
-:::note[Group-Specific Parameters]
-Your instructor will assign specific parameters to your group from the [Group Parameter Table](#appendix-group-parameter-assignments) at the end of this document.
-:::
+| Quantity | Symbol | Value |
+|---|---|---|
+| Rail length | $L$ | 800 mm |
+| Cross-section, a round tube | | Outer diameter (OD) 30 mm, inner diameter (ID) 24 mm |
+| Second moment of area, $\pi(\text{OD}^4 - \text{ID}^4)/64$ | $I$ | $2.35 \times 10^4\ \text{mm}^4$ |
+| Distance to the surface, the outer radius | $c$ | 15 mm |
+| Print head weight | $P$ | 200 N, anywhere from 0 to 800 mm |
+| Material | | Aluminum alloy 6061-T6 |
+| Young's modulus | $E$ | 70 GPa |
+| Poisson's ratio: sideways shrinking divided by lengthwise stretching | $\nu$ | 0.33 |
+| Yield strength | $\sigma_{\text{yield}}$ | 275 MPa |
+| Supports | | Simply supported: a pin at $x = 0$, a roller at $x = 800\ \text{mm}$. The roller lets the rail expand when it warms |
 
 </Card>
 
-**Critical Questions:**
-1. Where should the print head be positioned to cause maximum bending stress?
-2. What is the maximum stress value at this critical position?
-3. Does FEM analysis confirm the analytical solution?
+**Critical questions:**
+1. Where is the print head when the bending stress is highest?
+2. How large is the stress at that position?
+3. Does the FEM model confirm the hand solution?
 
-### Part 1: Analytical Solution
+**You record:** the worst position, the largest moment, stress and safety factor by hand and from Python, then the FEM stress and the number of elements for three mesh sizes.
 
-First, determine the critical load position and maximum stress analytically.
+### Part 1: Analytical solution
 
-#### Theory: Moving Load on Simply Supported Beam
+#### Theory: moving load on a simply supported beam
 
-For a simply supported beam with point load P at distance 'a' from left support:
+Put the load $P$ at a distance $a$ from the left support. The support nearer to the load carries more of it:
 
-**Left reaction:**
-$$R_A = \frac{P(L-a)}{L}$$
+$$R_A = \frac{P(L-a)}{L} \qquad R_B = \frac{Pa}{L}$$
 
-**Right reaction:**
-$$R_B = \frac{Pa}{L}$$
+The bending moment is largest under the load, where it is the left reaction times $a$:
 
-**Bending moment under load:**
 $$M(a) = \frac{Pa(L-a)}{L}$$
 
-To find position 'a' that gives absolute maximum moment, differentiate and set to zero:
+It is zero with the load over a support and grows toward the middle. Its slope is zero at the largest value:
 
 $$\frac{dM}{da} = \frac{P(L-2a)}{L} = 0$$
 
-**Therefore:** Maximum bending moment occurs when load is at **midspan (a = L/2 = 400 mm)**
+So the bending moment is largest with the load at midspan, $a = L/2 = 400\ \text{mm}$.
 
 <Steps>
 
-1. **Calculate Maximum Moment**
+1. **Largest moment.** At midspan the formula above becomes $PL/4$:
 
-   With load at midspan (a = 400 mm):
+   $$M_{\max} = \frac{PL}{4} = \frac{200\ \text{N} \times 800\ \text{mm}}{4} = 40{,}000\ \text{N·mm} = 40\ \text{N·m}$$ ✅
 
-   $$M_{max} = \frac{PL}{4} = \frac{200 \text{ N} \times 800 \text{ mm}}{4} = 40{,}000 \text{ N·mm} = 40 \text{ N·m}$$
+2. **Largest bending stress**, by the flexure formula: the moment times the distance to the surface, divided by $I$:
 
-2. **Calculate Maximum Bending Stress**
+   $$\sigma_{\max} = \frac{M_{\max} \times c}{I} = \frac{40{,}000\ \text{N·mm} \times 15\ \text{mm}}{2.35 \times 10^4\ \text{mm}^4} = 25.6\ \text{MPa}$$ ✅
 
-   Apply flexure formula:
+3. **Safety factor**, the yield strength divided by the largest stress:
 
-   $$\sigma_{max} = \frac{M_{max} \times c}{I}$$
+   $$SF = \frac{\sigma_{\text{yield}}}{\sigma_{\max}} = \frac{275\ \text{MPa}}{25.6\ \text{MPa}} = 10.8$$ ✅
 
-   $$\sigma_{max} = \frac{40{,}000 \text{ N·mm} \times 15 \text{ mm}}{6.0 \times 10^4 \text{ mm}^4}$$
-
-   $$\sigma_{max} = 10.0 \text{ MPa}$$
-
-3. **Calculate Safety Factor**
-
-   $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{275 \text{ MPa}}{10.0 \text{ MPa}} = 27.5$$
-
-4. **Engineering Assessment**
-
-   This extremely high static safety factor indicates the rail is over-designed for static loading. However, 3D printers involve:
-   - **Dynamic loading** (acceleration and deceleration of print head)
-   - **Vibration** during rapid movements
-   - **Fatigue** from millions of load cycles
-
-   These dynamic effects can create stress amplification factors of 2-5×. A high static SF provides margin for dynamic effects and ensures long service life.
+4. **Read the result.** A factor of 10.8 is high for a load that stands still. The print head accelerates and stops, the rail vibrates, and the load repeats millions of times. These effects can multiply the stress by 2 to 5, and the high static factor is the margin for them. ✅
 
 </Steps>
 
-:::note[Checkpoint]
-Record these analytical results in your lab notebook. You will compare them with Python calculations and FEM results.
+:::tip[Is your answer reasonable?]
+- With the head over a support, the moment under it is zero.
+- If your FEM stress is near 12.8 MPa, half of the hand value, the ends of your model cannot rotate. Built-in ends give a midspan moment of $PL/8$, not $PL/4$.
 :::
 
-### Part 2: Python Parametric Analysis
+### Part 2: Python parametric analysis
 
-Create Python code to analyze stress at multiple load positions and generate visualization plots.
+The script moves the load along the rail in 200 steps, calculates the stress at each position and plots the result.
 
 ```python
 import numpy as np
@@ -795,7 +514,7 @@ print(f'Distance to outer fiber: {c:.1f} mm')
 
 # ===== PARAMETRIC ANALYSIS =====
 # Analyze load at multiple positions
-a_positions = np.linspace(0, L, 200)  # Load positions
+a_positions = np.linspace(0, L, 201)  # Load positions (odd count, so midspan is one of them)
 
 # Calculate moment at each position
 M_at_load = P * a_positions * (L - a_positions) / L
@@ -847,119 +566,91 @@ plt.show()
 print('\nPlots saved as GantryRail_Stress_Analysis.png')
 ```
 
-**Expected Results:**
+**Expected results:**
 - Critical position: 400.0 mm (midspan)
 - Maximum moment: 40.0 N·m
-- Maximum stress: 10.0 MPa
-- Safety factor: 27.5
+- Maximum stress: 25.6 MPa (the script prints 25.559)
+- Safety factor: 10.8
 
-### Part 3: FEM Analysis in FreeCAD
+### Part 3: FEM analysis in FreeCAD
 
-Now validate the analytical solution using finite element analysis.
+Now let the finite element model solve the same rail, with the head at midspan.
 
 <Steps>
 
-1. **Create 3D Model of Hollow Circular Tube**
+1. **Model the tube**
 
-   - Open FreeCAD, create new document
-   - Part Design workbench → Create Body
-   - Create sketch on XY plane
-   - Draw **circle with radius 15 mm** (OD = 30 mm diameter) centered on origin
-   - Close sketch, Pad **800 mm** along length (beam length)
-   - Create second sketch on same face
-   - Draw **circle with radius 12 mm** (ID = 24 mm diameter) centered on origin (inner cavity)
-   - Close sketch, Pocket through all (creates hollow circular tube with 3 mm wall thickness)
+   - Part Design workbench → Create Body, then create a sketch on the XY plane
+   - Draw a circle of radius 15 mm (OD 30 mm) centered on the origin. Close the sketch and Pad 800 mm
+   - On the same face, sketch a circle of radius 12 mm (ID 24 mm). Close the sketch and Pocket through all. The tube now has a 3 mm wall
 
-2. **Switch to FEM Workbench**
+2. **Start the analysis**
 
-   - Workbench dropdown → FEM
-   - Create Analysis container: Model → Analysis container
+   - Workbench dropdown → FEM, then Model → Analysis container
 
-3. **Add Material**
+3. **Add the material**
 
-   - Model → Material → System → Standard → Metal
-   - Select material: Aluminum-Generic
-   - Verify: E = 70 GPa, ν = 0.33
-   - Select solid body, click OK
+   - Model → Material → System → Standard → Metal → Aluminum-Generic
+   - Check that $E = 70\ \text{GPa}$ and $\nu = 0.33$. Select the solid body and click OK
 
-4. **Apply Boundary Conditions - Left Support (Pin)**
+4. **Left support (pin)**
 
-   - Analysis → Constraint → Constraint fixed
-   - Select left end face
-   - Constrain: Fix X, Fix Y, Fix Z (pinned support approximation)
-   - Click OK
-
-5. **Apply Boundary Conditions - Right Support (Roller)**
+   The tube was padded along Z, so Z is the rail axis, Y is vertical and X is sideways.
 
    - Analysis → Constraint → Constraint displacement
-   - Select right end face
-   - Set: Y displacement = 0 (vertical support only)
-   - Leave X and Z free (allows expansion)
+   - Select left end face
+   - Set: X displacement = 0 and Y displacement = 0. Leave Z free and leave all rotations free
    - Click OK
+   - Add a second Constraint displacement. Select one vertex on the rim of the left end face and set Z displacement = 0. Click OK
+   - This single point stops the rail from sliding along its axis. The end can still rotate, so the support is a pin
+   - Do not use Constraint fixed here, and do not set Z = 0 on the whole face. Either one stops the end from rotating. That makes a built-in (fixed) end, and the midspan stress falls well below the simply supported value
 
-6. **Apply Load at Midspan**
+5. **Right support (roller)**
+
+   - Analysis → Constraint → Constraint displacement on the right end face
+   - Set: X displacement = 0 and Y displacement = 0 (support across the rail axis only)
+   - Leave Z free and leave all rotations free (the end can rotate and can move along the axis, which allows expansion)
+
+6. **Load at midspan**
 
    - Analysis → Constraint → Constraint force
-   - Select small face at top center (x = 600 mm position)
-   - Force magnitude: 250 N
-   - Direction: negative Y (downward)
-   - Click OK
+   - Select a small face on the top of the tube at midspan, 400 mm along the rail (the Z-axis)
+   - Force 200 N, direction negative Y (downward)
 
-7. **Create Mesh**
+7. **Mesh**
 
    - Analysis → Mesh → FEM mesh from shape by Gmsh
-   - Max element size: 20 mm (coarse mesh for first run)
-   - Click OK, then Compute
+   - Max element size: 20 mm, a coarse mesh for the first run. Click OK, then Compute
 
-8. **Run Solver**
+8. **Solve**
 
    - Analysis → Solver → Solver CalculiX Standard
-   - Click Write .inp file
-   - Click Run CalculiX
-   - Wait for solution (should take 10-30 seconds)
+   - Click Write .inp file, then Run CalculiX. The solution takes 10 to 30 seconds
 
-9. **View Results**
+9. **Read the result**
 
-   - Double-click "Results" in tree
-   - Change field to "von Mises stress"
-   - Note maximum stress value in color bar
-   - Verify location is at midspan, top/bottom surfaces
+   - Double-click "Results" in the tree and change the field to "von Mises stress"
+   - The highest stress must be at midspan, on the top and bottom surfaces
+   - A small hot spot directly under the load face is a local effect of the way the force is applied. Read the stress on the bottom surface at midspan
 
-10. **Compare with Analytical Solution**
+10. **Compare with the hand solution**
 
-    - Analytical: σ_max = 0.682 MPa
-    - FEM: (read from color bar, should be 0.6-0.7 MPa)
-    - Calculate percent difference
+    - Hand: $\sigma_{\max} = 25.6\ \text{MPa}$. FEM: expect 24 to 27 MPa
+    - Calculate the percent difference
 
 </Steps>
 
-### Part 4: Mesh Convergence Study
+### Part 4: Mesh convergence study
 
-Verify that your FEM results are mesh-independent by refining the mesh.
+An FEM result depends on the size of the elements, and you can trust it only when a finer mesh no longer changes it. Run the model three times and fill in the table.
 
-<Card title="🔬 Mesh Convergence Procedure" icon="information">
+| Max element size (mm) | Number of elements | Maximum von Mises stress (MPa) | Change from the run before (%) |
+|---|---|---|---|
+| 20 (the run you have) | | | |
+| 10 | | | |
+| 5 | | | |
 
-**Why Convergence Studies Matter:**
-
-FEM approximates reality by dividing continuous structure into discrete elements. Coarse meshes give approximate results; finer meshes converge toward exact solution. Engineers must verify their mesh is sufficiently refined.
-
-**Procedure:**
-
-1. Run analysis with max element size = 20 mm (already done)
-2. Record maximum von Mises stress
-3. Refine mesh: max element size = 10 mm
-4. Run analysis again, record stress
-5. Refine mesh: max element size = 5 mm
-6. Run analysis again, record stress
-7. Plot stress vs number of elements
-
-**Convergence Criterion:**
-
-Solution has converged when refining mesh changes result by less than 2-5%.
-
-</Card>
-
-**Create Python script to analyze convergence:**
+The solution has converged when a finer mesh changes the stress by less than 2 to 5%. Put your values in the two empty lists of this script, which plots the stress and the error against the number of elements. With empty lists the plots are empty.
 
 ```python
 import matplotlib.pyplot as plt
@@ -970,7 +661,7 @@ num_elements = []  # Record from FreeCAD
 max_stress_fem = []  # Record from FEM results (MPa)
 
 # Analytical solution for comparison
-sigma_analytical = 0.682  # MPa
+sigma_analytical = 25.56  # MPa
 
 # Calculate percent error
 percent_error = [(abs(s - sigma_analytical) / sigma_analytical * 100) for s in max_stress_fem]
@@ -1001,200 +692,185 @@ plt.savefig('Mesh_Convergence_Study.png', dpi=300, bbox_inches='tight')
 plt.show()
 ```
 
-### Lab 2 Deliverables
+### Design question
 
-**Submit according to the [File Naming and Submission Standards](#file-naming-and-submission-standards) above.**
+The midspan of the rail moves down by $PL^3/(48EI) = 1.3\ \text{mm}$ under the print head. That is 26 times the $\pm 0.05\ \text{mm}$ the printer needs, although the stress has a safety factor of 10.8. Keep the mass of the tube and change its outer diameter and wall. Which change gives the most stiffness?
 
-**Required Files:**
+### Lab 2 deliverables
 
-1. **3D FEM Model** - `E022-01-XXXX-YYYY-Lab2-Model.glb`
-   - Exported from FreeCAD showing gantry rail with FEM mesh and boundary conditions
+Submit the seven files listed in the [file naming and submission standards](#file-naming-and-submission-standards), in `E022-01-XXXX-YYYY-Lab2.zip`. For this lab:
 
-2. **Technical Drawing** - `E022-01-XXXX-YYYY-Lab2-Drawing.pdf`
-   - FreeCAD TechDraw with orthographic views, section view showing hollow tube (OD 30mm, ID 24mm)
-   - Dimensions, material (Al 6061-T6), support annotations (pin and roller)
-
-3. **Rendered Images**
-   - `E022-01-XXXX-YYYY-Lab2-Isometric.png` (FEM stress contours visible)
-   - `E022-01-XXXX-YYYY-Lab2-SideView.png` (showing support conditions and load position)
-
-4. **Python Scripts**
-   - `E022-01-XXXX-YYYY-Lab2-Analysis.py` (parametric stress analysis)
-   - `E022-01-XXXX-YYYY-Lab2-Convergence.py` (mesh convergence study)
-
-5. **Analysis Plots**
-   - `E022-01-XXXX-YYYY-Lab2-StressAnalysis.png` (stress vs load position, moment vs load position)
-   - `E022-01-XXXX-YYYY-Lab2-Convergence.png` (convergence plot showing stress vs element count)
-
-6. **Hand Calculations** - `E022-01-XXXX-YYYY-Lab2-Calculations.pdf`
-   - Critical load position derivation, maximum stress calculation, safety factor
-
-7. **Technical Report** - `E022-01-XXXX-YYYY-Lab2-Report.pdf` (3-4 pages)
-   - Introduction (3D printer application and moving load analysis)
-   - Analytical solution (critical position derivation, stress calculations)
-   - FEM methodology (model setup, mesh details, boundary conditions)
-   - Results (analytical vs FEM comparison, mesh convergence data)
-   - Discussion (why midspan is critical, sources of error, convergence assessment)
-   - Conclusion (design recommendations for weight reduction)
-
-**Submission:** Compress all files into `E022-01-XXXX-YYYY-Lab2.zip` and submit to the instructor.
+- Scripts: `E022-01-XXXX-YYYY-Lab2-Analysis.py` and `E022-01-XXXX-YYYY-Lab2-Convergence.py`.
+- Plots: `E022-01-XXXX-YYYY-Lab2-StressAnalysis.png` and `E022-01-XXXX-YYYY-Lab2-Convergence.png`.
+- Images: the mesh, the two supports, the load and the FEM stress colours must be visible.
+- Report, 3 to 4 pages: introduction, analytical solution (why midspan is the worst position), FEM method (model, mesh, supports), results (hand against FEM, your mesh table), discussion (sources of error, has the mesh converged, the design question) and conclusion.
 
 ---
 
-## Lab 3: Combined Loading and Failure Analysis
+## Lab 3: Combined loading and failure analysis
 
 <InArticleAd />
 
 
-### Application: Drone Arm Under Multi-Axis Loading
+### Application: drone arm under multi-axis loading
 
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-    ![Drone Arm Structure](https://cdn.siliconwit.com/education/solid-mechanics/quadcopter-drone-normal.png)
-  </TailwindWrapper>
-</div>
+One arm of the drone, seen from the side. The drone body holds it at the left end and the motor sits on the right end:
 
-**Lab Duration:** 1 week
+```text
+ drone                           P = 30 N (thrust, up)
+ body                              ^
+  ///                              |
+  ///+-----------------------------+
+  ///|  tube, OD 16 mm, ID 12 mm   o  F_drag = 5 N
+  ///+-----------------------------+  (out of the page)
+     |<-------- L = 200 mm ------->|
+
+  T = 1.0 N·m twists the tube about its own axis.
+```
 
 ### Learning Objectives
 
-By the end of this laboratory, you will be able to:
+By the end of this lab you can:
 
-1. **Analyze** structures under combined bending and torsional loading using superposition
-2. **Calculate** principal stresses from combined stress states
-3. **Construct** 3D Mohr's circles both by hand and using Python
-4. **Apply** Von Mises and Tresca failure criteria to verify design safety
-5. **Perform** FEM analysis with combined loading conditions in FreeCAD
-6. **Optimize** designs for weight reduction while maintaining structural integrity
+1. Analyze a part that is bent and twisted at once, by adding the effects of each load (superposition)
+2. Calculate the principal stresses of the combined stress state
+3. Draw Mohr's circle by hand and with Python
+4. Use the von Mises, Tresca and maximum stress criteria to check a design
+5. Run an FEM analysis with several loads in FreeCAD
+6. Reduce the weight of a design and keep it strong enough
 
-### Real-World Engineering Context
+### The engineering worry
 
-Quadcopter drones use four motor arms extending from the central body to support the motors and propellers. Each arm experiences complex loading: vertical thrust forces from motors, aerodynamic drag creating bending, and gyroscopic moments from spinning propellers creating torsion. The arms must withstand these combined loads while minimizing weight for maximum flight time.
+Each arm of a quadcopter drone holds a motor and a propeller at its tip. The thrust bends the arm up, air drag bends it sideways, and the spinning propeller twists it. A carbon fiber tube is strong along its fibers and weak in shear, so a stress that looks small can be the one that breaks the arm. An arm that fails in flight destroys the drone, and every gram that is not needed shortens the flight. The target is a safety factor of 3.0 with the lightest tube.
 
-**Design Challenge:** Optimize the arm cross-section to achieve a safety factor of 3.0 under combined loading while minimizing mass. Every gram saved increases flight time, but insufficient strength leads to catastrophic failure during flight.
+### Problem statement
 
-### Problem Statement
+<Card title="Drone arm data" icon="document">
 
-<Card title="📋 Drone Arm Specifications" icon="document">
-
-**Geometry:**
-- Arm Length (L): **200 mm** (center to motor mount)
-- Cross-section: **Circular tube OD 16 mm × ID 12 mm** (carbon fiber composite)
-- Polar Moment of Inertia (J): **4.64 × 10³ mm⁴**
-- Moment of Inertia (I): **2.32 × 10³ mm⁴**
-
-**Loading:**
-- Vertical Thrust Force (P): **30 N** at arm tip (motor thrust)
-- Aerodynamic Drag Force (F_drag): **5 N** horizontal at tip
-- Gyroscopic Torque (T): **1.0 N·m** about arm axis (propeller gyroscopic effect)
-
-**Material:**
-- Material: **Carbon Fiber Composite** (unidirectional)
-- Tensile Strength (σ_t): **600 MPa**
-- Compressive Strength (σ_c): **500 MPa**
-- Shear Strength (τ_ultimate): **70 MPa**
-
-**Support Configuration:**
-- **Cantilever** fixed to drone central body at origin
+| Quantity | Symbol | Value |
+|---|---|---|
+| Arm length | $L$ | 200 mm |
+| Cross-section, a round tube | | Outer diameter (OD) 16 mm, inner diameter (ID) 12 mm |
+| Distance to the surface, the outer radius | $c$ or $r$ | 8 mm |
+| Polar second moment of area, $\pi(\text{OD}^4 - \text{ID}^4)/32$ | $J$ | $4.40 \times 10^3\ \text{mm}^4$ (4,398) |
+| Second moment of area, $J/2$ | $I$ | $2.20 \times 10^3\ \text{mm}^4$ (2,199) |
+| Motor thrust, vertical, at the tip | $P$ | 30 N |
+| Air drag, horizontal, at the tip | $F_{\text{drag}}$ | 5 N |
+| Gyroscopic torque of the propeller, about the arm axis | $T$ | 1.0 N·m |
+| Material | | Carbon fiber composite, unidirectional (all fibers in one direction) |
+| Tensile strength | $\sigma_t$ | 600 MPa |
+| Compressive strength | $\sigma_c$ | 500 MPa |
+| Shear strength | $\tau_{\text{ultimate}}$ | 70 MPa |
+| Support | | Cantilever, fixed to the drone body |
 
 </Card>
 
-**Critical Questions:**
-1. What are the maximum principal stresses in the arm?
-2. Which failure criterion is most appropriate for this composite material?
+**Critical questions:**
+1. What are the principal stresses in the arm?
+2. Which failure criterion suits this composite material?
 3. What is the safety factor, and is the design adequate?
 
-### Part 1: Combined Stress Analysis
+**You record:** the stress from each load, the combined stress and its angle, the principal stresses, the largest shear stress and four safety factors, by hand and from Python. Then the FEM stresses and the lightest tube.
 
-Analyze each loading component separately, then combine using superposition.
+### Part 1: Combined stress analysis
+
+Find the stress from each load alone, then add them at the worst point.
 
 <Steps>
 
-1. **Analyze Bending from Vertical Thrust**
+1. **Moment from the thrust**, largest at the fixed end: force times length.
 
-   Vertical load P = 50 N creates bending moment at fixed end:
+   $$M_y = P \times L = 30\ \text{N} \times 200\ \text{mm} = 6{,}000\ \text{N·mm}$$ ✅
 
-   $$M_y = P \times L = 50 \text{ N} \times 250 \text{ mm} = 12{,}500 \text{ N·mm}$$
+2. **Bending stress from the thrust**, from the flexure formula $\sigma = Mc/I$. It is tension on the bottom of the tube and compression on the top:
 
-   Maximum bending stress (at top and bottom of section):
+   $$\sigma_x = \frac{M_y \cdot c}{I} = \frac{6{,}000\ \text{N·mm} \times 8\ \text{mm}}{2{,}199\ \text{mm}^4} = 21.8\ \text{MPa}$$ ✅
 
-   $$\sigma_x = \frac{M_y \cdot c}{I} = \frac{12{,}500 \times 10}{2{,}898} = 43.1 \text{ MPa}$$
+3. **Moment from the drag**, which bends the arm sideways:
 
-   (Tension on bottom, compression on top)
+   $$M_z = F_{\text{drag}} \times L = 5\ \text{N} \times 200\ \text{mm} = 1{,}000\ \text{N·mm}$$ ✅
 
-2. **Analyze Bending from Horizontal Drag**
+4. **Bending stress from the drag**, largest at the two sides of the tube:
 
-   Horizontal load F = 8 N creates bending in orthogonal plane:
+   $$\sigma_x = \frac{M_z \cdot c}{I} = \frac{1{,}000\ \text{N·mm} \times 8\ \text{mm}}{2{,}199\ \text{mm}^4} = 3.6\ \text{MPa}$$ ✅
 
-   $$M_z = F_{drag} \times L = 8 \text{ N} \times 250 \text{ mm} = 2{,}000 \text{ N·mm}$$
+5. **Shear stress from the torque**, largest at the outer radius $r$: the torque (1,000 N·mm) times the radius, divided by $J$:
 
-   Maximum bending stress (at sides of section):
+   $$\tau_{xy} = \frac{T \cdot r}{J} = \frac{1{,}000\ \text{N·mm} \times 8\ \text{mm}}{4{,}398\ \text{mm}^4} = 1.82\ \text{MPa}$$ ✅
 
-   $$\sigma_x = \frac{M_z \cdot c}{I} = \frac{2{,}000 \times 10}{2{,}898} = 6.9 \text{ MPa}$$
+6. **Resultant moment.** The critical point is at the fixed end, on the outer surface. A circular tube has the same $I$ about every axis through its centre, so the two bending moments add as vectors into one resultant moment:
 
-3. **Analyze Torsion from Gyroscopic Moment**
+   $$M_R = \sqrt{M_y^2 + M_z^2} = \sqrt{(6{,}000)^2 + (1{,}000)^2}\ \text{N·mm} = 6{,}083\ \text{N·mm}$$ ✅
 
-   Applied torque T = 2 N·m = 2000 N·mm creates shear stress:
+7. **Where the critical point is.** The largest bending stress is at the surface point farthest from the neutral axis of $M_R$. That point is not at 45°. Measured from the vertical axis of the section, it is turned toward the drag side by:
 
-   $$\tau_{xy} = \frac{T \cdot r}{J} = \frac{2{,}000 \times 10}{5{,}796} = 3.45 \text{ MPa}$$
+   $$\phi = \tan^{-1}\left(\frac{M_z}{M_y}\right) = \tan^{-1}\left(\frac{1{,}000}{6{,}000}\right) = 9.5°$$ ✅
 
-4. **Identify Critical Point**
+8. **Stress state at the critical point.** The bending stress there is:
 
-   The critical point is at the fixed end, at the location where bending stresses from both planes combine constructively. For circular tube, consider point at 45° where both bending components contribute:
+   $$\sigma_x = \frac{M_R \cdot c}{I} = \frac{6{,}083 \times 8}{2{,}199} = \sqrt{(21.8)^2 + (3.6)^2} = 22.1 \text{ MPa (tensile)}$$
 
-   $$\sigma_x = \sqrt{(43.1)^2 + (6.9)^2} = 43.6 \text{ MPa (tensile)}$$
+   $$\tau_{xy} = 1.82 \text{ MPa (shear from torsion)}$$
 
-   $$\tau_{xy} = 3.45 \text{ MPa (shear from torsion)}$$
+   The point on the opposite side of the tube has the same shear stress and $\sigma_x = -22.1\ \text{MPa}$ (compressive). ✅
 
-5. **Calculate Principal Stresses**
-
-   For plane stress state (σ_x, τ_xy):
+9. **Largest principal stress.** On one plane through the point the shear stress is zero and the normal stress is as large as it can be. This is the principal stress $\sigma_1$:
 
    $$\sigma_1 = \frac{\sigma_x}{2} + \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau_{xy}^2}$$
 
-   $$\sigma_1 = \frac{43.6}{2} + \sqrt{\left(\frac{43.6}{2}\right)^2 + (3.45)^2} = 44.4 \text{ MPa}$$
+   $$\sigma_1 = \frac{22.1}{2} + \sqrt{\left(\frac{22.1}{2}\right)^2 + (1.82)^2} = 22.3 \text{ MPa}$$ ✅
 
-   $$\sigma_2 = \frac{\sigma_x}{2} - \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau_{xy}^2}$$
+10. **Smallest principal stress.** The same formula with a minus sign gives the normal stress on the plane at 90° to the first:
 
-   $$\sigma_2 = \frac{43.6}{2} - \sqrt{\left(\frac{43.6}{2}\right)^2 + (3.45)^2} = -0.8 \text{ MPa}$$
+    $$\sigma_2 = \frac{\sigma_x}{2} - \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau_{xy}^2}$$
 
-   $$\sigma_3 = 0 \text{ (plane stress)}$$
+    $$\sigma_2 = \frac{22.1}{2} - \sqrt{\left(\frac{22.1}{2}\right)^2 + (1.82)^2} = -0.15 \text{ MPa}$$
 
-6. **Apply Von Mises Failure Criterion**
+    Nothing presses on the surface of the tube, so the third principal stress is $\sigma_3 = 0$ (plane stress). ✅
 
-   For ductile materials (conservative for composites):
+11. **Von Mises stress**, one equivalent stress from the three principal stresses. It was made for ductile metals, and for a composite it is only a first check:
 
-   $$\sigma_{VM} = \sqrt{\frac{(\sigma_1-\sigma_2)^2 + (\sigma_2-\sigma_3)^2 + (\sigma_3-\sigma_1)^2}{2}}$$
+    $$\sigma_{VM} = \sqrt{\frac{(\sigma_1-\sigma_2)^2 + (\sigma_2-\sigma_3)^2 + (\sigma_3-\sigma_1)^2}{2}}$$
 
-   $$\sigma_{VM} = \sqrt{\frac{(44.4-(-0.8))^2 + (-0.8-0)^2 + (0-44.4)^2}{2}} = 44.2 \text{ MPa}$$
+    $$\sigma_{VM} = \sqrt{\frac{(22.3-(-0.15))^2 + (-0.15-0)^2 + (0-22.3)^2}{2}} = 22.4 \text{ MPa}$$ ✅
 
-   Safety factor:
+12. **Safety factor by von Mises.** The lower of the two normal strengths, 500 MPa, is used in place of a yield strength:
 
-   $$SF = \frac{\sigma_{yield}}{\sigma_{VM}} = \frac{500}{44.2} = 11.3$$
+    $$SF = \frac{\sigma_{\text{yield}}}{\sigma_{VM}} = \frac{500}{22.35} = 22.4$$ ✅
 
-7. **Apply Maximum Stress Criterion (More Appropriate for Composites)**
+13. **Maximum stress criterion, tension.** This criterion suits a brittle composite better: compare each largest stress with its own strength. In tension, at the critical point:
 
-   For brittle composites, compare maximum stress to strength:
+    $$SF_{\text{tension}} = \frac{\sigma_t}{\sigma_1} = \frac{600}{22.3} = 26.9$$ ✅
 
-   $$SF_{tension} = \frac{600}{44.4} = 13.5$$
+14. **Maximum stress criterion, compression**, at the opposite point. There the stress state is the mirror image, so the largest compressive principal stress is also 22.3 MPa:
 
-   $$SF_{compression} = \frac{500}{0.8} = 625$$ (compression negligible)
+    $$SF_{\text{compression}} = \frac{\sigma_c}{|\sigma_{\min}|} = \frac{500}{22.3} = 22.4$$ ✅
 
-   **Governing safety factor: 13.5**
+15. **Largest shear stress.** The maximum in-plane shear stress is the radius of Mohr's circle:
+
+    $$\tau_{\max} = \sqrt{\left(\frac{\sigma_x}{2}\right)^2 + \tau_{xy}^2} = \sqrt{\left(\frac{22.1}{2}\right)^2 + (1.82)^2} = 11.2 \text{ MPa}$$ ✅
+
+16. **Maximum stress criterion, shear.**
+
+    $$SF_{\text{shear}} = \frac{\tau_{\text{ultimate}}}{\tau_{\max}} = \frac{70}{11.2} = 6.2$$
+
+    **Governing safety factor: 6.2 (shear failure)** ✅
+
+    This shear check uses the 70 MPa strength on every plane, which is the safe assumption when the fiber layup is not known. If all fibers run along the arm, the 70 MPa strength belongs to the plane along the fibers, where the shear stress is only $\tau_{xy} = 1.82\ \text{MPa}$ ($70/1.82 = 38$). A real composite design checks each stress in the fiber directions of each layer.
 
 </Steps>
 
-**Engineering Assessment:** The safety factor exceeds 10, indicating significant over-design. This provides margin for:
-- Dynamic loads during maneuvers (up to 3× static)
-- Manufacturing defects in composite layup
-- Fatigue from vibration
-- Impact loads during crashes
+**Engineering assessment:** The governing safety factor is 6.2, and the expected failure mode is shear, not tension. The low shear strength of the composite controls the design, even though the normal stress is far below the tensile strength. The factor is about twice the 3.0 target, so the arm is heavier than it needs to be. Some margin is useful for loads in maneuvers (up to 3 times the static load), defects in the composite, fatigue from vibration and impact in a crash. A safety factor of 3 to 4 would suit this arm better.
 
-However, weight reduction could increase flight time. Target SF = 3-4 would be more appropriate.
+:::tip[Is your answer reasonable?]
+- For a round tube, $J$ is exactly twice $I$.
+- The torque is small here, so $\sigma_1$ is only a little above $\sigma_x$ (22.3 against 22.1 MPa), and $\tau_{\max}$ is close to half of $\sigma_x$ (11.2 against 11.1 MPa).
+- The two principal stresses add up to $\sigma_x$: $22.3 + (-0.15) = 22.1$ MPa.
+:::
 
-### Part 2: Python Analysis with Mohr's Circle
+### Part 2: Python analysis with Mohr's circle
 
-Automate combined stress analysis and visualize stress state using Mohr's circle.
+The script repeats Part 1 and draws Mohr's circle, the circle that shows the normal and shear stress on every plane through the critical point.
 
 ```python
 import numpy as np
@@ -1202,16 +878,16 @@ import matplotlib.pyplot as plt
 
 # ===== PROBLEM PARAMETERS =====
 # Geometry
-L = 250  # Arm length in mm
-OD = 20  # Outer diameter in mm
-ID = 16  # Inner diameter in mm
+L = 200  # Arm length in mm
+OD = 16  # Outer diameter in mm
+ID = 12  # Inner diameter in mm
 r_outer = OD / 2
 r_inner = ID / 2
 
 # Loading
-P_vertical = 50  # N
-F_horizontal = 8  # N
-T_torque = 2000  # N·mm
+P_vertical = 30  # N
+F_horizontal = 5  # N
+T_torque = 1000  # N·mm
 
 # Material (carbon fiber)
 sigma_tensile = 600  # MPa
@@ -1230,12 +906,17 @@ print(f'Moment of Inertia: {I:.1f} mm^4')
 M_vertical = P_vertical * L
 M_horizontal = F_horizontal * L
 
-# Bending stresses at critical point
+# Largest bending stress from each load on its own
 sigma_vertical = (M_vertical * r_outer) / I
 sigma_horizontal = (M_horizontal * r_outer) / I
 
-# Combined bending stress (vector sum for worst case)
-sigma_x = np.sqrt(sigma_vertical**2 + sigma_horizontal**2)
+# Resultant moment on the circular section and the angle of the critical point,
+# measured from the vertical axis of the section toward the drag side
+M_resultant = np.sqrt(M_vertical**2 + M_horizontal**2)
+phi_critical = np.degrees(np.arctan2(M_horizontal, M_vertical))
+
+# Combined bending stress at the critical point
+sigma_x = (M_resultant * r_outer) / I
 
 # Torsional shear stress
 tau_xy = (T_torque * r_outer) / J
@@ -1244,6 +925,7 @@ print('\n===== STRESS COMPONENTS =====')
 print(f'Bending stress (vertical load): {sigma_vertical:.2f} MPa')
 print(f'Bending stress (horizontal load): {sigma_horizontal:.2f} MPa')
 print(f'Combined bending stress: {sigma_x:.2f} MPa')
+print(f'Critical point angle from vertical axis: {phi_critical:.1f} degrees')
 print(f'Torsional shear stress: {tau_xy:.2f} MPa')
 
 # ===== PRINCIPAL STRESSES =====
@@ -1270,16 +952,26 @@ tau_max = (sigma_1 - sigma_2) / 2
 # Safety factors
 SF_von_mises = sigma_compressive / sigma_vm
 SF_max_stress_tensile = sigma_tensile / sigma_1
+# The opposite point of the tube has the mirror-image state, so its largest
+# compressive principal stress has the same size as sigma_1
+SF_max_stress_compressive = sigma_compressive / sigma_1
 SF_max_stress_shear = tau_ultimate / tau_max
+
+safety_factors = {
+    'Von Mises criterion': SF_von_mises,
+    'Maximum stress (tension)': SF_max_stress_tensile,
+    'Maximum stress (compression)': SF_max_stress_compressive,
+    'Maximum shear': SF_max_stress_shear,
+}
+governing = min(safety_factors, key=safety_factors.get)
 
 print('\n===== FAILURE ANALYSIS =====')
 print(f'Von Mises equivalent stress: {sigma_vm:.2f} MPa')
 print(f'Maximum shear stress (Tresca): {tau_max:.2f} MPa')
 print(f'\nSafety Factors:')
-print(f'  Von Mises criterion: {SF_von_mises:.2f}')
-print(f'  Maximum stress (tension): {SF_max_stress_tensile:.2f}')
-print(f'  Maximum shear: {SF_max_stress_shear:.2f}')
-print(f'\nGoverning safety factor: {min(SF_von_mises, SF_max_stress_tensile, SF_max_stress_shear):.2f}')
+for name, value in safety_factors.items():
+    print(f'  {name}: {value:.2f}')
+print(f'\nGoverning safety factor: {safety_factors[governing]:.2f} ({governing})')
 
 # ===== MOHR'S CIRCLE VISUALIZATION =====
 fig, ax = plt.subplots(figsize=(10, 8))
@@ -1325,95 +1017,76 @@ plt.show()
 print("\nMohr's circle saved as Mohrs_Circle_DroneArm.png")
 ```
 
-### Part 3: FEM Analysis with Combined Loading
+**Expected results:**
+- Combined bending stress: 22.13 MPa, at 9.5° from the vertical axis
+- Torsional shear stress: 1.82 MPa
+- Principal stresses: 22.28 MPa and -0.15 MPa
+- Von Mises stress: 22.35 MPa
+- Maximum shear stress: 11.21 MPa
+- Safety factors: 22.37 (Von Mises), 26.93 (tension), 22.45 (compression), 6.24 (shear)
+- Governing safety factor: 6.24 (maximum shear)
 
-Validate analytical results using FreeCAD FEM with multiple load types.
+### Part 3: FEM analysis with combined loading
+
+Let the FEM model solve the arm with all three loads together. The menu paths are the same as in Lab 2, Part 3.
 
 <Steps>
 
-1. **Create Circular Tube Model**
+1. **Model the tube.** In the Part Design workbench, sketch a circle of diameter 16 mm on the XY plane and Pad 200 mm. On the same face, sketch a circle of diameter 12 mm and Pocket through all. The tube was padded along Z, so Z is the arm axis, Y is vertical and X is sideways.
 
-   - Part Design workbench → Create Body
-   - Create sketch on XY plane
-   - Draw circle centered at origin, diameter 20 mm
-   - Close sketch, Pad 250 mm
-   - Create sketch on same face, draw circle diameter 16 mm
-   - Pocket through all (creates hollow tube)
+2. **Set up the analysis.** FEM workbench → Create Analysis. Add the material Carbon-Fiber-Reinforced-Polymer with $E = 70\ \text{GPa}$ and $\nu = 0.1$. The real material has different properties along and across the fibers (it is orthotropic). These single values are an equivalent for a first model.
 
-2. **Setup FEM Analysis**
+3. **Fix one end.** Constraint fixed on the end face at the drone body. This holds every movement and rotation of that face.
 
-   - FEM workbench → Create Analysis
-   - Add material: Carbon-Fiber-Reinforced-Polymer
-   - Manual input: E = 70 GPa, ν = 0.1 (orthotropic, use equivalent)
+4. **Vertical force.** Constraint force on the center point of the free end face: 30 N in the positive Y direction (the thrust).
 
-3. **Apply Fixed Constraint**
+5. **Horizontal force.** Constraint force on the same point: 5 N in the positive X direction (the drag).
 
-   - Constraint fixed on left end face (drone body connection)
-   - Fix all DOF (X, Y, Z, RotX, RotY, RotZ)
+6. **Torque.** Apply it as a couple: two equal and opposite forces at a distance from each other.
 
-4. **Apply Vertical Force**
+   - Calculate: $F \times d = 1000\ \text{N·mm}$. The forces act at the top and bottom of the tube, so $d = 16\ \text{mm}$ (the outer diameter) → $F = 62.5\ \text{N}$
+   - Apply +62.5 N in the X direction at the top of the end face and -62.5 N in the X direction at the bottom (horizontal, tangent to the tube)
 
-   - Constraint force on right end face center point
-   - Force: 50 N in negative Z direction (downward thrust)
+7. **Mesh and solve.** Mesh with a maximum element size of 5 mm, compute the mesh and run CalculiX.
 
-5. **Apply Horizontal Force**
+8. **Von Mises stress.** The maximum must be at the fixed end. Record it and compare it with the hand value, $\sigma_{VM} = 22.4\ \text{MPa}$.
 
-   - Constraint force on same point
-   - Force: 8 N in positive Y direction (drag)
-
-6. **Apply Torque**
-
-   - This requires workaround in FreeCAD
-   - Create couple forces: two equal opposite forces offset from center
-   - Calculate: F × d = 2000 N·mm, use d = 8 mm → F = 250 N
-   - Apply +250 N and -250 N at top/bottom of end face
-
-7. **Mesh and Solve**
-
-   - Create mesh: max element 5 mm (refined from start)
-   - Compute mesh
-   - Run CalculiX solver
-
-8. **Analyze Results**
-
-   - View von Mises stress distribution
-   - Verify maximum occurs at fixed end
-   - Record maximum stress value
-   - Compare with analytical σ_VM = 44.2 MPa
-
-9. **View Principal Stresses**
-
-   - Change display to "Major principal stress"
-   - Verify σ₁ ≈ 44.4 MPa at critical location
-   - Export stress contour images
+9. **Principal stress.** Change the display to "Major principal stress" and check that $\sigma_1 \approx 22.3\ \text{MPa}$ at the critical point. Export the stress images.
 
 </Steps>
 
-### Part 4: Design Optimization Study
+Calculate the percent difference from the hand values. At the fixed face and where the forces act, the FEM stress can be higher in a small spot. Read the stress a short distance from these places.
 
-Use Python to perform parametric study for weight optimization.
+### Part 4: Design optimization study
+
+The script tries tubes with a 2 mm wall and outer diameters from 10 to 24 mm, and picks the lightest one that still has a safety factor of 3.0.
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Loading and material (same values as Part 2)
+P_vertical = 30  # N
+F_horizontal = 5  # N
+T_torque = 1000  # N·mm
+sigma_tensile = 600  # MPa
+sigma_compressive = 500  # MPa
+tau_ultimate = 70  # MPa
+
 # Design constraints
 SF_target = 3.0  # Target safety factor
-L = 250  # Length fixed
-sigma_allowable = sigma_compressive / SF_target  # 500/3 = 166.7 MPa
+L = 200  # Length fixed
 
 # Vary tube dimensions
-OD_range = np.linspace(12, 24, 30)  # Outer diameter range
+OD_range = np.linspace(10, 24, 29)  # Outer diameter range, 0.5 mm steps
 thickness = 2  # Fix wall thickness at 2mm
-ID_range = OD_range - 2*thickness
 
 # Material density
 rho = 1.6e-6  # kg/mm^3 (carbon fiber)
 
-masses = []
-safety_factors = []
 
-for OD, ID in zip(OD_range, ID_range):
+def analyze_tube(OD, ID):
+    """Return (governing safety factor, mass in grams) for one tube."""
     r_outer = OD / 2
     r_inner = ID / 2
 
@@ -1422,31 +1095,36 @@ for OD, ID in zip(OD_range, ID_range):
     I = (np.pi / 64) * (OD**4 - ID**4)
 
     # Stress analysis (same loading)
-    M_v = P_vertical * L
-    M_h = F_horizontal * L
-    sigma_v = (M_v * r_outer) / I
-    sigma_h = (M_h * r_outer) / I
-    sigma_x = np.sqrt(sigma_v**2 + sigma_h**2)
+    M_resultant = np.sqrt((P_vertical * L)**2 + (F_horizontal * L)**2)
+    sigma_x = (M_resultant * r_outer) / I
     tau_xy = (T_torque * r_outer) / J
 
-    # Principal stress
+    # Principal stress and maximum shear stress
     R = np.sqrt((sigma_x/2)**2 + tau_xy**2)
     sigma_1 = sigma_x/2 + R
+    tau_max = R
 
-    # Von Mises
-    sigma_vm = np.sqrt(sigma_1**2 + 3*tau_xy**2)  # Simplified for comparison
-
-    # Safety factor
-    SF = sigma_compressive / sigma_vm
-    safety_factors.append(SF)
+    # Governing safety factor: the lowest of tension, compression and shear
+    SF = min(sigma_tensile / sigma_1,
+             sigma_compressive / sigma_1,
+             tau_ultimate / tau_max)
 
     # Mass calculation
     volume = np.pi * (r_outer**2 - r_inner**2) * L
     mass = volume * rho * 1000  # Convert to grams
-    masses.append(mass)
+    return SF, mass
 
-# Find optimal design
-optimal_idx = np.argmin([abs(sf - SF_target) for sf in safety_factors])
+
+results = [analyze_tube(OD, OD - 2*thickness) for OD in OD_range]
+safety_factors = np.array([r[0] for r in results])
+masses = np.array([r[1] for r in results])
+
+# Original design (OD 16 mm, ID 12 mm)
+original_SF, original_mass = analyze_tube(16, 12)
+
+# Find optimal design: the lightest tube that still meets the target
+feasible = np.where(safety_factors >= SF_target)[0]
+optimal_idx = feasible[np.argmin(masses[feasible])]
 optimal_OD = OD_range[optimal_idx]
 optimal_mass = masses[optimal_idx]
 optimal_SF = safety_factors[optimal_idx]
@@ -1481,51 +1159,29 @@ print('\n===== OPTIMIZATION RESULTS =====')
 print(f'Optimal outer diameter: {optimal_OD:.1f} mm')
 print(f'Optimal mass per arm: {optimal_mass:.1f} grams')
 print(f'Safety factor achieved: {optimal_SF:.2f}')
-print(f'\nOriginal design: OD=20mm, mass={masses[list(OD_range).index(20)]:.1f}g')
-print(f'Mass savings: {masses[list(OD_range).index(20)] - optimal_mass:.1f}g ({(masses[list(OD_range).index(20)] - optimal_mass)/masses[list(OD_range).index(20)]*100:.1f}%)')
-print(f'Total savings for 4 arms: {4*(masses[list(OD_range).index(20)] - optimal_mass):.1f}g')
+print(f'\nOriginal design: OD=16mm, mass={original_mass:.1f}g, SF={original_SF:.2f}')
+print(f'Mass savings: {original_mass - optimal_mass:.1f}g ({(original_mass - optimal_mass)/original_mass*100:.1f}%)')
+print(f'Total savings for 4 arms: {4*(original_mass - optimal_mass):.1f}g')
 ```
 
-### Lab 3 Deliverables
+**Expected results:**
+- Optimal outer diameter: 12.0 mm (with the 2 mm wall), safety factor 3.09
+- Optimal mass per arm: 20.1 g, against 28.1 g for the original design
+- Mass savings: 8.0 g per arm (28.6%), 32.2 g for 4 arms
 
-**Submit according to the [File Naming and Submission Standards](#file-naming-and-submission-standards) above.**
+### Design question
 
-**Required Files:**
+The lightest tube has a safety factor of 3.09 for a drone that hovers. In a hard maneuver the loads can reach 3 times the static values. What is the safety factor then, and which tube from your plot would you choose?
 
-1. **3D FEM Model** - `E022-01-XXXX-YYYY-Lab3-Model.glb`
-   - Exported from FreeCAD showing drone arm with combined loading (bending + torsion)
+### Lab 3 deliverables
 
-2. **Technical Drawing** - `E022-01-XXXX-YYYY-Lab3-Drawing.pdf`
-   - FreeCAD TechDraw showing circular tube (OD 16mm, ID 12mm), length 200mm
-   - Section view of tube, material (Carbon Fiber), all three loading components annotated
+Submit the seven files listed in the [file naming and submission standards](#file-naming-and-submission-standards), in `E022-01-XXXX-YYYY-Lab3.zip`. For this lab:
 
-3. **Rendered Images**
-   - `E022-01-XXXX-YYYY-Lab3-Isometric.png` (FEM von Mises stress contours)
-   - `E022-01-XXXX-YYYY-Lab3-SideView.png` (principal stress visualization)
-
-4. **Python Scripts**
-   - `E022-01-XXXX-YYYY-Lab3-Analysis.py` (combined stress and Mohr's circle analysis)
-   - `E022-01-XXXX-YYYY-Lab3-Optimization.py` (design optimization study)
-
-5. **Analysis Plots**
-   - `E022-01-XXXX-YYYY-Lab3-MohrsCircle.png` (Mohr's circle with principal stresses labeled)
-   - `E022-01-XXXX-YYYY-Lab3-Optimization.png` (mass vs safety factor, optimal design point)
-
-6. **Hand Calculations** - `E022-01-XXXX-YYYY-Lab3-Calculations.pdf`
-   - Combined stress superposition, principal stress calculations, Mohr's circle construction by hand
-   - Von Mises and Tresca criteria application, safety factor calculations
-
-7. **Comprehensive Technical Report** - `E022-01-XXXX-YYYY-Lab3-Report.pdf` (5-6 pages)
-   - Introduction (drone arm application, combined loading importance)
-   - Combined loading methodology (superposition principle, stress components)
-   - Principal stress analysis (calculations, Mohr's circle interpretation)
-   - Failure criteria comparison (Von Mises, Maximum Stress, Tresca - which is most appropriate for composites?)
-   - FEM validation (analytical vs FEM comparison, percent error analysis)
-   - Design optimization (parametric study results, optimal tube dimensions)
-   - Discussion (dynamic load factors for flight applications, fatigue considerations)
-   - Conclusion (final design specification with justified safety factor)
-
-**Submission:** Compress all files into `E022-01-XXXX-YYYY-Lab3.zip` and submit to the instructor.
+- Scripts: `E022-01-XXXX-YYYY-Lab3-Analysis.py` and `E022-01-XXXX-YYYY-Lab3-Optimization.py`.
+- Plots: `E022-01-XXXX-YYYY-Lab3-MohrsCircle.png` and `E022-01-XXXX-YYYY-Lab3-Optimization.png`.
+- Images: the FEM von Mises stress and the principal stress. The drawing shows all three loads.
+- Hand calculations: include Mohr's circle drawn by hand.
+- Report, 5 to 6 pages: introduction, the stress from each load, principal stresses and Mohr's circle, comparison of the failure criteria (which one suits a composite?), FEM against the hand solution, optimization result, discussion (loads in flight, fatigue, the design question) and conclusion (your final tube and its safety factor).
 
 ---
 
@@ -1534,107 +1190,44 @@ print(f'Total savings for 4 arms: {4*(masses[list(OD_range).index(20)] - optimal
 <InArticleAd />
 
 
-### Appendix A: Group Parameter Assignments
+### Appendix A: Group parameter assignments
 
-To ensure independent work while maintaining collaborative learning, each group receives slightly different parameters. Your instructor will assign one of these parameter sets to your group.
+Find the row of your group. The cross-sections of the three labs do not change. Lengths are in mm, forces in N and the torque in N·mm.
 
-<Card title="Lab 1: Robotic Arm - Group Parameters" icon="document">
+| Group | Lab 1 length | Lab 1 load | Lab 2 length | Lab 2 load | Lab 3 length | Lab 3 thrust | Lab 3 drag | Lab 3 torque |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 501 | 542 | 818 | 180 | 200 | 30 | 5 | 1073 |
+| 2 | 464 | 521 | 799 | 201 | 183 | 27 | 4 | 1031 |
+| 3 | 510 | 470 | 808 | 196 | 203 | 33 | 5 | 1095 |
+| 4 | 532 | 536 | 801 | 197 | 187 | 30 | 6 | 1009 |
+| 5 | 524 | 524 | 809 | 207 | 216 | 32 | 5 | 901 |
+| 6 | 537 | 549 | 816 | 210 | 194 | 27 | 4 | 993 |
+| 7 | 473 | 452 | 837 | 180 | 201 | 30 | 4 | 974 |
+| 8 | 471 | 502 | 785 | 191 | 216 | 28 | 6 | 972 |
+| 9 | 451 | 537 | 839 | 181 | 209 | 32 | 4 | 974 |
+| 10 | 479 | 487 | 784 | 191 | 202 | 29 | 6 | 1044 |
+| 11 | 451 | 513 | 816 | 215 | 188 | 30 | 6 | 918 |
+| 12 | 509 | 470 | 754 | 216 | 208 | 32 | 5 | 963 |
+| 13 | 482 | 525 | 826 | 204 | 192 | 29 | 5 | 966 |
+| 14 | 507 | 471 | 797 | 212 | 189 | 27 | 5 | 908 |
+| 15 | 538 | 498 | 824 | 189 | 216 | 29 | 6 | 1023 |
+| 16 | 540 | 508 | 784 | 184 | 186 | 32 | 4 | 921 |
+| 17 | 491 | 541 | 778 | 189 | 193 | 30 | 5 | 1023 |
+| 18 | 509 | 529 | 757 | 200 | 195 | 31 | 4 | 1089 |
+| 19 | 464 | 511 | 797 | 220 | 197 | 27 | 6 | 996 |
+| 20 | 511 | 496 | 803 | 212 | 215 | 33 | 5 | 925 |
 
-| Group | Length (mm) | Load (N) | Width (mm) | Height (mm) |
-|-------|-------------|----------|------------|-------------|
-|   1   |     501     |   542    |     60     |      20     |
-|   2   |     464     |   521    |     60     |      20     |
-|   3   |     510     |   470    |     60     |      20     |
-|   4   |     532     |   536    |     60     |      20     |
-|   5   |     524     |   524    |     60     |      20     |
-|   6   |     537     |   549    |     60     |      20     |
-|   7   |     473     |   452    |     60     |      20     |
-|   8   |     471     |   502    |     60     |      20     |
-|   9   |     451     |   537    |     60     |      20     |
-|  10   |     479     |   487    |     60     |      20     |
-|  11   |     451     |   513    |     60     |      20     |
-|  12   |     509     |   470    |     60     |      20     |
-|  13   |     482     |   525    |     60     |      20     |
-|  14   |     507     |   471    |     60     |      20     |
-|  15   |     538     |   498    |     60     |      20     |
-|  16   |     540     |   508    |     60     |      20     |
-|  17   |     491     |   541    |     60     |      20     |
-|  18   |     509     |   529    |     60     |      20     |
-|  19   |     464     |   511    |     60     |      20     |
-|  20   |     511     |   496    |     60     |      20     |
+### Appendix B: Python environment setup
 
-**Note:** Cross-section dimensions (60mm × 20mm) remain constant for all groups. Only beam length and load vary.
-
-</Card>
-
-<Card title="Lab 2: 3D Printer Gantry - Group Parameters" icon="document">
-
-| Group | Length (mm) | Load (N) | Outer Dia (mm) | Wall Thickness (mm) |
-|-------|-------------|----------|----------------|---------------------|
-|   1   |     818     |   180    |       30       |          3          |
-|   2   |     799     |   201    |       30       |          3          |
-|   3   |     808     |   196    |       30       |          3          |
-|   4   |     801     |   197    |       30       |          3          |
-|   5   |     809     |   207    |       30       |          3          |
-|   6   |     816     |   210    |       30       |          3          |
-|   7   |     837     |   180    |       30       |          3          |
-|   8   |     785     |   191    |       30       |          3          |
-|   9   |     839     |   181    |       30       |          3          |
-|  10   |     784     |   191    |       30       |          3          |
-|  11   |     816     |   215    |       30       |          3          |
-|  12   |     754     |   216    |       30       |          3          |
-|  13   |     826     |   204    |       30       |          3          |
-|  14   |     797     |   212    |       30       |          3          |
-|  15   |     824     |   189    |       30       |          3          |
-|  16   |     784     |   184    |       30       |          3          |
-|  17   |     778     |   189    |       30       |          3          |
-|  18   |     757     |   200    |       30       |          3          |
-|  19   |     797     |   220    |       30       |          3          |
-|  20   |     803     |   212    |       30       |          3          |
-
-**Note:** Tube dimensions (OD=30mm, wall=3mm) remain constant. Only beam length and load vary.
-
-</Card>
-
-<Card title="Lab 3: Drone Arm - Group Parameters" icon="document">
-
-| Group | Length (mm) | P_vert (N) | F_horiz (N) | Torque (N·mm) | OD (mm) | ID (mm) |
-|-------|-------------|------------|-------------|---------------|---------|---------|
-|   1   |     200     |     30     |      5      |      1073     |    16   |    12   |
-|   2   |     183     |     27     |      4      |      1031     |    16   |    12   |
-|   3   |     203     |     33     |      5      |      1095     |    16   |    12   |
-|   4   |     187     |     30     |      6      |      1009     |    16   |    12   |
-|   5   |     216     |     32     |      5      |       901     |    16   |    12   |
-|   6   |     194     |     27     |      4      |       993     |    16   |    12   |
-|   7   |     201     |     30     |      4      |       974     |    16   |    12   |
-|   8   |     216     |     28     |      6      |       972     |    16   |    12   |
-|   9   |     209     |     32     |      4      |       974     |    16   |    12   |
-|  10   |     202     |     29     |      6      |      1044     |    16   |    12   |
-|  11   |     188     |     30     |      6      |       918     |    16   |    12   |
-|  12   |     208     |     32     |      5      |       963     |    16   |    12   |
-|  13   |     192     |     29     |      5      |       966     |    16   |    12   |
-|  14   |     189     |     27     |      5      |       908     |    16   |    12   |
-|  15   |     216     |     29     |      6      |      1023     |    16   |    12   |
-|  16   |     186     |     32     |      4      |       921     |    16   |    12   |
-|  17   |     193     |     30     |      5      |      1023     |    16   |    12   |
-|  18   |     195     |     31     |      4      |      1089     |    16   |    12   |
-|  19   |     197     |     27     |      6      |       996     |    16   |    12   |
-|  20   |     215     |     33     |      5      |       925     |    16   |    12   |
-
-**Note:** Tube dimensions (OD=16mm, ID=12mm) remain constant. Loading parameters vary by ±10-15%.
-
-</Card>
-
-### Appendix B: Python Environment Setup
-
-**Required Libraries:**
+Install the libraries:
 ```bash
 pip install numpy matplotlib scipy pandas
 ```
 
-**Version Verification:**
+Check the versions:
 ```python
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import scipy
 import pandas as pd
@@ -1645,126 +1238,41 @@ print(f"SciPy: {scipy.__version__}")
 print(f"Pandas: {pd.__version__}")
 ```
 
-**Recommended:** Use Anaconda distribution or virtual environment to avoid conflicts.
+A virtual environment or the Anaconda distribution keeps these libraries apart from other projects.
 
-### Appendix B: FreeCAD FEM Workflow Checklist
+### Appendix C: FreeCAD FEM workflow checklist
 
-**Complete Procedure for Finite Element Analysis:**
+Every FEM run has the same eight steps, with the menu paths of Lab 2, Part 3: model, analysis and material, supports, loads, mesh, solve, results, and a check against the hand solution and the deformed shape.
 
-<Steps>
+### Appendix D: Common material properties
 
-1. **Model Creation** (Part Design workbench)
-   - Create 3D solid geometry
-   - Ensure no small features that complicate meshing
-   - Verify dimensions match analytical model
-
-2. **FEM Setup** (FEM workbench)
-   - Create Analysis container
-   - Add material from library (or input custom properties)
-   - Verify E, ν, and other properties
-
-3. **Boundary Conditions**
-   - Apply fixed constraints (select appropriate faces/edges)
-   - Apply displacement constraints (roller supports)
-   - Check constraint symbols in viewport
-
-4. **Loading**
-   - Apply forces (select application points/faces)
-   - Apply pressures (select faces)
-   - Apply torques (use force couples if direct torque unavailable)
-
-5. **Meshing**
-   - Choose Gmsh or Netgen
-   - Set maximum element size
-   - Compute mesh, verify element count
-   - Check mesh quality visually
-
-6. **Solving**
-   - Write .inp file
-   - Run CalculiX solver
-   - Monitor console for errors
-   - Wait for completion message
-
-7. **Post-Processing**
-   - View von Mises stress
-   - View displacement magnitude
-   - View principal stresses
-   - Export images and data
-
-8. **Validation**
-   - Compare maximum stress with analytical
-   - Check deformation pattern makes physical sense
-   - Perform mesh convergence if needed
-
-</Steps>
-
-### Appendix C: Common Material Properties
-
-<Card title="📊 Material Properties Reference Table" icon="document">
+<Card title="Material properties reference table" icon="document">
 
 | Material | E (GPa) | ν | σ_yield (MPa) | σ_ultimate (MPa) | Density (g/cm³) |
 |----------|---------|---|---------------|------------------|-----------------|
 | Aluminum 6061-T6 | 69 | 0.33 | 275 | 310 | 2.70 |
 | Steel AISI 1020 | 200 | 0.29 | 350 | 420 | 7.85 |
-| Carbon Fiber (UD) | 70-140 | 0.10 | 500-600 | 600-1000 | 1.55-1.65 |
-| Titanium Ti-6Al-4V | 114 | 0.34 | 880 | 950 | 4.43 |
-| ABS Plastic | 2.3 | 0.35 | 40 | 45 | 1.05 |
+| Carbon Fiber (UD) | 70 to 140 | 0.10 | 500 to 600 | 600 to 1000 | 1.55 to 1.65 |
 
-**Notes:**
-- UD = Unidirectional (properties along fiber direction)
-- For composites, use equivalent isotropic properties for preliminary FEM
-- Always verify material properties from manufacturer datasheets for final designs
+UD means unidirectional: the values are along the fibers. For a final design, use the data sheet of the maker.
 
 </Card>
 
-### Appendix D: Creating Technical Drawings in FreeCAD
+### Appendix E: Creating technical drawings in FreeCAD
 
-Professional engineering documentation requires proper technical drawings following standard conventions.
+All three labs use these steps in the TechDraw workbench.
 
-<Card title="📐 TechDraw Workbench Quick Guide" icon="document">
+<Card title="TechDraw workbench quick guide" icon="document">
 
-**Basic Workflow:**
-
-1. **Setup Drawing Page**
-   - Switch to TechDraw workbench
-   - Insert → Default Page (select template: A4 Portrait or Landscape)
-   - Edit title block with your information
-
-2. **Insert Views**
-   - **Front View:** Insert → Insert View → Select part body → Position
-   - **Top View:** Insert → Insert View (link to front view for alignment)
-   - **Side View:** Insert → Insert View (link to front view)
-   - **Section View:** Select edge on view → Insert → Insert Section View → Specify cutting plane
-
-3. **Add Dimensions**
-   - **Length Dimension:** Insert → Dimension → Length Dimension → Click two points
-   - **Radius Dimension:** Insert → Dimension → Radius → Click arc/circle
-   - **Angle Dimension:** Insert → Dimension → Angle → Click two lines
-   - **Hole Dimension:** For hollow sections, dimension both OD and ID
-
-4. **Add Annotations**
-   - **Material Note:** Insert → Annotation → Rich Text Annotation
-     - Example: "Material: Aluminum Alloy 6061-T6"
-   - **Load Notes:** Add text boxes indicating applied forces
-     - Example: "P = 500 N applied at free end"
-   - **Support Notes:** Annotate boundary conditions
-     - Example: "Fixed support (all DOF constrained)"
-
-5. **Dimensioning Best Practices**
-   - Dimension to centerlines where appropriate
-   - Show all critical dimensions (length, cross-section, wall thickness)
-   - Use section views to show internal features (hollow tubes)
-   - Follow standard dimensioning conventions (ISO or ANSI)
-   - Don't over-dimension (each feature once only)
-
-6. **Export Drawing**
-   - File → Export as PDF
-   - Resolution: 300 DPI minimum
-   - Ensure all text is legible
+1. Page: Insert → Default Page (A4), then fill in the title block.
+2. Views: Insert → Insert View for the front view, then a top or side view linked to it. For a section, select an edge on a view, then Insert → Insert Section View.
+3. Dimensions: Insert → Dimension, then Length, Radius or Angle. Give each dimension once. For a tube, give OD and ID.
+4. Notes: Insert → Annotation → Rich Text Annotation for the material, each load and each support.
+5. Export: File → Export as PDF, at 300 DPI or more.
 
 </Card>
 
-<Card title="Drawing Standards Checklist" icon="approve-check">
+<Card title="Drawing standards checklist" icon="approve-check">
 
 **Your technical drawing must include:**
 
@@ -1781,165 +1289,80 @@ Professional engineering documentation requires proper technical drawings follow
 
 </Card>
 
-### Appendix E: Troubleshooting Guide
+### Appendix F: Troubleshooting guide
 
-**Common Python Errors:**
+**Python errors:**
 
 <Tabs>
-  <TabItem label="Import Errors">
+  <TabItem label="Import errors">
 
-  **Error:** `ModuleNotFoundError: No module named 'numpy'`
-
-  **Solution:** Install missing library
+  `ModuleNotFoundError: No module named 'numpy'` means that a library is missing. Install it:
   ```bash
   pip install numpy
   ```
 
-  If using Anaconda:
+  With Anaconda:
   ```bash
   conda install numpy
   ```
 
   </TabItem>
 
-  <TabItem label="Runtime Errors">
+  <TabItem label="Runtime errors">
 
-  **Error:** `ZeroDivisionError` or `invalid value encountered`
-
-  **Solution:**
-  - Check boundary conditions (dividing by zero area/inertia?)
-  - Verify input parameters are non-zero
-  - Use `np.seterr(divide='warn')` to debug
+  `ZeroDivisionError` or `invalid value encountered`: the script divides by zero. Check that no input value is zero. `np.seterr(divide='warn')` shows where it happens.
 
   </TabItem>
 
-  <TabItem label="Plotting Issues">
+  <TabItem label="Plotting issues">
 
-  **Error:** Plot window appears blank or doesn't show
-
-  **Solution:**
-  - Ensure `plt.show()` is called
-  - Check backend: `matplotlib.use('TkAgg')`
-  - Save figure instead: `plt.savefig()` always works
+  If the plot window is empty or does not open, check that `plt.show()` is called, or set the backend with `matplotlib.use('TkAgg')`. `plt.savefig()` always writes the file.
 
   </TabItem>
 </Tabs>
 
-**Common FreeCAD FEM Errors:**
+**FreeCAD FEM errors:**
 
 <Tabs>
-  <TabItem label="Meshing Failures">
+  <TabItem label="Meshing failures">
 
-  **Error:** "Meshing failed" or very poor quality mesh
-
-  **Solutions:**
-  - Simplify geometry (remove fillets, chamfers, small holes)
-  - Increase max element size
-  - Use Gmsh instead of Netgen (or vice versa)
-  - Check for overlapping faces or duplicate geometry
+  "Meshing failed", or a mesh of very poor quality: remove fillets, chamfers and small holes, increase the maximum element size, or change between Gmsh and Netgen.
 
   </TabItem>
 
-  <TabItem label="Solver Errors">
+  <TabItem label="Solver errors">
 
-  **Error:** CalculiX solver fails or produces no results
-
-  **Solutions:**
-  - Verify constraints don't over-constrain model
-  - Check that at least one constraint prevents rigid body motion
-  - Ensure material properties are physical (positive E, 0 < ν < 0.5)
-  - Review .inp file for syntax errors
+  CalculiX fails or gives no results:
+  - The supports must stop every rigid movement of the part
+  - The material values must be physical: positive $E$, and $\nu$ between 0 and 0.5
 
   </TabItem>
 
-  <TabItem label="Unrealistic Results">
+  <TabItem label="Unrealistic results">
 
-  **Problem:** FEM stress differs greatly from analytical (>50%)
-
-  **Checks:**
-  - Verify load magnitude and direction (sign errors common!)
-  - Check units consistency (N, mm, MPa vs N, m, Pa)
-  - Ensure material properties match analytical assumptions
-  - Perform mesh convergence study
-  - Look for stress concentrations (geometric discontinuities)
+  The FEM stress differs from the hand value by more than 50%:
+  - Check the size and direction of each load. Sign errors are common
+  - Check the units: N, mm and MPa, or N, m and Pa, never a mixture
+  - Check that the material values are those of the hand solution
+  - Run a mesh convergence study
 
   </TabItem>
 </Tabs>
-
-### Appendix F: Key Formulas Summary
-
-<Card title="📐 Essential Structural Analysis Formulas" icon="document">
-
-**Beam Bending:**
-$$M = \frac{PL}{4} \quad \text{(simply supported, center load)}$$
-
-$$\sigma = \frac{Mc}{I} \quad \text{(flexure formula)}$$
-
-**Torsion:**
-$$\tau = \frac{Tr}{J} \quad \text{(shear stress from torsion)}$$
-
-$$\theta = \frac{TL}{GJ} \quad \text{(angle of twist)}$$
-
-**Principal Stresses:**
-$$\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
-
-**Von Mises Stress:**
-$$\sigma_{VM} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}$$
-
-**Tresca (Maximum Shear Stress):**
-$$\tau_{max} = \frac{\sigma_1 - \sigma_3}{2}$$
-
-**Section Properties:**
-
-Solid circular: $I = \frac{\pi d^4}{64}, \quad J = \frac{\pi d^4}{32}$
-
-Hollow circular: $I = \frac{\pi (d_o^4 - d_i^4)}{64}, \quad J = \frac{\pi (d_o^4 - d_i^4)}{32}$
-
-Rectangular: $I = \frac{bh^3}{12}, \quad J = \beta bh^3$ (β depends on b/h ratio)
-
-</Card>
 
 ---
 
-## Summary and Course Integration
+## Summary and course integration
 
 <InArticleAd />
 
 
-This laboratory series provides comprehensive hands-on experience with structural analysis methods essential for mechatronics and mechanical engineering practice. You have developed proficiency in:
+In each lab the bending stress had a comfortable safety factor, and another requirement decided the design: the stiffness of the robotic arm and of the printer rail, and the low shear strength of the drone arm.
 
-**Core Competencies Developed:**
+The theory for each lab:
 
-1. Analytical Methods - Apply equilibrium principles and stress formulas to real engineering problems
-2. Programming Skills - Automate calculations and create parametric design studies using Python
-3. FEM Simulation - Validate analytical solutions with finite element analysis
-4. Design Optimization - Make informed design decisions balancing performance, weight, and cost
-5. Technical Communication - Document engineering analysis in professional reports
-
-**Integration with Course Topics:**
-
-These labs directly support and extend concepts from:
-- [Lesson 2.1: Shear Force and Bending Moment](/education/mechanics-of-materials/shear-force-bending-moment-beams) (Lab 1)
-- [Lesson 2.2: Bending Stresses in Simple Beams](/education/mechanics-of-materials/bending-stresses-simple-beams) (Lab 2)
-- [Lesson 2.4: Combined Bending and Torsion](/education/mechanics-of-materials/combined-bending-torsion-loading) (Lab 3)
-- [Lesson 2.6: Principal Stresses and Failure Analysis](/education/mechanics-of-materials/principal-stresses-failure-analysis) (Lab 3)
-
-**Next Steps in Your Engineering Education:**
-
-- Apply these analysis techniques to your design projects
-- Explore advanced FEM capabilities (nonlinear analysis, dynamic simulation, thermal-structural coupling)
-- Investigate optimization algorithms for automated design
-- Study fatigue analysis and life prediction for cyclic loading
-- Learn topology optimization for advanced lightweight structures
-
-:::tip[Career Relevance]
-The skills developed in this laboratory series are directly applicable to careers in:
-- **Robotics Engineering** (manipulator design, structural optimization)
-- **Aerospace Engineering** (aircraft/drone structural analysis)
-- **Mechanical Design** (product development with CAD/CAE integration)
-- **Automotive Engineering** (chassis and component analysis)
-- **Additive Manufacturing** (support structure design and validation)
-:::
+- Lab 1: [shear force and bending moment in beams](/education/mechanics-of-materials/shear-force-bending-moment-beams/)
+- Lab 2: [bending stresses in simple beams](/education/mechanics-of-materials/bending-stresses-simple-beams/)
+- Lab 3: [combined bending and torsion](/education/mechanics-of-materials/combined-bending-torsion-loading/) and [principal stresses and failure analysis](/education/mechanics-of-materials/principal-stresses-failure-analysis/)
 
 
 

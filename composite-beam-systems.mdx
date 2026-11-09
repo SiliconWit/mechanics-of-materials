@@ -24,7 +24,7 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-A CNC machine bed built from a single material is always a compromise: steel is stiff but heavy, aluminum is light but deflects more. Bonding or bolting two materials together gives you the best of both, but the standard flexural formula no longer applies because each material has a different elastic modulus and carries a different share of the bending stress. The transformed section method resolves this by converting the composite cross-section into an equivalent single-material section, letting you reuse the same bending equations you already know. In this lesson you will analyze a hybrid aluminum-steel CNC machine bed, locate the shifted neutral axis, and calculate the true stress in each material. #CompositeBeams #TransformedSection #CNCDesign
+A machine bed made of one material is a compromise: steel is stiff but heavy, and aluminum is light but bends more. Join the two and you can have both. But the usual bending formula now gives wrong stresses, because it assumes one material, and in a bonded beam the stiffer material takes more than its share. This lesson gives you the transformed section method: treat the whole beam as one material, with the stiffer part drawn wider, and the bending formula you know works again. You use it on the steel and aluminum bed of a CNC (computer-controlled) machine. #CompositeBeams #TransformedSection #CNCDesign
 
 ## Learning Objectives
 
@@ -33,447 +33,396 @@ By the end of this lesson, you will be able to:
 1. **Analyze** composite beams made of different materials using the transformed section method
 2. **Locate** the neutral axis in composite beam cross-sections
 3. **Calculate** bending stresses in each material of a composite system
-4. **Design** hybrid structures for optimal strength-to-weight performance
+4. **Judge** how much each material adds to the strength and stiffness of the beam
 
 :::tip[Try it as you read]
-This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-analysis-simulator/): vary the beam section and loading to see how the bending stress and deflection respond, the same response that drives the built-up and composite sections here. The [Beam Analysis Experiments](/education/mechanics-of-materials/beam-analysis-experiments) reproduce the worked examples step by step with Python.
+This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-analysis-simulator/): change the beam section and the load, and see how the bending stress and deflection respond. The [Beam Analysis Experiments](/education/mechanics-of-materials/beam-analysis-experiments/) reproduce the worked examples step by step with Python.
 :::
 
-## Real-World System Problem: CNC Machine Bed Structure
+## Real-World System Problem: CNC machine bed structure
 
 <InArticleAd />
 
 
-<BionicText method="advanced" intensity="medium" class="highlight">
-High-precision CNC machines require extremely rigid bed structures to maintain accuracy during cutting operations. Modern CNC beds often use composite construction - combining steel reinforcement with aluminum casting to achieve optimal stiffness, weight, and thermal stability while managing cost.
-</BionicText>
+The bed of a CNC machine carries the cutting forces. It must bend very little, or the cut is not accurate. A common design casts aluminum around a steel I-beam, a beam with a section shaped like the letter I: two horizontal plates (the flanges) joined by a vertical plate (the web). The aluminum gives the mounting surfaces and keeps the weight low, and the steel adds stiffness.
 
-### System Description
+```text
+   ◄────────── 300 mm ──────────►
+   ┌─────────────────────────────┐ ▲
+   │  aluminum casting           │ │
+   │      ┌───────────┐          │ │
+   │      └────┐ ┌────┘ steel    │ │
+   │           │ │      I-beam   │ 250 mm
+   │           │ │      150 wide │ │
+   │      ┌────┘ └────┐ 200 tall │ │
+   │      └───────────┘          │ │
+   │                             │ │
+   └─────────────────────────────┘ ▼
+```
 
-**CNC Machine Bed Components:**
-- **Steel Reinforcement Beams** (high stiffness backbone structure)
-- **Aluminum Casting** (lightweight material filling and mounting surfaces)
-- **Composite Cross-Section** (steel beams encased in aluminum)
-- **Precision Ways** (guided surfaces for machine tools)
-- **Vibration Damping** (integrated damping materials)
+> **Engineering Question:** When this bed bends, how much stress does each material carry, and is each material safe?
 
-### The Composite Challenge
-
-During machining operations, the CNC bed experiences:
-
-:::note[Critical Loading Conditions]
-- **Heavy cutting forces** transmitted through the tool and workpiece
-- **Dynamic loads** from rapid axis movements and accelerations
-- **Thermal gradients** from machining heat and environmental changes
-- **Vibration loads** that must be damped to maintain surface finish
-- **Long-term creep** under sustained loads
-:::
-
-> **Engineering Question:** How do we analyze the stress distribution in a composite CNC bed where steel reinforcement beams are encased in aluminum, and how do we ensure both materials work together effectively under bending loads?
-
-### Why Composite Beam Analysis Matters
-
-**Consequences of Poor Composite Design:**
-- **Interfacial failure** between steel and aluminum layers
-- **Uneven stress distribution** leading to premature failure
-- **Excessive deflection** reducing machining accuracy
-- **Thermal stress cracking** from differential expansion
-
-**Benefits of Proper Composite Analysis:**
-- **Optimized material usage** leveraging each material's strengths
-- **Predictable load sharing** between different materials
-- **Enhanced structural performance** compared to single materials
-- **Cost-effective design** balancing performance and economics
-
-## Fundamental Theory: Composite Beam Mechanics
+## Fundamental Theory: Composite beam mechanics
 
 <InArticleAd />
 
 
-### Basic Composite Beam Assumptions
+### Same strain, different stress
 
-For composite beams with **perfect bonding** between materials:
+Press two springs side by side through the same distance, one stiff and one soft. The stiff spring pushes back harder. Two bonded materials in a beam do the same. The bond makes them stretch together, so at the bond line the strain (the stretch for each unit of length) is the same in both. Stress is strain times the elastic modulus $E$, the stiffness of the material in GPa, so the stiffer material carries more stress.
 
-1. **Plane sections remain plane** during bending
-2. **No slip occurs** at material interfaces  
-3. **Strain is continuous** across the cross-section
-4. **Each material follows** its own stress-strain relationship
+Unlike the springs, a beam does not stretch evenly: the strain is zero at the neutral axis and grows with the distance from it. And all of this needs a perfect bond. If the materials slip, they bend separately and the results below no longer hold.
 
-### The Transformed Section Method
+### The transformed section method
 
-Since different materials have different elastic moduli, we transform the composite section into an equivalent single-material section:
+The bending formula $\sigma = My/I$ is for one material. So the real section is replaced by an imaginary section of one material, the reference material, that bends in the same way. A part made of the other material is $n$ times as stiff, so it is drawn $n$ times as wide. Its height and position do not change.
 
-<Card title="🔄 Transformation Ratio Formula" icon="document">
-$$n = \frac{E_2}{E_1}$$
+<Card title="Transformation ratio" icon="document">
+$$n = \frac{E_{other}}{E_{reference}}$$
 
-**Where:**
-- $n$ = Transformation ratio (dimensionless)
-- $E_2$ = Elastic modulus of material to be transformed
-- $E_1$ = Elastic modulus of reference material
+- $n$ = transformation ratio, also called the modular ratio (a ratio, so it has no unit)
+- $E_{other}$ = elastic modulus of the material that is replaced (GPa)
+- $E_{reference}$ = elastic modulus of the reference material (GPa)
 
-**Physical Meaning:** The transformation ratio allows us to convert a composite beam into an equivalent single-material beam by adjusting the width of one material based on stiffness differences.
+With aluminum ($E = 70$ GPa) as the reference, steel ($E = 200$ GPa) has $n = 200/70 = 2.86$. Each steel part is drawn 2.86 times as wide, as if it were aluminum.
 </Card>
 
-:::tip[Transformation Strategy]
-**Transform stiffer material to softer:** If steel (E = 200 GPa) and aluminum (E = 70 GPa):
-$$n = \frac{E_{steel}}{E_{aluminum}} = \frac{200}{70} = 2.86$$
-
-The steel section is replaced by an aluminum section **2.86 times wider**.
-:::
-
-### Composite Beam Analysis Steps
+### Composite beam analysis steps
 
 <Tabs>
   <TabItem label="Step 1: Transform">
-    
-    **Transform one material** to the reference material:
-    - Choose reference material (usually softer)
-    - Calculate transformation ratio n = E₂/E₁
-    - Transform width: b₂,transformed = n × b₂,actual
-    
+
+Choose the reference material and find $n$. Multiply the width of every part of the other material by $n$. Change widths only, never heights.
+
   </TabItem>
-  <TabItem label="Step 2: Locate Neutral Axis">
-    
-    <Card title="🎯 Neutral Axis Location" icon="document">
-    $$\bar{y} = \frac{\sum A_i y_i}{\sum A_i}$$
-    
-    **Where:**
-    - $\bar{y}$ = Distance to neutral axis from reference (m)
-    - $A_i$ = Transformed area of each section (m²)
-    - $y_i$ = Distance from reference to centroid of each area (m)
-    
-    **Physical Meaning:** The neutral axis location is found using the weighted average of transformed areas.
-    </Card>
-    
-  </TabItem>
-  <TabItem label="Step 3: Calculate Properties">
-    
-    **Calculate moment of inertia** of transformed section:
-    $$I_{transformed} = \sum (I_i + A_i d_i^2)$$
-    
-    Using parallel axis theorem
-    
-  </TabItem>
-  <TabItem label="Step 4: Find Stresses">
-    
-    <Card title="⚡ Composite Beam Stress Formulas" icon="document">
-    **Reference material stress:**
-    $$\sigma_1 = \frac{My}{I_{transformed}}$$
-    
-    **Transformed material stress:**
-    $$\sigma_2 = n \times \frac{My}{I_{transformed}}$$
-    
-    **Where:**
-    - $M$ = Applied bending moment (N·m)
-    - $y$ = Distance from neutral axis (m)
-    - $I_{transformed}$ = Moment of inertia of transformed section (m⁴)
-    - $n$ = Transformation ratio
-    
-    **Physical Meaning:** Stresses in composite beams are calculated using the transformed section, with the transformed material stress adjusted by the transformation ratio.
-    </Card>
-    
+  <TabItem label="Step 2: Locate neutral axis">
+
+The neutral axis passes through the centroid (the balance point) of the transformed section:
+
+$$\bar{y} = \frac{\sum A_i y_i}{\sum A_i}$$
+
+- $\bar{y}$ = height of the neutral axis above the bottom of the section (mm)
+- $A_i$ = area of each part of the transformed section (mm²)
+- $y_i$ = height of the centroid of that part above the bottom (mm)
+
+</TabItem>
+<TabItem label="Step 3: Calculate properties">
+
+Find the second moment of area $I$ of the transformed section about the neutral axis. The parallel axis theorem adds the parts:
+
+$$I_{transformed} = \sum (I_i + A_i d_i^2)$$
+
+- $I_i$ = second moment of area of each part about its own centroid (mm⁴)
+- $d_i$ = distance from that centroid to the neutral axis (mm)
+
+</TabItem>
+<TabItem label="Step 4: Find stresses">
+
+In the reference material, the usual formula applies. In the other material, multiply by $n$ to return from the imaginary section to the real material:
+
+$$\sigma_{reference} = \frac{My}{I_{transformed}} \qquad \sigma_{other} = n \times \frac{My}{I_{transformed}}$$
+
+- $M$ = bending moment (N·mm)
+- $y$ = distance from the neutral axis (mm)
+- $\sigma$ = bending stress (MPa)
+
+To forget the factor $n$ is the most common mistake in this method.
+
   </TabItem>
 </Tabs>
 
-## Application: CNC Bed Composite Beam Analysis
+## Application: CNC bed composite beam analysis
 
 <InArticleAd />
 
 
-Let's analyze a realistic CNC bed cross-section step by step.
-
 :::note[Problem Statement]
-**Hybrid CNC Machine Bed Composite Beam Analysis**
+- **Steel I-beam:** 150 mm wide and 200 mm tall, flanges 12 mm thick, web 8 mm thick, $E = 200$ GPa, $\sigma_{yield} = 250$ MPa
+- **Aluminum casting:** 300 mm wide and 250 mm tall, with the I-beam at its centre, $E = 70$ GPa, $\sigma_{yield} = 140$ MPa
+- **Span:** 2000 mm, simply supported (the bed rests on a support at each end)
+- **Load:** $w = 50$ kN/m spread evenly over the span, 100 kN in total
+- **Required safety factor:** 2.0
 
-**What we need to determine:**
-1. **Transformation ratio** between steel and aluminum materials
-2. **Neutral axis location** of the composite cross-section
-3. **Maximum bending stresses** in both steel and aluminum regions
-4. **Safety factors** and design adequacy for both materials
-
-**Key Question:** How do stresses distribute in a hybrid CNC bed with steel I-beam reinforcement encased in aluminum casting under a 50 kN distributed load?
+**Key Question:** What is the largest bending stress in the aluminum and in the steel, and does each material have a safety factor of at least 2?
 :::
 
-Explore how the section drives the bending stress and deflection in the simulator:
+See how the section sets the bending stress and deflection in the simulator:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/beam-analysis-simulator/" target="_blank" variant="primary">Open the Beam Analysis Simulator</LinkButton>
 </div>
 
-<hr />
-
-**System Parameters:**
-- Hybrid CNC machine bed (steel I-beam reinforcement in aluminum casting)
-- **Steel I-beam:** 150 mm × 200 mm × 12 mm flanges, 8 mm web, E₁ = 200 GPa, σ_yield = 250 MPa
-- **Aluminum casting:** 300 mm wide × 250 mm tall, E₂ = 70 GPa, σ_yield = 140 MPa
-- Span length: 2000 mm (simply supported)
-- Applied load: **`w`** = 50 kN uniform distributed load
-- **`Safety factor`**: 2.0
-
-<hr />
-
-### Step 1: Calculate Transformation Ratio
+### Step 1: Calculate transformation ratio
 
 <details>
 <summary>**Click to reveal transformation ratio calculations**</summary>
 
 <Steps>
 
-1. **Choose aluminum as reference material:**
-   
-   $$n = \frac{E_{steel}}{E_{aluminum}} = \frac{200}{70} = 2.86$$
+1. **Transformation ratio**, with aluminum as the reference material:
 
-2. **Transform steel section to equivalent aluminum:**
-   
-   - Steel I-beam actual: 150 mm flanges, 8 mm web
-   - Steel I-beam transformed: 150 × 2.86 = 429 mm flanges, 8 × 2.86 = 23 mm web
+   $$n = \frac{E_{steel}}{E_{aluminum}} = \frac{200 \text{ GPa}}{70 \text{ GPa}} = 2.86$$ ✅
 
-3. **Analysis approach:**
-   
-   Analyze transformed section as all-aluminum, then convert steel stresses using transformation ratio
+2. **Transformed widths.** Multiply each steel width by $n$. The 150 mm flanges become $150 \times 2.86 = 429$ mm of aluminum, and the 8 mm web becomes $8 \times 2.86 = 23$ mm. The heights do not change. ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Locate Neutral Axis of Transformed Section
+### Step 2: Locate neutral axis of transformed section
 
 <details>
 <summary>**Click to reveal neutral axis calculations**</summary>
 
 <Steps>
 
-1. **Aluminum region (original):**
-   
-   - Total area minus steel: A₁ = (300×250) - (150×200-8×176) = 46,408 mm²
-   - Centroid from bottom: ȳ₁ ≈ 125 mm (approximate due to steel cutout)
+1. **Area of the steel I-beam:** two flanges and the web. The web is $200 - 2 \times 12 = 176$ mm tall:
 
-2. **Steel region (transformed to aluminum):**
-   
-   - Transformed area: A₂ = 28,592 mm² (actual steel area)
-   - Centroid from bottom: ȳ₂ = 125 mm (center of I-beam)
+   $$A_s = 2 \times (150 \times 12) + 176 \times 8 = 3600 + 1408 = 5008 \text{ mm}^2$$ ✅
 
-3. **Combined centroid location:**
-   
-   $$\bar{y} = \frac{A_1 \bar{y_1} + A_2 \bar{y_2}}{A_1 + A_2} = \frac{46,408 \times 125 + 28,592 \times 125}{46,408 + 28,592} = 125 \text{ mm}$$
-   
-   Neutral axis at geometric center (125 mm from bottom) due to symmetry
+2. **Area of the aluminum**, the full rectangle less the steel:
+
+   $$A_1 = (300 \times 250) - 5008 = 69{,}992 \text{ mm}^2$$ ✅
+
+3. **Transformed area of the steel**, its real area times $n = 200/70$:
+
+   $$A_2 = n A_s = \frac{200}{70} \times 5008 = 14{,}309 \text{ mm}^2$$ ✅
+
+4. **Neutral axis.** Both parts have their centroid at mid-height, 125 mm above the bottom:
+
+   $$\bar{y} = \frac{A_1 \bar{y}_1 + A_2 \bar{y}_2}{A_1 + A_2} = \frac{69{,}992 \times 125 + 14{,}309 \times 125}{69{,}992 + 14{,}309} = 125 \text{ mm}$$
+
+   The section is symmetric, so the neutral axis stays at mid-height. In Problem 1 below it moves. ✅
 
 </Steps>
 
 </details>
 
-### Step 3: Calculate Maximum Bending Moment and Stresses
+### Step 3: Calculate maximum bending moment and stresses
 
 <details>
 <summary>**Click to reveal bending moment and stress calculations**</summary>
 
 <Steps>
 
-1. **Maximum bending moment:**
-   
-   For simply supported beam with uniform load:
-   $$M_{max} = \frac{wL^2}{8} = \frac{50,000 \times 2^2}{8} = 25,000 \text{ N·m}$$
+1. **Largest bending moment**, at the middle of a simply supported span with an even load, where $w = 50$ kN/m $= 50{,}000$ N/m:
 
-2. **Transformed section moment of inertia:**
-   
-   $$I_{transformed} = 2.1 \times 10^8 \text{ mm}^4$$ (calculated for composite section)
+   $$M_{max} = \frac{wL^2}{8} = \frac{50{,}000 \text{ N/m} \times (2 \text{ m})^2}{8} = 25{,}000 \text{ N·m} = 25 \times 10^6 \text{ N·mm}$$ ✅
 
-3. **Maximum distance from neutral axis:**
-   
-   c = 125 mm (to top or bottom fiber)
+2. **Second moment of area of the full rectangle:**
+
+   $$I_{rect} = \frac{300 \times 250^3}{12} = 3.906 \times 10^8 \text{ mm}^4$$ ✅
+
+3. **Second moment of area of the steel I-beam:** its outside rectangle less the two empty spaces beside the web, which are together $150 - 8 = 142$ mm wide and 176 mm tall:
+
+   $$I_s = \frac{150 \times 200^3}{12} - \frac{142 \times 176^3}{12} = 3.549 \times 10^7 \text{ mm}^4$$ ✅
+
+4. **Transformed second moment of area.** All parts share one centroid, so no parallel axis terms are needed. The aluminum is the rectangle less the steel, and the steel counts $n$ times, so $n - 1 = 1.857$ is added:
+
+   $$I_{transformed} = (I_{rect} - I_s) + n I_s = I_{rect} + (n - 1) I_s$$
+
+   $$I_{transformed} = 3.906 \times 10^8 + 1.857 \times 3.549 \times 10^7 = 4.57 \times 10^8 \text{ mm}^4$$ ✅
+
+5. **Distances from the neutral axis** to the outer surface of each material: $c_{al} = 125$ mm (top or bottom of the casting) and $c_s = 100$ mm (outer face of the steel flanges). ✅
 
 </Steps>
 
 </details>
 
-### Step 4: Calculate Stresses and Safety Factors
+### Step 4: Calculate stresses and safety factors
 
 <details>
 <summary>**Click to reveal stress and safety factor calculations**</summary>
 
 <Steps>
 
-1. **Stress in aluminum regions:**
-   
-   $$\sigma_{aluminum} = \frac{My}{I} = \frac{25,000 \times 10^3 \times 125}{2.1 \times 10^8} = 14.9 \text{ MPa}$$
+1. **Stress in the aluminum**, at its outer surface:
 
-2. **Stress in steel regions:**
-   
-   $$\sigma_{steel} = n \times \sigma_{aluminum} = 2.86 \times 14.9 = 42.6 \text{ MPa}$$
+   $$\sigma_{aluminum} = \frac{M c_{al}}{I_{transformed}} = \frac{25 \times 10^6 \text{ N·mm} \times 125 \text{ mm}}{4.57 \times 10^8 \text{ mm}^4} = 6.8 \text{ MPa}$$ ✅
 
-3. **Safety factor assessment:**
-   
-   - Aluminum: SF = 140/14.9 = 9.4 ✅ Very conservative
-   - Steel: SF = 250/42.6 = 5.9 ✅ Safe design
-   - Both exceed required SF = 2.0
+2. **Stress in the steel**, at the outer face of its flanges. Multiply by $n$ to return from aluminum to the real steel:
 
-4. **Load distribution analysis:**
-   
-   Steel carries 2.86× more stress per unit strain, efficiently using its higher strength
+   $$\sigma_{steel} = n \times \frac{M c_s}{I_{transformed}} = 2.86 \times \frac{25 \times 10^6 \text{ N·mm} \times 100 \text{ mm}}{4.57 \times 10^8 \text{ mm}^4} = 15.6 \text{ MPa}$$ ✅
+
+3. **Safety factors**, yield strength over stress. Aluminum: $140/6.8 = 20.5$. Steel: $250/15.6 = 16.0$. Both are far above the required 2.0, because a machine bed is sized to bend very little, not for strength. ✅
+
+4. **What the steel adds.** At $y = 100$ mm the aluminum carries $5.5$ MPa and the steel beside it $15.6$ MPa, 2.86 times as much. The steel is $6.7\%$ of the area and gives $n I_s / I_{transformed} = 22\%$ of the bending stiffness. ✅
 
 </Steps>
 
 </details>
 
-## Engineering Problems
+## Engineering problems
 
 <InArticleAd />
 
 
-### Problem 1: Steel-Concrete Composite Beam
+### Problem 1: Steel-concrete composite beam
 
-A composite beam consists of a steel I-beam with a concrete slab cast on top, used in building construction.
+A steel I-beam carries a concrete floor slab that is cast on its top flange, as in many buildings.
+
+```text
+   ◄──────────── 1000 mm ────────────►
+   ┌─────────────────────────────────┐ ▲
+   │          concrete slab          │ │ 100 mm
+   └────────────┬───────┬────────────┘ ▼
+                └──┐ ┌──┘              ▲
+                   │ │   steel I-beam  │ 200 mm
+                ┌──┘ └──┐              │
+                └───────┘              ▼
+```
 
 **Given:**
-- Steel I-beam: W200×36 (A = 4580 mm², I = 40.5×10⁶ mm⁴, centroid 100 mm from bottom)
-- Concrete slab: 1000 mm wide × 100 mm thick, cast on steel top flange
-- Simply supported span: L = 6000 mm
-- Uniform load: w = 15 kN/m (including self-weight)
-- Materials: Steel E₁ = 200 GPa, Concrete E₂ = 25 GPa
-- Perfect bond assumed between steel and concrete
+- Steel I-beam W200×36: area $A = 4580$ mm², second moment of area $I = 40.5 \times 10^6$ mm⁴, 200 mm tall, centroid 100 mm above its bottom
+- Concrete slab: 1000 mm wide and 100 mm thick
+- Simply supported span $L = 6000$ mm, with an even load $w = 15$ kN/m that includes the weight of the beam
+- $E_{steel} = 200$ GPa, $E_{concrete} = 25$ GPa
+- Perfect bond between steel and concrete
 
-**Find:** Maximum stresses in both steel and concrete.
+**Find:** the largest stress in the steel and in the concrete.
 
 <details>
 <summary>**Click to reveal solution**</summary>
 
 <Steps>
 
-1. ✓ **Calculate transformation ratio**
-   
-   Using steel as reference material:
-   n = E_concrete/E_steel = 25/200 = 0.125
-   Transformed concrete width: b_t = n × 1000 = 125 mm
+1. **Transformation ratio**, with steel as the reference. Concrete is less stiff than steel, so $n$ is below 1 and the slab becomes narrower:
 
-2. ✓ **Locate neutral axis of composite section**
-   
-   For steel I-beam: A₁ = 4580 mm², ȳ₁ = 100 mm (from bottom)
-   For concrete slab: A₂ = 125 × 100 = 12,500 mm², ȳ₂ = 250 mm (from bottom)
-   
-   ȳ = (A₁ȳ₁ + A₂ȳ₂)/(A₁ + A₂) = (4580×100 + 12,500×250)/(4580 + 12,500) = 202 mm
+   $$n = \frac{E_{\text{concrete}}}{E_{\text{steel}}} = \frac{25}{200} = 0.125 \qquad b_t = 0.125 \times 1000 = 125\ \text{mm}$$ ✅
 
-3. ✓ **Calculate composite moment of inertia**
-   
-   Using parallel axis theorem for transformed section:
+2. **Neutral axis**, measured from the bottom of the steel. Steel: $A_1 = 4580$ mm², centroid at $\bar{y}_1 = 100$ mm. Transformed slab: $A_2 = 125 \times 100 = 12{,}500$ mm², centroid at $\bar{y}_2 = 200 + 50 = 250$ mm:
 
-   I_composite = I_steel + A₁d₁² + A₂d₂²
-   I_composite = 40.5×10⁶ + 4580×(202-100)² + 12,500×(250-202)²
-   I_composite = 40.5×10⁶ + 47.6×10⁶ + 28.8×10⁶ = 116.9×10⁶ mm⁴
+   $$\bar{y} = \frac{A_1 \bar{y}_1 + A_2 \bar{y}_2}{A_1 + A_2} = \frac{4580 \times 100 + 12{,}500 \times 250}{4580 + 12{,}500} = 209.8\ \text{mm}$$ ✅
 
-4. ✓ **Calculate maximum bending moment**
-   
-   For simply supported beam: M_max = wL²/8 = 15×6²/8 = 67.5 kN·m
+3. **Second moment of area of the transformed slab** about its own centroid:
 
-5. ✓ **Calculate stresses**
-   
-   Steel (bottom): σ_s = M×c_s/I = 67.5×10⁶×202/116.9×10⁶ = 116.7 MPa
-   Concrete (top): σ_c = (M×c_c/I) = 67.5×10⁶×48/116.9×10⁶ = 27.7 MPa (before transformation correction)
+   $$I_{\text{slab}} = \frac{125 \times 100^3}{12} = 10.4 \times 10^6\ \text{mm}^4$$ ✅
+
+4. **Second moment of area of the whole section**, by the parallel axis theorem. Each part adds its own value and its area times the square of its distance from the neutral axis:
+
+   $$I_{\text{composite}} = 40.5 \times 10^6 + 4580 \times (209.8 - 100)^2 + 10.4 \times 10^6 + 12{,}500 \times (250 - 209.8)^2$$
+
+   $$I_{\text{composite}} = (40.5 + 55.2 + 10.4 + 20.2) \times 10^6 = 126.3 \times 10^6\ \text{mm}^4$$ ✅
+
+5. **Largest bending moment**, at the middle of the span:
+
+   $$M_{max} = \frac{wL^2}{8} = \frac{15 \text{ kN/m} \times (6 \text{ m})^2}{8} = 67.5\ \text{kN}\cdot\text{m} = 67.5 \times 10^6\ \text{N}\cdot\text{mm}$$ ✅
+
+6. **Stress in the steel**, at its bottom surface (tension), $c_s = 209.8$ mm from the neutral axis:
+
+   $$\sigma_s = \frac{M c_s}{I} = \frac{67.5 \times 10^6 \times 209.8}{126.3 \times 10^6} = 112.1\ \text{MPa}$$ ✅
+
+7. **Stress in the concrete**, at its top surface (compression), $c_c = 300 - 209.8 = 90.2$ mm from the neutral axis. Multiply by $n$ to return to the real concrete:
+
+   $$\sigma_c = n \times \frac{M c_c}{I} = 0.125 \times \frac{67.5 \times 10^6 \times 90.2}{126.3 \times 10^6} = 6.0\ \text{MPa}$$
+
+   The neutral axis lies 9.8 mm inside the slab. That thin strip of concrete is in tension, and its stress is below $0.7$ MPa, so it is kept in the section here. ✅
 
 </Steps>
 
 </details>
 
-### Problem 2: Aluminum-Steel Hybrid Beam
+### Problem 2: Aluminum-steel hybrid beam
 
-A lightweight beam combines aluminum flanges with a steel web for optimal strength-to-weight ratio in aerospace applications.
+A light beam has an upright steel web between two aluminum flanges, one on top and one below.
 
 **Given:**
-- Steel web: 200 mm high × 8 mm thick (E₁ = 200 GPa)
-- Aluminum flanges: 150 mm wide × 20 mm thick, top and bottom (E₂ = 70 GPa)
-- Cantilever beam length: L = 1200 mm
-- Point load: P = 5000 N at free end
-- Perfect bonding between materials
+- Steel web: 200 mm tall and 8 mm thick, $E_{steel} = 200$ GPa
+- Aluminum flanges: 150 mm wide and 20 mm thick, top and bottom, $E_{aluminum} = 70$ GPa
+- Cantilever (fixed at one end, free at the other) of length $L = 1200$ mm
+- Point load $P = 5000$ N at the free end
+- Perfect bond between the materials
 
-**Find:** Maximum bending stresses in steel and aluminum components.
+**Find:** the largest bending stress in the steel and in the aluminum.
 
 <details>
 <summary>**Click to reveal solution**</summary>
 
 <Steps>
 
-1. ✓ **Transform aluminum to equivalent steel**
-   
-   Transformation ratio: n = E_aluminum/E_steel = 70/200 = 0.35
-   Transformed aluminum flange width: b_t = 150 × 0.35 = 52.5 mm
+1. **Transformation ratio**, with steel as the reference, and the transformed flange width:
 
-2. ✓ **Calculate transformed section properties**
-   
-   Due to symmetry, neutral axis is at mid-height (120 mm from bottom)
-   - Steel web area: A₁ = 200 × 8 = 1600 mm²
-   - Aluminum flange areas: A₂ = 2 × (52.5 × 20) = 2100 mm²
-   
-3. ✓ **Calculate moment of inertia of transformed section**
-   
-   I_transformed = I_web + I_flanges + Ad² terms
-   I_transformed = (8×200³)/12 + 2×[(52.5×20³)/12 + 52.5×20×100²]
-   I_transformed = 5.33×10⁶ + 2×[35,000 + 10.5×10⁶] = 26.4×10⁶ mm⁴
+   $$n = \frac{E_{\text{aluminum}}}{E_{\text{steel}}} = \frac{70}{200} = 0.35 \qquad b_t = 150 \times 0.35 = 52.5\ \text{mm}$$ ✅
 
-4. ✓ **Calculate maximum bending moment**
-   
-   For cantilever: M_max = P × L = 5000 × 1200 = 6×10⁶ N·mm
+2. **Neutral axis.** The section is symmetric and $20 + 200 + 20 = 240$ mm tall, so the neutral axis is at mid-height, 120 mm from the bottom. The centroid of each flange is $120 - 10 = 110$ mm from it. ✅
 
-5. ✓ **Calculate stresses in both materials**
-   
-   Steel web (at neutral axis level): σ_steel = 0 MPa
-   Aluminum flanges: σ_aluminum = M×c/I_transformed × n⁻¹
-   σ_aluminum = (6×10⁶ × 120)/(26.4×10⁶) × (1/0.35) = 78.0 MPa
+3. **Second moment of area:** the web, and for each of the two flanges its own value and its area times $110^2$:
+
+   $$I_{\text{transformed}} = \frac{8 \times 200^3}{12} + 2 \times \left[\frac{52.5 \times 20^3}{12} + 52.5 \times 20 \times 110^2\right]$$
+
+   $$I_{\text{transformed}} = 5.33 \times 10^6 + 2 \times \left[35{,}000 + 12.7 \times 10^6\right] = 30.8 \times 10^6\ \text{mm}^4$$ ✅
+
+4. **Largest bending moment**, at the fixed end:
+
+   $$M_{max} = P \times L = 5000 \text{ N} \times 1200 \text{ mm} = 6 \times 10^6\ \text{N}\cdot\text{mm}$$ ✅
+
+5. **Stress in the steel web** (the reference material). It is largest at the top and bottom edges of the web, $y = 100$ mm:
+
+   $$\sigma_{\text{steel}} = \frac{M y}{I_{\text{transformed}}} = \frac{6 \times 10^6 \times 100}{30.8 \times 10^6} = 19.5\ \text{MPa}$$ ✅
+
+6. **Stress in the aluminum flanges**, at the outer surface, $c = 120$ mm. Multiply by $n$:
+
+   $$\sigma_{\text{aluminum}} = n \times \frac{M c}{I_{\text{transformed}}} = 0.35 \times \frac{6 \times 10^6 \times 120}{30.8 \times 10^6} = 8.2\ \text{MPa}$$
+
+   The steel stress is higher although the steel is closer to the neutral axis, because steel is stiffer. ✅
 
 </Steps>
 
 </details>
 
-### Problem 3: Carbon Fiber-Aluminum Composite Beam
+### Problem 3: Carbon fiber-aluminum composite beam
 
-A high-performance beam uses carbon fiber reinforcement bonded to aluminum structure for maximum stiffness with minimal weight.
+An aluminum bar has a thin carbon fiber strip bonded to its top and to its bottom.
 
 **Given:**
-- Aluminum beam: rectangular 60 mm wide × 80 mm thick (E₁ = 70 GPa)
-- Carbon fiber strips: 60 mm wide × 3 mm thick, bonded to top and bottom (E₂ = 150 GPa)
-- Simply supported span: L = 800 mm
-- Uniform distributed load: w = 2000 N/m
-- Perfect bond between materials
+- Aluminum bar: 60 mm wide and 80 mm tall, $E_{aluminum} = 70$ GPa
+- Carbon fiber strips: 60 mm wide and 3 mm thick, top and bottom, $E_{CF} = 150$ GPa
+- Simply supported span $L = 800$ mm, with an even load $w = 2000$ N/m
+- Perfect bond between the materials
 
-**Find:** Stress distribution and maximum stresses in each material.
+**Find:** the largest stress in each material, and the stresses at the bond line.
 
 <details>
 <summary>**Click to reveal solution**</summary>
 
 <Steps>
 
-1. ✓ **Calculate transformation ratio**
-   
-   Using aluminum as reference: n = E_CF/E_Al = 150/70 = 2.14
-   Carbon fiber strips transform to equivalent aluminum: b_t = 60 × 2.14 = 128.6 mm
+1. **Transformation ratio**, with aluminum as the reference, and the transformed strip width:
 
-2. ✓ **Locate composite neutral axis**
-   
-   Aluminum beam: A₁ = 60 × 80 = 4800 mm², ȳ₁ = 40 mm
-   CF strips: A₂ = 2 × (128.6 × 3) = 771.6 mm², ȳ₂ = 42.5 mm (average of top/bottom)
-   
-   Due to near symmetry, neutral axis ≈ 40 mm from bottom
+   $$n = \frac{E_{\text{CF}}}{E_{\text{Al}}} = \frac{150}{70} = 2.14 \qquad b_t = 60 \times 2.14 = 128.6\ \text{mm}$$ ✅
 
-3. ✓ **Calculate composite moment of inertia**
-   
-   I_aluminum = 60×80³/12 = 2.56×10⁶ mm⁴
-   I_CF = 2×[128.6×3³/12 + 128.6×3×38.5²] = 2×[96.4 + 57,200] = 114,600 mm⁴
-   I_total = 2.56×10⁶ + 0.115×10⁶ = 2.675×10⁶ mm⁴
+2. **Neutral axis.** The section is symmetric, so the neutral axis is at mid-height: 40 mm from each face of the aluminum and 43 mm from each outer surface. The centroid of each strip is $40 + 1.5 = 41.5$ mm from it. ✅
 
-4. ✓ **Calculate maximum bending moment**
-   
-   M_max = wL²/8 = 2000 × 0.8²/8 = 160 N·m
+3. **Second moment of area of the aluminum:**
 
-5. ✓ **Determine maximum stresses**
-   
-   Aluminum: σ_Al = Mc/I = 160×10³ × 40/(2.675×10⁶) = 2.39 MPa
-   Carbon fiber: σ_CF = n × Mc/I = 2.14 × 160×10³ × 41.5/(2.675×10⁶) = 8.46 MPa
+   $$I_{\text{aluminum}} = \frac{60 \times 80^3}{12} = 2.56 \times 10^6\ \text{mm}^4$$ ✅
+
+4. **Second moment of area of the two transformed strips**, each with its own value and its area times $41.5^2$:
+
+   $$I_{\text{CF}} = 2 \times \left[\frac{128.6 \times 3^3}{12} + 128.6 \times 3 \times 41.5^2\right] = 2 \times \left[289.3 + 664{,}296\right] = 1{,}329{,}000\ \text{mm}^4$$
+
+   $$I_{\text{total}} = 2.56 \times 10^6 + 1.329 \times 10^6 = 3.889 \times 10^6\ \text{mm}^4$$ ✅
+
+5. **Largest bending moment**, at the middle of the span:
+
+   $$M_{max} = \frac{wL^2}{8} = \frac{2000 \text{ N/m} \times (0.8 \text{ m})^2}{8} = 160\ \text{N}\cdot\text{m} = 160 \times 10^3\ \text{N}\cdot\text{mm}$$ ✅
+
+6. **Stress in the aluminum**, at its outer face, $y = 40$ mm:
+
+   $$\sigma_{\text{Al}} = \frac{My}{I} = \frac{160 \times 10^3 \times 40}{3.889 \times 10^6} = 1.65\ \text{MPa}$$ ✅
+
+7. **Stress in the carbon fiber**, at the outer surface of the beam, $c = 40 + 3 = 43$ mm. Multiply by $n$:
+
+   $$\sigma_{\text{CF}} = n \times \frac{Mc}{I} = \frac{2.14 \times 160 \times 10^3 \times 43}{3.889 \times 10^6} = 3.79\ \text{MPa}$$ ✅
+
+8. **Stresses at the bond line** ($y = 40$ mm). The strain is the same in both materials there, but the stress steps from $1.65$ MPa in the aluminum to $2.14 \times 1.65 = 3.53$ MPa in the carbon fiber. ✅
 
 </Steps>
 
 </details>
 
 :::tip[Instrument it]
-A built-up beam hides how its two materials share the bending load until you measure it. Bond a strain gauge to each material at the same height above the neutral axis; the strains match where the materials are bonded, while the stresses jump by the modulus ratio, exactly what the transformed-section method predicts. Read both gauges with an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [confirm the load split on siliconwit.io](https://siliconwit.io) and check that the stiffer material carries its designed share.
+Bond a strain gauge to each material, close to the bond line on each side. The two strains are almost equal, and the stresses differ by the ratio of the moduli. Read both gauges with an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [trend the two stresses on siliconwit.io](https://siliconwit.io). If the two strains begin to differ, the bond is failing.
 :::
 
 ## Summary and Next Steps
@@ -481,21 +430,14 @@ A built-up beam hides how its two materials share the bending load until you mea
 <InArticleAd />
 
 
-In this lesson, you learned to:
+### Key concepts
 
-1. **Apply** the transformed section method to analyze composite beams
-2. **Calculate** stress distribution in multi-material systems
-3. **Consider** interface requirements and thermal effects
-4. **Design** composite structures for optimal performance
+1. **Bonded materials share the same strain**, so the stiffer one carries $n$ times the stress at the same distance from the neutral axis.
+2. **The transformed section** draws the other material $n = E_{other}/E_{reference}$ times as wide. Heights do not change.
+3. **The neutral axis** is the centroid of the transformed section.
+4. **The stress** is $My/I$ in the reference material and $n \times My/I$ in the other.
 
-**Key Design Insights:**
-- Transformed section method handles different E values
-- Stiffer materials carry proportionally more stress
-- Interface bond strength is critical for composite action
-
-**Critical Formula:** $\sigma_2 = n \times \sigma_1$ where $n = \frac{E_2}{E_1}$
-
-**Coming Next**: In Lesson 2.6, we'll analyze principal stresses and failure criteria for critical stress evaluation in mechatronic joint design using Mohr's circle analysis.
+Next, [Principal Stresses and Failure Analysis](/education/mechanics-of-materials/principal-stresses-failure-analysis/) shows that the stress at a point depends on the direction of the cut.
 
 
 

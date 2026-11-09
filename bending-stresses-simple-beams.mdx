@@ -27,159 +27,148 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 import ChartEmbed from '../../../../components/mechanics-of-materials/ChartEmbed.astro';
 import LoadingDiagramEmbed from '../../../../components/mechanics-of-materials/LoadingDiagramEmbed.astro';
 
-A beam that supports a load without breaking can still fail by bending so far that the structure it supports becomes unusable, or by developing surface stresses that initiate fatigue cracks long before the yield strength is reached. Bending is the most common loading mode in structural design: every cantilever arm, every bridge span, and every 3D printer gantry rail is a beam in bending. Predicting where the maximum stress occurs and how it scales with cross-section shape is what separates a safe design from an over-designed or under-designed one. In this lesson you will apply the flexural formula to real beam configurations including electric train pantographs, crane jibs, and gantry rails. #FlexuralFormula #BeamAnalysis #StructuralDesign
+Lay a wooden ruler flat across two books and press on its middle: it bends easily. Turn it on its edge and press again: it hardly moves. It is the same wood, and the same amount of it. A beam that is sized by the amount of material alone can yield or crack at the one face where the stress peaks, while most of its material does almost no work. This lesson gives you the flexural formula, which finds the largest stress in a bent beam from the bending moment and the shape of the cross-section. You then use it on a pantograph arm, a crane jib and a 3D printer rail. #FlexuralFormula #BeamAnalysis #StructuralDesign
 
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
 1. Calculate bending stresses in beams using the flexural formula for various loading conditions
-2. Locate the neutral axis and identify maximum stress locations in beam cross-sections
-3. Analyze stress distribution and shear/moment diagrams for different beam types
+2. Locate the neutral axis and identify where the stress is largest in a beam cross-section
+3. Analyze the stress distribution and the shear and moment diagrams for different beam types
 4. Design structural members for both tensile and compressive stress limits in real-world applications
 
 :::tip[Try it as you read]
-This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-analysis-simulator/): choose a cross-section and watch the maximum bending stress respond as you change the load and the section dimensions. The [Beam Analysis Experiments](/education/mechanics-of-materials/beam-analysis-experiments) reproduce the worked examples step by step with Python.
+This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-analysis-simulator/): choose a cross-section and watch the maximum bending stress respond as you change the load and the section dimensions. The [Beam Analysis Experiments](/education/mechanics-of-materials/beam-analysis-experiments/) reproduce the worked examples step by step with Python.
 :::
 
-## Engineering Beams: The Foundation of Structural Design
+## Engineering beams: the foundation of structural design
 
 <InArticleAd />
 
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Loading Shear and Bending in Beams](https://cdn.siliconwit.com/education/solid-mechanics/crane-analysis-animation.gif)
+	![Animation of the crane jib of Application 2 in four parts: the real crane, its beam model, its shear force diagram, and its bending moment diagram, which rises to +3.85 kN·m at 1.5 m and falls to -4.60 kN·m at the support 3.0 m from the left end](https://cdn.siliconwit.com/education/solid-mechanics/crane-analysis-animation.gif)
   </TailwindWrapper>
 </div>
 
-<BionicText method="advanced" intensity="medium" class="highlight">
-Beams are fundamental structural elements found in virtually every engineering system—from electric train pantographs and crane jibs to 3D printer gantries and structural frameworks. Understanding bending stresses is essential for designing safe, efficient structures that can withstand operational loads without failure.
-</BionicText>
+### The universal bending challenge
 
-### The Universal Bending Challenge
+The lesson on [shear force and bending moment](/education/mechanics-of-materials/shear-force-bending-moment-beams/) ends with the largest bending moment in a beam. That number alone does not say if the beam is safe: a thick beam carries it easily, and a thin one breaks.
 
-Regardless of the application, engineers must address:
+> **Engineering Question:** How large is the stress that a bending moment causes in a beam of a given cross-section, and is it below what the material can stand?
 
-:::note[Critical Design Considerations]
-- **Loading conditions**: Concentrated forces, distributed loads, and combinations
-- **Support reactions**: Calculating forces at support points
-- **Internal forces**: Shear forces and bending moments throughout the beam
-- **Stress distribution**: Tension and compression across cross-sections
-- **Material limits**: Ensuring stresses remain within allowable limits
-:::
-
-> **Engineering Question:** How do we calculate bending stresses in various beam configurations and ensure structural members can safely carry their intended loads?
-
-#### Why Bending Stress Analysis Matters
-**Consequences of Inadequate Bending Analysis:**
-- **Structural failure** due to stress exceeding material strength
-- **Excessive deflection** affecting functionality and aesthetics
-- **Fatigue failure** from repeated loading cycles
-- **Over-design** leading to unnecessary material costs and weight
-
-**Benefits of Proper Bending Analysis:**
-- **Safe, reliable structures** designed for actual loading conditions
-- **Optimized cross-sections** balancing strength, weight, and cost
-- **Predictable performance** under service loads
-- **Extended service life** through proper stress management
-- **Informed material selection** based on stress requirements
-
-## Fundamental Theory: Bending Stress Mechanics
+## Fundamental Theory: Bending stress mechanics
 
 <InArticleAd />
 
 
-### The Flexural Formula
+### The flexural formula
 
-When a beam bends under load, internal stresses develop to resist the applied moment:
+Draw straight lines across the side of a rubber eraser and bend it. On the outside of the bend the lines move apart: the material there is stretched. On the inside they move together: the material there is squeezed. Between the two there is one layer whose length does not change. It is called the **neutral axis**.
 
-<Card title="🎯 Flexural Formula - Bending Stress" icon="document">
+The stretch grows in proportion to the distance from the neutral axis, and by Hooke's law the stress does the same. An eraser bends much farther than a metal beam: the formula below holds only for small bending, with the material below its yield strength.
+
+```text
+  cross-section      stress over the depth (sagging beam)
+
+  ┌─────────┐ top     ◄──────────┤  largest compression
+  │         │            ◄───────┤
+  │         │                ◄───┤
+  │┄┄┄┄┄┄┄┄┄│ ┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤  zero at the neutral axis
+  │         │                    ├───►
+  │         │                    ├───────►
+  └─────────┘ bottom             ├──────────►  largest tension
+```
+
+In words: the bending stress at a point is the bending moment, multiplied by the distance of the point from the neutral axis, divided by a number that describes the shape of the cross-section.
+
+<Card title="Flexural formula: bending stress" icon="document">
 $$\sigma = \frac{My}{I}$$
 
-**Where:**
-- $\sigma$ = Bending stress at distance y from neutral axis (Pa)
-- $M$ = Bending moment at the section (N·m)
-- $y$ = Distance from neutral axis to the point of interest (m)
-- $I$ = Second moment of area about the neutral axis (m⁴)
+Where:
+- $\sigma$ (sigma) = bending stress at the point (MPa, which is N/mm²)
+- $M$ = bending moment at that section of the beam (N·mm; 1 N·m = 1,000 N·mm)
+- $y$ = distance of the point from the neutral axis (mm)
+- $I$ = second moment of area of the cross-section about the neutral axis (mm⁴)
 
-**Physical Meaning:** Bending stress varies linearly across the beam cross-section, with maximum stress at the extreme fibers and zero stress at the neutral axis.
+The stress is zero at the neutral axis and largest at the top and bottom faces. Work in N and mm, and the answer is in MPa.
 </Card>
 
-### Neutral Axis and Stress Distribution
+### Neutral axis and stress distribution
 
 <Tabs>
   <TabItem label="Neutral Axis Location">
     
-    **For symmetric cross-sections:**
-    - The neutral axis passes through the **centroid**
-    - **Zero stress** at the neutral axis
-    - **Maximum stress** at the extreme fibers
+    The neutral axis passes through the **centroid** of the cross-section, its centre of area. For a section that is the same above and below its middle (a rectangle, a round tube, an I-beam), the neutral axis is at mid-depth.
     
-    **Stress varies linearly** with distance from neutral axis
+    The stress grows in a straight line from zero at the neutral axis to its largest value at the face farthest from it. This lesson calls that face the extreme fiber.
     
   </TabItem>
   <TabItem label="Maximum Stress">
     
-    <Card title="⚡ Maximum Bending Stress" icon="document">
+    The largest stress is the flexural formula with $y$ at its largest value, $c$:
+
+    <Card title="Maximum bending stress" icon="document">
     $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{M}{S}$$
     
-    **Where:**
-    - $c$ = distance from neutral axis to extreme fiber (m)
-    - $S = \frac{I}{c}$ = section modulus (m³)
+    Where:
+    - $c$ = distance from the neutral axis to the extreme fiber (mm). For a symmetric section it is half the depth.
+    - $S = \frac{I}{c}$ = section modulus (mm³)
     
-    **Physical Meaning:** Section modulus combines geometric properties (I and c) into a single parameter for maximum stress calculation.
+    The section modulus is one number for the bending strength of a shape. Double $S$ and the stress halves.
     </Card>
 
     
   </TabItem>
   <TabItem label="Sign Convention">
     
-    **Positive Bending Moment:**
-    - **Compression** on top fiber
-    - **Tension** on bottom fiber
-    - Beam curves upward (smile shape)
+    This lesson keeps the convention of the lesson on shear force and bending moment.
     
-    **Material Failure Modes:**
-    - Tension failure (brittle materials)
-    - Compression failure (slender sections)
+    - A **positive** bending moment makes the beam sag: **compression** on the top fiber, **tension** on the bottom fiber.
+    - A **negative** bending moment makes the beam hog: **tension** on the top fiber, **compression** on the bottom fiber.
+    - Tensile stress is written with a plus sign and compressive stress with a minus sign.
     
   </TabItem>
 </Tabs>
 
-### Second Moment of Area for Common Shapes
+### Second moment of area for common shapes
 
-**Rectangular Section (width b, height h):**
-$$I = \frac{bh^3}{12}$$
+The second moment of area $I$ measures how far the material of a cross-section lies from the neutral axis. Each small piece of area counts by the square of its distance, so material far from the neutral axis counts much more than material near it. The unit is mm⁴.
 
-**Circular Section (diameter d):**
+**Rectangular section** (width $b$, depth $h$ in the direction of the load):
+$$I = \frac{bh^3}{12} \qquad S = \frac{I}{h/2} = \frac{bh^2}{6}$$
+
+**Solid circular section** (diameter $d$):
 $$I = \frac{\pi d^4}{64}$$
 
-:::tip[Design Insight]
-For the same cross-sectional area, **tall narrow sections** have much higher bending resistance than **short wide sections**. This is why I-beams and T-beams are so effective in bending.
-:::
+**Round tube** (outer diameter $D$, inner diameter $d$):
+$$I = \frac{\pi (D^4 - d^4)}{64}$$
 
-## Application 1: Pantograph Arm of Electric Train (Electromechanical)
+**Why depth matters far more than width.** In $S = bh^2/6$ the width counts once and the depth counts twice. Take a steel bar of $60\ \text{mm} \times 20\ \text{mm}$ under a bending moment of 720 N·m, which is 720,000 N·mm:
+
+- Lying flat ($b = 60$, $h = 20$): $S = 60 \times 20^2/6$ = 4,000 mm³, so the largest stress is 720,000 ÷ 4,000 = 180 MPa.
+- On edge ($b = 20$, $h = 60$): $S = 20 \times 60^2/6$ = 12,000 mm³, so the largest stress is 720,000 ÷ 12,000 = 60 MPa.
+
+The same bar carries the same moment at one third of the stress. This is the ruler on its edge, and it is why an I-beam puts most of its metal in two flanges, far from the neutral axis. The rule has a limit: a section that is very deep and very thin twists and falls sideways before it reaches this stress.
+
+## Application 1: Pantograph arm of electric train (electromechanical)
 
 <InArticleAd />
 
 
-An electric train pantograph arm maintains contact with overhead power lines through a spring-loaded mechanism. Real pantographs use a **pin joint at the base** with **spring forces** to provide the upward contact pressure, allowing the arm to articulate and adapt to varying wire heights.
+A pantograph is the folding arm on the roof of an electric train that presses a contact strip up against the overhead wire. The arm turns about a pin joint at its base, and a spring pushes it up so that it follows the wire as the wire height changes.
 
 :::note[System Problem Statement]
-- **Support configuration:** Pin joint at A (single support, allows rotation, provides vertical reaction only)
-- **Loading conditions:** Downward point load P1 at wire contact + Upward point load F_spring at spring location (P2)
+- **Support:** a pin joint at A. It lets the arm rotate and gives a vertical reaction only.
+- **Loading:** the wire pushes down on the tip with $P_1$, and the spring pushes up with $F_{\text{spring}}$ part of the way along (the model picture labels the spring force P2)
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Electric Train Pantograph](https://cdn.siliconwit.com/education/solid-mechanics/electric-bus-pantograph.png)
+    ![Photograph of a pantograph on the roof of an electric vehicle, with labels: the pantograph, the pantograph head at its top, the contact wire that the head touches, and the catenary wire above that carries the contact wire](https://cdn.siliconwit.com/education/solid-mechanics/electric-bus-pantograph.png)
   </TailwindWrapper>
 </div>
 
-**What we need to analyze:**
-1. **Spring force** required to maintain wire contact
-2. **Support reaction forces** at the pin joint
-3. **Shear force and bending moment diagrams** for the articulated beam
-4. **Maximum bending stress** at the critical section (spring location)
-5. **Safety factor assessment** against yield failure
+- **Find:** the spring force, the pin reaction, the shear force and bending moment diagrams, the largest bending stress, and the safety factor against yield
 
 **Key Question:** Where does maximum bending stress occur in this pin-supported beam with spring loading, and does the design provide adequate safety margin for dynamic railway operations?
 :::
@@ -190,61 +179,55 @@ Set this beam and section in the simulator and read the maximum bending stress d
   <LinkButton href="/product-development/beam-analysis-simulator/" target="_blank" variant="primary">Open the Beam Analysis Simulator</LinkButton>
 </div>
 
-<Card title="🔧 Equivalent System Model" icon="document">
+<Card title="Equivalent system model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Pantograph Arm Loading Diagram](https://cdn.siliconwit.com/education/solid-mechanics/pantograph_arm_loading_diagram.png)
+	![A beam of length L with a pinned support A at its left end. A force P2 pushes up on the beam a quarter of the way along, and a force P1 pushes down on the free right end](https://cdn.siliconwit.com/education/solid-mechanics/pantograph_arm_loading_diagram.png)
   </TailwindWrapper>
 </div>
 
-**Geometric Configuration:**
-- Hollow steel tube: Outer Diameter (OD) = 50 mm, wall thickness = 4 mm
-- Total arm length: L = 1200 mm from pin joint A to contact point P1
-- Spring location P2: 300 mm from pin joint A
+**Geometry:**
+- Hollow steel tube: outer diameter $D = 50\ \text{mm}$, wall thickness 4 mm
+- Arm length: $L = 1200\ \text{mm}$ from pin joint A to the contact point
+- Spring: 300 mm from pin joint A
 
-**Loading Conditions:**
-- Wire contact force: P1 = 800 N downward at tip (reaction from overhead cable)
-- Spring force: F_spring (P2) = ? (to be determined from equilibrium)
+**Loads:**
+- Wire contact force: $P_1 = 800\ \text{N}$ downward at the tip (the push of the overhead wire)
+- Spring force: $F_{\text{spring}}$, upward, to be found from equilibrium
 
-**Cross-Section Properties:**
-- Second moment of area: I = 2.45 × 10⁶ mm⁴
-- Distance to extreme fiber: c = 25 mm
-- Section modulus: S = I/c = 98,000 mm³
+**Cross-section:**
+- Inner diameter: $d = 50 - 2 \times 4 = 42\ \text{mm}$
+- Second moment of area: $I = \pi(D^4 - d^4)/64 = \pi(50^4 - 42^4)/64 = 1.5405 \times 10^5\ \text{mm}^4$
+- Distance to extreme fiber: $c = D/2 = 25\ \text{mm}$
+- Section modulus: $S = I/c = 6{,}162\ \text{mm}^3$
 
-**Material & Safety:**
-- Material: High-strength steel (σ_yield = 250 MPa)
+**Material and safety:**
+- Material: structural steel ($\sigma_{\text{yield}} = 250\ \text{MPa}$)
 - Safety factor required: 3.0
-- Operating conditions: Dynamic contact with overhead wire at 600V DC
 </Card>
 
-### Step 1: Calculate Spring Force and Support Reactions
+### Step 1: Calculate spring force and support reactions
 
 <details>
 <summary>**Click to reveal equilibrium calculations**</summary>
 
 <Steps>
 
-1. **Identify loading and support configuration:**
+1. **List the forces on the arm,** with $x$ measured from the pin:
 
-   **Pin joint at A** (x = 0): Provides vertical reaction R_A only (no moment resistance!)
+   - Pin joint at A ($x = 0$): a vertical reaction $R_A$. A pin cannot resist a moment.
+   - Spring at $x = 300\ \text{mm}$: an upward force $F_{\text{spring}}$.
+   - Wire contact at $x = 1200\ \text{mm}$: a downward force of 800 N.
 
-   **Spring mechanism** at x = 300 mm: Provides upward force F_spring
-
-   **Wire contact** at P₁ (x = 1200 mm): Downward reaction force = 800 N
-
-2. **Calculate required spring force using moment equilibrium about pin A:**
-
-   $\sum M_A = 0$ (pin joint cannot resist moment)
-
-   Taking counterclockwise moments as positive:
+2. **Find the spring force with moments about pin A.** The pin cannot resist a moment, so the moments of the other two forces about A must cancel. With counterclockwise positive:
 
    $F_{spring} \times 300 - P_1 \times 1200 = 0$
 
-   $F_{spring} = \frac{800 \times 1200}{300} = \frac{960,000}{300} = 3200 \text{ N}$ ✅
+   $F_{spring} = \frac{800 \times 1200}{300} = \frac{960{,}000}{300} = 3200 \text{ N}$ ✅
 
-   **Physical meaning:** Spring must provide 4× the contact force due to 4:1 lever arm ratio (1200/300)
+   The spring is four times closer to the pin than the wire is (300 mm against 1200 mm), so it must push four times as hard.
 
-3. **Calculate pin reaction using vertical force equilibrium:**
+3. **Find the pin reaction with the vertical forces:**
 
    $\sum F_y = 0$
 
@@ -252,310 +235,266 @@ Set this beam and section in the simulator and read the maximum bending stress d
 
    $R_A = P_1 - F_{spring} = 800 - 3200 = -2400 \text{ N}$
 
-   **Negative sign means R_A acts downward** (pin pulls down on the arm) ✅
+   **The negative sign means that $R_A$ acts downward:** the pin pulls down on the arm ✅
 
-4. **Verify equilibrium:**
+4. **Check the balance:**
 
    - **Vertical forces:** $-2400 + 3200 - 800 = 0$ ✅
    - **Moments about A:** $3200(0.3) - 800(1.2) = 960 - 960 = 0$ ✅
-
-5. **Key insight - comparison with fixed cantilever:**
-
-   **Fixed cantilever** (incorrect model): Maximum moment (M = 960 N·m) at support A
-
-   **Pin + Spring** (correct model): **No moment at A** (pin cannot resist moment). Maximum moment will occur **at the spring location** where internal forces change!
 
 </Steps>
 
 </details>
 
-### Step 2: Shear Force Analysis
+### Step 2: Shear force analysis
 
 <details>
 <summary>**Click to reveal shear calculations at critical points**</summary>
 
 <Steps>
-1. **Region 1: Pin joint to spring (0 ≤ x < 0.3 m):**
+1. **Region 1: pin joint to spring ($0 \le x < 0.3\ \text{m}$):**
 
-   Applying force equilibrium on a section between pin and spring:
+   Only $R_A$ acts to the left of a cut in this region:
 
    $V = R_A = -2400 \text{ N}$
 
-   - Negative indicates downward internal shear force
-   - No applied loads in this region, so V remains constant ✅
+   - Negative: the left part is pulled down
+   - No load acts in this region, so $V$ stays constant ✅
 
-2. **Region 2: Spring to wire contact (0.3 m < x ≤ 1.2 m):**
+2. **Region 2: spring to wire contact ($0.3\ \text{m} < x \le 1.2\ \text{m}$):**
 
-   After passing the spring, the upward spring force adds to the reaction:
+   Past the spring, the upward spring force is added:
 
    $V = R_A + F_{spring} = -2400 + 3200 = +800 \text{ N}$
 
-   - Positive indicates upward internal shear force
-   - Remains constant until the wire contact point
-   - At wire contact (x = 1.2 m), the 800 N downward force brings V back to zero ✅
+   - Positive: the left part is pushed up
+   - $V$ stays constant up to the wire contact
+   - At the wire contact ($x = 1.2\ \text{m}$) the 800 N downward force brings $V$ back to zero ✅
 
-3. **Shear force jump at spring location (x = 0.3 m):**
+3. **Jump in the shear at the spring ($x = 0.3\ \text{m}$):**
 
-   - Just before spring: $V = -2400 \text{ N}$
-   - Just after spring: $V = +800 \text{ N}$
-   - **Jump magnitude:** $\Delta V = 3200 \text{ N}$ (equals spring force) ✅
+   - Just before the spring: $V = -2400 \text{ N}$
+   - Just after the spring: $V = +800 \text{ N}$
+   - **Size of the jump:** $\Delta V = 800 - (-2400) = 3200 \text{ N}$, which is the spring force ✅
 
-4. **Verify shear at wire contact:**
+4. **Check the shear at the wire contact:**
 
-   At x = 1.2 m (after wire contact): $V = 800 - 800 = 0 \text{ N}$ ✅
+   At $x = 1.2\ \text{m}$ (after the wire contact): $V = 800 - 800 = 0 \text{ N}$ ✅
 
 </Steps>
 
-**Shear Force Diagram**
-
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Pantograph Arm Shear Force Distribution](./codes/lesson-2-2/pantograph_arm_shear_diagram.svg)
+	![Shear force along the pantograph arm against the distance from the pin joint. The shear is -2.40 kN from the pin to the spring at 0.3 m, jumps there to +0.80 kN, and stays at +0.80 kN to the tip at 1.2 m](./codes/lesson-2-2/pantograph_arm_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
-> **Key observations:**
-> **Two-region shear distribution**: V = -2400 N from pin to spring, then V = +800 N from spring to wire
-> **Discontinuity at spring**: 3200 N upward jump where spring force is applied
-> **Unlike fixed cantilever**: Shear is NOT constant—changes sign at spring location
-
 </details>
 
-### Step 3: Bending Moment Analysis
+### Step 3: Bending moment analysis
 
 <details>
 <summary>**Click to reveal moment calculations at critical points**</summary>
 
-- **Method:** Cut the beam at position x, sum moments of forces to the LEFT of the cut
+Cut the arm at a position $x$ and add the moments, about the cut, of the forces to the left of the cut. Here $x$ is in metres and $M$ is in N·m.
 
 <Steps>
-1. **At pin joint (x = 0):**
+1. **At the pin joint ($x = 0$):**
 
-   Forces to the left: None (starting point)
+   No force lies to the left of this cut.
 
    $M = 0 \text{ N·m}$
 
-   **Key insight:** Pin joint cannot resist moment! ✅
+   A pin joint cannot resist a moment ✅
 
-2. **Region 1 (0 < x < 0.3 m): Pin to spring**
+2. **Region 1 ($0 < x < 0.3\ \text{m}$): pin to spring**
 
-   Forces to the left: R_A only
+   Force to the left: $R_A$ only, at a distance $x$ from the cut.
 
-   $M(x) = R_A \times x = -2400x$ (in N·m when x in meters)
+   $M(x) = R_A \times x = -2400x$
 
-   - Linear increase in negative moment
-   - At x = 0.3 m (spring location): $M = -2400(0.3) = -720 \text{ N·m}$ ✅
+   - The moment becomes more negative in a straight line.
+   - At $x = 0.3\ \text{m}$ (the spring): $M = -2400(0.3) = -720 \text{ N·m}$ ✅
 
-3. **Region 2 (0.3 m < x < 1.2 m): Spring to wire**
+3. **Region 2 ($0.3\ \text{m} < x < 1.2\ \text{m}$): spring to wire**
 
-   Forces to the left: R_A and F_spring
+   Forces to the left: $R_A$ at a distance $x$, and $F_{\text{spring}}$ at a distance $(x - 0.3)$.
 
    $M(x) = R_A \times x + F_{spring} \times (x - 0.3)$
 
-   $M(x) = -2400x + 3200(x - 0.3) = -2400x + 3200x - 960 = 800x - 960$ (N·m)
+   $M(x) = -2400x + 3200(x - 0.3) = -2400x + 3200x - 960 = 800x - 960$
 
-   - At x = 0.3 m: $M = 800(0.3) - 960 = -720 \text{ N·m}$ (continuous at spring)
-   - At x = 0.6 m (midspan): $M = 800(0.6) - 960 = -480 \text{ N·m}$
-   - At x = 0.9 m: $M = 800(0.9) - 960 = -240 \text{ N·m}$
-   - At x = 1.2 m (wire contact): $M = 800(1.2) - 960 = 0 \text{ N·m}$ ✅
+   - At $x = 0.3\ \text{m}$: $M = 800(0.3) - 960 = -720 \text{ N·m}$ (the same value as from Region 1)
+   - At $x = 0.6\ \text{m}$: $M = 800(0.6) - 960 = -480 \text{ N·m}$
+   - At $x = 1.2\ \text{m}$ (wire contact): $M = 800(1.2) - 960 = 0 \text{ N·m}$ ✅
 
-4. **Verify moment equilibrium:**
-
-   At wire contact (x = 1.2 m), moment should equal zero (free end condition):
+4. **Check at the free end.** Nothing applies a moment at the tip ($x = 1.2\ \text{m}$), so the moment there must be zero:
 
    $M = R_A(1.2) + F_{spring}(1.2 - 0.3) - P_1(0) = -2400(1.2) + 3200(0.9) = -2880 + 2880 = 0$ ✅
 
 </Steps>
 
-> **Critical observation:** Negative moments throughout indicate **tension on top fiber** and **compression on bottom fiber**. The beam curves downward (pantograph arm droops under wire contact force).
-
-**Bending Moment Diagram**
-
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Bending Moment Diagram](./codes/lesson-2-2/pantograph_arm_moment_diagram.svg)
+	![Bending moment along the pantograph arm against the distance from the pin joint. The moment falls in a straight line from 0 at the pin to -0.72 kN·m at the spring at 0.3 m, the largest value, then rises in a straight line through -0.48 kN·m at 0.6 m to 0 at the tip at 1.2 m](./codes/lesson-2-2/pantograph_arm_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
-**Key observations:**
-- **Region 1 (0 to 0.3m):** M(x) = -2400x (steep negative slope)
-- **Region 2 (0.3m to 1.2m):** M(x) = 800x - 960 (gentler positive slope)
-- **Maximum moment magnitude:** |M_max| = 720 N·m at spring location (x = 0.3 m)
-- **Critical design location:** Spring attachment point experiences highest bending stress
+The moment is negative along the whole arm, so the arm hogs: **tension on the top fiber** and **compression on the bottom fiber**. Its largest size is $|M_{max}| = 720\ \text{N}\cdot\text{m}$ at the spring ($x = 0.3\ \text{m}$), so the stress is checked there.
 
 </details>
 
-### Step 4: Calculate Maximum Bending Stress
+### Step 4: Calculate maximum bending stress
 
 <details>
 <summary>**Click to reveal stress calculations**</summary>
 
 <Steps>
 
-1. **Apply flexural formula at critical section (spring location):**
+1. **Apply the flexural formula at the spring.** Work in N and mm: $M = 720\ \text{N}\cdot\text{m} = 720{,}000\ \text{N}\cdot\text{mm}$, $c = 25\ \text{mm}$, $I = 1.5405 \times 10^5\ \text{mm}^4$:
 
-   $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{720,000 \times 25}{2.45 \times 10^6} = \frac{18,000,000}{2,450,000} = 7.35 \text{ MPa}$$
+   $$\sigma_{max} = \frac{M \cdot c}{I} = \frac{720{,}000 \times 25}{1.5405 \times 10^5} = \frac{18{,}000{,}000}{154{,}050} = 116.8 \text{ MPa}$$
 
-2. **Alternative using section modulus:**
+2. **Check with the section modulus:**
 
-   $$S = \frac{I}{c} = \frac{2.45 \times 10^6}{25} = 98,000 \text{ mm}^3$$
+   $$S = \frac{I}{c} = \frac{1.5405 \times 10^5}{25} = 6{,}162 \text{ mm}^3$$
 
-   $$\sigma_{max} = \frac{M}{S} = \frac{720,000}{98,000} = 7.35 \text{ MPa}$$ ✅
+   $$\sigma_{max} = \frac{M}{S} = \frac{720{,}000}{6{,}162} = 116.8 \text{ MPa}$$ ✅
 
-3. **Stress distribution at spring attachment (x = 0.3 m):**
+3. **Stress across the section at the spring ($x = 0.3\ \text{m}$):**
 
-   - Maximum tensile stress: +7.35 MPa (top fiber)
-   - Maximum compressive stress: -7.35 MPa (bottom fiber)
-   - Neutral axis stress: 0 MPa ✅
+   - Largest tensile stress: +116.8 MPa (top fiber)
+   - Largest compressive stress: -116.8 MPa (bottom fiber)
+   - Stress at the neutral axis: 0 MPa ✅
 
 </Steps>
 
 </details>
 
-### Step 5: Safety Factor Assessment
+### Step 5: Safety factor assessment
 
 <details>
 <summary>**Click to reveal safety calculations**</summary>
 
 <Steps>
 
-1. **Calculate actual safety factor:**
+1. **Calculate the actual safety factor,** the yield strength divided by the largest stress:
 
-   $$SF_{actual} = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{7.35} = 34.0$$
+   $$SF_{actual} = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250\ \text{MPa}}{116.8\ \text{MPa}} = 2.14$$
 
-2. **Compare with required safety factor:**
+2. **Compare it with the required safety factor:**
 
-   Required SF = 3.0
-   Actual SF = 34.0 >> 3.0 ✅
+   Required $\text{SF} = 3.0$
+   Actual $\text{SF} = 2.14 < 3.0$
 
-3. **Design adequacy assessment:**
+   The arm does **not** yield under the static load, but it does **not meet** the required safety factor of 3.0.
 
-   The pantograph arm is **significantly over-designed** with respect to static bending stress.
+3. **Find the section modulus that is needed.** Turn $\text{SF} = \sigma_{yield}/\sigma_{max}$ and $\sigma_{max} = M/S$ around:
 
-   This high safety margin (>10× required) is intentional for several reasons:
-   - **Dynamic loading:** Sudden wire contact/loss creates impact forces
-   - **Vibration effects:** Train motion causes cyclic loading
-   - **Fatigue resistance:** Millions of contact cycles over service life
-   - **Electrical safety:** Must not fail near high-voltage overhead wire
-   - **Wear tolerance:** Spring force increases as contacts wear ✅
+   $$S_{required} = \frac{SF \times M}{\sigma_{yield}} = \frac{3.0 \times 720{,}000}{250} = 8{,}640 \text{ mm}^3$$
+
+   The $50\ \text{mm} \times 4\ \text{mm}$ tube has only $S = 6{,}162\ \text{mm}^3$.
+
+4. **Choose a tube that passes.** A $60\ \text{mm} \times 4\ \text{mm}$ tube has $I = \pi(60^4 - 52^4)/64 = 2.773 \times 10^5\ \text{mm}^4$ and $S = I/30 = 9{,}242\ \text{mm}^3$. It gives $\sigma_{max} = 720{,}000/9{,}242 = 77.9\ \text{MPa}$ and $\text{SF} = 250/77.9 = 3.21$, which passes. ✅
+
+   The factor of 3.0 covers what the static calculation leaves out: impact when the wire is lost and found again, millions of load cycles in service, and the danger of a broken arm next to a live wire.
 
 </Steps>
 
 </details>
 
-### Step 6: Dynamic Loading and Failure Risk Analysis
+### Step 6: Dynamic loading and failure risk analysis
 
 <details>
 <summary>**Click to reveal dynamic analysis**</summary>
 
 <Steps>
 
-1. **Dynamic amplification considerations:**
+1. **The load is not steady.** The calculation above uses a static contact force of 800 N. In service the contact force changes with the wire tension and the motion of the vehicle, from about 200 N to 1200 N. ✅
 
-   Current analysis uses static load of 800 N which already includes vibration effects.
+2. **Risk 1: the arm suddenly loses the wire.** The spring then throws the arm upward, and the arm can damage the wire or the contact strip. So a pantograph needs a damper ✅
 
-   Actual contact force may vary: 200-1200 N depending on wire tension and vehicle dynamics. ✅
+3. **Risk 2: the arm hits the wire again.** The impact can multiply the static stress by a factor of 2 to 4.
 
-2. **Sudden contact loss scenarios:**
+   - With a factor of 2: $2 \times 116.8 = 233.6\ \text{MPa}$, just below yield ($\text{SF} = 250/233.6 = 1.07$)
+   - With a factor of 4: $4 \times 116.8 = 467\ \text{MPa} > 250\ \text{MPa}$, so the $50\ \text{mm} \times 4\ \text{mm}$ tube would yield
+   - To stay below yield at a factor of 4 the section needs $S \ge 4 \times 720{,}000/250 = 11{,}520\ \text{mm}^3$. A $70\ \text{mm} \times 4\ \text{mm}$ tube ($S = 12{,}950\ \text{mm}^3$) gives $4 \times 55.6 = 222\ \text{MPa}$ ✅
 
-   **Risk 1: Rapid load removal (dewirement)**
-   - Stored elastic energy in beam suddenly released
-   - Spring force causes violent upward motion if not damped
-   - Can damage overhead wire or contact strip
-   - Damping mechanisms essential for controlled motion ✅
+4. **Fatigue.** A stress far below yield can still crack steel if it is repeated millions of times. The stress below which this does not happen is the endurance limit.
 
-   **Risk 2: Recontact impact**
-   - Higher impact forces during wire recontact
-   - May exceed static analysis by 2-4× due to dynamic effects
-   - Still within safety margin: 4 × 7.35 = 29.4 MPa $\ll$ 250 MPa (SF = 8.5 even with 4× dynamic amplification) ✅
-
-3. **Fatigue considerations:**
-
-   Continuous contact/loss cycles create fatigue loading:
-   - Typical train: 10,000+ contact cycles per day
-   - Over 20-year service life: ~70 million cycles
-   - Endurance limit for steel: ~125 MPa (50% of yield for high-cycle fatigue)
-   - Maximum stress (7.35 MPa) is far below endurance limit
-   - High safety factor (SF = 34) provides adequate fatigue life margin ✅
+   - More than 10,000 contact cycles a day is about 70 million cycles in 20 years
+   - Endurance limit taken for this steel: about 125 MPa (50% of yield)
+   - The largest stress (116.8 MPa) is only 7% below the endurance limit ($125/116.8 = 1.07$)
+   - This margin is too small for a part loaded in fatigue. The $60\ \text{mm} \times 4\ \text{mm}$ tube lowers the stress to 77.9 MPa and raises the fatigue margin to $125/77.9 = 1.60$ ✅
 
 </Steps>
 
 </details>
 
-## Application 2: Crane Jib with Overhang Loading (Mechanical)
+## Application 2: Crane jib with overhang loading (mechanical)
 
 <InArticleAd />
 
 
-An industrial crane jib beam supports a hoist mechanism with multiple load points typical in material handling systems. This analysis demonstrates complex loading scenarios with both positive and negative bending moments.
+The jib of a crane is the beam that carries the hoist. This jib rests on two supports and reaches 1 m past the second one. It carries its own weight, one hoist load in the span and one at the end of the overhang, so it sags in the span and hogs over the support.
 
 :::note[System Problem Statement]
-- **Loading condition:** Uniformly distributed load (UDL) + two point loads
-- **Support configuration:** Overhanging simply supported beam with roller
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Double Girder Gantry Crane](https://cdn.siliconwit.com/education/solid-mechanics/double-girder-gantry-crane.png)
-  </TailwindWrapper>
-</div>
-**What we need to analyze:**
-1. **Support reaction forces** under combined loading
-2. **Shear force and bending moment diagrams** across the entire beam
-3. **Maximum bending stress** and its critical location
-4. **Safety factor assessment** for structural adequacy
+- **Loading:** a uniformly distributed load (UDL), which is the same load on every metre of the beam, and two point loads
+- **Support:** simply supported beam with an overhang past the roller
+- **Find:** the reactions, the shear force and bending moment diagrams, the largest bending stress and where it is, and the safety factor
 
 **Key Question:** Can this crane jib safely handle the specified loads including dynamic factors, and where do the maximum stresses occur?
 :::
 
-<Card title="🔧 Equivalent System Model" icon="document">
+<Card title="Equivalent system model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Double Girder Gantry Crane](https://cdn.siliconwit.com/education/solid-mechanics/crane-loading-diagram.png)
+	![A beam on a pinned support A at its left end and a roller support B three quarters of the way along, so the right end reaches past B. A distributed load, labelled W in the picture, presses down along the whole length. A point load P1 presses down in the middle of the span and a point load P2 presses down on the free right end](https://cdn.siliconwit.com/education/solid-mechanics/crane-loading-diagram.png)
   </TailwindWrapper>
 </div>
 
-**Given:**
-- Steel I-beam: 150 mm × 100 mm × 8 mm (I = 8.2 × 10⁶ mm⁴, c = 75 mm)
+**Given** (the picture labels the distributed load W; here $w$ is the load on each metre and $W$ is its total):
+- Steel I-beam: $150\ \text{mm} \times 100\ \text{mm} \times 8\ \text{mm}$ ($I = 8.2 \times 10^6\ \text{mm}^4$, $c = 75\ \text{mm}$)
 - Span: 3000 mm between supports A and B
 - Overhang: 1000 mm beyond support B
-- Load 1: P₁ = 5000 N at 1500 mm from A (midspan)
-- Load 2: P₂ = 3000 N at end of overhang
-- Load 3: Distributed load W = 800 N/m over entire length (beam self-weight + attachments)
-- Material: Structural steel (σ_yield = 250 MPa)
+- Load 1: $P_1 = 5000\ \text{N}$ at 1500 mm from A (midspan)
+- Load 2: $P_2 = 3000\ \text{N}$ at the end of the overhang
+- Load 3: distributed load $w = 800\ \text{N/m}$ over the entire length (weight of the beam and its attachments)
+- Material: structural steel ($\sigma_{\text{yield}} = 250\ \text{MPa}$)
 - Safety factor required: 2.5
-- Dynamic amplification factor: 1.4 (for crane operations)
+- Dynamic amplification factor: 1.4. A load that is lifted or stopped suddenly pulls harder than its weight, so each hoist load is multiplied by 1.4.
 </Card>
 
-### Step 1: Calculate Support Reaction Forces
+### Step 1: Calculate support reaction forces
 
 <details>
 <summary>**Click to reveal equilibrium calculations**</summary>
 
 <Steps>
 
-1. **Account for distributed loading effects:**
+1. **Replace the distributed load by its total:**
 
-   Distributed load total force: W = w × L_total = 800 × 4.0 = 3200 N
+   $W = w \times L_{\text{total}} = 800 \times 4.0 = 3200\ \text{N}$
 
-   This acts at the centroid of the beam: x̄ = 2.0 m from A ✅
+   For the reactions it acts at the middle of the beam: $\bar{x} = 2.0\ \text{m}$ from A ✅
 
-2. **Apply dynamic amplification factor:**
+2. **Apply the dynamic amplification factor to the hoist loads:**
 
-   Applied loads with dynamic effects:
-   - P₁_dynamic = 1.4 × 5000 = 7000 N
-   - P₂_dynamic = 1.4 × 3000 = 4200 N
-   - W remains at 3200 N (self-weight not amplified) ✅
+   - $P_{1,\text{dynamic}} = 1.4 \times 5000 = 7000\ \text{N}$
+   - $P_{2,\text{dynamic}} = 1.4 \times 3000 = 4200\ \text{N}$
+   - $W$ stays at 3200 N (the weight of the beam does not move) ✅
 
-3. **Calculate reaction at support B using moment equilibrium about A:**
+3. **Find the reaction at B with moments about A.** Each load is multiplied by its distance from A, in metres:
 
    $$\sum M_A = 0: R_B(3.0) - 7000(1.5) - 3200(2.0) - 4200(4.0) = 0$$
    $$R_B = \frac{10500 + 6400 + 16800}{3.0} = \frac{33700}{3.0} = 11233 \text{ N}$$ ✅
 
-4. **Calculate reaction at support A using force equilibrium:**
+4. **Find the reaction at A with the vertical forces:**
 
    $$\sum F_y = 0: R_A + 11233 - 7000 - 3200 - 4200 = 0$$
    $$R_A = 14400 - 11233 = 3167 \text{ N}$$ ✅
 
-5. **Verify equilibrium check:**
+5. **Check the balance:**
 
    $$\sum F_y = 3167 + 11233 - 7000 - 3200 - 4200 = 0$$ ✅
 
@@ -563,446 +502,366 @@ An industrial crane jib beam supports a hoist mechanism with multiple load point
 
 </details>
 
-### Step 2: Shear Force Analysis
+### Step 2: Shear force analysis
 
 <details>
 <summary>**Click to reveal shear force analysis at critical points**</summary>
 
+Move from A to the right, with $x$ in metres. The distributed load takes 800 N from the shear for each metre. A point load makes it drop, and the reaction at B lifts it. The marks $^-$ and $^+$ mean just before and just after a point.
+
 <Steps>
-1. At x = 0 (point A): V = +3167 N
-2. Just before P₁ (x = 1.5⁻): V = 3167 - 800(1.5) = 1967 N
+1. At $x = 0$ (point A): $V = +3167\ \text{N}$
+2. Just before $P_1$ ($x = 1.5^-$): $V = 3167 - 800(1.5) = 1967\ \text{N}$
 
-   Just after P₁ (x = 1.5⁺): V = 1967 - 7000 = -5033 N ✅
+   Just after $P_1$ ($x = 1.5^+$): $V = 1967 - 7000 = -5033\ \text{N}$ ✅
    
-3. Just before B (x = 3.0⁻): V = -5033 - 800(1.5) = -6233 N
+3. Just before B ($x = 3.0^-$): $V = -5033 - 800(1.5) = -6233\ \text{N}$
 
-   Just after B (x = 3.0⁺): V = -6233 + 11233 = 5000 N ✅
+   Just after B ($x = 3.0^+$): $V = -6233 + 11233 = 5000\ \text{N}$ ✅
    
-4. At overhang end (x = 4.0): V = 5000 - 800(1.0) - 4200 = 0 ✅
+4. At the end of the overhang ($x = 4.0$): $V = 5000 - 800(1.0) - 4200 = 0$ ✅
 </Steps>
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Double Girder Gantry Crane](./codes/lesson-2-2/crane_jib_shear_diagram.svg)
+	![Shear force along the crane jib against the distance from support A. The line falls from 3.17 kN at A to 1.97 kN at 1.5 m, drops there to -5.03 kN, falls to -6.23 kN at support B at 3.0 m, jumps there to +5.00 kN, and falls to 0 at the end of the overhang at 4.0 m](./codes/lesson-2-2/crane_jib_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
 </details>
 
-### Step 3: Bending Moment Analysis
+### Step 3: Bending moment analysis
 
 <details>
 <summary>**Click to reveal bending moment analysis at critical points**</summary>
 
-- **Method:** Cut beam at calculation point, sum moments of all forces to the LEFT of the cut
-<Steps>
-1. **At support A (x = 0 m):**
+Cut the beam at each point and add the moments, about the cut, of all forces to the left of the cut. The part of the distributed load to the left of the cut acts at the middle of its own length.
 
-   Forces to the left: None (this is the starting point)
+<Steps>
+1. **At support A ($x = 0\ \text{m}$):**
+
+   No force lies to the left of this cut.
 
    $$M = 0 \text{ N·m}$$ ✅
 
-2. **At midspan (x = 1.5 m):**
+2. **At midspan ($x = 1.5\ \text{m}$):**
 
-   Forces to the left: R_A and partial distributed load
-   - R_A = 3167 N at distance 1.5 m from cut
-   - Distributed load from 0 to 1.5 m = 800(1.5) = 1200 N at centroid distance 0.75 m from cut
+   - $R_A = 3167\ \text{N}$, 1.5 m from the cut
+   - Distributed load from 0 to 1.5 m: $800(1.5) = 1200\ \text{N}$, acting 0.75 m from the cut
 
    $$M = 3167(1.5) - 1200(0.75) = 4750.5 - 900 = 3850.5 \text{ N·m}$$ ✅
 
-3. **At support B (x = 3.0 m):**
+3. **At support B ($x = 3.0\ \text{m}$):**
 
-   Forces to the left: R_A, distributed load from 0 to 3.0 m, and P₁
-
-   - R_A = 3167 N at distance 3.0 m from cut
-   - Distributed load from 0 to 3.0 m = 800(3.0) = 2400 N at centroid distance 1.5 m from cut
-   - P₁ = 7000 N at distance (3.0 - 1.5) = 1.5 m from cut
+   - $R_A = 3167\ \text{N}$, 3.0 m from the cut
+   - Distributed load from 0 to 3.0 m: $800(3.0) = 2400\ \text{N}$, acting 1.5 m from the cut
+   - $P_1 = 7000\ \text{N}$, $(3.0 - 1.5) = 1.5\ \text{m}$ from the cut
 
    $$M = 3167(3.0) - 2400(1.5) - 7000(1.5) = 9501 - 3600 - 10500 = -4599 \text{ N·m}$$ ✅
 
-4. **At overhang end (x = 4.0 m):**
+4. **At the end of the overhang ($x = 4.0\ \text{m}$):**
 
-   Forces to the left: R_A, full distributed load, P₁, and R_B
-   - R_A = 3167 N at distance 4.0 m from cut
-   - Full distributed load = 800(4.0) = 3200 N at centroid distance 2.0 m from cut
-   - P₁ = 7000 N at distance (4.0 - 1.5) = 2.5 m from cut
-   - R_B = 11233 N at distance (4.0 - 3.0) = 1.0 m from cut
-   - P₂ = 4200 N at distance (4.0 - 4.0) = 0 m from cut
+   - $R_A = 3167\ \text{N}$, 4.0 m from the cut
+   - Whole distributed load: $800(4.0) = 3200\ \text{N}$, acting 2.0 m from the cut
+   - $P_1 = 7000\ \text{N}$, $(4.0 - 1.5) = 2.5\ \text{m}$ from the cut
+   - $R_B = 11233\ \text{N}$, $(4.0 - 3.0) = 1.0\ \text{m}$ from the cut
+   - $P_2 = 4200\ \text{N}$, at the cut, so its distance is 0
 
    $$M = 3167(4.0) - 3200(2.0) - 7000(2.5) + 11233(1.0) - 4200(0)$$
    $$M = 12668 - 6400 - 17500 + 11233 - 0 = 1 \text{ N·m} \approx 0$$ ✅
+
+   The moment at a free end must be zero. The 1 N·m that is left comes from rounding the reactions to whole newtons.
+
+5. **Pick the two largest moments:**
+
+   - **Largest positive (sagging) moment:** $M = +3850.5\ \text{N}\cdot\text{m}$ at $x = 1.5\ \text{m}$
+   - **Largest negative (hogging) moment:** $M = -4599\ \text{N}\cdot\text{m}$ at support B ($x = 3.0\ \text{m}$) ✅
 </Steps>
-> **Note:** The moment at the free end is approximately zero, confirming equilibrium.
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Double Girder Gantry Crane](./codes/lesson-2-2/crane_jib_moment_diagram.svg)
+	![Bending moment along the crane jib against the distance from support A. The curve rises from 0 at A to +3.85 kN·m at 1.5 m, crosses zero near 2.2 m, falls to -4.60 kN·m at support B at 3.0 m, and returns to 0 at the end of the overhang at 4.0 m](./codes/lesson-2-2/crane_jib_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
-<Steps>
-3. **Identify maximum moment locations:**
-
-   - **Positive moment maximum:** M = +3850.5 N·m at x = 1.5 m
-   - **Negative moment maximum:** M = -4599 N·m at support B (x = 3.0 m) ✅
-</Steps>
-
 </details>
 
-### Step 4: Calculate Maximum Bending Stresses
+### Step 4: Calculate maximum bending stresses
 
 <details>
 <summary>**Click to reveal stress calculations**</summary>
 
 <Steps>
 
-1. **Calculate section modulus using flexural formula:**
+1. **Calculate the section modulus.** The largest stress is $\sigma_{max} = M/S$ with $S = I/c$. Given $I = 8.2 \times 10^6\ \text{mm}^4$ and $c = 75\ \text{mm}$:
 
-   **Flexural Formula:** $$\sigma = \frac{My}{I}$$
-
-   **For maximum stress:** $$\sigma_{max} = \frac{M \cdot c}{I}$$
-
-   **Section Modulus:** $$S = \frac{I}{c}$$
-
-   **Therefore:** $$\sigma_{max} = \frac{M}{S}$$
-
-   Given I = 8.2 × 10⁶ mm⁴ and c = 75 mm:
    $$S = \frac{I}{c} = \frac{8.2 \times 10^6}{75} = 109333 \text{ mm}^3 = 109.33 \times 10^{-6} \text{ m}^3$$ ✅
 
-2. **Calculate stress at positive moment maximum (x = 1.5 m):**
+   This step works in N·m and m³, so the stress comes out in Pa. Divide by $10^6$ for MPa.
 
-   $$\sigma_{max,pos} = \frac{M_{max,pos}}{S} = \frac{3850.5}{109.33 \times 10^{-6}} = 35.2 \text{ MPa}$$ ✅
+2. **Stress at the largest positive moment ($x = 1.5\ \text{m}$):**
 
-   **Stress distribution:** Compression on top fiber, tension on bottom fiber
+   $$\sigma_{max,pos} = \frac{M_{max,pos}}{S} = \frac{3850.5}{109.33 \times 10^{-6}} = 35.2 \times 10^6\ \text{Pa} = 35.2 \text{ MPa}$$ ✅
 
-3. **Calculate stress at negative moment maximum (x = 3.0 m):**
+   The beam sags here: compression on the top fiber, tension on the bottom fiber.
 
-   $$\sigma_{max,neg} = \frac{|M_{max,neg}|}{S} = \frac{4599}{109.33 \times 10^{-6}} = 42.1 \text{ MPa}$$ ✅
+3. **Stress at the largest negative moment ($x = 3.0\ \text{m}$):**
 
-   **Stress distribution:** Tension on top fiber, compression on bottom fiber
+   $$\sigma_{max,neg} = \frac{|M_{max,neg}|}{S} = \frac{4599}{109.33 \times 10^{-6}} = 42.1 \times 10^6\ \text{Pa} = 42.1 \text{ MPa}$$ ✅
 
-4. **Determine controlling stress:**
+   The beam hogs here: tension on the top fiber, compression on the bottom fiber.
 
-   Comparing the two maximum stresses:
-   - Positive moment stress: 35.2 MPa
-   - Negative moment stress: 42.1 MPa
+4. **Find the controlling stress:**
 
-   **Maximum bending stress** = 42.1 MPa occurs at support B ✅
+   - Stress at the positive moment: 35.2 MPa
+   - Stress at the negative moment: 42.1 MPa
+
+   **Maximum bending stress** = 42.1 MPa, at support B ✅
 
 </Steps>
 
 </details>
 
-### Step 5: Safety Factor Assessment and Design Verification
+### Step 5: Safety factor assessment and design verification
 
 <details>
 <summary>**Click to reveal safety analysis**</summary>
 
 <Steps>
 
-1. **Calculate safety factor against yielding:**
+1. **Calculate the safety factor against yielding:**
 
-   $$SF_{yield} = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250}{42.1} = 5.94$$ ✅
+   $$SF_{yield} = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{250\ \text{MPa}}{42.1\ \text{MPa}} = 5.94$$ ✅
 
-2. **Check against required safety factor:**
+2. **Compare it with the required safety factor:**
 
-   **Design Criterion:** If the required safety factor is 2.5, then your design safety factor must be ≥ 2.5
+   Required $\text{SF} = 2.5$, actual $\text{SF} = 5.94 > 2.5$ ✅
 
-   Required SF = 2.5, Actual SF = 5.94 > 2.5 ✅
+   The jib passes, with a large margin.
 
-   **Design Status:** ADEQUATE with substantial margin
+3. **What the result says:**
 
-3. **Assess critical design considerations:**
-
-   - **Support B region** experiences highest stress (42.1 MPa)
-   - **Negative bending** creates tension on top flange at support B
-   - **Dynamic loading** significantly increases applied loads (40% amplification applied) ✅
-   - **Design is conservative** with SF = 5.94, well above required SF = 2.5
+   - The stress is largest at support B (42.1 MPa), and it is tension on the top flange.
+   - The 1.4 factor on the hoist loads is already in this number ✅
 
 </Steps>
 
 </details>
 
-## Application 3: 3D Printer Gantry Rail (Mechatronics)
+## Application 3: 3D printer gantry rail (mechatronics)
 
 <InArticleAd />
 
 
-A 3D printer gantry rail supports a moving print head assembly that traverses the build platform. The rail experiences a concentrated load as the print head moves to different positions during printing. We need to determine which position creates the worst-case bending stress.
+The gantry rail of a 3D printer carries the print head across the build platform. The load is the weight of the print head, and it moves along the rail during a print. Which position of the print head gives the largest bending stress?
 
 :::note[System Problem Statement]
-- **Support configuration:** Simply supported beam at both ends (allows rotation, provides vertical reactions)
-- **Loading conditions:** Point load from print head assembly at three critical positions along the beam
+- **Support:** simply supported at both ends
+- **Loading:** one point load, the print head, checked at three positions along the rail
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![3D Printer Gantry System](https://cdn.siliconwit.com/education/solid-mechanics/3d-printer-gantry-rail.jpeg)
+    ![Computer model of a 3D printer seen from above: a print head rides on a long straight rail that crosses the heated build plate, and the rail is held at its two ends by carriages on the side rods](https://cdn.siliconwit.com/education/solid-mechanics/3d-printer-gantry-rail.jpeg)
   </TailwindWrapper>
 </div>
 
-**What we need to analyze:**
-1. **Support reaction forces** at three print head positions: left quarter-point, midspan, and right quarter-point
-2. **Bending moment** at each load position
-3. **Maximum bending stress** by comparing all three cases
-4. **Safety factor assessment** against yield failure
+- **Find:** the reactions and the bending moment for each position, the largest bending stress, and the safety factor
 
 **Key Question:** Which print head position creates the maximum bending stress in the gantry rail, and is the design safe under normal operating conditions?
 :::
 
-<Card title="🔧 Equivalent System Model" icon="document">
+<Card title="Equivalent system model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Gantry Rail Loading Diagram](https://cdn.siliconwit.com/education/solid-mechanics/gantry-rail-loading-diagram.png)
+	![A beam of length L on a pinned support A at its left end and a roller support B at its right end, with one point load P1 pressing down at the centre](https://cdn.siliconwit.com/education/solid-mechanics/gantry-rail-loading-diagram.png)
   </TailwindWrapper>
 </div>
 
-**Geometric Configuration:**
-- Aluminum extrusion beam: Span L = 1200 mm between supports
-- Support A at x = 0 mm (left end)
-- Support B at x = 1200 mm (right end)
+**Geometry:**
+- Aluminum extrusion beam: span $L = 1200\ \text{mm}$ between supports
+- Support A at $x = 0\ \text{mm}$ (left end), support B at $x = 1200\ \text{mm}$ (right end)
 
-**Loading Positions to Analyze:**
-- Print head weight: P = 250 N (includes extruder, hotend, cooling fans)
-- **Position 1:** Left quarter-point (x = 300 mm from support A)
-- **Position 2:** Midspan (x = 600 mm from support A)
-- **Position 3:** Right quarter-point (x = 900 mm from support A)
+**Load positions:**
+- Print head weight: $P = 250\ \text{N}$ (the picture labels it P1)
+- **Position 1:** left quarter-point ($x = 300\ \text{mm}$ from support A)
+- **Position 2:** midspan ($x = 600\ \text{mm}$ from support A)
+- **Position 3:** right quarter-point ($x = 900\ \text{mm}$ from support A)
 
-**Cross-Section Properties:**
-- Second moment of area: I = 2.2 × 10⁶ mm⁴
-- Distance to extreme fiber: c = 25 mm
-- Section modulus: S = I/c = 88,000 mm³
+**Cross-section:**
+- Second moment of area: $I = 2.2 \times 10^6\ \text{mm}^4$
+- Distance to extreme fiber: $c = 25\ \text{mm}$
+- Section modulus: $S = I/c = 88{,}000\ \text{mm}^3$
 
-**Material & Safety:**
-- Material: Aluminum 6061-T6 (σ_yield = 275 MPa, E = 69 GPa)
+**Material and safety:**
+- Material: aluminum 6061-T6 ($\sigma_{\text{yield}} = 275\ \text{MPa}$, $E = 69\ \text{GPa}$)
 - Safety factor required: 3.0
 
 </Card>
 
-### Step 1: Calculate Support Reactions at Three Load Positions
+### Step 1: Calculate support reactions at three load positions
 
 <details>
 <summary>**Click to reveal support reaction calculations**</summary>
 
-We'll analyze the beam with the print head at three different positions and calculate the support reactions for each case.
-
-**General formulas for simply supported beam with point load at distance 'x' from left support:**
+For each position, moments about A give $R_B$, and the vertical forces then give $R_A$. In general, for a load $P$ at a distance $x$ from the left support:
 
 $$R_B = \frac{P \cdot x}{L} \quad \text{and} \quad R_A = \frac{P(L-x)}{L}$$
 
 <Steps>
 
-1. **Position 1: Print head at left quarter-point (x = 300 mm)**
+1. **Position 1: print head at the left quarter-point ($x = 300\ \text{mm}$)**
 
-   **Calculate R_B using moment equilibrium about A:**
-
-   $\sum M_A = 0$ (taking moments about A)
+   Moments about A:
 
    $R_B \times 1200 - 250 \times 300 = 0$
 
-   $R_B = \frac{250 \times 300}{1200} = \frac{75,000}{1200} = 62.5$ N ✅
+   $R_B = \frac{250 \times 300}{1200} = \frac{75{,}000}{1200} = 62.5$ N ✅
 
-   **Calculate R_A using vertical force equilibrium:**
-
-   $\sum F_y = 0$
-
-   $R_A + R_B - 250 = 0$
+   Vertical forces:
 
    $R_A = 250 - 62.5 = 187.5$ N ✅
 
-   **Verify:** $R_A + R_B = 187.5 + 62.5 = 250$ N ✅
+   **Check:** $R_A + R_B = 187.5 + 62.5 = 250$ N ✅
 
-2. **Position 2: Print head at midspan (x = 600 mm)**
+2. **Position 2: print head at midspan ($x = 600\ \text{mm}$)**
 
-   **Calculate R_B:**
-
-   $R_B = \frac{250 \times 600}{1200} = \frac{150,000}{1200} = 125$ N ✅
-
-   **Calculate R_A:**
+   $R_B = \frac{250 \times 600}{1200} = \frac{150{,}000}{1200} = 125$ N ✅
 
    $R_A = 250 - 125 = 125$ N ✅
 
-   **Note:** At midspan, both supports share the load equally ✅
+   At midspan the two supports share the load equally ✅
 
-3. **Position 3: Print head at right quarter-point (x = 900 mm)**
+3. **Position 3: print head at the right quarter-point ($x = 900\ \text{mm}$)**
 
-   **Calculate R_B:**
-
-   $R_B = \frac{250 \times 900}{1200} = \frac{225,000}{1200} = 187.5$ N ✅
-
-   **Calculate R_A:**
+   $R_B = \frac{250 \times 900}{1200} = \frac{225{,}000}{1200} = 187.5$ N ✅
 
    $R_A = 250 - 187.5 = 62.5$ N ✅
 
-   **Observation:** Notice the symmetry - reactions at Position 1 and Position 3 are mirror images ✅
-
-4. **Summary of reactions:**
-
-   | Position | Distance x | R_A (N) | R_B (N) |
-   |----------|-----------|---------|---------|
-   | Left quarter | 300 mm | 187.5 | 62.5 |
-   | Midspan | 600 mm | 125.0 | 125.0 |
-   | Right quarter | 900 mm | 62.5 | 187.5 |
+   The reactions of Position 1 and Position 3 are mirror images ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Calculate Maximum Bending Moment at Each Position
+### Step 2: Calculate maximum bending moment at each position
 
 <details>
 <summary>**Click to reveal bending moment calculations**</summary>
 
-For a simply supported beam with a point load, the maximum moment occurs **directly under the load** at the load position.
+With one point load on a simply supported beam, the moment is largest directly under the load. It is the left reaction multiplied by its distance from the load:
 
-**General formula:** $M_{max} = \frac{P \cdot x \cdot (L-x)}{L}$
+$$M_{max} = R_A \cdot x = \frac{P \cdot x \cdot (L-x)}{L}$$
 
 <Steps>
 
-1. **Position 1: Load at left quarter-point (x = 300 mm)**
+1. **Position 1: load at the left quarter-point ($x = 300\ \text{mm}$)**
 
-   Maximum moment occurs at x = 300 mm (where the load is):
+   $M_{max} = \frac{250 \times 300 \times (1200-300)}{1200} = \frac{67{,}500{,}000}{1200}$
 
-   $M_{max} = \frac{P \cdot x \cdot (L-x)}{L} = \frac{250 \times 300 \times (1200-300)}{1200}$
+   $M_{max} = 56{,}250$ N·mm = **56.25 N·m** ✅
 
-   $M_{max} = \frac{250 \times 300 \times 900}{1200} = \frac{67,500,000}{1200}$
+2. **Position 2: load at midspan ($x = 600\ \text{mm}$)**
 
-   $M_{max} = 56,250$ N·mm = **56.25 N·m** ✅
+   $M_{max} = \frac{250 \times 600 \times (1200-600)}{1200} = \frac{90{,}000{,}000}{1200}$
 
-2. **Position 2: Load at midspan (x = 600 mm)**
+   $M_{max} = 75{,}000$ N·mm = **75.0 N·m** ✅
 
-   Maximum moment occurs at x = 600 mm (where the load is):
+3. **Position 3: load at the right quarter-point ($x = 900\ \text{mm}$)**
 
-   $M_{max} = \frac{250 \times 600 \times (1200-600)}{1200}$
+   $M_{max} = \frac{250 \times 900 \times (1200-900)}{1200} = \frac{67{,}500{,}000}{1200}$
 
-   $M_{max} = \frac{250 \times 600 \times 600}{1200} = \frac{90,000,000}{1200}$
+   $M_{max} = 56{,}250$ N·mm = **56.25 N·m** ✅
 
-   $M_{max} = 75,000$ N·mm = **75.0 N·m** ✅
-
-3. **Position 3: Load at right quarter-point (x = 900 mm)**
-
-   Maximum moment occurs at x = 900 mm (where the load is):
-
-   $M_{max} = \frac{250 \times 900 \times (1200-900)}{1200}$
-
-   $M_{max} = \frac{250 \times 900 \times 300}{1200} = \frac{67,500,000}{1200}$
-
-   $M_{max} = 56,250$ N·mm = **56.25 N·m** ✅
-
-4. **Summary and comparison:**
-
-   | Position | Distance x | Maximum Moment M_max |
-   |----------|-----------|---------------------|
-   | Left quarter | 300 mm | 56.25 N·m |
-   | **Midspan** | **600 mm** | **75.0 N·m** ⭐ |
-   | Right quarter | 900 mm | 56.25 N·m |
-
-   **Key Observations:**
-   - ⭐ **Maximum moment occurs at midspan** (x = 600 mm)
-   - Symmetry: Quarter-point positions give identical moments
-   - Midspan moment is 33% higher than quarter-point moments
-   - This confirms midspan is the **worst-case position** for bending stress
+4. **Compare.** The moment is largest with the print head at midspan: $75.0/56.25 = 1.33$, so it is 33% higher than at a quarter-point. Midspan is the worst position for bending stress.
 
 </Steps>
 
-**Bending Moment Diagram for midspan position (worst case):**
-
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Gantry Rail Bending Moment Diagram](https://cdn.siliconwit.com/education/solid-mechanics/gantry-rail-moment-diagram.svg)
+	![Plot of bending moment against the distance from support A, with three marked points: 0.056 kN·m at 0.3 m, 0.075 kN·m at 0.6 m and 0.056 kN·m at 0.9 m, joined by straight lines that fall to zero at both supports](https://cdn.siliconwit.com/education/solid-mechanics/gantry-rail-moment-diagram.svg)
   </TailwindWrapper>
 </div>
 
+This plot joins the three results above: each marked point is the moment under the print head when the print head is at that position. It is not the moment diagram for one position. With the print head at midspan the diagram is a triangle, and the moment at 0.3 m is $125 \times 0.3 = 37.5\ \text{N}\cdot\text{m}$, not 56.
+
 </details>
 
-### Step 3: Calculate Bending Stress at Each Position
+### Step 3: Calculate bending stress at each position
 
 <details>
 <summary>**Click to reveal stress calculations**</summary>
 
-Now we'll use the flexural formula to calculate the bending stress for each load position.
-
-**Flexural formula:** $\sigma_{max} = \frac{M \cdot c}{I}$ or $\sigma_{max} = \frac{M}{S}$ where $S = \frac{I}{c}$
-
-**Given:** I = 2.2 × 10⁶ mm⁴, c = 25 mm, S = 88,000 mm³
+The largest stress is $\sigma_{max} = M/S$, with $M$ in N·mm and $S = 88{,}000\ \text{mm}^3$. Each moment is positive, so the rail sags: tension on the bottom fiber, compression on the top fiber.
 
 <Steps>
 
-1. **Position 1: Left quarter-point (M = 56,250 N·mm)**
+1. **Position 1: left quarter-point ($M = 56{,}250\ \text{N}\cdot\text{mm}$)**
 
-   $$\sigma = \frac{M}{S} = \frac{56,250}{88,000} = 0.639 \text{ MPa}$$
+   $$\sigma = \frac{M}{S} = \frac{56{,}250}{88{,}000} = 0.639 \text{ MPa}$$
 
-   **Stress distribution:**
    - Bottom fiber (tension): +0.639 MPa
    - Top fiber (compression): -0.639 MPa ✅
 
-2. **Position 2: Midspan (M = 75,000 N·mm)**
+2. **Position 2: midspan ($M = 75{,}000\ \text{N}\cdot\text{mm}$)**
 
-   $$\sigma = \frac{M}{S} = \frac{75,000}{88,000} = 0.852 \text{ MPa}$$
+   $$\sigma = \frac{M}{S} = \frac{75{,}000}{88{,}000} = 0.852 \text{ MPa}$$
 
-   **Stress distribution:**
    - Bottom fiber (tension): +0.852 MPa
    - Top fiber (compression): -0.852 MPa ✅
 
-3. **Position 3: Right quarter-point (M = 56,250 N·mm)**
+3. **Position 3: right quarter-point ($M = 56{,}250\ \text{N}\cdot\text{mm}$)**
 
-   $$\sigma = \frac{M}{S} = \frac{56,250}{88,000} = 0.639 \text{ MPa}$$
+   $$\sigma = \frac{M}{S} = \frac{56{,}250}{88{,}000} = 0.639 \text{ MPa}$$
 
-   **Stress distribution:**
    - Bottom fiber (tension): +0.639 MPa
    - Top fiber (compression): -0.639 MPa ✅
 
-4. **Summary and worst-case identification:**
+4. **Worst case:**
 
-   | Position | Maximum Moment | Maximum Stress |
+   | Position | Maximum moment | Maximum stress |
    |----------|---------------|----------------|
    | Left quarter | 56.25 N·m | 0.639 MPa |
-   | **Midspan** | **75.0 N·m** | **0.852 MPa** ⭐ |
+   | **Midspan** | **75.0 N·m** | **0.852 MPa** |
    | Right quarter | 56.25 N·m | 0.639 MPa |
 
-   **Conclusion:** Maximum bending stress occurs when the print head is at **midspan**: σ_max = **0.852 MPa**
+   The bending stress is largest when the print head is at **midspan**: $\sigma_{max}$ = **0.852 MPa**
 
 </Steps>
 
 </details>
 
-### Step 4: Safety Factor Assessment
+### Step 4: Safety factor assessment
 
 <details>
 <summary>**Click to reveal safety analysis**</summary>
 
 <Steps>
 
-1. **Calculate actual safety factor at worst case (midspan):**
+1. **Calculate the actual safety factor for the worst case (midspan):**
 
    $$SF = \frac{\sigma_{yield}}{\sigma_{max}} = \frac{275 \text{ MPa}}{0.852 \text{ MPa}} = 323$$
 
-2. **Compare with required safety factor:**
+2. **Compare it with the required safety factor:**
 
    - Required SF: 3.0
    - Actual SF: 323
-   - **Result:** 323 >> 3.0 ✅ **Design is SAFE**
+   - **Result:** $323 \gg 3.0$ ✅ **Design is SAFE**
 
-3. **Design adequacy assessment:**
+3. **Why is the rail so much stronger than it needs to be?**
 
-   The gantry rail has an **extremely high safety factor** (>100× required).
+   The safety factor is more than 100 times the required value. Strength did not size this rail. These did:
+   - ✅ **Stiffness, not strength, controls the design.** A rail that sags moves the nozzle.
+   - ✅ **Dynamic loads.** The print head speeds up and slows down all the time.
+   - ✅ **Vibration control.** A stiff rail vibrates less.
+   - ✅ **Long-term reliability.** Aluminum can crack in fatigue under repeated loads.
 
-   **Why such a large safety margin?**
-   - ✅ **Stiffness, not strength, controls the design** - the beam must be rigid enough to prevent deflection that affects print quality
-   - ✅ **Dynamic loads** - print head acceleration/deceleration creates additional forces
-   - ✅ **Vibration control** - high stiffness prevents resonance and vibration during printing
-   - ✅ **Long-term reliability** - aluminum experiences fatigue under repeated cyclic loading
+4. **Quick deflection check.** The sag at the centre of a simply supported beam with a centre load $P$ is $PL^3/(48EI)$, where $E$ is Young's modulus. The lesson on beam deflections explains this formula. In N and mm, with $E = 69{,}000\ \text{MPa}$:
 
-4. **Quick deflection check (stiffness verification):**
+   $$\delta_{max} = \frac{PL^3}{48EI} = \frac{250 \times (1200)^3}{48 \times 69{,}000 \times 2.2 \times 10^6} = 0.059 \text{ mm}$$
 
-   Maximum deflection at midspan:
+   - Sag that a precise printer can accept: less than 0.1 mm
+   - Calculated sag: 0.059 mm ✅
 
-   $$\delta_{max} = \frac{PL^3}{48EI} = \frac{250 \times (1200)^3}{48 \times 69,000 \times 2.2 \times 10^6} = 0.059 \text{ mm}$$
-
-   **For precision 3D printing:**
-   - Typical acceptable deflection: < 0.1 mm
-   - Calculated deflection: 0.059 mm ✅
-   - **Stiffness requirement is satisfied**
-
-   **Conclusion:** The large cross-section is needed for **stiffness (deflection control)**, not strength. Bending stress is very low compared to material strength.
+   The large cross-section is there for **stiffness**, not for strength. A beam can be far stronger than it needs to be and still be only just stiff enough.
 
 </Steps>
 
@@ -1011,29 +870,19 @@ Now we'll use the flexural formula to calculate the bending stress for each load
 ---
 
 :::tip[Instrument it]
-Bending stress is invisible, but the strain that rides with it is not. Bond a foil strain gauge to the extreme fibre on the tension face at the section of maximum moment; the strain times Young's modulus is the bending stress you computed from Mc/I. A quarter-bridge read by an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) turns the flexure formula into a measured value you can [trend on siliconwit.io](https://siliconwit.io) and check against the allowable before the part takes a permanent set.
+You cannot see bending stress, but you can measure the strain that comes with it. Bond a foil strain gauge to the extreme fibre on the tension face, at the section where the moment is largest. The strain multiplied by Young's modulus is the bending stress you calculated from $Mc/I$. A quarter-bridge read by an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) gives a measured value that you can [trend on siliconwit.io](https://siliconwit.io) and compare with the allowable stress before the part bends permanently.
 :::
 
-## Summary and Next Steps
+## Summary and next steps
 
 <InArticleAd />
 
 
-In this lesson, you learned to:
+- Bending stretches one face of a beam and squeezes the other. The stress is zero at the neutral axis and largest at the top and bottom faces: $\sigma = My/I$.
+- The largest stress is $\sigma_{max} = Mc/I = M/S$. The section modulus $S = I/c$ is the bending strength of a shape.
+- For a rectangle $S = bh^2/6$: depth counts twice and width once.
 
-1. **Apply** the flexural formula σ = My/I for bending stress calculation
-2. **Identify** neutral axis location and stress distribution patterns  
-3. **Calculate** section properties for common cross-sections
-4. **Design** beams to meet both strength and safety factor requirements
-
-**Key Design Insights:**
-- Maximum stress occurs at extreme fibers
-- Section modulus S = I/c determines bending capacity
-- Tall sections are much more efficient in bending
-
-**Critical Formula:** $\sigma_{max} = \frac{M}{S} = \frac{My}{I}$
-
-**Coming Next**: In Lesson 2.3, we'll analyze beam deflections and stiffness, exploring how to calculate elastic deformations in CNC spindles under cutting loads for precision control applications.
+**Coming next:** a beam can pass this strength check and still bend too far. How far a beam sags is the subject of [beam deflections and stiffness](/education/mechanics-of-materials/beam-deflections-stiffness-analysis/).
 
 
 

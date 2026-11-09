@@ -38,14 +38,14 @@ The theory behind these experiments is in [Torsion of Circular Shafts](/educatio
 
 | Term | Meaning |
 |------|---------|
-| **Torsional shear stress** | tau = T r / J; zero at the centre, maximum at the outer surface |
-| **Polar second moment J** | J = pi d^4 / 32 for a solid shaft; J = pi (do^4 - di^4) / 32 for hollow |
-| **Angle of twist phi** | phi = T L / (G J) in radians; governs precision and timing accuracy |
-| **Twist per metre** | phi_deg / L_m; independent of shaft length for the same cross-section and torque |
-| **Power and torque** | T = P / omega where omega = 2 pi n / 60 in rad/s |
-| **Diameter sensitivity** | tau scales as 1/d^3; J scales as d^4; diameter is the most effective design variable |
-| **k ratio** | k = di / do for a hollow shaft; the hollow J = (pi do^4 / 32)(1 - k^4) |
-| **Safety factor** | SF = tau_allow / tau_max; less than 1 means the shaft has already yielded |
+| **Torsional shear stress** | $\tau = Tr/J$; zero at the centre, maximum at the outer surface |
+| **Polar second moment $J$** | $J = \pi d^4/32$ for a solid shaft; $J = \pi (d_o^4 - d_i^4)/32$ for hollow |
+| **Angle of twist $\varphi$** | $\varphi = TL/(GJ)$ in radians; governs precision and timing accuracy |
+| **Twist per metre** | $\varphi_{\text{deg}}/L_{\text{m}}$; independent of shaft length for the same cross-section and torque |
+| **Power and torque** | $T = P/\omega$ where $\omega = 2\pi n/60$ in rad/s |
+| **Diameter sensitivity** | $\tau$ scales as $1/d^3$; $J$ scales as $d^4$; diameter is the most effective design variable |
+| **$k$ ratio** | $k = d_i/d_o$ for a hollow shaft; the hollow $J = (\pi d_o^4/32)(1 - k^4)$ |
+| **Safety factor** | $SF = \tau_{\text{allow}}/\tau_{\max}$; less than 1 means the shaft has already yielded |
 
 ### Experiment Workflow
 
@@ -82,21 +82,21 @@ A strain-gauge rosette bonded at 45 degrees to the shaft axis reads the principa
 Every torsion formula rests on one assumption: shear stress varies linearly from zero at the centre to a maximum at the outer surface. The centre carries no torque at all, which is exactly why removing it to make a hollow shaft wastes so little capacity. This experiment confirms that linear profile using the simulator's stress-distribution display and a brief Python check.
 
 :::note[Objective]
-Verify that tau = T r / J gives zero stress at r = 0 and peak stress tau_max = T ro / J at the outer surface, and that the intermediate radii fall exactly on the straight line between those two points.
+Verify that $\tau = Tr/J$ gives zero stress at $r = 0$ and peak stress $\tau_{\max} = T r_o/J$ at the outer surface, and that the intermediate radii fall exactly on the straight line between those two points.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the solid-steel preset (T = 200 N·m, do = 30 mm, di = 0, G = 79 GPa, tau_allow = 120 MPa). Read J and tau_max from the panel.
+   Select the solid-steel preset ($T = 200\ \text{N·m}$, $d_o = 30\ \text{mm}$, $d_i = 0$, $G = 79\ \text{GPa}$, $\tau_{\text{allow}} = 120\ \text{MPa}$). Read $J$ and $\tau_{\max}$ from the panel.
 
 2. **Predict by hand**
-   Compute J = pi (30)^4 / 32. Then compute tau at r = 5, 10, and 15 mm using tau = T r / J with T in N·mm. Confirm that tau scales exactly with r.
+   Compute $J = \pi (30)^4/32$. Then compute $\tau$ at $r = 5$, 10, and 15 mm using $\tau = Tr/J$ with $T$ in N·mm. Confirm that $\tau$ scales exactly with $r$.
 
 3. **Read the distribution diagram**
    On the cross-section diagram, verify that the stress is zero at the centre and peaks at the outer edge. Confirm the intermediate values match your hand calculations.
 
 4. **Note what changes with a hollow shaft**
-   Switch to the hollow-steel preset (do = 36, di = 26). The profile is still linear, but the zero-stress region from 0 to ri is physically absent. The material that was there contributed almost nothing to J.
+   Switch to the hollow-steel preset ($d_o = 36$, $d_i = 26$). The profile is still linear, but the zero-stress region from 0 to $r_i$ is physically absent. The material that was there contributed almost nothing to $J$.
 
 5. **Save data**
    Create `data/exp1_distribution.csv` with columns: r_mm, tau_mpa, tau_fraction.
@@ -156,11 +156,11 @@ plt.show()
 
 ### Expected Results
 
-J = pi * 30^4 / 32 = 79521.56 mm^4. The stresses are: r = 0 mm: tau = 0.00 MPa; r = 5 mm: tau = 12.58 MPa; r = 10 mm: tau = 25.15 MPa; r = 15 mm: tau = 37.73 MPa (tau_max). Each value is exactly one-third (or two-thirds) of tau_max, confirming the linear profile. The simulator's cross-section display should show the same gradient.
+$J = \pi \times 30^4/32 = 79521.56\ \text{mm}^4$. The stresses are: $r = 0$ mm: $\tau = 0.00$ MPa; $r = 5$ mm: $\tau = 12.58$ MPa; $r = 10$ mm: $\tau = 25.15$ MPa; $r = 15$ mm: $\tau = 37.73$ MPa ($\tau_{\max}$). Each value is exactly one-third (or two-thirds) of $\tau_{\max}$, confirming the linear profile. The simulator's cross-section display should show the same gradient.
 
 ### Design Question
 
-A designer proposes drilling out the central 10 mm of the 30 mm shaft (di = 10 mm) to lighten it. By how much does J change, and by how much does tau_max change? Is the strength penalty small enough to be worth the weight saving?
+A designer proposes drilling out the central 10 mm of the 30 mm shaft ($d_i = 10\ \text{mm}$) to lighten it. By how much does $J$ change, and by how much does $\tau_{\max}$ change? Is the strength penalty small enough to be worth the weight saving?
 
 ---
 
@@ -169,24 +169,24 @@ A designer proposes drilling out the central 10 mm of the 30 mm shaft (di = 10 m
 <InArticleAd />
 
 
-The formula phi = T L / (G J) says angle of twist is proportional to length: double the shaft and you double the angular deflection, for the same torque and cross-section. That matters in mechanism design because a shaft that twists too far throws off the timing of whatever is driven. This experiment sweeps length across the simulator's range to confirm the linear relationship and measure the twist per metre.
+The formula $\varphi = TL/(GJ)$ says angle of twist is proportional to length: double the shaft and you double the angular deflection, for the same torque and cross-section. That matters in mechanism design because a shaft that twists too far throws off the timing of whatever is driven. This experiment sweeps length across the simulator's range to confirm the linear relationship and measure the twist per metre.
 
 :::note[Objective]
-Verify that phi grows linearly with L and that the twist per metre (phi / L) is constant for a given cross-section and torque, then use that constant to predict whether a specific shaft length meets a precision budget.
+Verify that $\varphi$ grows linearly with $L$ and that the twist per metre ($\varphi/L$) is constant for a given cross-section and torque, then use that constant to predict whether a specific shaft length meets a precision budget.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the solid-steel preset (T = 200 N·m, do = 30 mm, G = 79 GPa). Set L = 100 mm and record phi_deg and twist per metre from the panel.
+   Select the solid-steel preset ($T = 200\ \text{N·m}$, $d_o = 30\ \text{mm}$, $G = 79\ \text{GPa}$). Set $L = 100\ \text{mm}$ and record $\varphi_{\text{deg}}$ and twist per metre from the panel.
 
 2. **Predict**
-   Compute phi = T L / (G J) for L = 100, 200, 300, 400, 500 mm with T in N·mm and G in MPa. Predict that all five twist-per-metre values are identical.
+   Compute $\varphi = TL/(GJ)$ for $L = 100$, 200, 300, 400, 500 mm with $T$ in N·mm and $G$ in MPa. Predict that all five twist-per-metre values are identical.
 
 3. **Sweep the length**
-   Step L through 100, 200, 300, 400, 500 mm. At each step record phi_deg and the simulator's twist-per-metre readout.
+   Step $L$ through 100, 200, 300, 400, 500 mm. At each step record $\varphi_{\text{deg}}$ and the simulator's twist-per-metre readout.
 
 4. **Check linearity**
-   Plot phi_deg versus L. Confirm it is a straight line through the origin.
+   Plot $\varphi_{\text{deg}}$ versus $L$. Confirm it is a straight line through the origin.
 
 5. **Save data**
    Create `data/exp2_twist_vs_length.csv` with columns: L_mm, phi_rad, phi_deg, twist_per_m.
@@ -247,11 +247,11 @@ plt.show()
 
 ### Expected Results
 
-J = 79521.56 mm^4. The five phi values are 0.1824, 0.3648, 0.5472, 0.7296, and 0.9120 degrees for L = 100 through 500 mm. The twist per metre is 1.8241 deg/m in every row, confirming it is a property of the cross-section and torque only, not of the length. The plot is a straight line through the origin with slope 1.8241/1000 deg/mm.
+$J = 79521.56\ \text{mm}^4$. The five $\varphi$ values are 0.1824, 0.3648, 0.5472, 0.7296, and 0.9120 degrees for $L = 100$ through 500 mm. The twist per metre is 1.8241 deg/m in every row, confirming it is a property of the cross-section and torque only, not of the length. The plot is a straight line through the origin with slope 1.8241/1000 deg/mm.
 
 ### Design Question
 
-A Geneva indexing mechanism requires that the drive crankshaft twists no more than 0.5 degrees. The shaft is solid steel with do = 30 mm carrying T = 200 N·m. What is the maximum allowable shaft length, and how does that compare with the 500 mm length of the solid-steel preset?
+A Geneva indexing mechanism requires that the drive crankshaft twists no more than 0.5 degrees. The shaft is solid steel with $d_o = 30\ \text{mm}$ carrying $T = 200\ \text{N·m}$. What is the maximum allowable shaft length, and how does that compare with the 500 mm length of the solid-steel preset?
 
 ---
 
@@ -263,21 +263,21 @@ A Geneva indexing mechanism requires that the drive crankshaft twists no more th
 Motors and gearboxes are specified by power and speed on their nameplates, not by torque. The first step in every motor-driven shaft design is converting that nameplate data into a torque, and then applying the torsion formula to find the minimum diameter. This experiment walks through that chain and confirms the result against the precision-shaft preset.
 
 :::note[Objective]
-Convert a motor's rated power and speed to torque using T = P / omega, find the minimum shaft diameter for a given allowable shear stress, and verify the result against the precision-shaft preset (T = 80 N·m, do = 25 mm, tau_allow = 90 MPa).
+Convert a motor's rated power and speed to torque using $T = P/\omega$, find the minimum shaft diameter for a given allowable shear stress, and verify the result against the precision-shaft preset ($T = 80\ \text{N·m}$, $d_o = 25\ \text{mm}$, $\tau_{\text{allow}} = 90\ \text{MPa}$).
 :::
 
 <Steps>
 1. **Convert power to torque**
-   A motor rated at 8 kW runs at 960 rpm. Compute omega = 2 pi n / 60 and T = P / omega. Compare the result with the precision-shaft preset torque of 80 N·m.
+   A motor rated at 8 kW runs at 960 rpm. Compute $\omega = 2\pi n/60$ and $T = P/\omega$. Compare the result with the precision-shaft preset torque of 80 N·m.
 
 2. **Find the minimum diameter**
-   From tau = 16 T / (pi d^3) (the compact form for a solid shaft), rearrange to d_min = (16 T / (pi tau_allow))^(1/3) with tau_allow = 90 MPa and T in N·mm.
+   From $\tau = 16T/(\pi d^3)$ (the compact form for a solid shaft), rearrange to $d_{\min} = \left(16T/(\pi \tau_{\text{allow}})\right)^{1/3}$ with $\tau_{\text{allow}} = 90\ \text{MPa}$ and $T$ in N·mm.
 
 3. **Configure the simulator**
-   Open the precision-shaft preset (T = 80, L = 400, do = 25, G = 79, allow = 90). Read tau_max and phi from the panel and confirm they match the script output.
+   Open the precision-shaft preset ($T = 80$, $L = 400$, $d_o = 25$, $G = 79$, $\text{allow} = 90$). Read $\tau_{\max}$ and $\varphi$ from the panel and confirm they match the script output.
 
 4. **Explore alternatives**
-   In the simulator, reduce do to the minimum computed diameter (18 mm rounded up from d_min = 16.5 mm) and observe how tau_max changes. Note the safety factor at 18 mm versus 25 mm.
+   In the simulator, reduce $d_o$ to the minimum computed diameter (18 mm rounded up from $d_{\min} = 16.5\ \text{mm}$) and observe how $\tau_{\max}$ changes. Note the safety factor at 18 mm versus 25 mm.
 
 5. **Save data**
    Create `data/exp3_power_sizing.csv` with columns: P_W, n_rpm, omega_rads, T_Nm, d_min_mm, d_chosen_mm, tau_mpa, SF.
@@ -332,11 +332,11 @@ print(f"phi = {phi_prec:.6f} rad = {np.degrees(phi_prec):.4f} deg over 400 mm")
 
 ### Expected Results
 
-omega = 100.5310 rad/s; T = 79.5775 N·m (the simulator preset rounds this to 80 N·m). d_min = 16.5135 mm; the next standard size up is 18 mm. At d = 18 mm: J = 10305.99 mm^4, tau = 69.49 MPa, SF = 1.30. At d = 25 mm (precision preset): tau = 26.08 MPa, SF = 3.45, phi = 0.6052 degrees over 400 mm. Increasing the diameter from the minimum to the preset value raises the safety factor from 1.30 to 3.45 and cuts tau by 63 percent, because stress scales as 1/d^3.
+$\omega = 100.5310\ \text{rad/s}$; $T = 79.5775\ \text{N·m}$ (the simulator preset rounds this to 80 N·m). $d_{\min} = 16.5135\ \text{mm}$; the next standard size up is 18 mm. At $d = 18\ \text{mm}$: $J = 10305.99\ \text{mm}^4$, $\tau = 69.49\ \text{MPa}$, $SF = 1.30$. At $d = 25\ \text{mm}$ (precision preset): $\tau = 26.08\ \text{MPa}$, $SF = 3.45$, $\varphi = 0.6052$ degrees over 400 mm. Increasing the diameter from the minimum to the preset value raises the safety factor from 1.30 to 3.45 and cuts $\tau$ by 63 percent, because stress scales as $1/d^3$.
 
 ### Design Question
 
-A second motor runs at 1440 rpm but still delivers 8 kW. Does the higher speed change the minimum shaft diameter, and by how much? Explain the result using T = P / omega without doing any new stress calculation.
+A second motor runs at 1440 rpm but still delivers 8 kW. Does the higher speed change the minimum shaft diameter, and by how much? Explain the result using $T = P/\omega$ without doing any new stress calculation.
 
 ---
 
@@ -345,24 +345,24 @@ A second motor runs at 1440 rpm but still delivers 8 kW. Does the higher speed c
 <InArticleAd />
 
 
-Most of the torsional stiffness in a circular shaft comes from material near the outer surface, because J weights each area element by r^2. The material at the centre contributes almost nothing to J but adds its full weight. Replacing a solid shaft with a hollow one of the same outer diameter removes that low-contribution core and saves a large fraction of the cross-sectional area. This experiment quantifies that saving using the solid-steel and hollow-steel presets.
+Most of the torsional stiffness in a circular shaft comes from material near the outer surface, because $J$ weights each area element by $r^2$. The material at the centre contributes almost nothing to $J$ but adds its full weight. Replacing a solid shaft with a hollow one of the same outer diameter removes that low-contribution core and saves a large fraction of the cross-sectional area. This experiment quantifies that saving using the solid-steel and hollow-steel presets.
 
 :::note[Objective]
-Compare the polar moment J, peak shear stress, and cross-sectional area for the solid-steel and hollow-steel presets carrying the same torque T = 200 N·m, and express the area saving as a percentage.
+Compare the polar moment $J$, peak shear stress, and cross-sectional area for the solid-steel and hollow-steel presets carrying the same torque $T = 200\ \text{N·m}$, and express the area saving as a percentage.
 :::
 
 <Steps>
 1. **Configure the solid-steel preset**
-   Open the solid-steel preset (T = 200, L = 500, do = 30, di = 0, G = 79, allow = 120). Record J, tau_max, and the cross-sectional area (A = pi do^2 / 4).
+   Open the solid-steel preset ($T = 200$, $L = 500$, $d_o = 30$, $d_i = 0$, $G = 79$, $\text{allow} = 120$). Record $J$, $\tau_{\max}$, and the cross-sectional area ($A = \pi d_o^2/4$).
 
 2. **Switch to the hollow-steel preset**
-   Open the hollow-steel preset (do = 36, di = 26). Record J, tau_max, and A = pi (do^2 - di^2) / 4.
+   Open the hollow-steel preset ($d_o = 36$, $d_i = 26$). Record $J$, $\tau_{\max}$, and $A = \pi (d_o^2 - d_i^2)/4$.
 
-3. **Compute k and 1 - k^4**
-   k = di / do = 26 / 36. The hollow J = (pi do^4 / 32)(1 - k^4). Verify this equals the J the simulator reports.
+3. **Compute $k$ and $1 - k^4$**
+   $k = d_i/d_o = 26/36$. The hollow $J = (\pi d_o^4/32)(1 - k^4)$. Verify this equals the $J$ the simulator reports.
 
 4. **Compare**
-   Both carry T = 200 N·m. The hollow shaft has a larger outer diameter but a lower peak stress and much less cross-sectional area. Quantify the area saving relative to the solid shaft.
+   Both carry $T = 200\ \text{N·m}$. The hollow shaft has a larger outer diameter but a lower peak stress and much less cross-sectional area. Quantify the area saving relative to the solid shaft.
 
 5. **Save data**
    Create `data/exp4_hollow_vs_solid.csv` with columns: type, do_mm, di_mm, J_mm4, tau_mpa, A_mm2.
@@ -431,11 +431,11 @@ plt.show()
 
 ### Expected Results
 
-Solid (do = 30): J = 79521.56 mm^4, tau = 37.73 MPa, A = 706.86 mm^2. Hollow (do = 36, di = 26): J = 120032.40 mm^4, tau = 29.99 MPa, A = 486.95 mm^2. k = 0.7222, 1 - k^4 = 0.7279. The area saving is 31.11 percent. The hollow shaft is simultaneously lighter (31 percent less area), stiffer in torsion (J is 51 percent larger), and carries a lower peak stress, because the larger outer diameter adds more to J than it adds to the stress numerator.
+Solid ($d_o = 30$): $J = 79521.56\ \text{mm}^4$, $\tau = 37.73\ \text{MPa}$, $A = 706.86\ \text{mm}^2$. Hollow ($d_o = 36$, $d_i = 26$): $J = 120032.40\ \text{mm}^4$, $\tau = 29.99\ \text{MPa}$, $A = 486.95\ \text{mm}^2$. $k = 0.7222$, $1 - k^4 = 0.7279$. The area saving is 31.11 percent. The hollow shaft is simultaneously lighter (31 percent less area), stiffer in torsion ($J$ is 51 percent larger), and carries a lower peak stress, because the larger outer diameter adds more to $J$ than it adds to the stress numerator.
 
 ### Design Question
 
-The hollow shaft has di = 26 mm. If di were increased to 30 mm (keeping do = 36 mm), by what fraction would J decrease? Use the 1 - k^4 factor to argue whether removing the last few millimetres of the core is still worth the wall-thickness reduction in manufacturing terms.
+The hollow shaft has $d_i = 26\ \text{mm}$. If $d_i$ were increased to 30 mm (keeping $d_o = 36\ \text{mm}$), by what fraction would $J$ decrease? Use the $1 - k^4$ factor to argue whether removing the last few millimetres of the core is still worth the wall-thickness reduction in manufacturing terms.
 
 ---
 
@@ -444,24 +444,24 @@ The hollow shaft has di = 26 mm. If di were increased to 30 mm (keeping do = 36 
 <InArticleAd />
 
 
-Diameter is the single most powerful variable in shaft design because stress scales as 1/d^3 and J scales as d^4. Increasing the diameter by 10 percent cuts the shear stress by 25 percent and raises the stiffness by 46 percent. This experiment maps those sensitivities across a diameter sweep on the solid-steel torque (T = 200 N·m) so the scaling relationships become concrete numbers rather than exponents.
+Diameter is the single most powerful variable in shaft design because stress scales as $1/d^3$ and $J$ scales as $d^4$. Increasing the diameter by 10 percent cuts the shear stress by 25 percent and raises the stiffness by 46 percent. This experiment maps those sensitivities across a diameter sweep on the solid-steel torque ($T = 200\ \text{N·m}$) so the scaling relationships become concrete numbers rather than exponents.
 
 :::note[Objective]
-Sweep the shaft diameter from 20 mm to 40 mm at T = 200 N·m and confirm that tau scales as (d_ref / d)^3 and J scales as (d / d_ref)^4, using d_ref = 30 mm (the solid-steel preset) as the reference.
+Sweep the shaft diameter from 20 mm to 40 mm at $T = 200\ \text{N·m}$ and confirm that $\tau$ scales as $(d_{\text{ref}}/d)^3$ and $J$ scales as $(d/d_{\text{ref}})^4$, using $d_{\text{ref}} = 30\ \text{mm}$ (the solid-steel preset) as the reference.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the solid-steel preset (T = 200, G = 79, allow = 120). Set L = 500 mm and vary only do.
+   Select the solid-steel preset ($T = 200$, $G = 79$, $\text{allow} = 120$). Set $L = 500\ \text{mm}$ and vary only $d_o$.
 
 2. **Sweep the diameter**
-   Set do to 20, 25, 30, 35, and 40 mm in turn. At each step record J and tau_max from the panel.
+   Set $d_o$ to 20, 25, 30, 35, and 40 mm in turn. At each step record $J$ and $\tau_{\max}$ from the panel.
 
 3. **Compute ratios**
-   For each diameter, compute tau / tau_ref and compare with (30 / d)^3, and compute J / J_ref and compare with (d / 30)^4.
+   For each diameter, compute $\tau/\tau_{\text{ref}}$ and compare with $(30/d)^3$, and compute $J/J_{\text{ref}}$ and compare with $(d/30)^4$.
 
 4. **Note the asymmetry**
-   Reducing d by 10 mm raises tau much more than increasing d by 10 mm lowers it. Sketch the reason from the 1/d^3 shape.
+   Reducing $d$ by 10 mm raises $\tau$ much more than increasing $d$ by 10 mm lowers it. Sketch the reason from the $1/d^3$ shape.
 
 5. **Save data**
    Create `data/exp5_diameter_sensitivity.csv` with columns: d_mm, J_mm4, tau_mpa, tau_ratio, J_ratio.
@@ -534,7 +534,7 @@ plt.show()
 
 ### Expected Results
 
-At d = 30 mm (reference): J = 79521.56 mm^4, tau = 37.73 MPa. The full table:
+At $d = 30\ \text{mm}$ (reference): $J = 79521.56\ \text{mm}^4$, $\tau = 37.73\ \text{MPa}$. The full table:
 
 | d (mm) | J (mm^4) | tau (MPa) | tau_ratio | (30/d)^3 | J_ratio | (d/30)^4 |
 |---|---|---|---|---|---|---|
@@ -544,11 +544,11 @@ At d = 30 mm (reference): J = 79521.56 mm^4, tau = 37.73 MPa. The full table:
 | 35 | 147323.51 | 23.76 | 0.6297 | 0.6297 | 1.8526 | 1.8526 |
 | 40 | 251327.41 | 15.92 | 0.4219 | 0.4219 | 3.1605 | 3.1605 |
 
-The computed ratios match the theoretical (30/d)^3 and (d/30)^4 columns exactly, confirming the power-law scaling. At d = 20 mm the stress of 127.32 MPa exceeds the 120 MPa allowable, showing that the solid-steel preset needs at least 21 mm to satisfy the stress criterion.
+The computed ratios match the theoretical $(30/d)^3$ and $(d/30)^4$ columns exactly, confirming the power-law scaling. At $d = 20\ \text{mm}$ the stress of 127.32 MPa exceeds the 120 MPa allowable, showing that the solid-steel preset needs at least 21 mm to satisfy the stress criterion.
 
 ### Design Question
 
-You need to reduce the shaft mass by 30 percent without exceeding tau_allow = 120 MPa. Mass is proportional to d^2 (for a fixed length). What is the target diameter, and does the stress check pass at that diameter for T = 200 N·m?
+You need to reduce the shaft mass by 30 percent without exceeding $\tau_{\text{allow}} = 120\ \text{MPa}$. Mass is proportional to $d^2$ (for a fixed length). What is the target diameter, and does the stress check pass at that diameter for $T = 200\ \text{N·m}$?
 
 ---
 
@@ -565,16 +565,16 @@ For the precision-shaft and aluminium-shaft presets, check the stress safety fac
 
 <Steps>
 1. **Configure the precision-shaft preset**
-   Open the precision-shaft preset (T = 80, L = 400, do = 25, G = 79, allow = 90). Record tau_max, SF, phi_deg, and twist per metre.
+   Open the precision-shaft preset ($T = 80$, $L = 400$, $d_o = 25$, $G = 79$, $\text{allow} = 90$). Record $\tau_{\max}$, $SF$, $\varphi_{\text{deg}}$, and twist per metre.
 
 2. **Configure the aluminium-shaft preset**
-   Open the aluminium-shaft preset (T = 120, L = 600, do = 35, G = 26, allow = 70). Record the same quantities.
+   Open the aluminium-shaft preset ($T = 120$, $L = 600$, $d_o = 35$, $G = 26$, $\text{allow} = 70$). Record the same quantities.
 
 3. **Apply the criteria**
-   For each preset, check: (a) is tau_max less than tau_allow? (b) is twist per metre less than 1.5 deg/m? Record which criterion governs.
+   For each preset, check: (a) is $\tau_{\max}$ less than $\tau_{\text{allow}}$? (b) is twist per metre less than 1.5 deg/m? Record which criterion governs.
 
 4. **Find the stiffness-limited diameter**
-   For each preset, rearrange phi_per_m = T * 180 / (pi * G_mpa * J * 1e-3) to find J_req and then d_req that meets exactly 1.5 deg/m.
+   For each preset, rearrange $\varphi_{\text{per m}} = 180\,T/(\pi\, G_{\text{MPa}}\, J \times 10^{-3})$ to find $J_{\text{req}}$ and then $d_{\text{req}}$ that meets exactly 1.5 deg/m.
 
 5. **Save data**
    Create `data/exp6_strength_vs_stiffness.csv` with columns: preset, tau_mpa, SF, twist_per_m, stress_criterion, stiffness_criterion, governing, d_req_stiffness_mm.
@@ -665,11 +665,11 @@ plt.show()
 
 ### Expected Results
 
-Precision-shaft: tau = 26.08 MPa (SF = 3.45 against 90 MPa, stress passes), twist/m = 1.5130 deg/m (exceeds 1.5 deg/m budget, stiffness governs). Minimum diameter to meet the 1.5 deg/m budget: 25.05 mm, barely above the current 25 mm. Aluminium-shaft: tau = 14.25 MPa (SF = 4.91 against 70 MPa, stress passes comfortably), twist/m = 1.7950 deg/m (exceeds budget, stiffness governs). Minimum diameter to meet the budget: 36.6 mm. The aluminium shaft fails the stiffness budget not because of its size or torque but because its shear modulus (G = 26 GPa) is only one-third that of steel. A 35 mm aluminium shaft twists more than a 25 mm steel shaft carrying 50 percent more torque over 50 percent more length, purely because of the material difference.
+Precision-shaft: $\tau = 26.08\ \text{MPa}$ ($SF = 3.45$ against 90 MPa, stress passes), twist/m = 1.5130 deg/m (exceeds 1.5 deg/m budget, stiffness governs). Minimum diameter to meet the 1.5 deg/m budget: 25.05 mm, barely above the current 25 mm. Aluminium-shaft: $\tau = 14.25\ \text{MPa}$ ($SF = 4.91$ against 70 MPa, stress passes comfortably), twist/m = 1.7950 deg/m (exceeds budget, stiffness governs). Minimum diameter to meet the budget: 36.6 mm. The aluminium shaft fails the stiffness budget not because of its size or torque but because its shear modulus ($G = 26\ \text{GPa}$) is only one-third that of steel. A 35 mm aluminium shaft twists more than a 25 mm steel shaft carrying 50 percent more torque over 50 percent more length, purely because of the material difference.
 
 ### Design Question
 
-The aluminium shaft is 40 percent lighter per unit volume than steel. If you must meet the 1.5 deg/m stiffness budget with the same torque and length, compare the cross-sectional areas of the minimum steel shaft (d_req from the precision calculation, G = 79 GPa, T = 80 N·m) and the minimum aluminium shaft (G = 26 GPa, T = 120 N·m). Which material actually gives the lighter shaft once the stiffness requirement is enforced?
+Aluminium is about 65 percent lighter per unit volume than steel (about $2700\ \text{kg/m}^3$ against $7850\ \text{kg/m}^3$). If each shaft must meet the 1.5 deg/m stiffness budget at its own preset torque, compare the cross-sectional areas of the minimum steel shaft ($d_{\text{req}}$ from the precision calculation, $G = 79\ \text{GPa}$, $T = 80\ \text{N·m}$) and the minimum aluminium shaft ($G = 26\ \text{GPa}$, $T = 120\ \text{N·m}$). Multiply each area by its density to get the mass per metre. Which material actually gives the lighter shaft once the stiffness requirement is enforced?
 
 ---
 

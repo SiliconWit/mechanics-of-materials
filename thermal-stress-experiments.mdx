@@ -24,7 +24,7 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-Free expansion is harmless. A rail that can slide expands by alpha times L times the temperature rise, develops no stress, and causes no damage. The moment you bolt both ends to a rigid frame the story changes: the same temperature rise becomes a compressive force that can buckle the rail or shear the bolts, and the stress depends only on the material, not on how long the member is. A gap between the member and the wall delays that contact, buying a range of temperature rise over which the member is still stress-free, but once the free expansion closes the gap every additional degree pushes the stress up fast. These six experiments turn those three ideas into habits you can carry into any constrained thermal design. #ThermalStress #ThermalExpansion #SolidMechanics
+Free expansion is harmless. A rail that can slide expands by $\alpha$ times $L$ times the temperature rise, develops no stress, and causes no damage. The moment you bolt both ends to a rigid frame the story changes: the same temperature rise becomes a compressive force that can buckle the rail or shear the bolts, and the stress depends only on the material, not on how long the member is. A gap between the member and the wall delays that contact, buying a range of temperature rise over which the member is still stress-free, but once the free expansion closes the gap every additional degree pushes the stress up fast. These six experiments turn those three ideas into habits you can carry into any constrained thermal design. #ThermalStress #ThermalExpansion #SolidMechanics
 
 :::tip[What you need]
 The [Thermal Stress Simulator](/product-development/thermal-stress-simulator/), and Python 3 with NumPy and Matplotlib for the analysis scripts (`pip install numpy matplotlib`).
@@ -38,14 +38,14 @@ The theory behind these experiments lives in [Thermal Stresses and Strains](/edu
 
 | Term | Meaning |
 |------|---------|
-| **Free thermal expansion** | delta = alpha L deltaT; the elongation a member undergoes when unconstrained; no stress develops |
-| **Thermal strain** | epsilon = alpha deltaT; dimensionless, independent of length |
-| **Fully constrained stress** | sigma = E alpha deltaT (compressive for heating); independent of member length |
-| **Coefficient of linear thermal expansion (alpha)** | Material property in units of 1/degC (or 1e-6/degC as tabulated); governs how much a member wants to expand per degree |
-| **Gap (g)** | Clearance between the free end of the member and the rigid wall; the member expands freely until delta_free = g, then contact begins |
-| **Contact threshold** | deltaT_c = g / (alpha L); the temperature rise at which free expansion exactly closes the gap |
-| **Post-contact stress** | sigma = -E (alpha deltaT - g/L); compressive, valid only when alpha L deltaT is greater than g |
-| **Safe temperature rise (deltaT_safe)** | The deltaT at which stress first reaches yield: deltaT_safe = (yield/E + g/L) / alpha |
+| **Free thermal expansion** | $\delta = \alpha L \Delta T$; the elongation a member undergoes when unconstrained; no stress develops |
+| **Thermal strain** | $\epsilon = \alpha \Delta T$; dimensionless, independent of length |
+| **Fully constrained stress** | $\sigma = E \alpha \Delta T$ (compressive for heating); independent of member length |
+| **Coefficient of linear thermal expansion ($\alpha$)** | Material property in units of 1/°C (or $10^{-6}$/°C as tabulated); governs how much a member wants to expand per degree |
+| **Gap ($g$)** | Clearance between the free end of the member and the rigid wall; the member expands freely until $\delta_{\text{free}} = g$, then contact begins |
+| **Contact threshold** | $\Delta T_c = g/(\alpha L)$; the temperature rise at which free expansion exactly closes the gap |
+| **Post-contact stress** | $\sigma = -E(\alpha \Delta T - g/L)$; compressive, valid only when $\alpha L \Delta T$ is greater than $g$ |
+| **Safe temperature rise ($\Delta T_{\text{safe}}$)** | The $\Delta T$ at which stress first reaches yield: $\Delta T_{\text{safe}} = (\sigma_{\text{yield}}/E + g/L)/\alpha$ |
 
 ### Experiment Workflow
 
@@ -79,24 +79,24 @@ You cannot read a thermal stress directly, but you can measure the two quantitie
 <InArticleAd />
 
 
-A free member always expands when heated and never develops a stress, no matter how large the temperature rise. That statement is obvious in theory but easy to forget in practice: it is the constraint, not the heating, that causes damage. This experiment measures the free expansion of each material in the simulator's library and confirms that sigma stays at zero throughout.
+A free member always expands when heated and never develops a stress, no matter how large the temperature rise. That statement is obvious in theory but easy to forget in practice: it is the constraint, not the heating, that causes damage. This experiment measures the free expansion of each material in the simulator's library and confirms that $\sigma$ stays at zero throughout.
 
 :::note[Objective]
-For five materials at a common length and temperature rise, calculate the free expansion delta = alpha L deltaT, confirm that the simulator reports zero stress in every case, and observe how alpha alone controls the expansion magnitude when L and deltaT are fixed.
+For five materials at a common length and temperature rise, calculate the free expansion $\delta = \alpha L \Delta T$, confirm that the simulator reports zero stress in every case, and observe how $\alpha$ alone controls the expansion magnitude when $L$ and $\Delta T$ are fixed.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Open the simulator. For each material (Steel, Aluminium, Copper, Brass, Titanium) set L = 1000 mm, deltaT = 80 degC, and gap = 999 (or any value large enough that free expansion never reaches it, effectively unconstrained). Alternatively, set gap = 0 but confirm that no contact indicator lights up; the simulator treats gap = 0 as a fully constrained wall, so to model a truly free member either use a very large gap or verify that the "contact" flag is off.
+   Open the simulator. The gap setting decides how the member is held. A very large gap means the member is free to expand, because it never reaches the wall. A gap of zero means the member is fully held, because the wall stops all expansion. This experiment needs a free member. For each material (Steel, Aluminium, Copper, Brass, Titanium) set $L = 1000$ mm, $\Delta T = 80$ °C, and gap = 999 mm, or the largest value the simulator allows. The free expansion in this experiment is always less than 2 mm, so any gap larger than that keeps the member free. Do not use gap = 0 here.
 
 2. **Predict**
-   For each material, compute delta_free = alpha times 1000 times 80 by hand. Use the alpha values: steel 12, aluminium 23, copper 17, brass 19, titanium 8.6 (all in units of 1e-6/degC). Predict sigma = 0 for all.
+   For each material, compute $\delta_{\text{free}} = \alpha \times 1000 \times 80$ by hand. Use the $\alpha$ values: steel 12, aluminium 23, copper 17, brass 19, titanium 8.6 (all in units of $10^{-6}$/°C). Predict $\sigma = 0$ for all.
 
 3. **Read the simulator**
    Confirm the stress readout is 0.00 MPa for each material. Record the displayed free expansion alongside your hand result.
 
 4. **Change the temperature rise**
-   Try deltaT = 40 and deltaT = 160 for steel. Confirm that delta_free scales linearly with deltaT and sigma remains 0.
+   Try $\Delta T = 40$ and $\Delta T = 160$ for steel. Confirm that $\delta_{\text{free}}$ scales linearly with $\Delta T$ and $\sigma$ remains 0.
 
 5. **Save data**
    Create `data/exp1_free_expansion.csv` with columns: material, alpha_per_C, L_mm, dT_degC, delta_free_mm, sigma_MPa.
@@ -104,7 +104,7 @@ For five materials at a common length and temperature rise, calculate the free e
 
 ### Data Collection Table
 
-| Material | alpha (1e-6/degC) | L (mm) | deltaT (degC) | delta_free (mm) | sigma (MPa) |
+| Material | $\alpha$ ($10^{-6}$/°C) | L (mm) | $\Delta T$ (°C) | $\delta_{\text{free}}$ (mm) | $\sigma$ (MPa) |
 |---|---|---|---|---|---|
 | Steel | 12 | 1000 | 80 | | |
 | Aluminium | 23 | 1000 | 80 | | |
@@ -159,11 +159,11 @@ plt.show()
 
 ### Expected Results
 
-For L = 1000 mm and deltaT = 80 degC, the free expansions are: Steel 0.9600 mm, Aluminium 1.8400 mm, Copper 1.3600 mm, Brass 1.5200 mm, Titanium 0.6880 mm. Sigma is 0.00 MPa for every material. The expansions are proportional to alpha: aluminium expands 1.92 times as much as titanium because its alpha is 23/8.6 = 2.67 times larger, but neither develops any stress.
+For $L = 1000$ mm and $\Delta T = 80$ °C, the free expansions are: Steel 0.9600 mm, Aluminium 1.8400 mm, Copper 1.3600 mm, Brass 1.5200 mm, Titanium 0.6880 mm. $\sigma$ is 0.00 MPa for every material. The expansions are proportional to $\alpha$: aluminium expands 2.67 times as much as titanium because its $\alpha$ is $23/8.6 = 2.67$ times larger, but neither develops any stress.
 
 ### Design Question
 
-A machine has an aluminium column and a steel frame, both L = 400 mm, heated by 60 degC. If the ends are free, how much does each part grow, and which direction does the relative motion go? If the parts were then bolted together at both ends, which one would end up in compression?
+A machine has an aluminium column and a steel frame, both $L = 400$ mm, heated by 60 °C. If the ends are free, how much does each part grow, and which direction does the relative motion go? If the parts were then bolted together at both ends, which one would end up in compression?
 
 ---
 
@@ -172,24 +172,24 @@ A machine has an aluminium column and a steel frame, both L = 400 mm, heated by 
 <InArticleAd />
 
 
-Once both ends of a member are fixed to a rigid wall, any attempt to expand becomes a compressive load. The result is a thermal stress sigma = E alpha deltaT that can easily exceed yield, and the disturbing feature is that it is the same at every length. A long pipe and a short bolt made of the same steel develop identical stress for the same temperature rise; the pipe just stores more elastic energy.
+Once both ends of a member are fixed to a rigid wall, any attempt to expand becomes a compressive load. The result is a thermal stress $\sigma = E \alpha \Delta T$ that can easily exceed yield, and the disturbing feature is that it is the same at every length. A long pipe and a short bolt made of the same steel develop identical stress for the same temperature rise; the pipe just stores more elastic energy.
 
 :::note[Objective]
-Using the steam-pipe preset (steel, L = 3000 mm, deltaT = 150 degC, gap = 0), measure the compressive thermal stress, compare it with the yield strength, and then show length independence by repeating the calculation at three other lengths.
+Using the steam-pipe preset (steel, $L = 3000$ mm, $\Delta T = 150$ °C, gap = 0), measure the compressive thermal stress, compare it with the yield strength, and then show length independence by repeating the calculation at three other lengths.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Load the steam-pipe preset: Steel, L = 3000 mm, deltaT = 150 degC, gap = 0.
+   Load the steam-pipe preset: Steel, $L = 3000$ mm, $\Delta T = 150$ °C, gap = 0.
 
 2. **Predict**
-   Compute sigma = E alpha deltaT = 200 000 MPa times 12e-6/degC times 150 degC. Then compare with the steel yield strength of 250 MPa and predict whether the member yields.
+   Compute $\sigma = E \alpha \Delta T = 200{,}000\ \text{MPa} \times 12 \times 10^{-6}\ /^\circ\text{C} \times 150\ ^\circ\text{C}$. Then compare with the steel yield strength of 250 MPa and predict whether the member yields.
 
 3. **Read the readout**
-   Record sigma and the safety factor from the simulator panel. Confirm the sign is compressive.
+   Record $\sigma$ and the safety factor from the simulator panel. Confirm the sign is compressive.
 
 4. **Test length independence**
-   Change L to 500, 1000, and 2000 mm while keeping deltaT = 150 and gap = 0. Record sigma at each length.
+   Change $L$ to 500, 1000, and 2000 mm while keeping $\Delta T = 150$ and gap = 0. Record $\sigma$ at each length.
 
 5. **Save data**
    Create `data/exp2_constrained.csv` with columns: L_mm, dT_degC, sigma_MPa, yield_MPa, SF.
@@ -197,7 +197,7 @@ Using the steam-pipe preset (steel, L = 3000 mm, deltaT = 150 degC, gap = 0), me
 
 ### Data Collection Table
 
-| L (mm) | deltaT (degC) | sigma (MPa) | Yield (MPa) | Safety factor |
+| L (mm) | $\Delta T$ (°C) | $\sigma$ (MPa) | Yield (MPa) | Safety factor |
 |---|---|---|---|---|
 | 500 | 150 | | 250 | |
 | 1000 | 150 | | 250 | |
@@ -255,11 +255,11 @@ plt.show()
 
 ### Expected Results
 
-Sigma = -360.00 MPa for every length. The steel yield strength is 250 MPa, so the safety factor is 0.6944 and the member yields at this temperature rise. The safe temperature limit without a gap is dT_safe = 250 / (200 000 times 12e-6) = 104.17 degC. The length-independence is exact: free expansion grows with L but the ratio (dFree - 0) / L cancels L completely, leaving sigma = -E alpha dT regardless.
+$\sigma = -360.00$ MPa for every length. The steel yield strength is 250 MPa, so the safety factor is 0.6944 and the member yields at this temperature rise. The safe temperature limit without a gap is $\Delta T_{\text{safe}} = 250/(200{,}000 \times 12 \times 10^{-6}) = 104.17$ °C. The length-independence is exact: free expansion grows with $L$ but the ratio $(\delta_{\text{free}} - 0)/L$ cancels $L$ completely, leaving $\sigma = -E \alpha \Delta T$ regardless.
 
 ### Design Question
 
-A steam pipe runs at 250 degC and is installed at 20 degC, giving deltaT = 230 degC. If the pipe material is steel (yield 250 MPa), what is the thermal stress under full constraint, and what is the minimum gap per metre of pipe length that would keep the stress below yield?
+A steam pipe runs at 250 °C and is installed at 20 °C, giving $\Delta T = 230$ °C. If the pipe material is steel (yield 250 MPa), what is the thermal stress under full constraint, and what is the minimum gap per metre of pipe length that would keep the stress below yield?
 
 ---
 
@@ -268,24 +268,24 @@ A steam pipe runs at 250 degC and is installed at 20 degC, giving deltaT = 230 d
 <InArticleAd />
 
 
-A gap between the free end of a member and the wall allows the member to expand harmlessly until the gap closes. After contact, every additional degree of temperature rise adds compressive stress at the rate E alpha per degree, less the relief the gap already provided. The transition from zero stress to rapid stress build-up is sharp and easy to miss in a design that only checks at the maximum expected temperature.
+A gap between the free end of a member and the wall allows the member to expand harmlessly until the gap closes. After contact, every additional degree of temperature rise adds compressive stress at the rate $E\alpha$ per degree, less the relief the gap already provided. The transition from zero stress to rapid stress build-up is sharp and easy to miss in a design that only checks at the maximum expected temperature.
 
 :::note[Objective]
-Using the copper-gap preset (Copper, L = 800 mm, gap = 5 mm), sweep deltaT across the contact threshold at 367.65 degC and measure how sigma jumps from zero to compressive as soon as free expansion exceeds the gap.
+Using the copper-gap preset (Copper, $L = 800$ mm, gap = 5 mm), sweep $\Delta T$ across the contact threshold at 367.65 °C and measure how $\sigma$ jumps from zero to compressive as soon as free expansion exceeds the gap.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Load the copper-gap preset: Copper, L = 800 mm, gap = 5 mm.
+   Load the copper-gap preset: Copper, $L = 800$ mm, gap = 5 mm.
 
 2. **Predict the contact threshold**
-   The member makes first contact when alpha L deltaT = gap. Compute deltaT_c = gap / (alpha L) = 5 / (17e-6 times 800) and write it down.
+   The member makes first contact when $\alpha L \Delta T = \text{gap}$. Compute $\Delta T_c = \text{gap}/(\alpha L) = 5/(17 \times 10^{-6} \times 800)$ and write it down.
 
-3. **Sweep deltaT below threshold**
-   Set deltaT to 100, 200, and 300 degC. At each step confirm sigma = 0 and record delta_free.
+3. **Sweep $\Delta T$ below threshold**
+   Set $\Delta T$ to 100, 200, and 300 °C. At each step confirm $\sigma = 0$ and record $\delta_{\text{free}}$.
 
 4. **Cross the threshold**
-   Set deltaT = 370 degC (just above threshold). Record the small compressive stress that appears. Then increase to 400 and 450 degC and record the growing stress.
+   Set $\Delta T = 370$ °C (just above threshold). Record the small compressive stress that appears. Then increase to 400 and 450 °C and record the growing stress.
 
 5. **Save data**
    Create `data/exp3_gap_contact.csv` with columns: dT_degC, dFree_mm, contact, sigma_MPa.
@@ -293,7 +293,7 @@ Using the copper-gap preset (Copper, L = 800 mm, gap = 5 mm), sweep deltaT acros
 
 ### Data Collection Table
 
-| deltaT (degC) | delta_free (mm) | Gap closed? | sigma (MPa) |
+| $\Delta T$ (°C) | $\delta_{\text{free}}$ (mm) | Gap closed? | $\sigma$ (MPa) |
 |---|---|---|---|
 | 100 | | | |
 | 200 | | | |
@@ -362,11 +362,11 @@ plt.show()
 
 ### Expected Results
 
-Contact threshold: dT_c = 5 / (17e-6 times 800) = 367.65 degC. Below that threshold sigma = 0.00 MPa for all deltaT values tested. At dT = 370 degC the free expansion is 5.0320 mm, just 0.032 mm past the gap, and sigma = -4.68 MPa. At dT = 400: sigma = -64.35 MPa. At dT = 450: sigma = -163.80 MPa. The copper yield strength is 210 MPa; first yield occurs at dTsafe = (210 / 117 000 + 5/800) / 17e-6 = 519.7 degC.
+Contact threshold: $\Delta T_c = 5/(17 \times 10^{-6} \times 800) = 367.65$ °C. Below that threshold $\sigma = 0.00$ MPa for all $\Delta T$ values tested. At $\Delta T = 370$ °C the free expansion is 5.0320 mm, just 0.032 mm past the gap, and $\sigma = -4.68$ MPa. At $\Delta T = 400$: $\sigma = -64.35$ MPa. At $\Delta T = 450$: $\sigma = -163.80$ MPa. The copper yield strength is 210 MPa; first yield occurs at $\Delta T_{\text{safe}} = (210/117{,}000 + 5/800)/(17 \times 10^{-6}) = 473.2$ °C.
 
 ### Design Question
 
-The same copper member operates at a maximum deltaT of 450 degC. With the current gap of 5 mm the stress reaches 163.80 MPa. What gap (to the nearest 0.5 mm) would keep the stress below 100 MPa at deltaT = 450 degC, and what would the new contact threshold be?
+The same copper member operates at a maximum $\Delta T$ of 450 °C. With the current gap of 5 mm the stress reaches 163.80 MPa. What gap (to the nearest 0.5 mm) would keep the stress below 100 MPa at $\Delta T = 450$ °C, and what would the new contact threshold be?
 
 ---
 
@@ -375,24 +375,24 @@ The same copper member operates at a maximum deltaT of 450 degC. With the curren
 <InArticleAd />
 
 
-Two things together set the constrained thermal stress: how much the material wants to expand (alpha) and how stiffly it resists being held back (E). The product E times alpha is the stress per degree of temperature rise. Steel has a relatively low alpha but a very high E; aluminium has the highest alpha in the simulator's library but a much lower E; titanium has the lowest alpha of the five and a moderate E. The ranking is not obvious from either property alone.
+Two things together set the constrained thermal stress: how much the material wants to expand ($\alpha$) and how stiffly it resists being held back ($E$). The product $E$ times $\alpha$ is the stress per degree of temperature rise. Steel has a relatively low $\alpha$ but a very high $E$; aluminium has the highest $\alpha$ in the simulator's library but a much lower $E$; titanium has the lowest $\alpha$ of the five and a moderate $E$. The ranking is not obvious from either property alone.
 
 :::note[Objective]
-With all five materials fully constrained (gap = 0) at deltaT = 100 degC and L = 1000 mm, compute and rank the compressive thermal stress and the safety factor against yield.
+With all five materials fully constrained (gap = 0) at $\Delta T = 100$ °C and $L = 1000$ mm, compute and rank the compressive thermal stress and the safety factor against yield.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select Steel, L = 1000 mm, deltaT = 100 degC, gap = 0. Record sigma and SF. Repeat for Aluminium, Copper, Brass, and Titanium.
+   Select Steel, $L = 1000$ mm, $\Delta T = 100$ °C, gap = 0. Record $\sigma$ and SF. Repeat for Aluminium, Copper, Brass, and Titanium.
 
 2. **Predict**
-   For each material, compute sigma = -E times alpha times 100 by hand (E in MPa, alpha in 1/degC). Predict which material will have the highest stress and which will have the highest safety factor.
+   For each material, compute $\sigma = -E \times \alpha \times 100$ by hand ($E$ in MPa, $\alpha$ in 1/°C). Predict which material will have the highest stress and which will have the highest safety factor.
 
 3. **Compare**
    Build the table below and rank by stress magnitude (most severe first).
 
 4. **Observe the counterintuitive result**
-   Aluminium has the highest alpha but the lowest E, so it ranks fourth in stress. Steel has only the second-highest alpha but its high E pushes it to the top. Titanium sits last in stress despite a moderate E because its alpha is the smallest.
+   Aluminium has the highest $\alpha$ but the lowest $E$, so it ranks fourth in stress. Steel has only the second-lowest $\alpha$ but its high $E$ pushes it to the top. Titanium sits last in stress despite a moderate $E$ because its $\alpha$ is the smallest.
 
 5. **Save data**
    Create `data/exp4_material_comparison.csv` with columns: material, alpha, E_GPa, sigma_MPa, yield_MPa, SF.
@@ -400,7 +400,7 @@ With all five materials fully constrained (gap = 0) at deltaT = 100 degC and L =
 
 ### Data Collection Table
 
-| Material | alpha (1e-6/degC) | E (GPa) | sigma (MPa) | Yield (MPa) | SF |
+| Material | $\alpha$ ($10^{-6}$/°C) | $E$ (GPa) | $\sigma$ (MPa) | Yield (MPa) | SF |
 |---|---|---|---|---|---|
 | Steel | 12 | 200 | | 250 | |
 | Aluminium | 23 | 69 | | 240 | |
@@ -469,11 +469,11 @@ plt.show()
 
 ### Expected Results
 
-Ranked by compressive stress magnitude at deltaT = 100 degC: Steel -240.00 MPa (SF = 1.042), Copper -198.90 MPa (SF = 1.056), Brass -190.00 MPa (SF = 1.053), Aluminium -158.70 MPa (SF = 1.512), Titanium -98.04 MPa (SF = 8.976). Steel tops the list despite having only the second-highest alpha because its E of 200 GPa is nearly three times that of aluminium. Titanium, with the lowest alpha and a moderate E, develops the least stress and sits far from yield even though its product E times alpha (8.6e-6 times 114 000 = 0.980 MPa/degC) is still substantial in absolute terms.
+Ranked by compressive stress magnitude at $\Delta T = 100$ °C: Steel -240.00 MPa ($SF = 1.042$), Copper -198.90 MPa ($SF = 1.056$), Brass -190.00 MPa ($SF = 1.053$), Aluminium -158.70 MPa ($SF = 1.512$), Titanium -98.04 MPa ($SF = 8.976$). Steel tops the list despite having only the second-lowest $\alpha$ because its $E$ of 200 GPa is nearly three times that of aluminium. Titanium, with the lowest $\alpha$ and a moderate $E$, develops the least stress and sits far from yield even though its product $E$ times $\alpha$ ($8.6 \times 10^{-6} \times 114{,}000 = 0.980$ MPa/°C) is still substantial in absolute terms.
 
 ### Design Question
 
-You need a constrained structural tie that can survive a full 200 degC temperature rise without yielding. Using only the simulator's five materials, which one gives the largest safety factor at that temperature rise, and what is the SF? Explain why titanium's very high yield strength dominates the answer.
+You need a constrained structural tie that can survive a full 200 °C temperature rise without yielding. Using only the simulator's five materials, which one gives the largest safety factor at that temperature rise, and what is the SF? Explain why titanium's very high yield strength dominates the answer.
 
 ---
 
@@ -482,37 +482,40 @@ You need a constrained structural tie that can survive a full 200 degC temperatu
 <InArticleAd />
 
 
-Every constrained member has a maximum temperature rise it can sustain before the thermal stress reaches yield. Without a gap that limit is dTsafe = yield / (E alpha). With a gap of g millimetres on a member of length L, the gap acts as a stored allowance: dTsafe = (yield/E + g/L) / alpha. Each millimetre of gap buys additional safe temperature range, and the gain depends on alpha and L rather than on the material strength.
+Every constrained member has a maximum temperature rise it can sustain before the thermal stress reaches yield. Without a gap that limit is $\Delta T_{\text{safe}} = \sigma_{\text{yield}}/(E\alpha)$. With a gap of $g$ millimetres on a member of length $L$, the gap acts as a stored allowance: $\Delta T_{\text{safe}} = (\sigma_{\text{yield}}/E + g/L)/\alpha$. Each millimetre of gap buys additional safe temperature range, and the gain depends on $\alpha$ and $L$ rather than on the material strength.
 
 :::note[Objective]
-For steel (L = 1000 mm) compare dTsafe at gap = 0 against gap = 3 mm (the rail-track preset gap), then sweep gap from 0 to 6 mm and plot how the safe temperature rise grows with the gap allowance.
+For steel ($L = 1000$ mm) compare $\Delta T_{\text{safe}}$ at gap = 0 against gap = 3 mm (the rail-track preset gap), then sweep gap from 0 to 6 mm and plot how the safe temperature rise grows with the gap allowance.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Load the alu-strut preset: Aluminium, L = 500 mm, gap = 0. Note the dTsafe shown in the panel. Then switch to Steel, L = 1000 mm, gap = 0 (the no-gap baseline).
+   Set Steel, $L = 1000$ mm, gap = 0. This is the no-gap baseline. Note the $\Delta T_{\text{safe}}$ shown in the panel.
 
-2. **Predict dTsafe for steel, gap = 0**
-   Compute dTsafe = yield / (E times alpha) = 250 / (200 000 times 12e-6).
+2. **Predict $\Delta T_{\text{safe}}$ for steel, gap = 0**
+   Compute $\Delta T_{\text{safe}} = \sigma_{\text{yield}}/(E \times \alpha) = 250/(200{,}000 \times 12 \times 10^{-6})$.
 
 3. **Add a gap**
-   Set gap = 3 mm (matching the rail-track preset gap, same L = 1000 mm). Compute the new dTsafe = (yield/E + g/L) / alpha = (250/200 000 + 3/1000) / 12e-6.
+   Set gap = 3 mm (matching the rail-track preset gap, same $L = 1000$ mm). Compute the new $\Delta T_{\text{safe}} = (\sigma_{\text{yield}}/E + g/L)/\alpha = (250/200{,}000 + 3/1000)/(12 \times 10^{-6})$.
 
 4. **Read the panel**
-   Confirm both values against the simulator's dTsafe display.
+   Confirm both values against the simulator's $\Delta T_{\text{safe}}$ display.
 
-5. **Save data**
+5. **Compare with aluminium**
+   Load the alu-strut preset: Aluminium, $L = 500$ mm, gap = 0. Compute $\Delta T_{\text{safe}} = 240/(69{,}000 \times 23 \times 10^{-6})$ and confirm it against the panel.
+
+6. **Save data**
    Create `data/exp5_safe_temperature.csv` with columns: material, L_mm, gap_mm, dTsafe_degC.
 </Steps>
 
 ### Data Collection Table
 
-| Material | L (mm) | gap (mm) | dTsafe formula | dTsafe (degC) |
+| Material | L (mm) | gap (mm) | $\Delta T_{\text{safe}}$ formula | $\Delta T_{\text{safe}}$ (°C) |
 |---|---|---|---|---|
-| Steel | 1000 | 0 | yield / (E alpha) | |
-| Steel | 1000 | 3 | (yield/E + g/L) / alpha | |
-| Steel | 1000 | 6 | (yield/E + g/L) / alpha | |
-| Aluminium | 500 | 0 | yield / (E alpha) | |
+| Steel | 1000 | 0 | $\sigma_{\text{yield}}/(E\alpha)$ | |
+| Steel | 1000 | 3 | $(\sigma_{\text{yield}}/E + g/L)/\alpha$ | |
+| Steel | 1000 | 6 | $(\sigma_{\text{yield}}/E + g/L)/\alpha$ | |
+| Aluminium | 500 | 0 | $\sigma_{\text{yield}}/(E\alpha)$ | |
 
 ### Python Analysis
 
@@ -567,11 +570,11 @@ plt.show()
 
 ### Expected Results
 
-Steel, L = 1000 mm, gap = 0: dTsafe = 104.17 degC. Steel, gap = 3 mm: dTsafe = 354.17 degC, a 3.40-fold increase from a 3 mm gap. Aluminium, L = 500 mm, gap = 0: dTsafe = 151.23 degC (higher than steel because the lower E partially offsets the higher alpha in the quotient yield / (E alpha)). The gap sweep shows that each additional millimetre of gap adds 83.33 degC to the safe limit for this geometry (1000 mm steel), which follows directly from deltaT_per_mm = 1 / (alpha L) = 1 / (12e-6 times 1000).
+Steel, $L = 1000$ mm, gap = 0: $\Delta T_{\text{safe}} = 104.17$ °C. Steel, gap = 3 mm: $\Delta T_{\text{safe}} = 354.17$ °C, a 3.40-fold increase from a 3 mm gap. Aluminium, $L = 500$ mm, gap = 0: $\Delta T_{\text{safe}} = 151.23$ °C (higher than steel because the lower $E$ partially offsets the higher $\alpha$ in the quotient $\sigma_{\text{yield}}/(E\alpha)$). The gap sweep shows that each additional millimetre of gap adds 83.33 °C to the safe limit for this geometry (1000 mm steel), which follows directly from $\Delta T_{\text{per mm}} = 1/(\alpha L) = 1/(12 \times 10^{-6} \times 1000)$.
 
 ### Design Question
 
-A steel pipe (yield 250 MPa, alpha 12e-6/degC, E 200 GPa) is 1500 mm long and experiences a maximum temperature rise of 200 degC during operation. The current design has no gap and the pipe yields. What is the minimum gap (to the nearest 0.5 mm) that keeps the pipe in the elastic range, and what safety factor does that gap give at deltaT = 200 degC?
+A steel pipe (yield 250 MPa, $\alpha$ $12 \times 10^{-6}$/°C, $E$ 200 GPa) is 1500 mm long and experiences a maximum temperature rise of 200 °C during operation. The current design has no gap and the pipe yields. What is the minimum gap (to the nearest 0.5 mm) that keeps the pipe in the elastic range, and what safety factor does that gap give at $\Delta T = 200$ °C?
 
 ---
 
@@ -583,21 +586,21 @@ A steel pipe (yield 250 MPa, alpha 12e-6/degC, E 200 GPa) is 1500 mm long and ex
 Railway rails and bridge girders are designed with deliberate gaps at their joints so that summer heating does not buckle the structure. The gap must be large enough that the free expansion at the maximum expected temperature rise stays below the gap (no stress) or, if the gap is smaller than the maximum free expansion, that the resulting stress stays within an acceptable fraction of yield. This experiment works through that sizing calculation for a steel rail segment.
 
 :::note[Objective]
-For a steel rail segment L = 1000 mm installed at the ambient temperature, determine the minimum gap that keeps the thermal stress below yield at deltaT = 120 degC, then find the gap that achieves a safety factor of at least 1.5 at that temperature rise.
+For a steel rail segment $L = 1000$ mm installed at the ambient temperature, determine the minimum gap that keeps the thermal stress below yield at $\Delta T = 120$ °C, then find the gap that achieves a safety factor of at least 1.5 at that temperature rise.
 :::
 
 <Steps>
 1. **Assess the unconstrained risk**
-   Set the simulator to Steel, L = 1000 mm, deltaT = 120 degC, gap = 0. Read sigma and confirm it exceeds yield.
+   Set the simulator to Steel, $L = 1000$ mm, $\Delta T = 120$ °C, gap = 0. Read $\sigma$ and confirm it exceeds yield.
 
 2. **Compute the minimum gap for no yield**
-   From sigma = -E (alpha deltaT - g/L) = -yield, rearrange: g_min = L (alpha deltaT - yield/E). Calculate this value.
+   From $\sigma = -E(\alpha \Delta T - g/L) = -\sigma_{\text{yield}}$, rearrange: $g_{\min} = L(\alpha \Delta T - \sigma_{\text{yield}}/E)$. Calculate this value.
 
-3. **Target SF = 1.5**
-   Replace yield with yield/1.5 in the formula above to get the gap needed for a safety factor of 1.5: g_sf = L (alpha deltaT - yield/(1.5 E)). Round up to the nearest 0.5 mm for a practical value.
+3. **Target $SF = 1.5$**
+   Replace $\sigma_{\text{yield}}$ with $\sigma_{\text{yield}}/1.5$ in the formula above to get the gap needed for a safety factor of 1.5: $g_{sf} = L(\alpha \Delta T - \sigma_{\text{yield}}/(1.5E))$. Round up to the nearest 0.5 mm for a practical value.
 
 4. **Verify in the simulator**
-   Enter the practical gap. Read sigma and SF. Confirm the safety factor is at least 1.5.
+   Enter the practical gap. Read $\sigma$ and SF. Confirm the safety factor is at least 1.5.
 
 5. **Save data**
    Create `data/exp6_expansion_joint.csv` with columns: L_mm, dT_degC, gap_mm, sigma_MPa, SF.
@@ -605,11 +608,11 @@ For a steel rail segment L = 1000 mm installed at the ambient temperature, deter
 
 ### Data Collection Table
 
-| L (mm) | deltaT (degC) | gap (mm) | sigma (MPa) | Safety factor |
+| L (mm) | $\Delta T$ (°C) | gap (mm) | $\sigma$ (MPa) | Safety factor |
 |---|---|---|---|---|
 | 1000 | 120 | 0 | | |
-| 1000 | 120 | g_min | | ~1.0 |
-| 1000 | 120 | g_sf (practical) | | >= 1.5 |
+| 1000 | 120 | $g_{\min}$ | | ~1.0 |
+| 1000 | 120 | $g_{sf}$ (practical) | | $\geq 1.5$ |
 
 ### Python Analysis
 
@@ -677,11 +680,11 @@ plt.show()
 
 ### Expected Results
 
-No gap: sigma = -288.00 MPa, which exceeds the steel yield of 250 MPa (YIELDS = True). Minimum gap for no yield: g_min = 1000 times (12e-6 times 120 - 250/200 000) = 1000 times (0.001440 - 0.001250) = 0.1900 mm. Gap for SF = 1.5 (target stress 166.67 MPa): g_sf = 1000 times (0.001440 - 166.67/200 000) = 0.6067 mm, rounded up to g_practical = 1.0 mm. With a 1.0 mm gap: sigma = -88.00 MPa, SF = 2.84. The two-panel plot shows the kink at g_min (stress first drops to -yield) and how the safety factor climbs steeply once the gap exceeds g_min.
+No gap: $\sigma = -288.00$ MPa, which exceeds the steel yield of 250 MPa (YIELDS = True). Minimum gap for no yield: $g_{\min} = 1000 \times (12 \times 10^{-6} \times 120 - 250/200{,}000) = 1000 \times (0.001440 - 0.001250) = 0.1900$ mm. Gap for $SF = 1.5$ (target stress 166.67 MPa): $g_{sf} = 1000 \times (0.001440 - 166.67/200{,}000) = 0.6067$ mm, rounded up to $g_{\text{practical}} = 1.0$ mm. With a 1.0 mm gap: $\sigma = -88.00$ MPa, $SF = 2.84$. The two-panel plot shows the kink at $g_{\min}$ (stress first drops to $-\sigma_{\text{yield}}$) and how the safety factor climbs steeply once the gap exceeds $g_{\min}$.
 
 ### Design Question
 
-The same rail segment must now survive a service temperature range from -30 degC (cold installation) to +90 degC (hot summer rail surface), giving deltaT = 120 degC. If the track has a segment-to-segment spacing that means you can only accommodate a total gap of 0.8 mm per metre of rail, what material from the simulator's library would give the highest safety factor at that gap allocation, and why?
+The same rail segment must now survive a service temperature range from -30 °C (cold installation) to +90 °C (hot summer rail surface), giving $\Delta T = 120$ °C. If the track has a segment-to-segment spacing that means you can only accommodate a total gap of 0.8 mm per metre of rail, what material from the simulator's library would give the highest safety factor at that gap allocation, and why?
 
 ---
 
@@ -690,7 +693,7 @@ The same rail segment must now survive a service temperature range from -30 degC
 <InArticleAd />
 
 
-Across the six experiments you confirmed that free expansion is always harmless and that constraint, not heating, is the source of thermal stress. You measured the length independence of constrained stress, watched the gap-then-contact transition sharpen the stress response from zero to compressive in a narrow temperature band, and ranked five materials by the product E times alpha rather than by either property alone. The safe-temperature-rise formula and the expansion-joint sizing procedure complete the toolkit: together they let you screen any constrained thermal design before building a prototype, using nothing more than the material table and the two relations sigma = E alpha deltaT and dTsafe = (yield/E + g/L) / alpha. Carry them forward into the fuller structural analyses in [Thermal Stresses and Strains](/education/mechanics-of-materials/thermal-stresses-and-strains) and the rest of the [Solid Mechanics Analyzer](/product-development/solid-mechanics-analyzer/) set.
+Across the six experiments you confirmed that free expansion is always harmless and that constraint, not heating, is the source of thermal stress. You measured the length independence of constrained stress, watched the gap-then-contact transition sharpen the stress response from zero to compressive in a narrow temperature band, and ranked five materials by the product $E$ times $\alpha$ rather than by either property alone. The safe-temperature-rise formula and the expansion-joint sizing procedure complete the toolkit: together they let you screen any constrained thermal design before building a prototype, using nothing more than the material table and the two relations $\sigma = E \alpha \Delta T$ and $\Delta T_{\text{safe}} = (\sigma_{\text{yield}}/E + g/L)/\alpha$. Carry them forward into the fuller structural analyses in [Thermal Stresses and Strains](/education/mechanics-of-materials/thermal-stresses-and-strains) and the rest of the [Solid Mechanics Analyzer](/product-development/solid-mechanics-analyzer/) set.
 
 
 

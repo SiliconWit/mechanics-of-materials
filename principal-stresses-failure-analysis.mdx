@@ -24,10 +24,10 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-Real components rarely experience pure tension, pure bending, or pure torsion in isolation. A robotic joint shaft bends and twists simultaneously; a bracket carries tension on one face and compression on the other along with shear. Checking each stress component individually against the yield strength gives a false sense of safety because the combination of stresses can cause failure at levels well below the individual limits. Mohr's circle and failure theories (von Mises, Tresca, maximum normal stress) provide the framework for combining these stresses into a single safety assessment. In this lesson you will construct Mohr's circle, find principal stresses, and apply failure criteria to predict whether a mechatronic joint will survive its combined loading. #PrincipalStress #MohrsCircle #FailureAnalysis
+A pin is checked for bending and passes. It is checked for torsion and passes. It still yields, because the largest stress at a point is often on a plane that nobody checked: the stress you find depends on the direction in which you cut the material. This lesson shows how to find the largest and smallest stresses at a point (the principal stresses), how Mohr's circle shows every direction in one picture, and how a failure theory turns the result into one number to compare with the yield strength. You use it on the pin of a universal joint in a robot drive. #PrincipalStress #MohrsCircle #FailureAnalysis
 
 :::tip[Try it as you read]
-This lesson pairs with the [Mohr's Circle Simulator](/product-development/mohrs-circle-simulator/): rotate a stress element and watch its face stresses ride around the circle, then work the six [Stress Transformation Experiments](/education/mechanics-of-materials/stress-transformation-experiments) for Python-verified practice.
+This lesson pairs with the [Mohr's Circle Simulator](/product-development/mohrs-circle-simulator/): turn a small square of material and watch the stresses on its faces move around the circle. The [Stress Transformation Experiments](/education/mechanics-of-materials/stress-transformation-experiments/) check each result with Python.
 :::
 
 ---
@@ -39,440 +39,366 @@ By the end of this lesson, you will be able to:
 1. **Construct** Mohr's circle for any 2D stress state in mechatronic components
 2. **Determine** principal stresses and maximum shear stresses graphically and analytically
 3. **Apply** appropriate failure theories for different materials and loading conditions
-4. **Predict** failure modes in complex mechatronic joint designs
+4. **Decide** whether a loaded part will yield, and with what safety factor
 
-## Real-World System Problem: Universal Joint in Robotic Drive System
-
-<InArticleAd />
-
-
-Universal joints in robotic drive trains experience complex 3D stress states from transmitted torque, bending moments, and contact forces. Understanding principal stress distributions and applying appropriate failure criteria is essential for preventing catastrophic failures in critical robotic applications.
-
-### System Description
-
-**Robotic Universal Joint Components:**
-- **Cross Pin** (transmits torque between intersecting shafts)
-- **Bearing Races** (allow rotation while constraining radial motion)
-- **Fork Arms** (connect to input and output shafts)
-- **Needle Bearings** (reduce friction in oscillating motion)
-- **Sealing System** (protects against contamination)
-
-### The Complex Stress Challenge
-
-During robotic operation, the universal joint pin experiences:
-
-:::note[Multi-Dimensional Stress State]
-- **Torsional shear** from transmitted torque (τ_xy, τ_xz)
-- **Bending stresses** from joint angulation (σ_x, σ_y)
-- **Contact stresses** at bearing interfaces (localized σ and τ)
-- **Fatigue loading** from oscillating joint angles
-- **Stress concentrations** at pin diameter changes and keyways
-:::
-
-> **Engineering Question:** How do we determine the critical stress state in a universal joint pin that experiences 500 N·m torque, 200 N·m bending moment, and bearing contact forces, and predict which failure mode is most likely to occur?
-
-### Why Principal Stress Analysis Matters
-
-**Consequences of Inadequate Stress Analysis:**
-- **Unexpected joint failure** during critical operations
-- **Catastrophic system shutdown** from drive train failure
-- **Safety hazards** in human-robot collaborative environments
-- **Expensive repairs** and extended downtime
-- **Loss of system reliability** and customer confidence
-
-**Benefits of Comprehensive Stress Analysis:**
-- **Accurate failure prediction** under complex loading
-- **Optimized joint geometry** for maximum reliability
-- **Material selection** based on actual stress states
-- **Preventive maintenance** scheduling based on stress analysis
-
-## Fundamental Theory: Principal Stress Analysis
+## Real-World System Problem: Universal joint in robotic drive system
 
 <InArticleAd />
 
 
-### The General Stress State
+A universal joint lets a drive shaft turn through an angle. Each shaft ends in a fork, and a cross-shaped pin joins the two forks. The pin carries three loads at once: the torque of the drive twists it, the angle of the joint bends it, and the bearings press on its surface.
 
-At any point in a stressed body, the stress state can be described by:
+```text
+           bearing presses on the surface: 50 MPa
+                     ▼  ▼  ▼  ▼  ▼
+         ┌──────────────────────────────┐
+         │   pin, 25 mm in diameter     │  ↻ torque 500 N·m
+         └──────────────────────────────┘
+         bending moment 200 N·m bends the pin
+```
 
-**2D Stress Components:**
-- Normal stresses: σ_x, σ_y
-- Shear stress: τ_xy (= τ_yx)
+> **Engineering Question:** What is the largest stress at the surface of the pin, on which plane does it act, and will the pin yield?
 
-**3D Stress Components:**
-- Normal stresses: σ_x, σ_y, σ_z
-- Shear stresses: τ_xy, τ_yz, τ_zx
+## Fundamental Theory: Principal stress analysis
 
-### Principal Stress Theory
+<InArticleAd />
+
+
+### The stress at a point depends on the cut
+
+Glue two pieces of wood end to end and pull them. If the joint is cut square, the glue is only pulled. If the joint is cut at a slant, the same pull also tries to slide one piece along the other, so the glue carries tension and shear together. The load did not change, only the direction of the cut.
+
+A glued joint is one real cut. A solid part must survive on every cut that can be imagined.
+
+To describe the stress at a point, imagine a very small square of material around it, with faces along x and y. Three numbers act on its faces:
+
+- $\sigma_x$ = normal stress on the x face, in MPa (tension is positive, compression is negative)
+- $\sigma_y$ = normal stress on the y face (MPa)
+- $\tau_{xy}$ = shear stress on the faces (MPa)
+
+### Principal stress theory
+
+Turn the square and the three numbers change. At one angle the shear stress becomes zero. The two normal stresses at that angle are the principal stresses: $\sigma_1$ is the largest normal stress at the point and $\sigma_2$ is the smallest. No cut carries more tension than $\sigma_1$.
 
 <Tabs>
-  <TabItem label="Principal Stress Equations">
-    
-    <Card title="Principal Stress Equations" icon="document">
-    **For 2D stress state:**
-    $$\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
-    
-    **Principal angles:**
-    $$\tan(2\theta_p) = \frac{2\tau_{xy}}{\sigma_x - \sigma_y}$$
-    
-    **Where:**
-    - $\sigma_1, \sigma_2$ = Principal stresses (Pa)
-    - $\sigma_x, \sigma_y$ = Normal stresses on coordinate planes (Pa)
-    - $\tau_{xy}$ = Shear stress on coordinate planes (Pa)
-    - $\theta_p$ = Orientation of principal planes (degrees)
-    
-    **Physical Meaning:** Principal stresses are the maximum and minimum normal stresses at a point, occurring on planes with zero shear stress.
-    </Card>
+  <TabItem label="Principal stress equations">
 
-    
+<Card title="Principal stress equations" icon="document">
+The principal stresses are the average of the two normal stresses, plus and minus one square root:
+
+$$\sigma_{1,2} = \frac{\sigma_x + \sigma_y}{2} \pm \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
+
+The angle $\theta_p$ (theta, in degrees) from the x face to the plane of a principal stress is given by:
+
+$$\tan(2\theta_p) = \frac{2\tau_{xy}}{\sigma_x - \sigma_y}$$
+</Card>
+
   </TabItem>
-  <TabItem label="Maximum Shear Stress">
-    
-    <Card title="Maximum Shear Stress Analysis" icon="document">
-    **In-plane maximum shear:**
-    $$\tau_{max} = \frac{\sigma_1 - \sigma_2}{2}$$
-    
-    **Maximum shear planes:**
-    $$\theta_s = \theta_p \pm 45°$$
-    
-    **Associated normal stress:**
-    $$\sigma_{avg} = \frac{\sigma_1 + \sigma_2}{2} = \frac{\sigma_x + \sigma_y}{2}$$
-    
-    **Physical Meaning:** Maximum shear stress occurs on planes oriented 45° from the principal planes, with the average normal stress acting on those planes.
-    </Card>
-    
+  <TabItem label="Maximum shear stress">
+
+<Card title="Maximum shear stress" icon="document">
+The largest shear stress in the plane is half the difference of the principal stresses:
+
+$$\tau_{\max} = \frac{\sigma_1 - \sigma_2}{2}$$
+
+It acts on planes at 45° to the principal planes. On those planes the normal stress is the average, $\sigma_{\text{avg}} = (\sigma_x + \sigma_y)/2$.
+</Card>
+
   </TabItem>
-  <TabItem label="3D Stress State">
-    
-    **Three principal stresses:** σ₁ ≥ σ₂ ≥ σ₃
-    
-    **Absolute maximum shear:**
-    $$\tau_{abs,max} = \frac{\sigma_1 - \sigma_3}{2}$$
-    
-    **Critical for failure analysis** when one principal stress is zero
-    
+  <TabItem label="Third principal stress">
+
+A free surface carries no stress at right angles to itself, so a third principal stress, equal to zero, exists there. Put the three in order, $\sigma_1 \geq \sigma_2 \geq \sigma_3$. The largest shear stress on any plane is then:
+
+$$\tau_{\text{abs},\max} = \frac{\sigma_1 - \sigma_3}{2}$$
+
   </TabItem>
 </Tabs>
 
-### Mohr's Circle Construction
+### Mohr's circle construction
 
-Mohr's circle provides a graphical method for stress transformation:
+Plot each cut as one point: its normal stress across and its shear stress up. As the cut turns, the point moves on a circle. This is Mohr's circle, and two numbers define it.
 
-<Card title="Mohr's Circle Parameters" icon="document">
-**Circle Center:**
-$$C = \left(\frac{\sigma_x + \sigma_y}{2}, 0\right)$$
+<Card title="Mohr's circle parameters" icon="document">
+The centre $C$ is on the horizontal axis, at the average normal stress:
 
-**Circle Radius:**
+$$C = \frac{\sigma_x + \sigma_y}{2}$$
+
+The radius $R$ is the square root in the principal stress equation:
+
 $$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2}$$
-
-**Physical Meaning:** Mohr's circle graphically represents all possible stress states at a point as the coordinate system is rotated. The circle's diameter equals the difference between principal stresses.
 </Card>
 
-**Key Points on Circle:**
-- Principal stresses: σ₁ and σ₂ (intersections with σ-axis)
-- Maximum shear: τ_max (top and bottom of circle)
-- Any stress state: Point on circle circumference
+- The circle crosses the horizontal axis at $\sigma_1 = C + R$ and $\sigma_2 = C - R$.
+- Its top and bottom give the largest shear stress, $\tau_{\max} = R$.
+- When the cut turns through an angle $\theta$, its point moves through $2\theta$ on the circle.
 
-:::tip[Mohr's Circle Applications]
-1. **Find principal stresses** graphically
-2. **Determine stress at any angle** of rotation
-3. **Visualize stress transformation** relationships
-4. **Identify critical orientations** for failure analysis
-:::
-
-Constructing the circle by hand for every state is slow, and the link between the rotating element and the moving point is exactly what gets lost on paper. Open the interactive tool and drag the element through its rotation while the circle, the principal stresses, and the safety factor update live:
+Turn the square yourself in the simulator:
 
 <LinkButton href="/product-development/mohrs-circle-simulator/" variant="primary">Open the Mohr's Circle Simulator</LinkButton>
 
-## Application: Universal Joint Pin Analysis
+### Failure theories
+
+A tension test gives one number for a metal, the yield strength $\sigma_{yield}$: the stress at which it stops springing back. A real part has two or three principal stresses. A failure theory turns them into one number to compare with $\sigma_{yield}$.
+
+- **Maximum normal stress theory.** Compare $\sigma_1$ alone with the strength. It suits brittle materials such as cast iron, which crack under tension. It misses yielding that shear causes, so do not use it for ductile metals (metals that stretch before they break).
+- **Maximum shear stress theory (Tresca).** A ductile metal yields when $\tau_{\max}$ reaches $\sigma_{yield}/2$, the shear stress at yield in a tension test. This is the cautious choice.
+- **Von Mises theory.** A ductile metal yields when the equivalent stress $\sigma_{\text{eq}}$ reaches $\sigma_{yield}$. Tests agree best with this theory.
+
+$$\sigma_{\text{eq}} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}$$
+
+Equal pressure from all sides squeezes a metal but does not make it yield. Unequal stresses change its shape, and that causes yielding. The von Mises stress measures this difference, so it is one number for how close the point is to yielding. The safety factor (SF) is $\sigma_{yield}/\sigma_{\text{eq}}$.
+
+## Application: Universal joint pin analysis
 
 <InArticleAd />
 
 
-Let's analyze a critical universal joint pin under complex loading.
-
 :::note[Problem Statement]
-**Heavy-Duty Robotic Universal Joint Pin Analysis**
+- **Pin:** solid round steel pin, diameter $d = 25$ mm
+- **Material:** steel 4340, $\sigma_{yield} = 470$ MPa
+- **Torque:** $T = 500$ N·m
+- **Bending moment:** $M = 200$ N·m, from the angle of the joint
+- **Bearing pressure:** 50 MPa on the surface of the pin
+- **Required safety factor:** 4
 
-**What we need to determine:**
-1. **Individual stress components** from bending, torsion, and contact loading
-2. **Principal stresses** using analytical methods and Mohr's circle
-3. **Critical failure modes** using multiple failure theories
-4. **Design adequacy** and required modifications for safe operation
-
-**Key Question:** Can a 25 mm diameter universal joint pin safely handle 500 N·m torque and 200 N·m bending with SF = 4, and which failure theory governs the design?
+**Key Question:** Can the 25 mm pin carry 500 N·m of torque and 200 N·m of bending with a safety factor of 4, and which failure theory gives the lowest safety factor?
 :::
 
-<hr />
-
-**System Parameters:**
-- Heavy-duty robotic universal joint pin (critical drive component)
-- Pin diameter: 25 mm (solid circular cross-section)
-- Material: Steel 4340 (**`σ_yield`** = 470 MPa, σ_ultimate = 745 MPa)
-- Applied torque: **`T`** = 500 N·m
-- Bending moment: **`M`** = 200 N·m (from joint angulation)
-- Contact pressure: 50 MPa (localized bearing load)
-- **`Safety factor`**: 4 (industrial environment)
-
-<hr />
-
-### Step 1: Calculate Individual Stress Components
+### Step 1: Calculate individual stress components
 
 <details>
 <summary>**Click to reveal individual stress component calculations**</summary>
 
 <Steps>
 
-1. **Cross-sectional properties:**
-   
-   $$A = \frac{\pi d^2}{4} = \frac{\pi (25)^2}{4} = 491 \text{ mm}^2$$
-   $$I = \frac{\pi d^4}{64} = \frac{\pi (25)^4}{64} = 19,175 \text{ mm}^4$$
-   $$J = \frac{\pi d^4}{32} = \frac{\pi (25)^4}{32} = 38,350 \text{ mm}^4$$
+1. **Second moment of area** of the round pin, for the bending stress:
 
-2. **Bending stress at surface:**
-   
-   $$\sigma_x = \frac{Mc}{I} = \frac{200 \times 10^3 \times 12.5}{19,175} = 130.4 \text{ MPa}$$
+   $$I = \frac{\pi d^4}{64} = \frac{\pi (25 \text{ mm})^4}{64} = 19{,}175 \text{ mm}^4$$ ✅
 
-3. **Torsional shear stress:**
-   
-   $$\tau_{xy} = \frac{Tr}{J} = \frac{500 \times 10^3 \times 12.5}{38,350} = 163.2 \text{ MPa}$$
+2. **Polar second moment of area**, for the torsional stress. For a round section it is twice $I$:
 
-4. **Contact stress (localized bearing load):**
-   
-   $$\sigma_y = -50 \text{ MPa (compressive)}$$
+   $$J = \frac{\pi d^4}{32} = \frac{\pi (25 \text{ mm})^4}{32} = 38{,}350 \text{ mm}^4$$ ✅
+
+3. **Bending stress at the surface**, with 200 N·m written as $200 \times 10^3$ N·mm and $c = d/2 = 12.5$ mm. Take the x axis along the pin:
+
+   $$\sigma_x = \frac{Mc}{I} = \frac{200 \times 10^3 \text{ N·mm} \times 12.5 \text{ mm}}{19{,}175 \text{ mm}^4} = 130.4 \text{ MPa}$$ ✅
+
+4. **Torsional shear stress at the surface**, with $r = 12.5$ mm:
+
+   $$\tau_{xy} = \frac{Tr}{J} = \frac{500 \times 10^3 \text{ N·mm} \times 12.5 \text{ mm}}{38{,}350 \text{ mm}^4} = 163.0 \text{ MPa}$$ ✅
+
+5. **Bearing stress.** The bearing presses on the surface, which is a compression across the pin, so it is negative:
+
+   $$\sigma_y = -50 \text{ MPa}$$ ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Principal Stress Analysis Using Mohr's Circle
+### Step 2: Principal stress analysis using Mohr's circle
 
 <details>
 <summary>**Click to reveal Mohr's circle and principal stress calculations**</summary>
 
 <Steps>
 
-1. **Stress state at critical point:**
-   
-   - σ_x = 130.4 MPa (tension from bending)
-   - σ_y = -50 MPa (compression from contact)
-   - τ_xy = 163.2 MPa (from torsion)
+1. **Centre of the circle**, the average normal stress:
 
-2. **Mohr's circle parameters:**
-   
-   $$\sigma_{avg} = \frac{\sigma_x + \sigma_y}{2} = \frac{130.4 + (-50)}{2} = 40.2 \text{ MPa}$$
-   
-   $$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2} = \sqrt{\left(\frac{180.4}{2}\right)^2 + 163.2^2} = 186.4 \text{ MPa}$$
+   $$\sigma_{\text{avg}} = \frac{\sigma_x + \sigma_y}{2} = \frac{130.4 + (-50)}{2} = 40.2 \text{ MPa}$$ ✅
 
-3. **Principal stresses:**
-   
-   $$\sigma_1 = \sigma_{avg} + R = 40.2 + 186.4 = 226.6 \text{ MPa}$$
-   $$\sigma_2 = \sigma_{avg} - R = 40.2 - 186.4 = -146.2 \text{ MPa}$$
+2. **Radius of the circle**, with $\sigma_x - \sigma_y = 130.4 - (-50) = 180.4$ MPa:
 
-4. **Maximum shear stress:**
-   
-   $$\tau_{max} = \frac{\sigma_1 - \sigma_2}{2} = \frac{226.6 - (-146.2)}{2} = 186.4 \text{ MPa}$$
+   $$R = \sqrt{\left(\frac{\sigma_x - \sigma_y}{2}\right)^2 + \tau_{xy}^2} = \sqrt{\left(\frac{180.4}{2}\right)^2 + 163.0^2} = 186.3 \text{ MPa}$$ ✅
+
+3. **Principal stresses**, the centre plus and minus the radius. The largest tension at the point is 74% above the bending stress of 130.4 MPa:
+
+   $$\sigma_1 = 40.2 + 186.3 = 226.5 \text{ MPa} \qquad \sigma_2 = 40.2 - 186.3 = -146.1 \text{ MPa}$$ ✅
+
+4. **Direction of $\sigma_1$**, measured from the x face:
+
+   $$\tan(2\theta_p) = \frac{2 \times 163.0}{180.4} = 1.807 \qquad \theta_p = 30.5°$$ ✅
+
+5. **Largest shear stress**, equal to the radius. The third principal stress, zero, lies between $\sigma_1$ and $\sigma_2$, so no plane carries more:
+
+   $$\tau_{\max} = \frac{\sigma_1 - \sigma_2}{2} = \frac{226.5 - (-146.1)}{2} = 186.3 \text{ MPa}$$ ✅
 
 </Steps>
 
 </details>
 
-### Step 3: Apply Failure Theories and Design Assessment
+### Step 3: Apply failure theories and design assessment
 
 <details>
 <summary>**Click to reveal failure theory analysis**</summary>
 
+With a required safety factor of 4, the allowed stress is $470/4 = 117.5$ MPa.
+
 <Steps>
 
-1. **Maximum Normal Stress Theory:**
-   
-   $$\sigma_1 = 226.6 \text{ MPa} \text{ vs } \frac{\sigma_{yield}}{SF} = \frac{470}{4} = 117.5 \text{ MPa}$$
-   **Result:** Fails criterion ❌ (226.6 > 117.5 MPa)
+1. **Maximum normal stress theory.** $\sigma_1 = 226.5$ MPa is above 117.5 MPa, so the check fails:
 
-2. **Maximum Shear Stress Theory (Tresca):**
-   
-   $$\tau_{max} = 186.4 \text{ MPa} \text{ vs } \frac{\sigma_{yield}}{2 \cdot SF} = \frac{470}{8} = 58.75 \text{ MPa}$$
-   **Result:** Fails criterion ❌ (186.4 > 58.75 MPa)
+   $$\text{SF} = \frac{470}{226.5} = 2.08$$ ✅
 
-3. **von Mises Equivalent Stress:**
-   
-   $$\sigma_{eq} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2} = \sqrt{226.6^2 - 226.6(-146.2) + (-146.2)^2} = 342.7 \text{ MPa}$$
-   
-   $$\sigma_{eq} = 342.7 \text{ MPa} \text{ vs } \frac{\sigma_{yield}}{SF} = 117.5 \text{ MPa}$$
-   **Result:** Fails criterion ❌ (Actual SF = 1.37)
+2. **Maximum shear stress theory (Tresca).** The allowed shear stress is $117.5/2 = 58.75$ MPa, and $\tau_{\max} = 186.3$ MPa is above it, so the check fails:
 
-4. **Critical design assessment:**
-   
-   All failure theories indicate current pin design is inadequate
-   Universal joint pin requires immediate redesign to prevent failure
+   $$\text{SF} = \frac{470}{2 \times 186.3} = 1.26$$ ✅
+
+3. **Von Mises equivalent stress:**
+
+   $$\sigma_{\text{eq}} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2} = \sqrt{226.5^2 - 226.5(-146.1) + (-146.1)^2} = 325.2 \text{ MPa}$$ ✅
+
+4. **Von Mises safety factor.** 325.2 MPa is above 117.5 MPa, so the check fails:
+
+   $$\text{SF} = \frac{470}{325.2} = 1.45$$ ✅
+
+5. **Design assessment.** Every safety factor is above 1, so the pin does not yield, but none reaches the required 4. For this ductile steel, report the von Mises value, 1.45, with Tresca, 1.26, as the cautious limit. The 2.08 looks better only because that theory ignores shear. The pin needs a larger diameter. ✅
 
 </Steps>
 
 </details>
 
-## Engineering Problems
+## Engineering problems
 
 <InArticleAd />
 
 
-### Problem 1: Pressure Vessel Joint Analysis
+### Problem 1: Pressure vessel joint analysis
 
-A spherical pressure vessel joint experiences complex stress states from internal pressure and thermal effects, requiring principal stress analysis.
+A joint in the wall of a spherical pressure vessel carries the stress from the internal pressure and an extra stress from heating.
 
 **Given:**
-- Spherical pressure vessel: inner radius R = 500 mm, wall thickness t = 20 mm
-- Internal pressure: p = 2.5 MPa
-- Additional thermal stress: σ_thermal = 50 MPa (tangential direction)
-- Material: Steel (σ_yield = 250 MPa, σ_ultimate = 400 MPa)
-- Safety factor required: 3.0
+- Spherical pressure vessel: inner radius $R = 500$ mm, wall thickness $t = 20$ mm
+- Internal pressure: $p = 2.5$ MPa
+- Extra thermal stress: $\sigma_{\text{thermal}} = 50$ MPa, in one direction along the wall
+- Material: steel, $\sigma_{yield} = 250$ MPa
+- Required safety factor: 3.0
 
-**Find:** Principal stresses and safety factor using von Mises criterion.
+**Find:** the principal stresses, and the safety factor by the von Mises theory.
 
 <details>
 <summary>**Click to reveal solution**</summary>
 
 <Steps>
 
-1. ✓ **Calculate pressure-induced stresses**
-   
-   For thin-walled spherical pressure vessel:
-   - Hoop stress: σ₁ = σ₂ = pR/(2t) = (2.5 × 500)/(2 × 20) = 31.25 MPa
-   - Radial stress: σ₃ ≈ 0 (thin wall assumption)
+1. **Stress from the pressure.** In a thin sphere it is the same in every direction along the wall. Through the thickness the stress is close to zero:
 
-2. ✓ **Add thermal stress components**
-   
-   Combined stress state:
-   - σ₁ = 31.25 + 50 = 81.25 MPa (tangential)
-   - σ₂ = 31.25 MPa (tangential)  
-   - σ₃ = 0 MPa (radial)
+   $$\sigma = \frac{pR}{2t} = \frac{2.5 \text{ MPa} \times 500 \text{ mm}}{2 \times 20 \text{ mm}} = 31.25 \text{ MPa}$$ ✅
 
-3. ✓ **Identify principal stresses**
-   
-   Since stresses are aligned with coordinate axes:
-   - σ₁ = 81.25 MPa (maximum principal stress)
-   - σ₂ = 31.25 MPa (intermediate principal stress)
-   - σ₃ = 0 MPa (minimum principal stress)
+2. **Principal stresses.** Add the thermal stress in its own direction: $31.25 + 50 = 81.25$ MPa. No shear stress acts on these faces, so the values are already principal stresses: $\sigma_1 = 81.25$ MPa, $\sigma_2 = 31.25$ MPa and $\sigma_3 = 0$ (through the thickness). ✅
 
-4. ✓ **Apply von Mises failure criterion**
-   
-   σ_eq = √[(σ₁-σ₂)² + (σ₂-σ₃)² + (σ₃-σ₁)²]/√2
-   σ_eq = √[(81.25-31.25)² + (31.25-0)² + (0-81.25)²]/√2
-   σ_eq = √[2500 + 976.6 + 6601.6]/√2 = 71.4 MPa
+3. **Von Mises stress.** With three principal stresses, the general form uses the three differences:
 
-5. ✓ **Calculate safety factor**
-   
-   SF = σ_yield/σ_eq = 250/71.4 = 3.50
-   Required SF = 3.0, Actual SF = 3.50 ✓ (Design adequate)
+   $$\sigma_{\text{eq}} = \frac{\sqrt{(\sigma_1-\sigma_2)^2 + (\sigma_2-\sigma_3)^2 + (\sigma_3-\sigma_1)^2}}{\sqrt{2}}$$
+
+   $$\sigma_{\text{eq}} = \frac{\sqrt{(81.25-31.25)^2 + (31.25-0)^2 + (0-81.25)^2}}{\sqrt{2}} = \frac{\sqrt{2500 + 976.6 + 6601.6}}{\sqrt{2}} = 71.0 \text{ MPa}$$ ✅
+
+4. **Safety factor.** It is above the required 3.0, so the design is adequate:
+
+   $$\text{SF} = \frac{\sigma_{yield}}{\sigma_{\text{eq}}} = \frac{250 \text{ MPa}}{71.0 \text{ MPa}} = 3.52$$ ✅
 
 </Steps>
 
 </details>
 
-### Problem 2: Shaft with Keyway Under Combined Loading
+### Problem 2: Shaft with keyway under combined loading
 
-A motor shaft with a keyway experiences combined bending and torsion, creating a complex stress state requiring Mohr's circle analysis.
+A motor shaft has a keyway, the slot for the key that locks a gear to the shaft. Its sharp corners multiply the stress near them by the stress concentration factor $K_t$.
 
 **Given:**
-- Solid circular shaft: diameter d = 50 mm  
-- Keyway: 12 mm wide × 6 mm deep (standard)
-- Bending moment: M = 800 N·m
-- Torque: T = 1200 N·m  
-- Material: Steel 4140 (σ_yield = 415 MPa)
-- Stress concentration factor for keyway: Kt = 2.5
+- Solid round shaft: diameter $d = 50$ mm
+- Bending moment: $M = 800$ N·m
+- Torque: $T = 1200$ N·m
+- Material: steel 4140, $\sigma_{yield} = 415$ MPa
+- Stress concentration factor for the keyway: $K_t = 2.5$
 
-**Find:** Principal stresses at keyway location and safety factor.
+**Find:** the principal stresses at the keyway, and the safety factor.
 
 <details>
 <summary>**Click to reveal solution**</summary>
 
 <Steps>
 
-1. ✓ **Calculate nominal stresses**
-   
-   At keyway location on shaft surface:
-   - Bending stress: σ = Mc/I = (800×10³×25)/(π×50⁴/64) = 32.7 MPa
-   - Torsional shear: τ = Tr/J = (1200×10³×25)/(π×50⁴/32) = 24.5 MPa
+1. **Nominal bending stress** at the surface, as if there were no keyway, with $c = 25$ mm:
 
-2. ✓ **Apply stress concentration**
-   
-   Keyway amplifies stresses:
-   - σ_max = Kt × σ = 2.5 × 32.7 = 81.8 MPa
-   - τ_max = Kt × τ = 2.5 × 24.5 = 61.3 MPa
+   $$\sigma = \frac{Mc}{I} = \frac{800 \times 10^3 \times 25}{\pi \times 50^4/64} = 65.2\ \text{MPa}$$ ✅
 
-3. ✓ **Calculate principal stresses**
-   
-   For combined normal and shear stress:
-   - σ_avg = σ_max/2 = 81.8/2 = 40.9 MPa
-   - σ₁ = σ_avg + √(σ_avg² + τ_max²) = 40.9 + √(40.9² + 61.3²) = 114.5 MPa
-   - σ₂ = σ_avg - √(σ_avg² + τ_max²) = 40.9 - 73.6 = -32.7 MPa
+2. **Nominal torsional shear stress** at the surface, with $r = 25$ mm:
 
-4. ✓ **Determine maximum shear stress**
-   
-   τ_max = (σ₁ - σ₂)/2 = (114.5 - (-32.7))/2 = 73.6 MPa
+   $$\tau = \frac{Tr}{J} = \frac{1200 \times 10^3 \times 25}{\pi \times 50^4/32} = 48.9\ \text{MPa}$$ ✅
 
-5. ✓ **Apply von Mises criterion**
-   
-   σ_eq = √(σ₁² - σ₁σ₂ + σ₂²) = √(114.5² - 114.5×(-32.7) + (-32.7)²) = 128.2 MPa
-   SF = 415/128.2 = 3.24 ✓ (Adequate safety factor)
+3. **Apply the stress concentration** to both stresses:
+
+   $$\sigma_k = K_t \times \sigma = 2.5 \times 65.2 = 163.0\ \text{MPa} \qquad \tau_k = K_t \times \tau = 2.5 \times 48.9 = 122.2\ \text{MPa}$$ ✅
+
+4. **Centre and radius of Mohr's circle.** There is no second normal stress, so the centre is half of $\sigma_k$:
+
+   $$\sigma_{\text{avg}} = \frac{163.0}{2} = 81.5\ \text{MPa} \qquad R = \sqrt{81.5^2 + 122.2^2} = 146.9\ \text{MPa}$$ ✅
+
+5. **Principal stresses**, the centre plus and minus the radius. The radius, 146.9 MPa, is also the largest shear stress:
+
+   $$\sigma_1 = 81.5 + 146.9 = 228.4\ \text{MPa} \qquad \sigma_2 = 81.5 - 146.9 = -65.4\ \text{MPa}$$ ✅
+
+6. **Von Mises stress:**
+
+   $$\sigma_{\text{eq}} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2} = \sqrt{228.4^2 - 228.4 \times (-65.4) + (-65.4)^2} = 267.2 \text{ MPa}$$ ✅
+
+7. **Safety factor.** The shaft does not yield, but the margin is small:
+
+   $$\text{SF} = \frac{415}{267.2} = 1.55$$ ✅
 
 </Steps>
 
 </details>
 
-### Problem 3: Bolted Joint Under Eccentric Loading
+### Problem 3: Bolted joint under eccentric loading
 
-A bolted connection experiences eccentric loading creating non-uniform stress distribution requiring principal stress analysis for the most critical bolt.
+A bolt is pulled by a load that does not act along its centre line (an eccentric load), so the bolt is also bent.
 
 **Given:**
-- Bolt material: Steel Grade 8.8 (σ_yield = 640 MPa)  
-- Bolt diameter: M12 (nominal diameter 12 mm)
-- Tensile load: F = 8000 N (eccentric, creates additional bending)
-- Bending moment on bolt: M = 96 N·m (from load eccentricity)
-- Thread stress concentration: Kt = 3.0
-- Safety factor required: 4.0
+- Bolt material: steel grade 8.8, $\sigma_{yield} = 640$ MPa
+- Bolt size: M12 (nominal diameter 12 mm)
+- Tensile load: $F = 8000$ N
+- Bending moment on the bolt: $M = 96$ N·m, from the eccentric load
+- Stress concentration factor at the thread: $K_t = 3.0$
+- Required safety factor: 4.0
 
-**Find:** Principal stresses in bolt and design adequacy.
+**Find:** the principal stresses in the bolt, and whether the design is adequate.
 
 <details>
 <summary>**Click to reveal solution**</summary>
 
 <Steps>
 
-1. ✓ **Calculate bolt cross-sectional properties**
-   
-   For M12 bolt (tensile stress area):
-   - As = 84.3 mm² (standard value for M12)
-   - Minor diameter: d = 10.106 mm
-   - Section modulus: S = πd³/32 = π(10.106)³/32 = 101.4 mm³
+1. **Section of the bolt at the thread.** Standard values for M12 are a tensile stress area $A_s = 84.3$ mm² and a minor diameter $d = 10.106$ mm. The section modulus $S$ is $I/c$, which for a round section is:
 
-2. ✓ **Calculate nominal stresses**
-   
-   Direct tensile stress: σ_t = F/As = 8000/84.3 = 94.9 MPa
-   Bending stress: σ_b = M/S = 96×10³/101.4 = 946.7 MPa
+   $$S = \frac{\pi d^3}{32} = \frac{\pi (10.106 \text{ mm})^3}{32} = 101.3\ \text{mm}^3$$ ✅
 
-3. ✓ **Combine stresses and apply stress concentration**
-   
-   Total tensile stress: σ_total = σ_t + σ_b = 94.9 + 946.7 = 1041.6 MPa
-   With stress concentration: σ_max = Kt × σ_total = 3.0 × 1041.6 = 3124.8 MPa
+2. **Direct tensile stress**, force over area:
 
-4. ✓ **Identify principal stress state**
-   
-   Uniaxial tension case:
-   - σ₁ = 3124.8 MPa (maximum tensile)
-   - σ₂ = σ₃ = 0 MPa
-   Von Mises equivalent: σ_eq = σ₁ = 3124.8 MPa
+   $$\sigma_t = \frac{F}{A_s} = \frac{8000 \text{ N}}{84.3 \text{ mm}^2} = 94.9 \text{ MPa}$$ ✅
 
-5. ✓ **Check safety factor**
-   
-   SF = σ_yield/σ_eq = 640/3124.8 = 0.20
-   Required SF = 4.0, Actual SF = 0.20 ⚠️ (Severely inadequate - redesign required)
+3. **Bending stress**, moment over section modulus:
+
+   $$\sigma_b = \frac{M}{S} = \frac{96 \times 10^3 \text{ N·mm}}{101.3 \text{ mm}^3} = 947.4 \text{ MPa}$$ ✅
+
+4. **Total stress.** Both are normal stresses along the bolt, so on the tension side they add:
+
+   $$\sigma_{\text{total}} = \sigma_t + \sigma_b = 94.9 + 947.4 = 1042.3 \text{ MPa}$$ ✅
+
+5. **Apply the stress concentration.** One stress acts, along the bolt, with no shear, so this value is $\sigma_1$, the other principal stresses are zero, and $\sigma_{\text{eq}} = \sigma_1$:
+
+   $$\sigma_{\max} = K_t \times \sigma_{\text{total}} = 3.0 \times 1042.3 = 3126.9 \text{ MPa}$$ ✅
+
+6. **Safety factor.** It is below 1, so the bolt yields at the thread. Bending gives ten times the stress of the direct pull, so the joint must be changed until the load acts along the centre line of the bolt:
+
+   $$\text{SF} = \frac{\sigma_{yield}}{\sigma_{\text{eq}}} = \frac{640}{3126.9} = 0.20$$ ✅
 
 </Steps>
 
 </details>
 
 :::tip[Instrument it]
-The principal stresses that decide whether a part survives are exactly what a strain-gauge rosette measures. Bond a 0/45/90 rosette to the free surface at the critical point; from its three strains you compute the principal strains, their direction, and through Hooke's law the principal stresses that feed von Mises or Tresca. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sampling the three channels can [track the principal stress and its safety factor on siliconwit.io](https://siliconwit.io) and warn before the state reaches the yield envelope.
+A strain gauge rosette, three gauges on one patch at 0°, 45° and 90°, measures what this lesson calculates. Bond it to the free surface at the critical point. Its three strains give the principal strains and their direction, and through Hooke's law the principal stresses. Read the three channels with an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [trend the principal stress and its safety factor on siliconwit.io](https://siliconwit.io).
 :::
 
 ## Course Completion Summary
@@ -480,55 +406,14 @@ The principal stresses that decide whether a part survives are exactly what a st
 <InArticleAd />
 
 
-**Congratulations!** You have completed Mechanics of Materials I & II with a comprehensive systems-based approach.
+### Key concepts
 
-### Knowledge Mastered
+1. **The stress at a point depends on the direction of the cut.** $\sigma_x$, $\sigma_y$ and $\tau_{xy}$ describe one pair of faces only.
+2. **The principal stresses** are the largest and smallest normal stresses at the point, on planes with no shear stress.
+3. **Mohr's circle** shows every cut as one point: centre at the average normal stress, radius equal to the largest shear stress.
+4. **A failure theory** gives one number to compare with the yield strength. For ductile metals use von Mises.
 
-**Part I: Foundations (Units 1.1-1.6)**
-- ✅ Stress and strain fundamentals through crank-slider mechanisms
-- ✅ Material behavior analysis in CNC actuator systems
-- ✅ Multi-material compound systems in linear actuators
-- ✅ Thermal stress effects in heated piston-cylinder interfaces
-- ✅ Torsional analysis in Geneva mechanism crankshafts
-- ✅ Pressure vessel design for pneumatic actuator systems
-
-**Part II: Bending & Complex Loading (Units 2.1-2.6)**
-- ✅ Shear force and bending moment analysis in robotic arms
-- ✅ Bending stress calculations in cantilever gripper systems
-- ✅ Beam deflection prediction for precision CNC spindles
-- ✅ Combined loading analysis in robotic wrist joints
-- ✅ Composite beam behavior in CNC machine structures
-- ✅ Principal stress analysis and failure prediction in universal joints
-
-### Professional Competencies Developed
-
-<CardGrid>
-  <Card title="Systems Integration" icon="rocket">
-    **Connect** solid mechanics theory to real mechatronic applications
-    **Design** components that function reliably in complex systems
-    Industry-ready skills
-  </Card>
-  <Card title="Failure Prevention" icon="approve">
-    **Predict** failure modes before they occur in operation
-    **Apply** appropriate safety factors for reliable design
-    Risk mitigation expertise
-  </Card>
-  <Card title="Optimization Thinking" icon="setting">
-    **Balance** strength, weight, cost, and performance requirements
-    **Iterate** designs based on comprehensive stress analysis
-    Design optimization
-  </Card>
-</CardGrid>
-
-### Your Next Steps
-
-**Apply this knowledge to:**
-- Advanced mechatronics projects requiring structural analysis
-- Multi-physics simulations combining stress, thermal, and dynamic effects
-- Failure analysis investigations in existing systems
-- Design optimization projects balancing multiple objectives
-
-You are now equipped with the solid mechanics foundation essential for successful mechatronic system design and analysis!
+This lesson completes the course. Practise the whole second chapter in the [Chapter 2 Assignments](/education/mechanics-of-materials/structural-analysis-assignments/).
 
 
 

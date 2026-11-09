@@ -24,104 +24,89 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-A CNC actuator shaft that stretches even a few micrometres under load throws off positioning accuracy, and choosing a material by cost alone risks either over-designing (heavy, expensive) or under-designing (flexible, imprecise). Selecting the right material requires comparing elastic modulus, yield strength, and elongation at failure across candidates, then computing the actual deformation under your expected loads. In this lesson you will perform that analysis on a CNC actuator shaft, extend it to members whose cross-section varies along the length (tapered pull-rods, tapered tie plates, stepped bars, bars under their own weight), read a steel tensile test curve to extract yield strength, toughness, and ductility, and compute shear deflection in a bonded elastomer mount. #AxialStress #MaterialSelection #TaperedBars #CNCDesign
+A machine tool that cuts every part 0.05 mm out of size produces scrap. Often the cause is a shaft that is strong enough but stretches too far under the cutting force. Strength and stiffness are different properties, and a stronger steel is not a stiffer steel. This lesson shows how to size a shaft for both, how to find the stretch of a rod whose thickness changes along its length, how to read the stress-strain curve of a tensile test, and how far a rubber mount moves in shear. #AxialStress #MaterialSelection #TaperedBars #CNCDesign
 
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
 1. **Analyze** axial stress and strain in a precision actuator shaft and select between steel and aluminum based on strength and stiffness criteria
-2. **Derive and apply** the extension of bars whose section varies along the length (circular tapers, flat tapers, stepped bars) and of bars loaded by their own weight, starting from $\delta = \int N\,dx/(AE)$
-3. **Interpret** a tensile test stress-strain curve to identify proportional limit, 0.2% offset yield strength, UTS, fracture strain, modulus of resilience, and modulus of toughness
-4. **Apply** the shear modulus relation $G = E / (2(1+\nu))$ to calculate shear stress, shear strain, and lateral deflection in an elastomer component
+2. **Derive and apply** the extension of bars whose section changes along the length (circular tapers, flat tapers, stepped bars) and of bars loaded by their own weight
+3. **Interpret** a tensile test stress-strain curve to identify the proportional limit, the 0.2% offset yield strength, the ultimate tensile strength, the fracture strain, and the energy the material absorbs
+4. **Apply** the shear modulus relation $G = E / (2(1+\nu))$ to calculate shear stress, shear strain, and lateral deflection in a rubber component
 
 :::tip[Try it as you read]
-This lesson pairs with the [Axial Loading Simulator](/product-development/axial-loading-simulator/): compare two materials side by side under the same axial load and watch how the stiffness, not the strength, sets the deflection. The [Axial Loading Experiments](/education/mechanics-of-materials/axial-loading-experiments) reproduce the worked examples below step by step with Python.
+This lesson pairs with the [Axial Loading Simulator](/product-development/axial-loading-simulator/): compare two materials side by side under the same axial load and watch how the stiffness, not the strength, sets the deflection. The [Axial Loading Experiments](/education/mechanics-of-materials/axial-loading-experiments/) reproduce the worked examples below step by step with Python.
 :::
 
-## Real-World System Problem: CNC Z-Axis Actuator Shaft
+## Real-World System Problem: CNC Z-axis actuator shaft
 
 <InArticleAd />
 
 
-In a CNC machine the Z-axis actuator controls vertical tool movement. The shaft must transmit precise forces while maintaining dimensional accuracy under varying loads. A shaft that deflects too far under the cutting force moves the tool out of the programmed path, producing scrap.
+In a CNC machine (a computer-controlled machine tool) the Z-axis actuator moves the tool up and down. Its shaft carries the cutting force. If the shaft stretches under that force, the tool is no longer where the program says it is, and the part is cut to the wrong size.
 
-### The Shaft Selection Problem
+### The shaft selection problem
 
-> **Engineering Question:** How do you select the right material and shaft diameter to ensure the CNC system maintains a deformation limit of 0.05 mm under a maximum axial load of 5,000 N?
+> **Engineering Question:** Which material and which shaft diameter keep the stretch of the shaft within 0.05 mm under an axial load of 5,000 N?
 
-Answering that requires two independent checks: a strength check (the stress must stay below the allowable strength) and a stiffness check (the elongation must stay within the positional tolerance). Either check can set the minimum diameter, and in precision systems the stiffness check almost always wins.
+Two separate checks answer this. The strength check: the stress must stay below the stress that the design allows. The stiffness check: the stretch must stay within the limit. Each check gives a smallest diameter, and the larger of the two is the design.
 
-### Why Material Selection Matters
-
-<CardGrid>
-  <Card title="Stiffness governs precision" icon="warning">
-  In positioning systems, the deformation limit is often tighter than the strength limit. A shaft sized purely for strength may deflect several times more than the tolerance allows.
-  </Card>
-  <Card title="Modulus sets deflection" icon="setting">
-  Steel ($E = 200$ GPa) is about 2.9 times stiffer than aluminum ($E = 70$ GPa). For the same diameter and load, the steel shaft deflects less than a third as much.
-  </Card>
-  <Card title="Section size follows from E" icon="puzzle">
-  Because $\delta = FL/(AE)$, a stiffer material needs a smaller area for the same deflection, which keeps the shaft compact.
-  </Card>
-  <Card title="Mass can be nearly equal" icon="rocket">
-  Steel is about 2.9 times denser than aluminum, but steel's higher E lets it use a smaller cross-section, so the final shaft masses can end up similar.
-  </Card>
-</CardGrid>
-
-## Fundamental Theory: Strain, Hooke's Law, and the Stress-Strain Curve
+## Fundamental Theory: Strain, Hooke's law, and the stress-strain curve
 
 <InArticleAd />
 
 
-The previous lesson defined stress. Here we build the quantities needed to predict deformation and to read a material test curve.
+**What this lesson takes from the earlier one.** Stress is force over area, $\sigma = F/A$, in MPa. The yield strength $\sigma_{yield}$ is the stress above which a metal does not return to its first shape. The safety factor (SF), also called the factor of safety, is the yield strength divided by the stress. See [Fundamental Stress Concepts](/education/mechanics-of-materials/fundamental-stress-concepts/).
 
-### Axial Strain and Deformation
+### Axial strain and deformation
 
-<Card title="Axial Strain and Deflection" icon="document">
+Strain is the change in length of a bar divided by its original length. A rubber band 100 mm long that is pulled to 110 mm has a strain of 0.1. While a material is elastic (it returns when the load is removed), stress and strain rise together: $\sigma = E\epsilon$, which is Hooke's law. $E$ is Young's modulus, the stiffness of the material. The two give the stretch of a bar.
+
+<Card title="Axial strain and deflection" icon="document">
 $$\epsilon = \frac{\delta}{L_0}, \qquad \delta = \frac{F L_0}{A E}$$
 
 Where:
-- $\epsilon$ = axial strain (dimensionless)
-- $\delta$ = change in length (mm or m)
-- $L_0$ = original length
+- $\epsilon$ (epsilon) = axial strain (a ratio, no unit)
+- $\delta$ (delta) = change in length (mm)
+- $L_0$ = original length (mm)
 - $F$ = axial force (N)
-- $A$ = cross-sectional area (mm² or m²)
-- $E$ = Young's modulus (GPa)
+- $A$ = cross-sectional area (mm²)
+- $E$ = Young's modulus (GPa; in a calculation, 1 GPa = 1,000 MPa = 1,000 N/mm²)
 
-The second form is the most-used relation in this lesson: it links a known load and geometry to the actual elongation.
+In words: more force or more length gives more stretch, and more area or a stiffer material gives less.
 </Card>
 
-### Bars of Varying Cross-Section
+### Bars of varying cross-section
 
-$\delta = FL/(AE)$ is only valid when $F$, $A$, and $E$ are the same at every section. Real members often are not uniform: a pull-rod is machined with a taper so that material is only where the stress needs it, a tie plate narrows towards the pin, a shaft is stepped for bearing seats, and a long hanging bar carries its own weight. For all of these the load or the area (or both) is a function of position, so the extension has to be built up from an element rather than read off a single formula.
+$\delta = FL/(AE)$ holds only when $F$, $A$ and $E$ are the same at every section. Many parts are not uniform: a pull-rod is tapered to save weight, a shaft has steps for its bearings, and a long hanging bar carries its own weight.
 
-<Card title="The General Rule for Any Non-Uniform Bar" icon="document">
-Take a slice of thickness $dx$ at distance $x$ from the fixed end. The slice is short enough that the internal force $N(x)$ and area $A(x)$ are constant across it, so the uniform-bar result applies to the slice alone:
+Think of such a bar as a line of short springs joined end to end. Each spring stretches by its own amount, a thin one more than a thick one, and the stretch of the bar is the sum. A real bar has no joints, so the springs become slices of zero thickness and the sum becomes an integral.
+
+<Card title="The general rule for any non-uniform bar" icon="document">
+Take a slice of thickness $dx$ at distance $x$ from the fixed end. It is so short that the internal force $N(x)$, in newtons, and the area $A(x)$ do not change across it. So the uniform-bar formula gives the stretch of the slice:
 
 $$d\delta = \frac{N(x)\,dx}{A(x)\,E}$$
 
-The total extension is the sum of all the slice extensions:
+The total extension is the sum over all the slices from $x = 0$ to $x = L$:
 
 $$\boxed{\;\delta = \int_0^L \frac{N(x)\,dx}{A(x)\,E}\;}$$
 
-Every result in this section, and every taper, step, or self-weight problem you will meet, comes from this one integral. The uniform bar is just the special case where $N$ and $A$ come out of the integral: $\delta = NL/(AE)$.
+For a uniform bar, $N$ and $A$ are constants and the integral returns $\delta = NL/(AE)$.
 </Card>
 
 :::note[The four-step recipe]
-Work every varying-section problem the same way, and you never have to memorise the individual results:
-
-1. **Write $A(x)$**: the geometry, as a function of distance from one end (linear taper of a diameter, linear taper of a width, etc.)
-2. **Write $N(x)$**: the internal force. For an end-loaded bar it is simply the applied load $W$ everywhere; for self-weight it is the weight of the material below the cut.
+1. **Write $A(x)$**: how the area changes with the distance from one end.
+2. **Write $N(x)$**: the internal force. For a bar loaded at its end it is the load $W$ at every section. For a bar under its own weight it is the weight of the material below the cut.
 3. **Integrate** $N(x)\,dx / (A(x)E)$ from $0$ to $L$.
-4. **Locate the maximum stress separately**: it is at the *smallest area*, and it needs no integration at all: $\sigma_{max} = N/A_{min}$.
+4. **Find the maximum stress separately.** It is at the smallest area and needs no integral: $\sigma_{max} = N/A_{min}$.
 :::
 
-#### Case A: Circular Bar Tapering Linearly (the standard case)
+#### Case A: Circular bar tapering linearly (the standard case)
 
-![Circular bar tapering linearly from diameter D1 at the fixed end to D2 at the loaded end, under axial load W, with the element dx used in the derivation](./images/tapered-bar-axial.svg)
+![A round bar that tapers from diameter D1 at the fixed left end to the smaller diameter D2 at the right end, where the load W pulls. A thin slice of thickness dx is marked at distance x from the fixed end, where the diameter is d(x)](./images/tapered-bar-axial.svg)
 
-A bar of circular section tapers uniformly from diameter $D_1$ at the fixed end to $D_2$ at the loaded end over a length $L$, carrying an axial load $W$.
+A round bar tapers evenly from diameter $D_1$ at the fixed end to $D_2$ at the loaded end, over a length $L$. It carries an axial load $W$, in newtons.
 
 <Steps>
 
@@ -151,143 +136,128 @@ A bar of circular section tapers uniformly from diameter $D_1$ at the fixed end 
 
 </Steps>
 
-<Card title="What the Tapered-Bar Result Tells You" icon="document">
-- **Extension:** $\delta = \dfrac{4WL}{\pi E D_1 D_2}$, symmetric in $D_1$ and $D_2$, so which end is fixed makes no difference to the total extension.
-- **Maximum stress** is at the *small* end, where the area is least: $\sigma_{max} = \dfrac{4W}{\pi D_2^{\,2}}$
-- **Stress at any section** uses the local diameter: $\sigma(x) = \dfrac{4W}{\pi d(x)^2}$. At mid-length the diameter is the *arithmetic* mean, $d_{mid} = \dfrac{D_1 + D_2}{2}$, giving $\sigma_{mid} = \dfrac{16W}{\pi (D_1+D_2)^2}$.
-- **Equivalent uniform bar:** setting $\delta = WL/(A_{eq}E)$ gives $d_{eq} = \sqrt{D_1 D_2}$, the *geometric* mean of the end diameters. A uniform bar of that diameter stretches exactly as much as the taper.
-- **Cost of tapering:** compared with a uniform bar of the large diameter, the taper stretches $D_1/D_2$ times as much. Halving the end diameter doubles the extension.
-</Card>
+A uniform bar of diameter $\sqrt{D_1 D_2}$ stretches exactly as much as this taper.
 
 :::caution[The most common mistake]
-Do **not** compute the extension from the average area or the mid-length area. Extension depends on $\int dx/A(x)$, not on the average of $A$, and $1/A$ is not linear in $x$. Using the mid-length section underestimates the extension of a 2:1 taper by 11%, and the error grows as the taper gets steeper. Use the geometric mean $\sqrt{D_1 D_2}$ for a diameter, never the arithmetic mean.
-
-The arithmetic mean $d_{mid} = (D_1+D_2)/2$ *is* correct for one thing only: the local diameter (and therefore the local stress) at mid-length.
+Do **not** find the extension from the average area or from the area at mid-length. The thin slices stretch much more than the thick slices save, so the answer is too small: 11% too small for a 2:1 taper, and more for a steeper one. The mid-length diameter is correct for one thing only: the stress at mid-length.
 :::
 
-#### Case B: Flat Bar of Constant Thickness and Tapering Width
+#### Case B: Flat bar of constant thickness and tapering width
 
-A plate of constant thickness $t$ tapers linearly in width from $b_1$ to $b_2$ over length $L$ under axial load $W$. Now $A(x) = t\left(b_1 - \frac{(b_1-b_2)}{L}x\right)$, and the area appears to the *first* power, so the integral is a logarithm rather than a reciprocal:
+A plate of constant thickness $t$ tapers in width from $b_1$ to $b_2$ over length $L$ under axial load $W$. Its area is $A(x) = t\left(b_1 - \frac{(b_1-b_2)}{L}x\right)$. Here the area itself changes in a straight line (for the round bar it was the diameter), so the integral gives a natural logarithm, $\ln$:
 
 $$\delta = \frac{W}{Et}\int_0^L \frac{dx}{b_1 - \frac{(b_1-b_2)}{L}x} = \frac{WL}{Et(b_1 - b_2)}\ln\!\left(\frac{b_1}{b_2}\right)$$
 
-The equivalent uniform width is the *logarithmic* mean, $b_{eq} = (b_1-b_2)/\ln(b_1/b_2)$. Maximum stress is again at the narrow end, $\sigma_{max} = W/(t\,b_2)$.
+The uniform plate that stretches as much has the width $b_{eq} = (b_1-b_2)/\ln(b_1/b_2)$. The maximum stress is again at the narrow end, $\sigma_{max} = W/(t\,b_2)$.
 
-:::note[Why the two tapers give different-looking answers]
-Both come from the same integral. A circular taper varies the diameter linearly, so the *area* varies as the square of a linear function and $\int dx/A$ produces a reciprocal. A flat taper varies the area linearly, so $\int dx/A$ produces a logarithm. Identify how $A(x)$ depends on $x$ before integrating, and the correct form follows automatically.
-:::
+#### Case C: Stepped bar (the same idea with a few thick slices)
 
-#### Case C: Stepped Bar (a Discrete Version of the Same Idea)
-
-If the section changes in steps rather than continuously, the integral becomes a sum, because each segment is internally uniform:
+If the section changes in steps, each segment is uniform, and the integral becomes a sum over the segments:
 
 $$\delta = \sum_i \frac{N_i L_i}{A_i E_i}$$
 
-Each segment is analysed on its own and the extensions are added. The stress is checked segment by segment, and the critical segment is the one with the largest $N_i/A_i$, which is not necessarily the longest or the most heavily loaded one. [Compound bars](/education/mechanics-of-materials/compound-bars-and-composite-systems) apply this same summation to segments of different materials.
+Check the stress in each segment: the critical one has the largest $N_i/A_i$. [Compound Bars and Composite Systems](/education/mechanics-of-materials/compound-bars-and-composite-systems/) uses this sum for segments of different materials.
 
-#### Case D: When the Internal Force Varies (Self-Weight)
+#### Case D: When the internal force varies (self-weight)
 
-Self-weight problems use the identical integral, except that $N(x)$ varies and $A$ may not:
+A hanging bar carries its own weight. The integral is the same, but now $N(x)$ changes along the bar: a section near the bottom carries little weight, and a section at the top carries all of it.
 
-![Panel (a): a uniform bar hanging from its top end with an element dx at height x, and the triangular internal force diagram rising from zero at the free end to rho g A L at the support. Panel (b): a conical bar hanging from its base, where the weight below any cut is a cone](./images/self-weight-extension.svg)
+![Panel (a): a uniform bar hanging from a ceiling, with a slice dx at height x above its free end; a triangle beside it shows the internal force, zero at the free end and largest at the support. Panel (b): a cone hanging from its wide base, point down](./images/self-weight-extension.svg)
 
-- **Uniform bar hanging under its own weight** ($\rho$ = density, $g$ = 9.81 m/s²). At a height $x$ above the free end the bar carries the weight below it, $N(x) = \rho g A x$, so
+- **Uniform bar hanging under its own weight** ($\rho$, rho, = density in kg/m³, $g$ = 9.81 m/s²). At a height $x$ above the free end the section carries the weight below it, $N(x) = \rho g A x$, so
 
   $$\delta = \int_0^L \frac{\rho g A x\,dx}{AE} = \frac{\rho g L^2}{2E} = \frac{W_{total}L}{2AE}$$
 
-  which is exactly half the extension the total weight would produce if it were hung at the free end.
+  This is half the extension that the total weight would give if it hung at the free end. The largest stress is at the support, $\sigma_{max} = \rho g L$.
 
-- **Conical bar suspended from its base.** At a distance $x$ from the apex the weight below is that of a cone, $N(x) = \rho g A(x) x/3$, so the area cancels again and
+- **Conical bar hanging from its base.** The weight below a cut is that of a small cone, $N(x) = \rho g A(x) x/3$, and the same integral gives $\delta = \rho g L^2/(6E)$. This is one third of the value for the uniform bar, because most of the material is near the support.
 
-  $$\delta = \int_0^L \frac{\rho g x}{3E}\,dx = \frac{\rho g L^2}{6E}$$
+### The stress-strain curve
 
-  one third of the uniform-bar value, because most of the material sits near the support where it carries little of the weight below it.
+Bend a paper clip a little and it springs back. Bend it far and it stays bent. The first behaviour is elastic and the second is plastic. A tensile test finds the stress at which a metal passes from one to the other.
 
-<Card title="Summary of Varying-Section Results" icon="document">
-| Member | $A(x)$ or $N(x)$ | Extension | Maximum stress |
-|--------|------------------|-----------|----------------|
-| Uniform bar, end load $W$ | $A$ constant | $\delta = \dfrac{WL}{AE}$ | $W/A$ |
-| Circular taper $D_1 \to D_2$ | $A \propto (D_1-kx)^2$ | $\delta = \dfrac{4WL}{\pi E D_1 D_2}$ | $\dfrac{4W}{\pi D_2^{\,2}}$ |
-| Flat taper $b_1 \to b_2$, thickness $t$ | $A$ linear in $x$ | $\delta = \dfrac{WL}{Et(b_1-b_2)}\ln\dfrac{b_1}{b_2}$ | $\dfrac{W}{t\,b_2}$ |
-| Stepped bar | piecewise constant | $\delta = \sum \dfrac{N_i L_i}{A_i E_i}$ | $\max(N_i/A_i)$ |
-| Uniform bar, self-weight | $N = \rho g A x$ | $\delta = \dfrac{\rho g L^2}{2E}$ | $\rho g L$ (at the support) |
-| Conical bar, self-weight | $N = \rho g A(x) x/3$ | $\delta = \dfrac{\rho g L^2}{6E}$ | $\rho g L/3$ (at the base) |
+The test pulls a standard test piece, called a coupon, until it breaks. The force divided by the original area is the stress, and the stretch divided by the original length is the strain. The plot of one against the other is the stress-strain curve.
 
-Equivalent uniform section: $d_{eq} = \sqrt{D_1D_2}$ for a circular taper, $b_{eq} = (b_1-b_2)/\ln(b_1/b_2)$ for a flat taper.
+![Panel (a): the complete stress-strain curve of a steel. It rises steeply, bends over, reaches a peak marked ultimate tensile strength, then falls through a part marked necking to the fracture point. Panel (b): the first small part of the same curve, magnified. A straight elastic line of slope E ends at the proportional limit. A parallel line that starts at a strain of 0.002 meets the curve at the yield strength](./images/stress-strain-offset-construction.svg)
+
+The two panels show the same curve at two scales. The elastic part, which decides every stretch calculated in this lesson, is so narrow in panel (a) that it looks vertical, so panel (b) magnifies it. The axes have no numbers, because metals share the shape and not the values. Application 3 gives the values for one steel.
+
+<Card title="Key points on the curve" icon="document">
+- **Elastic line:** the straight first part. Its slope is Young's modulus $E$. Remove the load here and the coupon returns to its first length.
+- **Proportional limit:** the stress at which the curve leaves the straight line.
+- **Yield strength (0.2% offset), $\sigma_y$:** many metals show no sharp yield point, so one is defined. Draw a line parallel to the elastic line, starting at a strain of 0.002. The stress where it meets the curve is the yield strength.
+- **Ultimate tensile strength (UTS):** the highest stress on the curve. After it the coupon becomes thin at one place (necking), and the stress falls.
+- **Fracture point:** where the coupon breaks. The strain here measures the ductility: how far the metal stretches before it breaks.
+- **Unloading:** from any point past yield, the stress falls along a line parallel to the elastic line. The strain $\sigma/E$ returns, and the rest stays as permanent strain. At the yield strength the permanent strain is exactly 0.002.
 </Card>
 
-### The Stress-Strain Curve
-
-A tensile test pulls a standard coupon to fracture while recording force and extension. The resulting curve divides material behaviour into regions:
-
-![Panel (a): the complete stress-strain curve of a ductile steel to fracture, marking UTS and the necking region. Panel (b): the elastic and yield region magnified, showing the elastic line of slope E and the parallel 0.2% offset line intersecting the curve at the yield strength](./images/stress-strain-offset-construction.svg)
-
-The two panels are the same curve at different scales, and the scale change is the point: the elastic behaviour that governs every deflection calculation in this lesson occupies a small fraction of the strain axis, so the 0.2% offset construction can only be drawn in the magnified view. The axes are deliberately unnumbered because the shape is common to ductile metals while the values are not; the figures for one particular steel are worked out in Application 3 below.
-
-<Card title="Key Points on the Curve" icon="document">
-- **Proportional limit:** the highest stress at which stress and strain remain strictly proportional (the curve is still a straight line)
-- **Yield strength (0.2% offset):** found by drawing a line with slope $E$ starting at $\epsilon = 0.002$; where it intersects the curve is the yield point
-- **Ultimate tensile strength (UTS):** the peak stress the material ever carries
-- **Fracture point:** where the coupon breaks; the strain here gives the percent elongation (a ductility measure)
-</Card>
-
-:::note[Strength vs Stiffness]
-Young's modulus $E$ is the slope of the elastic line: it describes stiffness, how much force per unit strain. Yield strength and UTS describe strength, how much stress the material can carry. A soft rubber has a low $E$ but high elongation; a cast iron has a high $E$ but fractures with almost no plastic stretch. These are separate properties and must be checked separately.
+:::note[Strength and stiffness are different]
+Young's modulus $E$, the slope of the elastic line, is the stiffness. Yield strength and UTS are strengths: how much stress the material can carry. Heat treatment and alloying can double the yield strength of a steel, but its $E$ stays near 200 GPa. So a stronger steel does not stretch less.
 :::
 
-### Modulus of Resilience and Modulus of Toughness
+### Modulus of resilience and modulus of toughness
 
-<Card title="Energy Absorption Measures" icon="document">
+It takes work to stretch a part, and the material takes in that work as energy. The energy taken in by each unit of volume is the area under the curve (1 MPa times a strain of 1 is 1 MJ/m³). Two areas have names.
+
+<Card title="Energy absorption measures" icon="document">
 $$u_r = \frac{\sigma_y^2}{2E} \quad \text{(modulus of resilience, J/m}^3\text{)}$$
 
 $$u_T \approx \text{area under the full stress-strain curve} \quad \text{(modulus of toughness, J/m}^3\text{)}$$
 
-Resilience measures how much elastic energy the material stores per unit volume before yielding. Toughness measures the total energy per unit volume absorbed before fracture, including all the plastic work.
+Resilience is the energy stored up to yield: the triangle under the elastic line, half of $\sigma_y$ times the strain $\sigma_y/E$. The material gives it back when the load is removed, as a spring does. Toughness is all the energy taken in before fracture. Most of it is plastic work, which is not given back.
 </Card>
 
-![Panel (a): the area under the entire stress-strain curve shaded, labelled as the modulus of toughness, the integral of stress with respect to strain up to fracture. Panel (b): the magnified elastic triangle under the elastic line up to yield, labelled as the modulus of resilience, sigma yield squared over 2E](./images/stress-strain-energy-areas.svg)
+![Panel (a): the whole area under the stress-strain curve up to fracture is shaded and labelled modulus of toughness. Panel (b): in the magnified first part of the curve, only the small triangle under the elastic line up to the yield strength is shaded and labelled modulus of resilience](./images/stress-strain-energy-areas.svg)
 
-Both quantities are areas under the same curve, which is why they are so easily confused, and the figure shows how different those areas are. For a ductile metal the elastic triangle is smaller than the total area by orders of magnitude, so the toughness is essentially all plastic work. Steps 2 and 3 of Application 3 evaluate both areas for a particular steel.
+For a metal that stretches far before it breaks, the elastic triangle is hundreds of times smaller than the whole area.
 
-### Shear Modulus
+### Shear modulus
 
-<Card title="Shear Modulus and Its Relation to E and Poisson's Ratio" icon="document">
+Put a thick book on a table and push its top cover sideways. The pages slide over each other and the book leans. This is shear. The shear strain $\gamma$ (gamma) is the sideways movement of the top divided by the thickness of the book. The shear modulus $G$ is the stiffness in shear, as $E$ is the stiffness in tension. It follows from $E$ and Poisson's ratio $\nu$, the ratio that says how much a bar thins as it stretches.
+
+<Card title="Shear modulus and its relation to E and Poisson's ratio" icon="document">
 $$G = \frac{E}{2(1 + \nu)}$$
 
 $$\tau = G \gamma, \qquad \gamma = \frac{\tau}{G}, \qquad \delta_{shear} = \gamma \, h$$
 
 Where:
-- $G$ = shear modulus (Pa or MPa)
-- $\tau$ = shear stress (Pa or MPa)
-- $\gamma$ = shear strain (dimensionless, in radians)
-- $h$ = thickness of the sheared layer
+- $G$ = shear modulus (MPa)
+- $\tau$ (tau) = shear stress, the force along a surface divided by the area of that surface (MPa)
+- $\gamma$ = shear strain (no unit; it is the angle of lean in radians)
+- $h$ = thickness of the sheared layer (mm)
+- $\delta_{shear}$ = sideways movement of the top of the layer (mm)
 
-For metals, $G$ falls between $0.38E$ and $0.40E$. For elastomers with $\nu \approx 0.49$, $G \approx E/2.98$, much smaller than for metals.
+For metals, $G$ is between $0.38E$ and $0.40E$. For rubber, with $\nu \approx 0.49$, $G \approx E/3$.
 </Card>
 
-:::tip[Material Selection Insight]
-A higher $E$ means a stiffer material that deforms less under the same load. A lower $E$ means more flexibility, which is useful for vibration damping in mounts and couplings. Steel ($E \approx 200$ GPa) is about 2.9 times stiffer than aluminum ($E \approx 70$ GPa) for the same shape, but an elastomer ($E \approx 4$ MPa) is roughly 50,000 times less stiff than steel.
-:::
-
-## Application 1: CNC Actuator Shaft, Steel vs Aluminum
+## Application 1: CNC actuator shaft, steel vs aluminum
 
 <InArticleAd />
 
 
-The CNC Z-axis shaft must transmit a maximum axial force of 5,000 N while keeping elongation within 0.05 mm over its 400 mm length. Both a strength check and a stiffness check are required.
+The CNC Z-axis shaft must carry an axial force of up to 5,000 N and stretch no more than 0.05 mm over its 400 mm length.
 
 :::note[System Problem Statement]
 - **Component:** CNC Z-axis actuator shaft, circular cross-section
 - **Maximum axial force:** $F = 5{,}000$ N (tension)
 - **Shaft length:** $L = 400$ mm
 - **Deformation limit:** $\delta \leq 0.05$ mm
-- **Safety factor:** SF = 3
+- **Safety factor:** $SF = 3$
 - **Material Option A:** Aluminum 6061-T6, $E = 70$ GPa, $\sigma_{yield} = 270$ MPa
 - **Material Option B:** Steel 1045, $E = 200$ GPa, $\sigma_{yield} = 530$ MPa
-- **Task:** find the minimum shaft diameter from the strength criterion and then from the stiffness criterion for each material; identify which criterion governs
+- **Task:** for each material, find the smallest shaft diameter that the strength check allows and the smallest that the stiffness check allows; say which check decides
 
-**Key Question:** Should this shaft be aluminum or steel, and what diameter is required to meet both strength and stiffness requirements?
+**Key Question:** Should this shaft be aluminum or steel, and what diameter meets both the strength and the stiffness requirement?
 :::
+
+```text
+ fixed end                                 F = 5,000 N
+   ┃┌───────────────────────────────┐
+   ┃│ shaft, diameter d to be found │ ──────────►
+   ┃└───────────────────────────────┘
+   ┃◄───────── L = 400 mm ─────────►│
+      stretch allowed: 0.05 mm at most
+```
 
 Run the steel and the aluminum shaft as the A and B states in the simulator and compare the deflection directly:
 
@@ -295,51 +265,49 @@ Run the steel and the aluminum shaft as the A and B states in the simulator and 
   <LinkButton href="/product-development/axial-loading-simulator/" target="_blank" variant="primary">Open the Axial Loading Simulator</LinkButton>
 </div>
 
-### Step 1: Minimum Diameter from the Strength Criterion
+### Step 1: Minimum diameter from the strength criterion
 
 <details>
 <summary>**Click to reveal the strength calculations**</summary>
 
 <Steps>
 
-1. **Allowable stress for each material** with SF = 3:
+1. **Allowable stress for each material.** This is the highest stress the design permits: the yield strength divided by the safety factor, $SF = 3$:
 
    Aluminum: $\sigma_{allow} = 270 / 3 = 90 \text{ MPa}$ ✅
 
    Steel: $\sigma_{allow} = 530 / 3 = 177 \text{ MPa}$ ✅
 
-2. **Minimum area** from $A_{min} = F / \sigma_{allow}$:
+2. **Minimum area.** Stress is force over area, so the area must be at least force over allowable stress, $A_{min} = F / \sigma_{allow}$ (N divided by MPa gives mm²):
 
    Aluminum: $A_{min} = 5{,}000 / 90 = 55.6 \text{ mm}^2$ ✅
 
    Steel: $A_{min} = 5{,}000 / 177 = 28.2 \text{ mm}^2$ ✅
 
-3. **Minimum diameter** from $d_{min} = \sqrt{4 A_{min} / \pi}$:
+3. **Minimum diameter.** The area of a circle is $\pi d^2/4$, so $d_{min} = \sqrt{4 A_{min} / \pi}$:
 
    Aluminum: $d_{min} = \sqrt{4 \times 55.6 / \pi} = 8.41 \text{ mm}$ ✅
 
    Steel: $d_{min} = \sqrt{4 \times 28.2 / \pi} = 6.00 \text{ mm}$ ✅
 
-   Strength alone would permit quite a thin shaft for either material. ✅
+   For strength alone, a thin shaft is enough in either material. ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Minimum Diameter from the Stiffness Criterion
+### Step 2: Minimum diameter from the stiffness criterion
 
 <details>
 <summary>**Click to reveal the stiffness calculations**</summary>
 
 <Steps>
 
-1. **Required area** from $\delta = FL/(AE) \leq 0.05$ mm, rearranged to $A \geq FL/(\delta_{allow} \cdot E)$:
+1. **Required area.** The stretch $\delta = FL/(AE)$ must not exceed 0.05 mm. Solve for the area: $A \geq FL/(\delta_{allow} \cdot E)$. Use N, mm and $E$ in MPa (70 GPa = 70,000 MPa), so that the area is in mm²:
 
    Aluminum: $A = \frac{5{,}000 \times 400}{0.05 \times 70{,}000} = \frac{2{,}000{,}000}{3{,}500} = 571 \text{ mm}^2$ ✅
 
    Steel: $A = \frac{5{,}000 \times 400}{0.05 \times 200{,}000} = \frac{2{,}000{,}000}{10{,}000} = 200 \text{ mm}^2$ ✅
-
-   (Here $E$ is in MPa = N/mm², so $\delta$ in mm and $L$ in mm are consistent.)
 
 2. **Required diameter** from $d = \sqrt{4A/\pi}$:
 
@@ -349,22 +317,22 @@ Run the steel and the aluminum shaft as the A and B states in the simulator and 
 
 3. **Compare the two criteria:**
 
-   For aluminum: strength needs 8.4 mm, stiffness needs 27.0 mm. Stiffness governs by a factor of 3.2. ✅
+   For aluminum: strength needs 8.4 mm, stiffness needs 27.0 mm. Stiffness decides, by a factor of 3.2. ✅
 
-   For steel: strength needs 6.0 mm, stiffness needs 16.0 mm. Stiffness governs by a factor of 2.7. ✅
+   For steel: strength needs 6.0 mm, stiffness needs 16.0 mm. Stiffness decides, by a factor of 2.7. ✅
 
 </Steps>
 
 </details>
 
-### Step 3: Verify the Final Design and Compare Materials
+### Step 3: Verify the final design and compare materials
 
 <details>
 <summary>**Click to reveal the design comparison**</summary>
 
 <Steps>
 
-1. **Confirm deformation for the stiffness-governed diameters.** For the 27 mm aluminum shaft:
+1. **Check the stretch with the chosen diameters**, from $\delta = FL/(AE)$. For the 27 mm aluminum shaft:
 
    $A = \pi (27)^2 / 4 = 572.6 \text{ mm}^2$ ✅
 
@@ -376,30 +344,28 @@ Run the steel and the aluminum shaft as the A and B states in the simulator and 
 
    $\delta = \frac{5{,}000 \times 400}{201.1 \times 200{,}000} = \frac{2{,}000{,}000}{40{,}220{,}000} = 0.0497 \text{ mm}$ (just within 0.05 mm) ✅
 
-2. **Estimate shaft mass** using $m = \rho A L$:
+2. **Estimate the mass of each shaft**, density times volume, $m = \rho A L$, with the area in m² ($1 \text{ mm}^2 = 10^{-6} \text{ m}^2$) and the length in m:
 
    Aluminum ($\rho = 2{,}700$ kg/m³): $m = 2{,}700 \times 572.6 \times 10^{-6} \times 0.4 = 0.618$ kg ✅
 
    Steel ($\rho = 7{,}850$ kg/m³): $m = 7{,}850 \times 201.1 \times 10^{-6} \times 0.4 = 0.631$ kg ✅
 
-   The masses are nearly equal because steel's higher density is almost exactly offset by its smaller cross-section. ✅
+   The masses are nearly equal. Steel is 2.9 times as dense as aluminum, but it is also 2.9 times as stiff, so its shaft needs 2.9 times less area. ✅
 
-3. **Design decision:** Steel 1045 at 16 mm diameter meets both criteria, uses a 41% smaller diameter (16 mm versus 27 mm, which fits tighter machine envelopes), and has a similar mass to the aluminum option. ✅
+3. **Design decision:** Steel 1045 at 16 mm diameter passes both checks. Its diameter is 41% smaller (16 mm against 27 mm), so it fits a tighter space, and its mass is about the same as the aluminum shaft. ✅
 
 </Steps>
 
 </details>
 
-:::note[Engineering Insight]
-In precision positioning systems, the stiffness criterion almost always sets the shaft size, not the strength criterion. A shaft that is well within the strength limit can still fail the job by deflecting the tool out of tolerance. Both criteria must be checked, and the larger of the two required diameters governs the design.
-:::
+A steel shaft sized for strength alone, 6 mm, would be safe, and it would stretch seven times too far.
 
-## Application 2: Tapered Steel Pull-Rod on the Machine Spindle
+## Application 2: Tapered steel pull-rod on the machine spindle
 
 <InArticleAd />
 
 
-The shaft in Application 1 was uniform because it runs in bearings along its whole length. A drawbar or pull-rod is different: it is loaded in tension at one end and anchored at the other, nothing slides on it, and it moves with the axis, so every kilogram of it costs acceleration. That is exactly the case for a taper: put the metal where the stress is, and remove it where the stress is low.
+A pull-rod is held at one end and pulled at the other, and it moves with the machine axis, so every kilogram of it slows the axis. A taper saves mass. The rod has the shape drawn in Case A, with the sizes below.
 
 :::note[System Problem Statement]
 - **Component:** steel pull-rod, circular section, tapering linearly
@@ -408,78 +374,74 @@ The shaft in Application 1 was uniform because it runs in bearings along its who
 - **Length:** $L = 900$ mm
 - **Axial tensile load:** $W = 25$ kN
 - **Material:** Steel 1045, $E = 200$ GPa, $\sigma_{yield} = 530$ MPa
-- **Task:** find the maximum stress and where it occurs, the total extension, the stress at mid-length, and the diameter of the uniform rod that would be equally stiff; then compare mass with that uniform rod
+- **Task:** find the maximum stress and where it occurs, the total extension, the stress at mid-length, and the diameter of the uniform rod that would be equally stiff; then compare mass with a uniform rod
 
-**Key Question:** How much does a rod that changes section along its length stretch, and how much material does the taper save compared with the uniform rod of the same stiffness?
+**Key Question:** How much does a rod that changes section along its length stretch, and how much material does the taper save?
 :::
 
-### Step 1: Maximum Stress and Where It Acts
+### Step 1: Maximum stress and where it acts
 
 <details>
 <summary>**Click to reveal the maximum stress calculation**</summary>
 
 <Steps>
 
-1. **Locate the critical section.** The internal force is $W = 25$ kN at every section (the rod is loaded only at its ends), so the stress $\sigma = W/A(x)$ is largest where the area is smallest, which is the loaded end at $D_2 = 25$ mm. No integration is involved. ✅
+1. **Find the critical section.** The rod is loaded only at its ends, so the internal force is $W = 25$ kN at every section. The stress $\sigma = W/A(x)$ is therefore largest where the area is smallest: at the loaded end, $D_2 = 25$ mm. No integral is needed. ✅
 
 2. **Area of the small end:**
 
    $$A_2 = \frac{\pi D_2^{\,2}}{4} = \frac{\pi (25)^2}{4} = 490.9 \text{ mm}^2$$ ✅
 
-3. **Maximum stress:**
+3. **Maximum stress**, with 25 kN written as 25,000 N:
 
    $$\sigma_{max} = \frac{W}{A_2} = \frac{4W}{\pi D_2^{\,2}} = \frac{25{,}000}{490.9} = 50.93 \text{ MPa}$$ ✅
 
-4. **Compare with the large end** for context:
+4. **Compare with the large end:**
 
    $$A_1 = \frac{\pi (50)^2}{4} = 1{,}963.5 \text{ mm}^2, \qquad \sigma_{min} = \frac{25{,}000}{1{,}963.5} = 12.73 \text{ MPa}$$
 
-   The stress at the small end is four times the stress at the large end, because doubling the diameter quadruples the area. The factor of safety against yield is $530/50.93 = 10.4$, so this rod is stiffness-critical rather than strength-critical, exactly like the shaft in Application 1. ✅
+   The stress at the small end is four times the stress at the large end, because twice the diameter is four times the area. The safety factor against yield is $530/50.93 = 10.4$. So strength is not the limit for this rod. As for the shaft in Application 1, stiffness is. ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Total Extension of the Tapered Rod
+### Step 2: Total extension of the tapered rod
 
 <details>
 <summary>**Click to reveal the extension calculation**</summary>
 
 <Steps>
 
-1. **Select the relation.** The area varies, so $\delta = WL/(AE)$ does not apply. From the derivation in the theory section, a linear circular taper gives:
+1. **Choose the relation.** The area changes along the rod, so $\delta = WL/(AE)$ does not apply. Case A of the theory gave the result for a round taper:
 
    $$\delta = \frac{4WL}{\pi E D_1 D_2}$$
 
-2. **Substitute, keeping every length in mm and $E$ in MPa = N/mm²** so the answer comes out in mm:
+2. **Substitute, with every length in mm and $E$ in MPa = N/mm²**, so that the answer is in mm:
 
    $$\delta = \frac{4 \times 25{,}000 \times 900}{\pi \times 200{,}000 \times 50 \times 25} = \frac{90 \times 10^6}{7.854 \times 10^8} = 0.1146 \text{ mm}$$ ✅
 
-3. **Sanity-check the magnitude.** The rod is nowhere thinner than 25 mm, so its extension must lie between that of a uniform 50 mm rod and a uniform 25 mm rod:
+3. **Check that the size is reasonable.** The rod is thinner than 50 mm and thicker than 25 mm, so its extension must lie between those of the two uniform rods:
 
    - Uniform 50 mm: $\delta = \dfrac{25{,}000 \times 900}{1{,}963.5 \times 200{,}000} = 0.0573$ mm
    - Uniform 25 mm: $\delta = \dfrac{25{,}000 \times 900}{490.9 \times 200{,}000} = 0.2292$ mm
 
-   The taper result, 0.1146 mm, sits between the two, and is exactly $D_1/D_2 = 2$ times the uniform 50 mm value, as the formula predicts. ✅
+   The taper result, 0.1146 mm, lies between the two. It is exactly $D_1/D_2 = 2$ times the uniform 50 mm value, as the formula says. ✅
 
-4. **What the wrong method would have given.** Using the mid-length area $A_{mid} = \pi(37.5)^2/4 = 1{,}104.5$ mm²:
-
-   $$\delta_{wrong} = \frac{25{,}000 \times 900}{1{,}104.5 \times 200{,}000} = 0.1019 \text{ mm}$$
-
-   That is 11.1% below the correct value. The averaging must be done on $1/A$, not on $A$. ❌
+   The mid-length area, $1{,}104.5$ mm², would give $0.1019$ mm, which is 11.1% too small.
 
 </Steps>
 
 </details>
 
-### Step 3: Stress at Mid-Length
+### Step 3: Stress at mid-length
 
 <details>
 <summary>**Click to reveal the mid-length stress**</summary>
 
 <Steps>
 
-1. **Diameter at mid-length.** The *diameter* varies linearly, so at $x = L/2$ it is the arithmetic mean of the end diameters:
+1. **Diameter at mid-length.** The diameter changes in a straight line, so at $x = L/2$ it is midway between the end diameters:
 
    $$d_{mid} = \frac{D_1 + D_2}{2} = \frac{50 + 25}{2} = 37.5 \text{ mm}$$ ✅
 
@@ -487,84 +449,82 @@ The shaft in Application 1 was uniform because it runs in bearings along its who
 
    $$A_{mid} = \frac{\pi (37.5)^2}{4} = 1{,}104.5 \text{ mm}^2, \qquad \sigma_{mid} = \frac{25{,}000}{1{,}104.5} = 22.64 \text{ MPa}$$ ✅
 
-3. **Note the asymmetry.** The mid-length stress (22.64 MPa) is *not* the average of the end stresses ($(50.93 + 12.73)/2 = 31.83$ MPa). Stress varies as $1/d^2$, not linearly, so it stays low over most of the rod and rises sharply only near the small end. This is why the taper is efficient: the highly stressed material is a small fraction of the rod. ✅
+3. **Notice that it is not the average.** The mid-length stress (22.64 MPa) is well below the average of the end stresses ($(50.93 + 12.73)/2 = 31.83$ MPa). Stress goes as $1/d^2$, so it stays low over most of the rod and rises steeply only near the small end. This is why a taper wastes little: only a small part of the rod is highly stressed. ✅
 
-4. **Local strain, for reference.** $\epsilon = \sigma/E$ gives $2.55 \times 10^{-4}$ at the small end and $6.37 \times 10^{-5}$ at the large end. Strain varies along the rod, which is precisely why the extension needed an integral. ✅
+4. **Local strain.** $\epsilon = \sigma/E$ gives $2.55 \times 10^{-4}$ at the small end and $6.37 \times 10^{-5}$ at the large end. The strain changes along the rod, and this is why the extension needed an integral. ✅
 
 </Steps>
 
 </details>
 
-### Step 4: Equivalent Uniform Rod and the Mass Saved
+### Step 4: Equivalent uniform rod and the mass saved
 
 <details>
 <summary>**Click to reveal the equivalence and mass comparison**</summary>
 
 <Steps>
 
-1. **Equivalent uniform diameter.** Set the uniform-bar extension equal to the taper extension:
+1. **Equivalent uniform diameter.** Set the extension of a uniform rod of diameter $d_{eq}$ equal to the extension of the taper:
 
    $$\frac{4WL}{\pi E d_{eq}^{\,2}} = \frac{4WL}{\pi E D_1 D_2} \;\Rightarrow\; d_{eq} = \sqrt{D_1 D_2} = \sqrt{50 \times 25} = 35.36 \text{ mm}$$ ✅
 
-   Check: $A_{eq} = \pi(35.36)^2/4 = 981.7$ mm², and $\delta = \dfrac{25{,}000 \times 900}{981.7 \times 200{,}000} = 0.1146$ mm, matching Step 2 exactly. ✅
+   Check: $A_{eq} = \pi(35.36)^2/4 = 981.7$ mm², and $\delta = \dfrac{25{,}000 \times 900}{981.7 \times 200{,}000} = 0.1146$ mm, the same as Step 2. ✅
 
-2. **Volume of the tapered rod** (a frustum of a cone):
+2. **Volume of the tapered rod.** Its shape is a cone with the point cut off:
 
    $$V = \frac{\pi L}{12}\left(D_1^2 + D_1 D_2 + D_2^2\right) = \frac{\pi (900)}{12}\left(2{,}500 + 1{,}250 + 625\right) = 1.031 \times 10^6 \text{ mm}^3$$ ✅
 
-   Mass at $\rho = 7{,}850$ kg/m³: $m = 7{,}850 \times 1.031 \times 10^{-3} = 8.09$ kg ✅
+   Mass at $\rho = 7{,}850$ kg/m³ ($10^6 \text{ mm}^3 = 10^{-3} \text{ m}^3$): $m = 7{,}850 \times 1.031 \times 10^{-3} = 8.09$ kg ✅
 
-3. **Compare with the uniform 50 mm rod** (the one you would use if the anchor end sets the diameter):
+3. **Compare with the uniform 50 mm rod**, the rod you would use if the anchor end decides the diameter:
 
    $$V_{uniform} = 1{,}963.5 \times 900 = 1.767 \times 10^6 \text{ mm}^3, \qquad m = 13.87 \text{ kg}$$
 
-   The taper saves 41.7% of the material and 5.8 kg of moving mass, at the price of doubling the extension from 0.057 mm to 0.115 mm. ✅
+   The taper saves 41.7% of the material and 5.8 kg of moving mass. The price is twice the extension: 0.115 mm against 0.057 mm. ✅
 
-4. **Design decision.** If the deflection budget for this rod is 0.15 mm, the taper passes (0.115 mm) with a strength factor of safety above 10, and is the better design because the mass is on a moving axis. If the budget were 0.10 mm, the taper would fail on stiffness and the small end would have to be increased: from $\delta = 4WL/(\pi E D_1 D_2)$, holding $D_1 = 50$ mm, $D_2 \geq 4WL/(\pi E D_1 \delta_{allow}) = 28.6$ mm, so a 30 mm small end. ✅
+4. **Design decision.** If this rod may stretch 0.15 mm, the taper passes (0.115 mm) with a safety factor above 10, and it is the better design because the mass is on a moving axis. If the limit were 0.10 mm, the taper would fail on stiffness, and the small end would need to be larger. Solve $\delta = 4WL/(\pi E D_1 D_2)$ for $D_2$ with $D_1 = 50$ mm: $D_2 \geq 4WL/(\pi E D_1 \delta_{allow}) = 28.6$ mm, so choose a small end of 30 mm. ✅
 
 </Steps>
 
 </details>
 
-### Variation: The Same Method on a Flat Tapered Tie Plate
+### Variation: The same method on a flat tapered tie plate
 
 <details>
 <summary>**Click to reveal the flat-taper worked example**</summary>
 
-An aluminum tie plate ($E = 70$ GPa) of constant thickness $t = 10$ mm tapers in width from $b_1 = 120$ mm at the anchor to $b_2 = 60$ mm at the pin, over $L = 600$ mm, carrying $W = 40$ kN.
+An aluminum tie plate ($E = 70$ GPa) of constant thickness $t = 10$ mm tapers in width from $b_1 = 120$ mm at the anchor to $b_2 = 60$ mm at the pin, over $L = 600$ mm. It carries $W = 40$ kN.
 
 <Steps>
 
-1. **Maximum stress** at the narrow end (smallest area, $A_2 = 10 \times 60 = 600$ mm²):
+1. **Maximum stress**, force over the smallest area, at the narrow end ($A_2 = 10 \times 60 = 600$ mm²):
 
    $$\sigma_{max} = \frac{40{,}000}{600} = 66.67 \text{ MPa}$$ ✅
 
-   (At the wide end, $A_1 = 1{,}200$ mm² and $\sigma = 33.33$ MPa: half, because here the area is linear in the width, not quadratic.)
-
-2. **Extension** from the flat-taper result:
+2. **Extension** from the flat-taper result of Case B:
 
    $$\delta = \frac{WL}{Et(b_1-b_2)}\ln\!\left(\frac{b_1}{b_2}\right) = \frac{40{,}000 \times 600}{70{,}000 \times 10 \times 60}\ln\!\left(\frac{120}{60}\right)$$
 
    $$\delta = \frac{24 \times 10^6}{42 \times 10^6} \times 0.6931 = 0.5714 \times 0.6931 = 0.396 \text{ mm}$$ ✅
 
-3. **Equivalent uniform width** (the logarithmic mean):
+3. **Equivalent uniform width:**
 
    $$b_{eq} = \frac{b_1 - b_2}{\ln(b_1/b_2)} = \frac{60}{0.6931} = 86.56 \text{ mm}, \qquad A_{eq} = 865.6 \text{ mm}^2$$
 
    Check: $\delta = \dfrac{40{,}000 \times 600}{865.6 \times 70{,}000} = 0.396$ mm ✅
 
-   Note that the equivalent width (86.6 mm) is *below* the arithmetic mean (90 mm), the same bias seen in the circular taper. ✅
+   The equivalent width (86.6 mm) is below the mid-length width (90 mm), as it was for the round taper. ✅
 
 </Steps>
 
 </details>
 
-### Practice: Four Variations to Work Yourself
+### Practice: Four variations to work yourself
 
 <details>
 <summary>**Click to reveal the practice problems and their answers**</summary>
 
-Work each one from the four-step recipe, then check against the answers.
+Work each one with the four-step recipe, then compare with the answers.
 
 1. **Circular taper.** A steel bar ($E = 200$ GPa) tapers from $D_1 = 80$ mm to $D_2 = 40$ mm over $L = 1{,}200$ mm under $W = 45$ kN. Find the maximum stress, the total extension, and the stress at mid-length.
 
@@ -576,7 +536,7 @@ Work each one from the four-step recipe, then check against the answers.
 
 3. **Design (inverse) problem.** A steel taper ($E = 200$ GPa) has $D_1 = 60$ mm, $L = 800$ mm, and carries $W = 35$ kN. The extension must not exceed 0.15 mm. What is the smallest permissible $D_2$, and what is the resulting maximum stress?
 
-   *Answers:* rearranging, $D_2 \geq \dfrac{4WL}{\pi E D_1 \delta_{allow}} = \dfrac{4(35{,}000)(800)}{\pi (200{,}000)(60)(0.15)} = 19.81$ mm, so use 20 mm. Then $\delta = 0.1485$ mm ✅ and $\sigma_{max} = 4(35{,}000)/(\pi \times 400) = 111.4$ MPa, a factor of safety of 4.8 against a 530 MPa yield. ✅
+   *Answers:* rearranging, $D_2 \geq \dfrac{4WL}{\pi E D_1 \delta_{allow}} = \dfrac{4(35{,}000)(800)}{\pi (200{,}000)(60)(0.15)} = 19.81$ mm, so use 20 mm. Then $\delta = 0.1485$ mm ✅ and $\sigma_{max} = 4(35{,}000)/(\pi \times 400) = 111.4$ MPa, a safety factor of 4.8 against a 530 MPa yield. ✅
 
 4. **Self-weight.** A uniform steel bar hangs vertically from its top end, $L = 12$ m, $\rho = 7{,}850$ kg/m³, $E = 200$ GPa, carrying no other load. Find the extension and the maximum stress.
 
@@ -584,20 +544,16 @@ Work each one from the four-step recipe, then check against the answers.
 
 </details>
 
-:::note[Engineering Insight]
-A varying section changes nothing conceptually: the extension is still built from $d\delta = N\,dx/(AE)$, and the maximum stress is still force over the smallest area. What changes is that the two answers now come from different places in the member. The stress check is local (at the small end) and needs no calculus; the stiffness check is global (an integral over the whole length) and cannot be shortcut with an average area. Getting a taper problem right is mostly a matter of writing $A(x)$ correctly before integrating.
-:::
-
-## Application 3: Interpreting a Tensile Test of a Steel Coupon
+## Application 3: Interpreting a tensile test of a steel coupon
 
 <InArticleAd />
 
 
-A tensile test is the standard way to measure the mechanical properties of a material before it goes into a design. Understanding how to read the stress-strain curve lets you extract the numbers that feed every other analysis.
+The yield strength in every design calculation comes from a tensile test. Here is the record of one test.
 
 :::note[System Problem Statement]
-- **Component:** standard round steel coupon (ASTM E8)
-- **Gauge length:** $L_0 = 50$ mm
+- **Component:** standard round steel coupon (ASTM E8, a standard for tensile tests)
+- **Gauge length:** $L_0 = 50$ mm (the measured length of the coupon)
 - **Diameter:** $d = 12.5$ mm, giving $A_0 = \pi(12.5)^2/4 = 122.7$ mm²
 - **Material:** medium-carbon steel, $E = 200$ GPa
 - **Curve data (read from the test record):**
@@ -606,68 +562,68 @@ A tensile test is the standard way to measure the mechanical properties of a mat
   - Ultimate tensile strength: $\sigma_{UTS} = 520$ MPa
   - Fracture stress: 410 MPa (after necking)
   - Elongation at fracture: 22% of gauge length
-- **Task:** confirm the 0.2% offset construction, compute modulus of resilience, estimate modulus of toughness, and compute percent elongation
+- **Task:** confirm the 0.2% offset construction, compute the modulus of resilience, estimate the modulus of toughness, and compute the percent elongation
 
-**Key Question:** What are the energy-absorption characteristics of this steel, and how ductile is it?
+**Key Question:** How much energy can this steel take in, and how far does it stretch before it breaks?
 :::
 
-### Step 1: Confirm the 0.2% Offset Yield Construction
+### Step 1: Confirm the 0.2% offset yield construction
 
 <details>
 <summary>**Click to reveal the 0.2% offset construction**</summary>
 
 <Steps>
 
-1. **What "0.2% offset" means.** Draw a straight line with slope equal to $E$ (200 GPa) that starts not at the origin but at $\epsilon = 0.002$ on the strain axis. Where that line intersects the actual stress-strain curve is defined as the yield strength. The 0.002 offset accounts for the permanent set that is considered acceptable for a yield criterion.
+1. **What "0.2% offset" means.** Draw a straight line with the slope $E$ (200 GPa) that starts on the strain axis at $\epsilon = 0.002$ and not at zero. The stress where that line meets the stress-strain curve is defined as the yield strength. A coupon loaded to this stress and unloaded keeps a permanent strain of 0.002, which is 0.2%.
 
-2. **Check the elastic slope at the yield point.** At $\sigma_y = 350$ MPa the elastic strain is:
+2. **Find the strain at the yield point.** At $\sigma_y = 350$ MPa the elastic strain is stress over $E$:
 
    $$\epsilon_{elastic} = \frac{\sigma_y}{E} = \frac{350 \text{ MPa}}{200{,}000 \text{ MPa}} = 0.00175$$ ✅
 
-   The total strain at the 0.2% offset yield point is $0.00175 + 0.002 = 0.00375$, which is consistent with where the offset line meets the curve. ✅
+   The total strain at the 0.2% offset yield point is the elastic strain plus the offset, $0.00175 + 0.002 = 0.00375$. This is where the offset line meets the curve. ✅
 
-3. **Read the other landmarks:**
-   - Proportional limit $\approx 280$ MPa at strain $\approx 0.0014$ (curve is still linear)
-   - UTS = 520 MPa at a strain of roughly 12% (the peak of the curve)
-   - Fracture at 22% elongation and 410 MPa (necking has reduced the load-bearing area)
+3. **Read the other points:**
+   - Proportional limit $\approx 280$ MPa at a strain of $280/200{,}000 = 0.0014$ (the curve is still straight)
+   - UTS = 520 MPa at a strain of about 12% (the top of the curve)
+   - Fracture at a strain of 22% and 410 MPa (the stress is lower because the neck has made the coupon thinner, and the stress is still calculated with the original area)
 
 </Steps>
 
 </details>
 
-### Step 2: Modulus of Resilience
+### Step 2: Modulus of resilience
 
 <details>
 <summary>**Click to reveal the resilience calculation**</summary>
 
 <Steps>
 
-1. **Formula.** The modulus of resilience is the area under the elastic portion of the curve, approximated as a triangle:
+1. **Formula.** The modulus of resilience is the area under the elastic part of the curve, taken as a triangle:
 
    $$u_r = \frac{\sigma_y^2}{2E}$$
 
-2. **Calculation:**
+2. **Calculation**, with both values in pascals, so that the answer is in J/m³:
 
    $$u_r = \frac{(350 \times 10^6)^2}{2 \times (200 \times 10^9)} = \frac{1.225 \times 10^{17}}{4.0 \times 10^{11}} = 306{,}250 \text{ J/m}^3 \approx 306 \text{ kJ/m}^3$$ ✅
 
-3. **Meaning.** This steel can absorb 306 kJ per cubic metre elastically before yielding. A material with higher resilience makes a better spring; higher toughness (see Step 3) makes a better crash absorber. ✅
+3. **Meaning.** Each cubic metre of this steel can store 306 kJ and give it back. A material with a high resilience makes a good spring. A material with a high toughness (Step 3) is good at taking a blow without breaking. ✅
 
 </Steps>
 
 </details>
 
-### Step 3: Estimate the Modulus of Toughness
+### Step 3: Estimate the modulus of toughness
 
 <details>
 <summary>**Click to reveal the toughness estimate**</summary>
 
 <Steps>
 
-1. **Approach.** The modulus of toughness is the total area under the stress-strain curve. A practical estimate splits the curve into the elastic triangle plus a trapezoidal plastic region:
+1. **Approach.** The modulus of toughness is the whole area under the stress-strain curve. For an estimate, add two areas: the elastic triangle, and a plastic part whose height is taken as the average of the yield strength and the UTS:
 
    $$u_T \approx u_r + \frac{(\sigma_y + \sigma_{UTS})}{2} \times (\epsilon_{fracture} - \epsilon_y^{*})$$
 
-   where $\epsilon_y^{*}$ is the strain at yield (approximately 0.00175) and $\epsilon_{fracture} = 0.22$.
+   where $\epsilon_y^{*}$ is the elastic strain at yield (0.00175) and $\epsilon_{fracture} = 0.22$.
 
 2. **Calculation:**
 
@@ -681,134 +637,124 @@ A tensile test is the standard way to measure the mechanical properties of a mat
 
    Total: $u_T \approx 0.31 + 94.96 \approx 95.3$ MJ/m³ ✅
 
-3. **Interpretation.** The steel absorbs roughly 95 MJ per cubic metre before fracturing. Nearly all of that (99.7%) is plastic work during the large permanent elongation. This high toughness is what makes medium-carbon steel suitable for parts that must absorb impact without shattering. ✅
+3. **Interpretation.** The steel takes in about 95 MJ per cubic metre before it breaks. Nearly all of it (99.7%) is plastic work, done during the large permanent stretch. This is why a medium-carbon steel suits parts that must take a blow without shattering. ✅
 
 </Steps>
 
 </details>
 
-### Step 4: Percent Elongation (Ductility)
+### Step 4: Percent elongation (ductility)
 
 <details>
 <summary>**Click to reveal the percent elongation**</summary>
 
 <Steps>
 
-1. **Percent elongation** is defined over the original gauge length:
+1. **Percent elongation** is the growth of the gauge length, as a percentage of the original gauge length. $L_f$ is the gauge length at fracture:
 
    $$\%EL = \frac{L_f - L_0}{L_0} \times 100 = \frac{(50 \times 1.22) - 50}{50} \times 100 = 22\%$$ ✅
 
-   (The fracture elongation of 22% was read from the curve; it means the gauge section grew from 50 mm to 61 mm before breaking.) ✅
+   (The 22% was read from the curve. It means that the gauge length grew from 50 mm to 61 mm before the coupon broke.) ✅
 
-2. **Classification.** Materials with $\%EL > 5\%$ are considered ductile. At 22%, this steel has substantial ductility: it gives visual warning (necking and elongation) well before fracture, which is the property that makes ductile metals forgiving in overload situations. ✅
+2. **Classification.** A material with $\%EL > 5\%$ is called ductile. At 22% this steel is clearly ductile. An overloaded part stretches and necks where people can see it, well before it breaks. A brittle material, such as cast iron, breaks with no warning. ✅
 
 </Steps>
 
 </details>
 
-:::note[Engineering Insight]
-A stress-strain curve tells you four different things about a material: its stiffness (the slope $E$), its yield strength (where permanent deformation begins), its ultimate strength (the peak load it can ever carry), and its ductility (how much it deforms before breaking). All four numbers are needed for a complete design check, and none of them can substitute for another.
-:::
-
-## Application 4: Shear Modulus and a Bonded Elastomer Anti-Vibration Mount
+## Application 4: Shear modulus and a bonded elastomer anti-vibration mount
 
 <InArticleAd />
 
 
-Shear modulus governs any component that is loaded across its thickness rather than along its length. Bonded elastomer mounts are a common example: the rubber layer is glued between two metal plates, and when the structure moves horizontally the rubber is sheared. The mount's compliance in shear is exactly what provides the vibration isolation.
+An anti-vibration mount is a layer of rubber (an elastomer) bonded between two metal plates. When the machine on top moves sideways, the rubber is sheared, as the book was. Its softness in shear keeps the vibration of the machine from the floor.
 
 :::note[System Problem Statement]
 - **Component:** bonded natural-rubber anti-vibration mount
-- **Bonded pad dimensions:** 80 mm x 80 mm (shear area $A = 6{,}400$ mm²)
+- **Bonded pad dimensions:** $80\ \text{mm} \times 80\ \text{mm}$ (shear area $A = 6{,}400$ mm²)
 - **Rubber layer thickness:** $h = 20$ mm
 - **Material:** natural rubber, $E = 4$ MPa, $\nu = 0.49$
 - **Applied horizontal shear force:** $F = 800$ N
 - **Task:** compute $G$ from $E$ and $\nu$, then find shear stress $\tau$, shear strain $\gamma$, and the lateral shear deflection $\delta_{shear}$
 
-**Key Question:** By how much does the mount deflect laterally under an 800 N horizontal load, and is that deflection in the expected design range for vibration isolation?
+**Key Question:** How far does the top of the mount move sideways under a horizontal load of 800 N, and is that a usual value for a mount of this kind?
 :::
 
-### Step 1: Shear Modulus from E and Poisson's Ratio
+```text
+            F = 800 N ────►
+  ┌───────────────────────────┐   top plate, moves sideways
+  ├───────────────────────────┤
+  │    rubber, h = 20 mm      │   bonded area 80 mm × 80 mm
+  ├───────────────────────────┤
+  └───────────────────────────┘   bottom plate, fixed
+```
+
+### Step 1: Shear modulus from E and Poisson's ratio
 
 <details>
 <summary>**Click to reveal the shear modulus calculation**</summary>
 
 <Steps>
 
-1. **Apply the elastic relation** between $G$, $E$, and $\nu$:
+1. **Find $G$** from $E$ and $\nu$:
 
    $$G = \frac{E}{2(1 + \nu)} = \frac{4 \text{ MPa}}{2(1 + 0.49)} = \frac{4}{2 \times 1.49} = \frac{4}{2.98} = 1.342 \text{ MPa}$$ ✅
 
-2. **Context.** For nearly incompressible materials such as rubber ($\nu \approx 0.49$ to $0.50$), the denominator $2(1+\nu)$ approaches $3.0$, so $G \approx E/3$. This is why rubber is much easier to shear than to compress: its shear modulus is only a third of its tensile modulus, while for steel the ratio is about $0.385$. ✅
+2. **Context.** Rubber keeps almost the same volume when it is squeezed, so its $\nu$ is close to $0.50$. Then $2(1+\nu)$ is close to $3$, and $G \approx E/3$. The real difference is in size: the $E$ of rubber, 4 MPa, is 50,000 times smaller than the $E$ of steel. ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Shear Stress in the Rubber Layer
+### Step 2: Shear stress in the rubber layer
 
 <details>
 <summary>**Click to reveal the shear stress calculation**</summary>
 
 <Steps>
 
-1. **Shear stress** is force over the area parallel to the load:
+1. **Shear stress** is the force divided by the area it slides along, here the bonded area:
 
    $$\tau = \frac{F}{A} = \frac{800 \text{ N}}{6{,}400 \text{ mm}^2} = 0.125 \text{ MPa}$$ ✅
 
-2. **Check against the rubber's short-term shear strength.** Natural rubber typically carries shear stresses up to 1 to 2 MPa before tearing. At 0.125 MPa the mount is well within its elastic range. ✅
+2. **Compare with the strength of the rubber in shear.** Natural rubber usually carries a shear stress of 1 to 2 MPa before it tears. At 0.125 MPa the mount is far below that. ✅
 
 </Steps>
 
 </details>
 
-### Step 3: Shear Strain and Lateral Deflection
+### Step 3: Shear strain and lateral deflection
 
 <details>
 <summary>**Click to reveal the shear strain and deflection**</summary>
 
 <Steps>
 
-1. **Shear strain** from $\tau = G\gamma$:
+1. **Shear strain**, shear stress over $G$:
 
    $$\gamma = \frac{\tau}{G} = \frac{0.125 \text{ MPa}}{1.342 \text{ MPa}} = 0.0931 \text{ rad}$$ ✅
 
-2. **Lateral shear deflection.** Shear strain is the tangent of the shear angle, which for small angles equals $\delta_{shear}/h$:
+2. **Lateral shear deflection.** The shear strain is the sideways movement divided by the thickness, so the movement is strain times thickness. (This holds for small angles of lean, and 0.0931 rad is about 5°.)
 
    $$\delta_{shear} = \gamma \times h = 0.0931 \times 20 \text{ mm} = 1.86 \text{ mm}$$ ✅
 
-3. **Interpret the result.** A lateral deflection of about 1.9 mm under 800 N gives a lateral stiffness of $k = F/\delta = 800/1.86 = 430$ N/mm. Anti-vibration mounts for light machinery typically target lateral stiffnesses in the range of 200 to 800 N/mm, so this mount is in the right design region. ✅
+3. **Interpret the result.** The top moves about 1.9 mm under 800 N, so the stiffness of the mount in shear is $k = F/\delta = 800/1.86 = 430$ N/mm. Mounts for light machines usually have between 200 and 800 N/mm, so this mount is in the usual range. ✅
 
 </Steps>
 
 </details>
 
-:::note[Engineering Insight]
-The shear modulus is not an independent material property: it follows directly from Young's modulus and Poisson's ratio through $G = E/(2(1+\nu))$. For metals, $G \approx 0.38E$; for rubbers, $G \approx E/3$. Whenever a component is loaded in shear (a lap joint, an elastomer mount, a keyed shaft), the calculation uses $\tau = F/A$ and $\gamma = \tau/G$, in exactly the same pattern as the axial case but with the shear quantities throughout.
-:::
-
-## Design Guidelines for Strain and Material Properties
+## Design guidelines for strain and material properties
 
 <InArticleAd />
 
 
-<CardGrid>
-  <Card title="Check stiffness and strength separately" icon="rocket">
-  In precision systems, the deformation limit almost always sets a larger minimum cross-section than the strength criterion. Run both calculations and take the larger diameter.
-  </Card>
-  <Card title="Read the full stress-strain curve" icon="warning">
-  Yield strength and UTS are on the same curve, but they mean different things. Yield is where permanent deformation begins; UTS is the peak load. Using UTS for a yield-based design check is unsafe.
-  </Card>
-  <Card title="Know G for shear-loaded parts" icon="setting">
-  Any component carrying shear (a pin, an adhesive joint, a rubber mount, a splined coupling) requires the shear modulus, not Young's modulus. Compute it from $G = E/(2(1+\nu))$ if you only have $E$ and $\nu$.
-  </Card>
-  <Card title="Ductility provides failure warning" icon="puzzle">
-  A material with more than 5% elongation at fracture deforms visibly before it breaks. This gives warning time. Brittle materials fracture suddenly, with no prior deformation, which is why ductility matters in safety-critical parts.
-  </Card>
-</CardGrid>
+1. Check stiffness and strength separately, and take the larger diameter.
+2. Design against the yield strength. A design that uses the UTS as its limit accepts permanent stretch.
+3. For a part loaded in shear (a pin, a glued joint, a rubber mount), use the shear modulus $G$, and not $E$.
 
 :::tip[Instrument it]
-The stiffness criterion that sized the actuator shaft is something you can measure directly. Mount an LVDT or a dial indicator at the loaded end and read the real deflection under a known load; its slope is the actual axial stiffness, which is rarely exactly what the handbook modulus predicts (fits, surface condition, and bearing compliance all add compliance). An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) logging the LVDT output lets you [trend the measured stiffness on siliconwit.io](https://siliconwit.io) and verify the shaft meets the tolerance before you trust the part in production.
+You can measure the stiffness that sized the actuator shaft. Fix a dial indicator or an LVDT (a sensor that reads small movements) at the loaded end and read the real stretch under a known load. It is usually larger than the calculated one, because the joints and bearings also give a little. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) that logs the LVDT lets you [trend the measured stiffness on siliconwit.io](https://siliconwit.io) and confirm that the shaft meets its tolerance.
 :::
 
 ## Summary and Next Steps
@@ -816,27 +762,14 @@ The stiffness criterion that sized the actuator shaft is something you can measu
 <InArticleAd />
 
 
-### Key Concepts Mastered
+### Key concepts
 
-1. **Axial deflection** follows $\delta = FL/(AE)$. In precision systems the stiffness criterion (deformation limit) almost always sets a larger minimum section than the strength criterion, and both must be checked.
-2. **Non-uniform members** are all handled by one relation, $\delta = \int_0^L N(x)\,dx/(A(x)E)$: a linear circular taper gives $\delta = 4WL/(\pi E D_1 D_2)$, a flat taper gives $\delta = WL\ln(b_1/b_2)/(Et(b_1-b_2))$, a stepped bar gives $\sum N_iL_i/(A_iE_i)$, and self-weight gives $\rho gL^2/(2E)$ for a uniform bar. The maximum stress is always $N/A_{min}$ at the smallest section and needs no integration; the extension can never be found from an average area.
-3. **The tensile test curve** captures stiffness ($E$, the slope), yield strength (0.2% offset construction), UTS (peak), fracture strain (ductility), and the energy per unit volume the material can absorb (resilience and toughness).
-4. **Shear modulus** is related to Young's modulus and Poisson's ratio by $G = E/(2(1+\nu))$. Shear-loaded parts (elastomer mounts, pins, adhesive joints) use $\tau = F/A$ and $\gamma = \tau/G$ to find the shear deflection $\delta_{shear} = \gamma h$.
+1. **Axial deflection** of a uniform bar is $\delta = FL/(AE)$. Stiffness and strength are separate checks.
+2. **Bars of changing section** follow $\delta = \int_0^L N(x)\,dx/(A(x)E)$. The maximum stress is $N/A_{min}$, and an average area never gives the extension.
+3. **The tensile test curve** gives the stiffness, the yield strength, the UTS, the ductility and the energy the material takes in. Unloading follows a line parallel to the elastic line.
+4. **Shear modulus** is $G = E/(2(1+\nu))$, and the sideways movement of a sheared layer is $\delta_{shear} = \gamma h$.
 
-### Results at a Glance
-
-| Application | Key result | Governing criterion |
-|------------|-----------|---------------------|
-| CNC shaft: aluminum 27 mm, steel 16 mm | Al: $\delta = 0.050$ mm, mass 0.62 kg; steel: $\delta = 0.050$ mm, mass 0.63 kg | Stiffness governs both |
-| Tapered pull-rod (50 mm → 25 mm, 900 mm, 25 kN) | $\sigma_{max} = 50.9$ MPa at the small end, $\delta = 0.115$ mm, $\sigma_{mid} = 22.6$ MPa, $d_{eq} = 35.4$ mm, 41.7% less material | Stiffness governs (SF = 10.4 on strength) |
-| Steel tensile coupon | $u_r = 306$ kJ/m³, $u_T \approx 95.3$ MJ/m³, ductility 22% | Yield at 350 MPa, UTS 520 MPa |
-| Elastomer mount (80 mm x 80 mm, 20 mm thick) | $G = 1.34$ MPa, $\tau = 0.125$ MPa, $\gamma = 0.093$ rad, $\delta_{shear} = 1.86$ mm | Shear governs deflection |
-
-### A Note on Tools
-
-Every number in this lesson came from four relations ($\delta = FL/(AE)$, its non-uniform form $\delta = \int N\,dx/(AE)$, $u_r = \sigma_y^2/(2E)$, and $G = E/(2(1+\nu))$) and a calculator. Finite-element software is not needed for axial or shear members, tapered ones included; the hand calculation is the design, and simulation is for validating complex geometry after the sizing is done.
-
-Next, [Compound Bars and Composite Systems](/education/mechanics-of-materials/compound-bars-and-composite-systems) extends the axial analysis to members made of two different materials in series or parallel, which is the situation in every bolted joint, press fit, and bi-material actuator.
+Next, [Compound Bars and Composite Systems](/education/mechanics-of-materials/compound-bars-and-composite-systems/) takes the axial analysis to members made of two materials, side by side or end to end, as in a bolted joint or a sleeved rod.
 
 
 

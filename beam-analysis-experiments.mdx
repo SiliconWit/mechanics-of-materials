@@ -38,15 +38,15 @@ The theory behind these experiments is in [Shear Force and Bending Moment in Bea
 
 | Term | Meaning |
 |------|---------|
-| **Shear force V(x)** | Internal transverse force at section x; equals the algebraic sum of all transverse forces to one side of the cut |
-| **Bending moment M(x)** | Internal moment at section x; sagging positive in the convention used here |
-| **Reactions RA, RB** | Vertical support forces at the pin (A) and roller (B); found by equilibrium |
-| **Fixed-end moment M0** | The moment reaction at a clamped wall; hogging (negative in the sagging convention) |
-| **Flexure formula** | σ = M·c/I; bending stress at the extreme fibre, where c = h/2 for a symmetric section |
-| **Second moment of area I** | I = b·h³/12 for a solid rectangle; measures resistance to bending |
-| **Section modulus S** | S = I/c; divides M directly into the extreme-fibre stress |
-| **Elastic modulus E** | Material stiffness (GPa); multiplied by I to give flexural rigidity EI |
-| **Deflection δ** | Transverse displacement of the elastic curve; proportional to M/(EI) integrated twice |
+| **Shear force $V(x)$** | Internal transverse force at section x; equals the algebraic sum of all transverse forces to one side of the cut |
+| **Bending moment $M(x)$** | Internal moment at section x; sagging positive in the convention used here |
+| **Reactions $R_A$, $R_B$** | Vertical support forces at the pin (A) and roller (B); found by equilibrium |
+| **Fixed-end moment $M_0$** | The moment reaction at a clamped wall; hogging (negative in the sagging convention) |
+| **Flexure formula** | $\sigma = M \cdot c/I$; bending stress at the extreme fibre, where $c = h/2$ for a symmetric section |
+| **Second moment of area I** | $I = b \cdot h^3/12$ for a solid rectangle; measures resistance to bending |
+| **Section modulus S** | $S = I/c$; divides M directly into the extreme-fibre stress |
+| **Elastic modulus E** | Material stiffness (GPa); multiplied by I to give flexural rigidity $EI$ |
+| **Deflection $\delta$** | Transverse displacement of the elastic curve; proportional to $M/(EI)$ integrated twice |
 
 ### Experiment Workflow
 
@@ -69,7 +69,7 @@ flowchart TD
 </FileTree>
 
 :::tip[Instrument it]
-You cannot read bending stress directly, but you can read the surface strain on the tension face and convert. Bond a uniaxial foil strain gauge (for example an HBM LY series or a Micro-Measurements CEA series) to the bottom face of the beam at the section of maximum moment, where the longitudinal strain is largest. Wire it into a Wheatstone quarter-bridge, amplify with an HX711-class bridge ADC or an INA128, and have an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample it. Multiply the measured strain by E to get bending stress and compare it to σ = M·c/I. For deflection, a dial gauge, an LVDT, or a simple IR distance sensor mounted under the beam midspan gives δ directly. A connected board can [log both quantities against load in real time](https://siliconwit.io) and flag when either exceeds a set limit.
+You cannot read bending stress directly, but you can read the surface strain on the tension face and convert. Bond a uniaxial foil strain gauge (for example an HBM LY series or a Micro-Measurements CEA series) to the bottom face of the beam at the section of maximum moment, where the longitudinal strain is largest. Wire it into a Wheatstone quarter-bridge, amplify with an HX711-class bridge ADC or an INA128, and have an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample it. Multiply the measured strain by E to get bending stress and compare it to $\sigma = M \cdot c/I$. For deflection, a dial gauge, an LVDT, or a simple IR distance sensor mounted under the beam midspan gives $\delta$ directly. A connected board can [log both quantities against load in real time](https://siliconwit.io) and flag when either exceeds a set limit.
 :::
 
 ---
@@ -87,15 +87,15 @@ Compute the support reactions, draw the shear-force and bending-moment diagrams,
 
 <Steps>
 1. **Configure the simulator**
-   Open the simulator and select the **two-point** preset (L = 1000 mm, simply supported; P1 = 2000 N at x = 300 mm; P2 = 1500 N at x = 700 mm; section 40 mm × 80 mm; E = 200 GPa). Leave the load and section inputs as they are.
+   Open the simulator and select the **two-point** preset ($L = 1000\ \text{mm}$, simply supported; $P_1 = 2000\ \text{N}$ at $x = 300\ \text{mm}$; $P_2 = 1500\ \text{N}$ at $x = 700\ \text{mm}$; section $40\ \text{mm} \times 80\ \text{mm}$; $E = 200\ \text{GPa}$). Leave the load and section inputs as they are.
 
 2. **Predict reactions**
-   Take moments about A to find RB = (P1·a1 + P2·a2)/L, then RA = P1 + P2 - RB. Predict the shear in each of the three segments before reading the panel.
+   Take moments about A to find $R_B = (P_1 \cdot a_1 + P_2 \cdot a_2)/L$, then $R_A = P_1 + P_2 - R_B$. Predict the shear in each of the three segments before reading the panel.
 
 3. **Read the diagrams**
-   On the SFD, confirm the shear jumps downward at x = 300 mm and again at x = 700 mm, and crosses zero (changes sign) in the segment between them. On the BMD, confirm the moment is piecewise linear and peaks at the load closer to the larger reaction.
+   On the SFD, confirm the shear jumps downward at $x = 300\ \text{mm}$ and again at $x = 700\ \text{mm}$, and crosses zero (changes sign) in the segment between them. On the BMD, confirm the moment is piecewise linear and peaks at the load closer to the larger reaction.
 
-4. **Locate Mmax**
+4. **Locate $M_{max}$**
    The moment is maximum where the shear is zero (changes sign). Confirm which load position carries the higher moment.
 
 5. **Save data**
@@ -176,11 +176,11 @@ plt.show()
 
 ### Expected Results
 
-RA = 1850.0 N, RB = 1650.0 N. The shear diagram reads: V = +1850 N from x = 0 to 300 mm, then drops to -150 N from 300 to 700 mm, then drops to -1650 N from 700 to 1000 mm. Moments: M(300 mm) = 555 000 N·mm, M(700 mm) = 495 000 N·mm. The maximum bending moment is 555 000 N·mm at x = 300 mm. The bending stress at this section is σmax = 13.008 MPa (I = 1 706 667 mm⁴, c = 40 mm).
+$R_A = 1850.0\ \text{N}$, $R_B = 1650.0\ \text{N}$. The shear diagram reads: $V = +1850\ \text{N}$ from $x = 0$ to 300 mm, then drops to $-150\ \text{N}$ from 300 to 700 mm, then drops to $-1650\ \text{N}$ from 700 to 1000 mm. Moments: $M(300\ \text{mm}) = 555\,000\ \text{N}\cdot\text{mm}$, $M(700\ \text{mm}) = 495\,000\ \text{N}\cdot\text{mm}$. The maximum bending moment is $555\,000\ \text{N}\cdot\text{mm}$ at $x = 300\ \text{mm}$. The bending stress at this section is $\sigma_{max} = 13.008\ \text{MPa}$ ($I = 1\,706\,667\ \text{mm}^4$, $c = 40\ \text{mm}$).
 
 ### Design Question
 
-The maximum moment sits at x = 300 mm even though the larger load P1 = 2000 N acts there and P2 is closer to the midspan. If you moved P2 from x = 700 mm to x = 500 mm while keeping everything else fixed, would Mmax increase or decrease? Use the reaction equations to argue why.
+The maximum moment sits at $x = 300\ \text{mm}$, under the larger load $P_1 = 2000\ \text{N}$. Both loads are the same distance, $200\ \text{mm}$, from the midspan. If you moved $P_2$ from $x = 700\ \text{mm}$ to $x = 500\ \text{mm}$ while keeping everything else fixed, would $M_{max}$ increase or decrease? Use the reaction equations to argue why.
 
 ---
 
@@ -192,21 +192,21 @@ The maximum moment sits at x = 300 mm even though the larger load P1 = 2000 N ac
 A cantilever carrying its own weight or a pressure load over its full length is one of the most common structural configurations in practice, from a shelf bracket to a robotic arm. The shear and moment diagrams both peak at the wall, not at the tip, and the fixed-end moment that the wall must resist is half what most students guess on a first attempt because the resultant of the UDL acts at the midpoint of the beam, not at the tip.
 
 :::note[Objective]
-For a cantilever under a full-span uniformly distributed load, compute the wall reactions (vertical force and fixed-end moment), draw the SFD and BMD, and confirm the tip deflection against the analytical formula δ = wL⁴/(8EI).
+For a cantilever under a full-span uniformly distributed load, compute the wall reactions (vertical force and fixed-end moment), draw the SFD and BMD, and confirm the tip deflection against the analytical formula $\delta = wL^4/(8EI)$.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **cantilever-udl** preset (L = 700 mm, cantilever fixed at x = 0; w = 4 N/mm over the full span; section 40 mm × 80 mm; E = 69 GPa).
+   Select the **cantilever-udl** preset ($L = 700\ \text{mm}$, cantilever fixed at $x = 0$; $w = 4\ \text{N/mm}$ over the full span; section $40\ \text{mm} \times 80\ \text{mm}$; $E = 69\ \text{GPa}$).
 
 2. **Predict reactions**
-   The wall carries a vertical force RA = w·L and a hogging moment M0 = w·L²/2. Compute both before reading the panel.
+   The wall carries a vertical force $R_A = w \cdot L$ and a hogging moment $M_0 = w \cdot L^2/2$. Compute both before reading the panel.
 
 3. **Check the SFD**
-   Shear should decrease linearly from RA at the wall to zero at the free tip, because the UDL progressively unloads the section toward the tip. Confirm the slope equals w.
+   Shear should decrease linearly from $R_A$ at the wall to zero at the free tip, because the UDL progressively unloads the section toward the tip. Confirm the slope equals w.
 
 4. **Check the BMD**
-   Moment should vary parabolically: M(0) = -w·L²/2 (hogging at the wall) and M(L) = 0. Confirm the parabolic shape and sign.
+   Moment should vary parabolically: $M(0) = -w \cdot L^2/2$ (hogging at the wall) and $M(L) = 0$. Confirm the parabolic shape and sign.
 
 5. **Save data**
    Create `data/exp2_cantilever_udl.csv` with columns: x_mm, V_N, M_Nmm, defl_mm.
@@ -285,11 +285,11 @@ plt.show()
 
 ### Expected Results
 
-Wall reaction RA = 2800.0 N. Fixed-end moment M0 = -980 000 N·mm (hogging, magnitude 0.980 kN·m). The shear decreases linearly from 2800 N at the wall to 0 N at the tip; the moment varies parabolically from -980 000 N·mm at the wall to 0 at the tip. The maximum bending stress is σmax = 22.969 MPa at the wall. The analytical tip deflection is δ = wL⁴/(8EI) = 1.0194 mm downward.
+Wall reaction $R_A = 2800.0\ \text{N}$. Fixed-end moment $M_0 = -980\,000\ \text{N}\cdot\text{mm}$ (hogging, magnitude $0.980\ \text{kN}\cdot\text{m}$). The shear decreases linearly from 2800 N at the wall to 0 N at the tip; the moment varies parabolically from $-980\,000\ \text{N}\cdot\text{mm}$ at the wall to 0 at the tip. The maximum bending stress is $\sigma_{max} = 22.969\ \text{MPa}$ at the wall. The analytical tip deflection is $\delta = wL^4/(8EI) = 1.0194\ \text{mm}$ downward.
 
 ### Design Question
 
-The preset uses aluminium (E = 69 GPa) rather than steel (E = 200 GPa). If you swapped to steel but kept every other parameter the same, by what factor would the tip deflection change, and why does Young's modulus appear only in the denominator of the deflection formula but not in the bending stress formula?
+The preset uses aluminium ($E = 69\ \text{GPa}$) rather than steel ($E = 200\ \text{GPa}$). If you swapped to steel but kept every other parameter the same, by what factor would the tip deflection change, and why does Young's modulus appear only in the denominator of the deflection formula but not in the bending stress formula?
 
 ---
 
@@ -298,21 +298,21 @@ The preset uses aluminium (E = 69 GPa) rather than steel (E = 200 GPa). If you s
 <InArticleAd />
 
 
-The flexure formula σ = M·c/I is short but deceptive. Engineers routinely underestimate the bending stress because they use M correctly but forget that c and I are not independent: rotating a rectangular section ninety degrees keeps the same area and the same M, but it cuts I by a factor of four and halves c, so the stress doubles. This experiment locks in the habit of computing σ from I and c separately rather than memorising a formula for a specific shape.
+The flexure formula $\sigma = M \cdot c/I$ is short but deceptive. Engineers routinely underestimate the bending stress because they use M correctly but forget that c and I are not independent: rotating a rectangular section ninety degrees keeps the same area and the same M, but it cuts I by a factor of four and halves c, so the stress doubles. This experiment locks in the habit of computing σ from I and c separately rather than memorising a formula for a specific shape.
 
 :::note[Objective]
-For the two-point-load preset, compute the maximum bending stress using σ = M·c/I, then compare the stress for the default 40 × 80 mm section against a 80 × 40 mm section (same area, rotated ninety degrees) to see how section orientation controls stress.
+For the two-point-load preset, compute the maximum bending stress using $\sigma = M \cdot c/I$, then compare the stress for the default $40 \times 80\ \text{mm}$ section against a $80 \times 40\ \text{mm}$ section (same area, rotated ninety degrees) to see how section orientation controls stress.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **two-point** preset. Read Mmax = 555 000 N·mm at x = 300 mm from Experiment 1 (or from the panel). Keep the default section b = 40, h = 80.
+   Select the **two-point** preset. Read $M_{max} = 555\,000\ \text{N}\cdot\text{mm}$ at $x = 300\ \text{mm}$ from Experiment 1 (or from the panel). Keep the default section $b = 40$, $h = 80$.
 
 2. **Compute stress for the default section**
-   Calculate I = b·h³/12, c = h/2, then σ = Mmax·c/I. Note the result.
+   Calculate $I = b \cdot h^3/12$, $c = h/2$, then $\sigma = M_{max} \cdot c/I$. Note the result.
 
 3. **Switch the section in the simulator**
-   Set b = 80, h = 40 (same cross-sectional area, same perimeter, ninety-degree rotation). Read the updated σmax from the panel.
+   Set $b = 80$, $h = 40$ (same cross-sectional area, same perimeter, ninety-degree rotation). Read the updated $\sigma_{max}$ from the panel.
 
 4. **Compute stress for the rotated section by hand**
    Recalculate I and c, then σ. Compare the ratio to the default section.
@@ -367,11 +367,11 @@ print(f"sigma_rotated / sigma_default = {(Mmax/S2)/(Mmax/S1):.3f}  (stress doubl
 
 ### Expected Results
 
-Default section (40 × 80): I = 1 706 667 mm⁴, c = 40 mm, S = 42 666.7 mm³, σmax = 13.008 MPa. Rotated section (80 × 40): I = 426 667 mm⁴, c = 20 mm, S = 21 333.3 mm³, σmax = 26.016 MPa. The rotated section has I reduced to one-quarter and S halved, so the bending stress doubles. The cross-sectional area (3200 mm²) is identical for both orientations; only the distribution of material away from the neutral axis changes.
+Default section ($40 \times 80$): $I = 1\,706\,667\ \text{mm}^4$, $c = 40\ \text{mm}$, $S = 42\,666.7\ \text{mm}^3$, $\sigma_{max} = 13.008\ \text{MPa}$. Rotated section ($80 \times 40$): $I = 426\,667\ \text{mm}^4$, $c = 20\ \text{mm}$, $S = 21\,333.3\ \text{mm}^3$, $\sigma_{max} = 26.016\ \text{MPa}$. The rotated section has I reduced to one-quarter and S halved, so the bending stress doubles. The cross-sectional area ($3200\ \text{mm}^2$) is identical for both orientations; only the distribution of material away from the neutral axis changes.
 
 ### Design Question
 
-A beam must carry the same Mmax but the allowable stress is fixed. You can use any rectangular section with the same cross-sectional area. Argue from S = b·h²/6 why a narrow, tall section is more efficient than a wide, flat one, and state the practical limit that prevents you from making the section arbitrarily tall.
+A beam must carry the same $M_{max}$ but the allowable stress is fixed. You can use any rectangular section with the same cross-sectional area. Argue from $S = b \cdot h^2/6$ why a narrow, tall section is more efficient than a wide, flat one, and state the practical limit that prevents you from making the section arbitrarily tall.
 
 ---
 
@@ -383,21 +383,21 @@ A beam must carry the same Mmax but the allowable stress is fixed. You can use a
 The cubic dependence of I on h is the reason engineers reach for deeper sections rather than wider ones when they need to reduce bending stress: doubling the height multiplies I by eight and S by four, cutting the bending stress to a quarter, while doubling the width multiplies I by only two. This experiment makes that scaling concrete by holding the cross-sectional area fixed and sweeping the height.
 
 :::note[Objective]
-For the same Mmax, compare the bending stress across three rectangular sections that all have the same cross-sectional area (3200 mm²) but different height-to-width ratios, and show that making a section taller is far more efficient than making it wider.
+For the same $M_{max}$, compare the bending stress across three rectangular sections that all have the same cross-sectional area ($3200\ \text{mm}^2$) but different height-to-width ratios, and show that making a section taller is far more efficient than making it wider.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **two-point** preset and note Mmax = 555 000 N·mm at x = 300 mm. The default section is 40 × 80 (area = 3200 mm²).
+   Select the **two-point** preset and note $M_{max} = 555\,000\ \text{N}\cdot\text{mm}$ at $x = 300\ \text{mm}$. The default section is $40 \times 80$ (area = $3200\ \text{mm}^2$).
 
 2. **Predict for a tall section**
-   Set b = 20, h = 160 (area still 3200 mm²). Compute I = 20·160³/12 by hand. Predict σ = Mmax·c/I before reading the panel.
+   Set $b = 20$, $h = 160$ (area still $3200\ \text{mm}^2$). Compute $I = 20 \cdot 160^3/12$ by hand. Predict $\sigma = M_{max} \cdot c/I$ before reading the panel.
 
 3. **Predict for a flat section**
-   Set b = 160, h = 20 (same area). Compute I and predict σ.
+   Set $b = 160$, $h = 20$ (same area). Compute I and predict $\sigma$.
 
 4. **Read the simulator**
-   Enter each section and confirm the σmax on the panel matches your hand calculation.
+   Enter each section and confirm the $\sigma_{max}$ on the panel matches your hand calculation.
 
 5. **Save data**
    Create `data/exp4_section_geometry.csv` with columns: b_mm, h_mm, area_mm2, I_mm4, S_mm3, sigma_MPa.
@@ -471,11 +471,11 @@ plt.show()
 
 ### Expected Results
 
-All three sections have area = 3200 mm². Default (40 × 80): I = 1 706 667 mm⁴, S = 42 666.7 mm³, σ = 13.008 MPa. Tall section (20 × 160): I = 6 826 667 mm⁴, S = 85 333.3 mm³, σ = 6.504 MPa (exactly half the default stress). Flat section (160 × 20): I = 106 667 mm⁴, S = 10 666.7 mm³, σ = 52.031 MPa (four times the default stress). The I ratio tall-to-default is 4.00, which follows from (160/80)³ × (20/40) = 8 × 0.5 = 4. Making the section taller is dramatically more efficient; making it flatter is equally damaging.
+All three sections have area = $3200\ \text{mm}^2$. Default ($40 \times 80$): $I = 1\,706\,667\ \text{mm}^4$, $S = 42\,666.7\ \text{mm}^3$, $\sigma = 13.008\ \text{MPa}$. Tall section ($20 \times 160$): $I = 6\,826\,667\ \text{mm}^4$, $S = 85\,333.3\ \text{mm}^3$, $\sigma = 6.504\ \text{MPa}$ (exactly half the default stress). Flat section ($160 \times 20$): $I = 106\,667\ \text{mm}^4$, $S = 10\,666.7\ \text{mm}^3$, $\sigma = 52.031\ \text{MPa}$ (four times the default stress). The I ratio tall-to-default is 4.00, which follows from $(160/80)^3 \times (20/40) = 8 \times 0.5 = 4$. Making the section taller is dramatically more efficient; making it flatter is equally damaging.
 
 ### Design Question
 
-An I-beam concentrates material near the flanges (large h, thin web) rather than distributing it evenly. Using the b·h³/12 principle, explain qualitatively why an I-beam achieves a large S without using more material than a solid rectangle of the same height, and name one failure mode the thin web introduces that the solid rectangle avoids.
+An I-beam concentrates material near the flanges (large h, thin web) rather than distributing it evenly. Using the $b \cdot h^3/12$ principle, explain qualitatively why an I-beam achieves a large S without using more material than a solid rectangle of the same height, and name one failure mode the thin web introduces that the solid rectangle avoids.
 
 ---
 
@@ -484,24 +484,24 @@ An I-beam concentrates material near the flanges (large h, thin web) rather than
 <InArticleAd />
 
 
-A small increase in span causes a large increase in deflection: for a simply supported beam under a uniformly distributed load the maximum deflection at midspan scales with L⁴. This is one of the most practically important scaling laws in structural design. Engineers who overlook it routinely underestimate how much stiffer a beam must be when a span grows by twenty percent.
+A small increase in span causes a large increase in deflection: for a simply supported beam under a uniformly distributed load the maximum deflection at midspan scales with $L^4$. This is one of the most practically important scaling laws in structural design. Engineers who overlook it routinely underestimate how much stiffer a beam must be when a span grows by twenty percent.
 
 :::note[Objective]
-Use the udl-simple preset to measure the midspan deflection at the nominal span, then verify the L⁴ scaling law by repeating the calculation for a range of spans in Python and confirming that the ratio of deflections matches (L2/L1)⁴.
+Use the udl-simple preset to measure the midspan deflection at the nominal span, then verify the $L^4$ scaling law by repeating the calculation for a range of spans in Python and confirming that the ratio of deflections matches $(L_2/L_1)^4$.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **udl-simple** preset (L = 1200 mm, simply supported; w = 5 N/mm over the full span; section 50 mm × 100 mm; E = 200 GPa).
+   Select the **udl-simple** preset ($L = 1200\ \text{mm}$, simply supported; $w = 5\ \text{N/mm}$ over the full span; section $50\ \text{mm} \times 100\ \text{mm}$; $E = 200\ \text{GPa}$).
 
-2. **Predict Mmax and σmax**
-   For a UDL on a simple beam: Mmax = w·L²/8 at midspan. Compute the bending stress at midspan before reading the panel.
+2. **Predict $M_{max}$ and $\sigma_{max}$**
+   For a UDL on a simple beam: $M_{max} = w \cdot L^2/8$ at midspan. Compute the bending stress at midspan before reading the panel.
 
 3. **Read the midspan deflection**
-   Confirm δmax against the formula δ = 5·w·L⁴/(384·E·I) that applies at midspan for a uniform load.
+   Confirm $\delta_{max}$ against the formula $\delta = 5 \cdot w \cdot L^4/(384 \cdot E \cdot I)$ that applies at midspan for a uniform load.
 
 4. **Sweep spans in Python**
-   Recompute δ for L = 800, 1000, 1200, and 1400 mm, then check that the ratio δ(1400)/δ(1000) equals (1400/1000)⁴.
+   Recompute $\delta$ for $L$ = 800, 1000, 1200, and 1400 mm, then check that the ratio $\delta(1400)/\delta(1000)$ equals $(1400/1000)^4$.
 
 5. **Save data**
    Create `data/exp5_span_deflection.csv` with columns: L_mm, Mmax_Nmm, sigma_MPa, delta_mm.
@@ -566,11 +566,11 @@ plt.show()
 
 ### Expected Results
 
-Section 50 × 100: I = 4 166 667 mm⁴. The four spans print: L = 800 mm, δ = 0.0320 mm; L = 1000 mm, δ = 0.0781 mm; L = 1200 mm, δ = 0.1620 mm; L = 1400 mm, δ = 0.3001 mm. For the nominal preset (L = 1200 mm): Mmax = 900 000 N·mm, σmax = 10.800 MPa. The ratio δ(1400)/δ(1000) = 3.8416, which equals (1.4)⁴ = 3.8416 to four decimal places, confirming the L⁴ law. A twenty-percent increase in span (1000 to 1200 mm) nearly triples the deflection (0.0781 to 0.1620 mm, a factor of 2.07), not a twenty-percent increase.
+Section $50 \times 100$: $I = 4\,166\,667\ \text{mm}^4$. The four spans print: $L = 800\ \text{mm}$, $\delta = 0.0320\ \text{mm}$; $L = 1000\ \text{mm}$, $\delta = 0.0781\ \text{mm}$; $L = 1200\ \text{mm}$, $\delta = 0.1620\ \text{mm}$; $L = 1400\ \text{mm}$, $\delta = 0.3001\ \text{mm}$. For the nominal preset ($L = 1200\ \text{mm}$): $M_{max} = 900\,000\ \text{N}\cdot\text{mm}$, $\sigma_{max} = 10.800\ \text{MPa}$. The ratio $\delta(1400)/\delta(1000) = 3.8416$, which equals $(1.4)^4 = 3.8416$ to four decimal places, confirming the $L^4$ law. A twenty-percent increase in span (1000 to 1200 mm) roughly doubles the deflection (0.0781 to 0.1620 mm, a factor of 2.07), not a twenty-percent increase.
 
 ### Design Question
 
-A designer reduces the span from 1200 mm to 1000 mm but simultaneously reduces the section height from 100 mm to 80 mm to save weight (area drops from 5000 mm² to 4000 mm²). The deflection formula δ = 5·w·L⁴/(384·E·I) contains both L and I. Work out whether the shorter, shallower beam deflects more or less than the original, and by what factor.
+A designer reduces the span from 1200 mm to 1000 mm but simultaneously reduces the section height from 100 mm to 80 mm to save weight (area drops from $5000\ \text{mm}^2$ to $4000\ \text{mm}^2$). The deflection formula $\delta = 5 \cdot w \cdot L^4/(384 \cdot E \cdot I)$ contains both L and I. Work out whether the shorter, shallower beam deflects more or less than the original, and by what factor.
 
 ---
 
@@ -587,13 +587,13 @@ Verify that the maximum deflection of the two-point-load beam equals the sum of 
 
 <Steps>
 1. **Configure the simulator for the two-point preset**
-   Select the **two-point** preset. Read δmax and σmax from the panel.
+   Select the **two-point** preset. Read $\delta_{max}$ and $\sigma_{max}$ from the panel.
 
 2. **Verify superposition of deflections**
-   In Python, compute the deflection curve for P1 alone (P2 = 0) and for P2 alone (P1 = 0), add the two curves, and confirm the maximum of the sum equals the simulator's δmax to at least three significant figures.
+   In Python, compute the deflection curve for $P_1$ alone ($P_2 = 0$) and for $P_2$ alone ($P_1 = 0$), add the two curves, and confirm the maximum of the sum equals the simulator's $\delta_{max}$ to at least three significant figures.
 
 3. **Switch to the cantilever-tip preset**
-   Select the **cantilever-tip** preset (L = 800 mm, cantilever; P1 = 1200 N at the tip; section 30 mm × 60 mm; E = 200 GPa). Read δmax (tip deflection) and σmax from the panel.
+   Select the **cantilever-tip** preset ($L = 800\ \text{mm}$, cantilever; $P_1 = 1200\ \text{N}$ at the tip; section $30\ \text{mm} \times 60\ \text{mm}$; $E = 200\ \text{GPa}$). Read $\delta_{max}$ (tip deflection) and $\sigma_{max}$ from the panel.
 
 4. **Compare the two cases**
    The total load in both cases is of a similar order, but the peak stress and deflection will differ substantially because of the support configuration and load position. Note which case is more critical and why.
@@ -695,7 +695,7 @@ plt.show()
 
 ### Expected Results
 
-Two-point simply supported preset: Mmax = 555 000 N·mm at x = 300 mm, σmax = 13.008 MPa, δmax = 0.1692 mm at approximately x = 493 mm. The superposition check confirms `np.allclose(d_combined, d_P1 + d_P2)` is True. Cantilever-tip preset: wall moment = 960 000 N·mm, σmax = 53.333 MPa, tip deflection = P·L³/(3EI) = 1.8963 mm. The cantilever carries 1200 N while the simply supported beam carries 3500 N, yet the cantilever's peak stress is 53.333 MPa versus 13.008 MPa: four times higher. The lesson is that support conditions and load eccentricity drive stress far more than total load magnitude.
+Two-point simply supported preset: $M_{max} = 555\,000\ \text{N}\cdot\text{mm}$ at $x = 300\ \text{mm}$, $\sigma_{max} = 13.008\ \text{MPa}$, $\delta_{max} = 0.1692\ \text{mm}$ at approximately $x = 493\ \text{mm}$. The superposition check confirms `np.allclose(d_combined, d_P1 + d_P2)` is True. Cantilever-tip preset: wall moment = $960\,000\ \text{N}\cdot\text{mm}$, $\sigma_{max} = 53.333\ \text{MPa}$, tip deflection = $P \cdot L^3/(3EI) = 1.8963\ \text{mm}$. The cantilever carries 1200 N while the simply supported beam carries 3500 N, yet the cantilever's peak stress is 53.333 MPa versus 13.008 MPa: four times higher. The lesson is that support conditions and load eccentricity drive stress far more than total load magnitude.
 
 ### Design Question
 
@@ -708,7 +708,7 @@ Superposition holds because the beam is linear elastic. Name two practical situa
 <InArticleAd />
 
 
-Across the six experiments you traced the complete chain from loads to reactions to internal forces to stress to deflection. Experiment 1 built that chain for the standard simply supported case. Experiment 2 repeated it for a cantilever under a distributed load, where the fixed-end moment at the wall governs everything. Experiments 3 and 4 isolated how section geometry controls stress through I = b·h³/12, showing that the height dominates with a cubic exponent. Experiment 5 measured the L⁴ span scaling that makes span the single most sensitive design variable for deflection. Experiment 6 closed the loop by confirming superposition and comparing two fundamentally different load cases. Carry these results into the bending stress and deflection lessons, and use the simulator to check any configuration that does not fit one of the standard textbook cases.
+Across the six experiments you traced the complete chain from loads to reactions to internal forces to stress to deflection. Experiment 1 built that chain for the standard simply supported case. Experiment 2 repeated it for a cantilever under a distributed load, where the fixed-end moment at the wall governs everything. Experiments 3 and 4 isolated how section geometry controls stress through $I = b \cdot h^3/12$, showing that the height dominates with a cubic exponent. Experiment 5 measured the $L^4$ span scaling that makes span the single most sensitive design variable for deflection. Experiment 6 closed the loop by confirming superposition and comparing two fundamentally different load cases. Carry these results into the bending stress and deflection lessons, and use the simulator to check any configuration that does not fit one of the standard textbook cases.
 
 
 

@@ -24,7 +24,7 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-A compound bar loaded axially does not split the force in proportion to cross-sectional area, and assuming it does can leave one member near its yield limit while the other is barely stressed. The stiffer member attracts more load because compatibility forces both members to deform by the same amount, and deformation is governed by stiffness, not by area alone. These six experiments make that behaviour concrete: build up from a single bar through parallel and series configurations, compare materials at a stiffness target, balance a mismatched compound bar, and close with a full safety-factor verdict on a real compound system. #AxialLoading #CompoundBars #SolidMechanics
+A compound bar loaded axially does not split the force in proportion to cross-sectional area, and assuming it does can leave one member near its yield limit while the other is barely stressed. The stiffer member attracts more load because compatibility forces both members to deform by the same amount, and deformation is governed by stiffness, not by area alone. Compatibility is the geometric condition that joined parts must stay joined, so their deformations have to fit together. These six experiments make that behaviour concrete: build up from a single bar through parallel and series configurations, compare materials at a stiffness target, balance a mismatched compound bar, and close with a full safety-factor verdict on a real compound system. #AxialLoading #CompoundBars #SolidMechanics
 
 :::tip[What you need]
 The [Axial Loading Simulator](/product-development/axial-loading-simulator/), and Python 3 with NumPy and Matplotlib for the analysis scripts (`pip install numpy matplotlib`).
@@ -38,14 +38,14 @@ The theory behind normal stress and elongation is in [Fundamental Stress Concept
 
 | Term | Meaning |
 |------|---------|
-| **Normal stress** | sigma = F/A, axial force divided by cross-sectional area, in MPa when F is in N and A in mm^2 |
-| **Axial strain** | eps = sigma/E = delta/L, dimensionless ratio of elongation to original length |
-| **Elongation** | delta = FL/(AE), the change in length of a member under axial load |
-| **Axial stiffness** | k = AE/L, the force required per unit of elongation, in N/mm |
+| **Normal stress** | $\sigma = F/A$, axial force divided by cross-sectional area, in MPa when $F$ is in N and $A$ in $\text{mm}^2$ |
+| **Axial strain** | $\varepsilon = \sigma/E = \delta/L$, dimensionless ratio of elongation to original length |
+| **Elongation** | $\delta = FL/(AE)$, the change in length of a member under axial load |
+| **Axial stiffness** | $k = AE/L$, the force required per unit of elongation, in N/mm |
 | **Parallel compound bar** | Two (or more) members bonded or bolted so they share the same deformation; each carries a force proportional to its own stiffness |
 | **Series bar** | Two (or more) segments carrying the same axial force in succession; total elongation is the sum of each segment's elongation |
-| **Load fraction** | For a parallel system, f_i = k_i / sum(k_j); the fraction of total load carried by member i |
-| **Safety factor** | SF = yield strength / actual stress; the margin between the working stress and the onset of yielding |
+| **Load fraction** | For a parallel system, $f_i = k_i / \sum_j k_j$; the fraction of total load carried by member $i$ |
+| **Safety factor** | $\text{SF} = \text{yield strength} / \text{actual stress}$; the margin between the working stress and the onset of yielding |
 
 ### Experiment Workflow
 
@@ -69,7 +69,7 @@ flowchart TD
 </FileTree>
 
 :::tip[Instrument it]
-You cannot read stress or elongation directly, but you can read both with inexpensive sensors bonded or clamped to the member. A resistance strain gauge (for example a TML FLA-series or a Vishay CEA-series) bonded to the surface reads axial strain; multiply by E to get stress. An LVDT or a digital indicator measures total elongation of the gauge length. For a compound bar you need one gauge per member to capture the individual strains and confirm the load split. Wire each gauge into a Wheatstone bridge, amplify with an HX711-class bridge ADC or an INA122 instrumentation amplifier, and stream the readings from an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/). On a loaded frame or fixture that board can [log the individual member stresses in real time](https://siliconwit.io) and flag when either member's stress approaches its yield limit.
+You cannot read stress or elongation directly, but you can read both with inexpensive sensors bonded or clamped to the member. A resistance strain gauge (for example a TML FLA-series or a Vishay CEA-series) bonded to the surface reads axial strain; multiply by $E$ to get stress. An LVDT or a digital indicator measures total elongation of the gauge length. For a compound bar you need one gauge per member to capture the individual strains and confirm the load split. Wire each gauge into a Wheatstone bridge, amplify with an HX711-class bridge ADC or an INA122 instrumentation amplifier, and stream the readings from an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/). On a loaded frame or fixture that board can [log the individual member stresses in real time](https://siliconwit.io) and flag when either member's stress approaches its yield limit.
 :::
 
 ---
@@ -87,16 +87,16 @@ For a steel bar under a single axial load, compute the normal stress, axial stra
 
 <Steps>
 1. **Configure the simulator**
-   Open the simulator and select the **single-steel** preset (P = 15 000 N, L = 400 mm, d = 20 mm, steel, single mode). Leave all other settings at their defaults.
+   Open the simulator and select the **single-steel** preset ($P = 15\,000\ \text{N}$, $L = 400\ \text{mm}$, $d = 20\ \text{mm}$, steel, single mode). Leave all other settings at their defaults.
 
 2. **Predict**
-   Before reading the panel, compute by hand: A = pi times d^2 / 4, sigma = P/A, eps = sigma/E, delta = P times L / (A times E), SF = yield/sigma. Use E = 200 000 MPa and yield = 250 MPa.
+   Before reading the panel, compute by hand: $A = \pi d^2/4$, $\sigma = P/A$, $\varepsilon = \sigma/E$, $\delta = PL/(AE)$, $\text{SF} = \sigma_{\text{yield}}/\sigma$. Use $E = 200\,000\ \text{MPa}$ and $\sigma_{\text{yield}} = 250\ \text{MPa}$.
 
 3. **Read the simulator**
    Read stress, strain, elongation, and safety factor from the panel. Confirm that the stress and elongation panels match your hand values.
 
 4. **Vary the diameter**
-   Switch to Custom and try d = 15 mm and d = 30 mm with the same load. Observe how stress scales as 1/d^2 and elongation does the same.
+   Switch to Custom and try $d = 15\ \text{mm}$ and $d = 30\ \text{mm}$ with the same load. Observe how stress scales as $1/d^2$ and elongation does the same.
 
 5. **Save data**
    Create `data/exp1_single.csv` with columns: d_mm, L_mm, P_N, A_mm2, sigma_MPa, eps, delta_mm, SF.
@@ -162,11 +162,11 @@ plt.show()
 
 ### Expected Results
 
-For d = 20 mm: A = 314.16 mm^2, sigma = 47.75 MPa, eps = 0.000239, delta = 0.0955 mm, SF = 5.24. The stress scales as 1/d^2: halving the diameter quadruples the stress. SF = 5.24 means the bar could carry about five times the load before yielding, so this is a lightly loaded member. Stress and elongation both agree with the simulator panel to better than rounding.
+For $d = 20\ \text{mm}$: $A = 314.16\ \text{mm}^2$, $\sigma = 47.75\ \text{MPa}$, $\varepsilon = 0.000239$, $\delta = 0.0955\ \text{mm}$, $\text{SF} = 5.24$. The stress scales as $1/d^2$: halving the diameter quadruples the stress. $\text{SF} = 5.24$ means the bar could carry about five times the load before yielding, so this is a lightly loaded member. Stress and elongation both agree with the simulator panel to better than rounding.
 
 ### Design Question
 
-The bar must fit inside a housing that limits the diameter to 12 mm. The load remains 15 000 N and the material is still steel. Compute the safety factor at d = 12 mm and state whether the bar survives, then find the minimum diameter (in whole millimetres) that keeps SF above 2.0.
+The bar must fit inside a housing that limits the diameter to 12 mm. The load remains $15\,000\ \text{N}$ and the material is still steel. Compute the safety factor at $d = 12\ \text{mm}$ and state whether the bar survives, then find the minimum diameter (in whole millimetres) that keeps $\text{SF}$ above 2.0.
 
 ---
 
@@ -175,7 +175,7 @@ The bar must fit inside a housing that limits the diameter to 12 mm. The load re
 <InArticleAd />
 
 
-A steel rod and an aluminium tube bolted between the same end plates form a parallel compound bar. The steel is stiffer (E = 200 GPa vs 69 GPa) but here the aluminium member is larger in diameter. The question is which effect wins, and by how much the stiffer material outperforms its area fraction.
+A steel rod and an aluminium tube bolted between the same end plates form a parallel compound bar. The steel is stiffer ($E = 200\ \text{GPa}$ vs $69\ \text{GPa}$) but here the aluminium member is larger in diameter. The question is which effect wins, and by how much the stiffer material outperforms its area fraction.
 
 :::note[Objective]
 For a parallel steel-aluminium compound bar, compute the stiffness of each member, the common deflection, the force each member carries, the stress in each, and the safety factor on each. Confirm that the load split follows the stiffness ratio, not the area ratio.
@@ -183,13 +183,13 @@ For a parallel steel-aluminium compound bar, compute the stiffness of each membe
 
 <Steps>
 1. **Configure the simulator**
-   Select the **steel-alu** preset (P = 20 000 N, L = 300 mm, d1 = 25 mm steel, d2 = 30 mm aluminium, compound mode).
+   Select the **steel-alu** preset ($P = 20\,000\ \text{N}$, $L = 300\ \text{mm}$, $d_1 = 25\ \text{mm}$ steel, $d_2 = 30\ \text{mm}$ aluminium, compound mode).
 
 2. **Predict**
-   Compute A1, A2, k1 = A1 times E1 / L, k2 = A2 times E2 / L, then F1 = P times k1/(k1+k2) and F2 = P times k2/(k1+k2). Predict also the area fraction that steel would carry if load split by area alone, and compare the two predictions.
+   Compute $A_1$, $A_2$, $k_1 = A_1 E_1 / L$, $k_2 = A_2 E_2 / L$, then $F_1 = P k_1/(k_1+k_2)$ and $F_2 = P k_2/(k_1+k_2)$. Predict also the area fraction that steel would carry if load split by area alone, and compare the two predictions.
 
 3. **Read the simulator**
-   Read the individual forces F1 and F2, the common deflection, and the stresses from the panel. Check that F1 + F2 = P.
+   Read the individual forces $F_1$ and $F_2$, the common deflection, and the stresses from the panel. Check that $F_1 + F_2 = P$.
 
 4. **Compare area vs stiffness splitting**
    Steel has 40.98 percent of the total area but carries 66.81 percent of the load. Record both percentages and explain the discrepancy in one sentence.
@@ -268,11 +268,11 @@ plt.show()
 
 ### Expected Results
 
-A1 = 490.87 mm^2, A2 = 706.86 mm^2, k1 = 327 249 N/mm, k2 = 162 577 N/mm, ktot = 489 827 N/mm. Common deflection = 0.040831 mm. F1 (steel) = 13 361.84 N (66.81 percent of total load), F2 (aluminium) = 6 638.16 N (33.19 percent). Steel carries 66.81 percent despite having only 40.98 percent of the total cross-section area. Stress in steel = 27.22 MPa; stress in aluminium = 9.39 MPa; ratio = 2.90 = E1/E2, confirming that in a parallel system the stress ratio equals the modulus ratio. SF1 = 9.18, SF2 = 25.56.
+$A_1 = 490.87\ \text{mm}^2$, $A_2 = 706.86\ \text{mm}^2$, $k_1 = 327\,249\ \text{N/mm}$, $k_2 = 162\,577\ \text{N/mm}$, $k_{\text{tot}} = 489\,827\ \text{N/mm}$. Common deflection $= 0.040831\ \text{mm}$. $F_1$ (steel) $= 13\,361.84\ \text{N}$ (66.81 percent of total load), $F_2$ (aluminium) $= 6\,638.16\ \text{N}$ (33.19 percent). Steel carries 66.81 percent despite having only 40.98 percent of the total cross-section area. Stress in steel $= 27.22\ \text{MPa}$; stress in aluminium $= 9.39\ \text{MPa}$; ratio $= 2.90 = E_1/E_2$, confirming that in a parallel system the stress ratio equals the modulus ratio. $\text{SF}_1 = 9.18$, $\text{SF}_2 = 25.56$.
 
 ### Design Question
 
-A designer replaces the 30 mm aluminium member with one of the same diameter in brass (E = 100 GPa, yield = 200 MPa). Without running the simulator, predict whether steel now carries a larger or smaller fraction of the total load than in the original aluminium case, and which member will govern the safety-factor check.
+A designer replaces the 30 mm aluminium member with one of the same diameter in brass ($E = 100\ \text{GPa}$, $\sigma_{\text{yield}} = 200\ \text{MPa}$). Without running the simulator, predict whether steel now carries a larger or smaller fraction of the total load than in the original aluminium case, and which member will govern the safety-factor check.
 
 ---
 
@@ -284,23 +284,25 @@ A designer replaces the 30 mm aluminium member with one of the same diameter in 
 When two members are connected end to end and the same axial load is passed through both, they are in series. Each segment carries the same force regardless of its stiffness, but the stress in each depends on its own area, and the total elongation is the sum of both segments' elongations. This is the arrangement that catches designers who confuse series with parallel.
 
 :::note[Objective]
-For a two-segment series bar carrying P = 12 000 N, compute the stress in each segment, the elongation of each segment, and the total elongation as their sum. Confirm that the same force produces different stresses and different elongations in each segment.
+For a two-segment series bar carrying $P = 12\,000\ \text{N}$, compute the stress in each segment, the elongation of each segment, and the total elongation as their sum. Confirm that the same force produces different stresses and different elongations in each segment.
 :::
+
+The simulator has no series mode. It models one bar on its own (single mode) or two bars side by side (compound mode, which is a parallel arrangement). Do this experiment by hand. Treat each segment as a single bar that carries the full load $P$, use $\sigma = P/A$ and $\delta = PL/(AE)$ for each segment, then add the two elongations. Use the simulator in single mode only to check each segment on its own.
 
 <Steps>
 1. **Configure the simulator**
-   Select the **alu-brass** preset (P = 12 000 N, d1 = 28 mm aluminium, d2 = 24 mm brass) and switch the mode to **single** for each member in turn to read their individual responses, or use Custom mode to set each segment separately.
+   Select the **alu-brass** preset ($P = 12\,000\ \text{N}$, $d_1 = 28\ \text{mm}$ aluminium, $d_2 = 24\ \text{mm}$ brass) and switch the mode to **single** for each member in turn to read their individual responses, or use Custom mode to set each segment separately.
 
-   For the series arrangement, treat the two members as successive segments sharing the same load: Segment A is aluminium, L = 200 mm, d = 28 mm; Segment B is brass, L = 150 mm, d = 24 mm.
+   For the series arrangement, treat the two members as successive segments sharing the same load: Segment A is aluminium, $L = 200\ \text{mm}$, $d = 28\ \text{mm}$; Segment B is brass, $L = 150\ \text{mm}$, $d = 24\ \text{mm}$.
 
 2. **Predict**
-   Compute AA and AB, then sigmaA = P/AA and sigmaB = P/AB. Compute deltaA = P times LA/(AA times EA) and deltaB = P times LB/(AB times EB). Sum for total delta.
+   Compute $A_A$ and $A_B$, then $\sigma_A = P/A_A$ and $\sigma_B = P/A_B$. Compute $\delta_A = P L_A/(A_A E_A)$ and $\delta_B = P L_B/(A_B E_B)$. Sum for total $\delta$.
 
 3. **Read the simulator**
    Set each member in single mode at its own geometry and confirm the individual stress and elongation values.
 
 4. **Identify the critical segment**
-   The segment with the higher stress (lower area) sets the safety factor for the combined bar. Identify it and compute its SF.
+   The segment with the higher stress (lower area) sets the safety factor for the combined bar. Identify it and compute its $\text{SF}$.
 
 5. **Save data**
    Create `data/exp3_series.csv` with columns: segment, material, d_mm, L_mm, E_MPa, A_mm2, sigma_MPa, delta_mm, SF.
@@ -378,11 +380,11 @@ plt.show()
 
 ### Expected Results
 
-Segment A (aluminium, d = 28 mm): AA = 615.75 mm^2, sigmaA = 19.49 MPa, deltaA = 0.056488 mm, SFA = 12.32. Segment B (brass, d = 24 mm): AB = 452.39 mm^2, sigmaB = 26.53 MPa, deltaB = 0.039789 mm, SFB = 7.54. Total elongation = 0.096277 mm. The brass segment carries a higher stress because its area is smaller, even though both segments carry exactly the same force P = 12 000 N. The governing safety factor is 7.54 on brass, not on aluminium.
+Segment A (aluminium, $d = 28\ \text{mm}$): $A_A = 615.75\ \text{mm}^2$, $\sigma_A = 19.49\ \text{MPa}$, $\delta_A = 0.056488\ \text{mm}$, $\text{SF}_A = 12.32$. Segment B (brass, $d = 24\ \text{mm}$): $A_B = 452.39\ \text{mm}^2$, $\sigma_B = 26.53\ \text{MPa}$, $\delta_B = 0.039789\ \text{mm}$, $\text{SF}_B = 7.54$. Total elongation $= 0.096277\ \text{mm}$. The brass segment carries a higher stress because its area is smaller, even though both segments carry exactly the same force $P = 12\,000\ \text{N}$. The governing safety factor is 7.54 on brass, not on aluminium.
 
 ### Design Question
 
-If the designer was allowed to change only one segment's diameter to equalise the safety factors of both segments, which segment should be changed and to what diameter? Derive the required area from the condition SF_A = SF_B.
+If the designer was allowed to change only one segment's diameter to equalise the safety factors of both segments, which segment should be changed and to what diameter? Derive the required area from the condition $\text{SF}_A = \text{SF}_B$.
 
 ---
 
@@ -391,7 +393,7 @@ If the designer was allowed to change only one segment's diameter to equalise th
 <InArticleAd />
 
 
-A designer is asked to limit the elongation of a bar to 0.2 mm under P = 15 000 N with L = 400 mm. Both steel and aluminium are available. This experiment quantifies the trade-off: aluminium is lighter and cheaper, but its lower modulus means a larger diameter is needed to meet the stiffness requirement.
+A designer is asked to limit the elongation of a bar to $0.2\ \text{mm}$ under $P = 15\,000\ \text{N}$ with $L = 400\ \text{mm}$. Both steel and aluminium are available. This experiment quantifies the trade-off: aluminium is lighter and cheaper, but its lower modulus means a larger diameter is needed to meet the stiffness requirement.
 
 :::note[Objective]
 For the same load, length, and diameter, compute and compare the stress, elongation, and safety factor for steel and aluminium. Then find the minimum diameter each material needs to stay within a deflection limit of 0.2 mm.
@@ -399,16 +401,16 @@ For the same load, length, and diameter, compute and compare the stress, elongat
 
 <Steps>
 1. **Configure the simulator**
-   Select the **single-steel** preset (P = 15 000 N, L = 400 mm, d = 20 mm). Read stress, elongation, and SF. Switch the material to aluminium while keeping all other parameters fixed and read the new values.
+   Select the **single-steel** preset ($P = 15\,000\ \text{N}$, $L = 400\ \text{mm}$, $d = 20\ \text{mm}$). Read stress, elongation, and $\text{SF}$. Switch the material to aluminium while keeping all other parameters fixed and read the new values.
 
 2. **Predict the elongation ratio**
-   The elongation formula delta = FL/(AE) shows that for the same geometry and load the elongation scales as 1/E. Predict that aluminium elongates by E_steel/E_alu = 200/69 = 2.90 times as much as steel.
+   The elongation formula $\delta = FL/(AE)$ shows that for the same geometry and load the elongation scales as $1/E$. Predict that aluminium elongates by $E_{\text{steel}}/E_{\text{alu}} = 200/69 = 2.90$ times as much as steel.
 
 3. **Find the stiffness-governed diameter**
-   The constraint delta ≤ 0.2 mm rearranges to d ≥ sqrt(4FL / (pi times E times delta_lim)). Compute d_min for each material.
+   The constraint $\delta \leq 0.2\ \text{mm}$ rearranges to $d \geq \sqrt{4FL / (\pi E \delta_{\text{lim}})}$. Compute $d_{\text{min}}$ for each material.
 
 4. **Compare the diameter ratio**
-   The minimum-diameter ratio should equal sqrt(E_steel/E_alu). Confirm this numerically.
+   The minimum-diameter ratio should equal $\sqrt{E_{\text{steel}}/E_{\text{alu}}}$. Confirm this numerically.
 
 5. **Save data**
    Create `data/exp4_matcompare.csv` with columns: material, E_GPa, d_mm, sigma_MPa, delta_mm, SF, d_min_for_delta02_mm.
@@ -478,11 +480,11 @@ plt.show()
 
 ### Expected Results
 
-At d = 20 mm: sigma = 47.75 MPa (identical for both, same geometry). Steel: delta = 0.0955 mm, SF = 5.24. Aluminium: delta = 0.2768 mm, SF = 5.03. The aluminium bar already violates the 0.2 mm limit at d = 20 mm. Minimum diameter: steel requires d_min = 13.82 mm; aluminium requires d_min = 23.53 mm to stay within delta = 0.2 mm. The ratio 23.53/13.82 = 1.703 equals sqrt(200/69) = 1.703, confirming that the diameter requirement scales as the square root of the modulus ratio. The stiffness requirement governs the design, not the strength requirement.
+At $d = 20\ \text{mm}$: $\sigma = 47.75\ \text{MPa}$ (identical for both, same geometry). Steel: $\delta = 0.0955\ \text{mm}$, $\text{SF} = 5.24$. Aluminium: $\delta = 0.2768\ \text{mm}$, $\text{SF} = 5.03$. The aluminium bar already violates the $0.2\ \text{mm}$ limit at $d = 20\ \text{mm}$. Minimum diameter: steel requires $d_{\text{min}} = 13.82\ \text{mm}$; aluminium requires $d_{\text{min}} = 23.53\ \text{mm}$ to stay within $\delta = 0.2\ \text{mm}$. The ratio $23.53/13.82 = 1.703$ equals $\sqrt{200/69} = 1.703$, confirming that the diameter requirement scales as the square root of the modulus ratio. The stiffness requirement governs the design, not the strength requirement.
 
 ### Design Question
 
-If the design team adds a weight budget that says "the bar must weigh less than 0.5 kg" (density of aluminium = 2700 kg/m^3, density of steel = 7850 kg/m^3), compute whether the steel or aluminium bar at its minimum stiffness-governed diameter satisfies the weight constraint. State which material simultaneously meets both the deflection limit and the weight budget.
+If the design team adds a weight budget that says "the bar must weigh less than 0.5 kg" (density of aluminium $= 2700\ \text{kg/m}^3$, density of steel $= 7850\ \text{kg/m}^3$), compute whether the steel or aluminium bar at its minimum stiffness-governed diameter satisfies the weight constraint. State which material simultaneously meets both the deflection limit and the weight budget.
 
 ---
 
@@ -491,24 +493,24 @@ If the design team adds a weight budget that says "the bar must weigh less than 
 <InArticleAd />
 
 
-The steel-aluminium compound bar in Experiment 2 sends 66.81 percent of the load to steel because steel is 2.01 times stiffer per unit area. A designer who needs both materials to carry equal shares of the load must compensate by enlarging the aluminium member's area until its stiffness matches steel's. This experiment finds that diameter and confirms the result.
+The steel-aluminium compound bar in Experiment 2 sends 66.81 percent of the load to steel because steel is 2.90 times stiffer per unit area. A designer who needs both materials to carry equal shares of the load must compensate by enlarging the aluminium member's area until its stiffness matches steel's. This experiment finds that diameter and confirms the result.
 
 :::note[Objective]
-Starting from the steel-alu preset, find the aluminium diameter that makes the two members equally stiff (k1 = k2). Show that equal stiffness means each member carries exactly P/2, and compute the resulting stresses and safety factors.
+Starting from the steel-alu preset, find the aluminium diameter that makes the two members equally stiff ($k_1 = k_2$). Show that equal stiffness means each member carries exactly $P/2$, and compute the resulting stresses and safety factors.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **steel-alu** preset. Record k1 for steel from the preset data or compute it: k1 = A1 times E1 / L.
+   Select the **steel-alu** preset. Record $k_1$ for steel from the preset data or compute it: $k_1 = A_1 E_1 / L$.
 
 2. **Derive the required aluminium area**
-   Equal stiffness requires k2 = k1, so A2_new = k1 times L / E2. Convert to diameter: d2_new = sqrt(4 times A2_new / pi).
+   Equal stiffness requires $k_2 = k_1$, so $A_{2,\text{new}} = k_1 L / E_2$. Convert to diameter: $d_{2,\text{new}} = \sqrt{4 A_{2,\text{new}} / \pi}$.
 
 3. **Enter the new diameter**
-   Switch to Custom mode and enter d2 = d2_new while keeping all other preset values (L = 300 mm, P = 20 000 N, d1 = 25 mm steel). Read F1, F2, and the stresses.
+   Switch to Custom mode and enter $d_2 = d_{2,\text{new}}$ while keeping all other preset values ($L = 300\ \text{mm}$, $P = 20\,000\ \text{N}$, $d_1 = 25\ \text{mm}$ steel). Read $F_1$, $F_2$, and the stresses.
 
 4. **Confirm equal force share**
-   F1 and F2 should each be 10 000 N. If the panel shows any deviation, check your area calculation.
+   $F_1$ and $F_2$ should each be $10\,000\ \text{N}$. If the panel shows any deviation, check your area calculation.
 
 5. **Save data**
    Create `data/exp5_match.csv` with columns: d1_mm, d2_orig_mm, d2_new_mm, k1_N_per_mm, k2_N_per_mm, F1_N, F2_N, sigma1_MPa, sigma2_MPa, SF1, SF2.
@@ -567,11 +569,11 @@ for label, k2, A2 in [('Original (d2=30mm)', k2_orig, A2_orig),
 
 ### Expected Results
 
-k1 (steel, d1 = 25 mm) = 327 249.23 N/mm. The required aluminium area for equal stiffness is A2_new = 1 422.82 mm^2, giving d2_new = 42.56 mm. With this diameter: k2 = 327 249.23 N/mm (= k1), ktot = 654 498.47 N/mm, common deflection = 0.030558 mm. Each member carries exactly 10 000 N (50 percent of total load). Stress in steel = 20.37 MPa (SF1 = 12.27); stress in aluminium = 7.03 MPa (SF2 = 34.15). The stress ratio is still E1/E2 = 2.90 because equal stiffness does not equalise stress; it only equalises force. Both safety factors are large, confirming the bar is well within its elastic range.
+$k_1$ (steel, $d_1 = 25\ \text{mm}$) $= 327\,249.23\ \text{N/mm}$. The required aluminium area for equal stiffness is $A_{2,\text{new}} = 1\,422.82\ \text{mm}^2$, giving $d_{2,\text{new}} = 42.56\ \text{mm}$. With this diameter: $k_2 = 327\,249.23\ \text{N/mm}$ ($= k_1$), $k_{\text{tot}} = 654\,498.47\ \text{N/mm}$, common deflection $= 0.030558\ \text{mm}$. Each member carries exactly $10\,000\ \text{N}$ (50 percent of total load). Stress in steel $= 20.37\ \text{MPa}$ ($\text{SF}_1 = 12.27$); stress in aluminium $= 7.03\ \text{MPa}$ ($\text{SF}_2 = 34.15$). The stress ratio is still $E_1/E_2 = 2.90$ because equal stiffness does not equalise stress; it only equalises force. Both safety factors are large, confirming the bar is well within its elastic range.
 
 ### Design Question
 
-Instead of enlarging the aluminium diameter, a designer proposes shortening the aluminium member's length (keeping L_steel = 300 mm). Derive the aluminium length that would also equalise the stiffnesses, state whether it is physically possible in this configuration, and explain the constraint.
+Instead of enlarging the aluminium diameter, a designer proposes shortening the aluminium member's length (keeping $L_{\text{steel}} = 300\ \text{mm}$). Derive the aluminium length that would also equalise the stiffnesses, state whether it is physically possible in this configuration, and explain the constraint.
 
 ---
 
@@ -588,16 +590,16 @@ For the steel-titanium compound bar (steel-ti preset), compute the load carried 
 
 <Steps>
 1. **Configure the simulator**
-   Select the **steel-ti** preset (P = 30 000 N, L = 250 mm, d1 = 20 mm steel, d2 = 22 mm titanium, compound mode).
+   Select the **steel-ti** preset ($P = 30\,000\ \text{N}$, $L = 250\ \text{mm}$, $d_1 = 20\ \text{mm}$ steel, $d_2 = 22\ \text{mm}$ titanium, compound mode).
 
 2. **Predict**
-   Compute A1, A2, k1, k2, the common deflection, F1, F2, sigma1, sigma2, SF1, and SF2. Predict which member governs.
+   Compute $A_1$, $A_2$, $k_1$, $k_2$, the common deflection, $F_1$, $F_2$, $\sigma_1$, $\sigma_2$, $\text{SF}_1$, and $\text{SF}_2$. Predict which member governs.
 
 3. **Read the simulator**
    Confirm the forces, stresses, and safety factors from the panel. Note the governing member indicator.
 
 4. **Assess the design**
-   For a design target of SF >= 3.0, state whether the compound bar passes. If it does not, propose the smallest increase in d1 or d2 that brings the governing SF to exactly 3.0.
+   For a design target of $\text{SF} \geq 3.0$, state whether the compound bar passes. If it does not, propose the smallest increase in $d_1$ or $d_2$ that brings the governing $\text{SF}$ to exactly 3.0.
 
 5. **Save data**
    Create `data/exp6_design.csv` with columns: member, material, d_mm, A_mm2, k_N_per_mm, F_N, sigma_MPa, yield_MPa, SF, governs.
@@ -670,16 +672,16 @@ try:
     d1_req = brentq(residual, 1, 100)
     print(f"\nTo achieve SF1 = {SF_target} on steel: d1_min = {d1_req:.4f} mm")
 except Exception:
-    print("Note: install scipy to solve for d1_min. Analytical: d1_min ~ 24.5 mm.")
+    print("Note: install scipy to solve for d1_min. Analytical: d1_min ~ 13.5 mm.")
 ```
 
 ### Expected Results
 
-A1 = 314.16 mm^2, A2 = 380.13 mm^2, k1 = 251 327.41 N/mm, k2 = 173 340.52 N/mm, ktot = 424 667.93 N/mm. Common deflection = 0.070643 mm. F1 (steel) = 17 754.63 N (59.18 percent), F2 (titanium) = 12 245.37 N (40.82 percent). Stress in steel = 56.51 MPa, SF1 = 4.42. Stress in titanium = 32.21 MPa, SF2 = 27.32. Governing member: steel, minSF = 4.42. Design status: SAFE. Despite titanium having a yield strength of 880 MPa, it is steel that governs because steel is stiffer (higher E) and therefore attracts more load per unit area. The large SF2 = 27.32 on titanium shows the titanium member is grossly under-utilised in this configuration.
+$A_1 = 314.16\ \text{mm}^2$, $A_2 = 380.13\ \text{mm}^2$, $k_1 = 251\,327.41\ \text{N/mm}$, $k_2 = 173\,340.52\ \text{N/mm}$, $k_{\text{tot}} = 424\,667.93\ \text{N/mm}$. Common deflection $= 0.070643\ \text{mm}$. $F_1$ (steel) $= 17\,754.63\ \text{N}$ (59.18 percent), $F_2$ (titanium) $= 12\,245.37\ \text{N}$ (40.82 percent). Stress in steel $= 56.51\ \text{MPa}$, $\text{SF}_1 = 4.42$. Stress in titanium $= 32.21\ \text{MPa}$, $\text{SF}_2 = 27.32$. Governing member: steel, minimum $\text{SF} = 4.42$. Design status: SAFE. Despite titanium having a yield strength of $880\ \text{MPa}$, it is steel that governs because steel is stiffer (higher $E$) and therefore attracts more load per unit area. The large $\text{SF}_2 = 27.32$ on titanium shows the titanium member is grossly under-utilised in this configuration.
 
 ### Design Question
 
-A revised design requirement raises the required safety factor to SF >= 6.0. The titanium member's area is fixed. Determine whether the designer should increase or decrease d1 to meet SF1 = 6.0 on steel, explain why the direction is counterintuitive (hint: consider how F1 changes as A1 grows), and compute the required d1.
+A revised design requirement raises the required safety factor to $\text{SF} \geq 6.0$. The titanium member's area is fixed. Determine whether the designer should increase or decrease $d_1$ to meet $\text{SF}_1 = 6.0$ on steel, explain why the direction is counterintuitive (hint: consider how $F_1$ changes as $A_1$ grows), and compute the required $d_1$.
 
 ---
 
@@ -688,7 +690,7 @@ A revised design requirement raises the required safety factor to SF >= 6.0. The
 <InArticleAd />
 
 
-Across the six experiments you went from a single-bar stress check through a parallel compound bar that splits load by stiffness, a series bar where deflections add, a material comparison driven by a stiffness constraint, a matched-stiffness redesign, and a full safety-factor verdict on a two-material system. The load-split formula F_i = P times k_i / sum(k_j) and the elongation formula delta = FL/(AE) are the two calculations that connect all of these. Carry them into [Compound Bars and Composite Systems](/education/mechanics-of-materials/compound-bars-and-composite-systems) and the [Fundamental Stress Concepts](/education/mechanics-of-materials/fundamental-stress-concepts) lesson, where the same tools are applied to more complex geometries and loading conditions.
+Across the six experiments you went from a single-bar stress check through a parallel compound bar that splits load by stiffness, a series bar where deflections add, a material comparison driven by a stiffness constraint, a matched-stiffness redesign, and a full safety-factor verdict on a two-material system. The load-split formula $F_i = P k_i / \sum_j k_j$ and the elongation formula $\delta = FL/(AE)$ are the two calculations that connect all of these. Carry them into [Compound Bars and Composite Systems](/education/mechanics-of-materials/compound-bars-and-composite-systems) and the [Fundamental Stress Concepts](/education/mechanics-of-materials/fundamental-stress-concepts) lesson, where the same tools are applied to more complex geometries and loading conditions.
 
 
 

@@ -25,325 +25,243 @@ import { Card, CardGrid, Badge, Steps, LinkButton, FileTree } from '@astrojs/sta
 
 
 
-Master shear force and bending moment analysis through real-world industrial beam structures: robotic arm cantilevers, conveyor support systems, and solar tracker mechanisms. Learn load distribution analysis, diagram construction techniques, and critical section identification essential for safe structural design across mechatronics and automation systems.
+A robot arm that carries its load at the tip cracks at the base, where it is bolted down, and never at the tip. A plank across a stream breaks near the middle, far from both banks. Each point along a beam carries a different internal force, and the beam fails where that force is largest. This lesson shows you how to find it: cut the beam in your mind, ask what the cut face must carry, and plot the answer along the beam as two diagrams, the shear force and the bending moment. #BeamAnalysis #StructuralMechanics #EngineeringDesign
 
 ## Learning Objectives
 
 By the end of this lesson, you will be able to:
 
-1. **Construct** shear force and bending moment diagrams for cantilever, simply supported, and overhanging beam configurations
-2. **Identify** critical sections with maximum shear and moment values across diverse loading conditions
-3. **Apply** equilibrium principles to analyze beams under point loads, distributed loads, and combined loading scenarios
-4. **Determine** reaction forces for different support types including fixed, pinned, and roller supports
+1. **Construct** shear force and bending moment diagrams for cantilever, simply supported, and overhanging beams
+2. **Identify** the sections where the shear force and the bending moment are largest
+3. **Apply** equilibrium to beams under point loads, distributed loads, and both together
+4. **Determine** the reaction forces at fixed, pinned, and roller supports
 
 :::tip[Try it as you read]
-This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-analysis-simulator/): place point loads and distributed loads on a beam and watch the shear-force and bending-moment diagrams build as you drag the loads. The [Beam Analysis Experiments](/education/mechanics-of-materials/beam-analysis-experiments) reproduce the worked examples step by step with Python.
+This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-analysis-simulator/): place point loads and distributed loads on a beam and watch the shear-force and bending-moment diagrams build as you drag the loads. The [Beam Analysis Experiments](/education/mechanics-of-materials/beam-analysis-experiments/) reproduce the worked examples step by step with Python.
 :::
 
-## Real-World Engineering Challenge: Beam Analysis in Industrial Automation Systems
+## Real-world engineering challenge: Beam analysis in industrial automation systems
 
 <InArticleAd />
 
 
+A beam is a long part that carries loads which act across its length. Three beams from automation are worked in this lesson:
+
+- **A robotic arm**, fixed at its base and free at its tip. A beam held at one end only is a cantilever.
+- **A conveyor support beam**, resting on a support at each end and carrying a row of boxes.
+- **A solar tracker arm**, resting on two supports and reaching past one of them. This is an overhanging beam.
+
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Industrial Beam Structures](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-analysis-animation.gif)
+	![Animation of the conveyor beam of Application 2 in four parts: the real conveyor, its beam model with five loads, the shear force diagram that steps down from +1.0 kN to -1.0 kN, and the bending moment diagram that rises to 0.52 kN·m at the centre](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-analysis-animation.gif)
   </TailwindWrapper>
 </div>
 
-<BionicText method="advanced" intensity="medium" class="highlight">
-Industrial automation systems rely on structural beam elements that must safely support complex loading conditions. Understanding how internal forces and moments distribute along beam structures is fundamental to preventing failure, optimizing material usage, and ensuring reliable performance across mechatronics, material handling, and renewable energy applications.
-</BionicText>
+### The structural challenge
 
-### Industrial Beam Applications
+> **Engineering Question:** At which point along each beam is the internal loading largest, and how large is it there?
 
-**Common Beam Structures in Automation:**
-- **Robotic Arms** (cantilever beams supporting payloads and end-effectors)
-- **Conveyor Support Beams** (simply supported beams carrying multiple concentrated loads)
-- **Solar Tracker Arms** (overhanging beams managing distributed loads plus equipment forces)
-
-### The Structural Challenge
-
-All industrial beam structures experience **internal shear forces and bending moments** that determine structural adequacy. Different support types (fixed, pinned, roller) and loading patterns (point loads, distributed loads, combined) create varying internal force distributions requiring careful analysis for safe design.
-
-> **Engineering Question 1:** How do we determine where maximum bending stresses occur in different beam configurations and what governs the critical design section?
-> **Engineering Question 2:** How do support types and loading patterns affect internal force distributions and structural requirements?
-> **Engineering Question 3:** What analytical tools enable optimized designs that balance safety, cost, and performance?
-
-#### Why Beam Analysis Matters
-**Consequences of Inadequate Analysis:**
-- **Structural failure** causing downtime, equipment damage, and safety hazards
-- **Excessive deflection** compromising positioning accuracy
-- **Over-designed structures** wasting material and increasing costs
-
-**Benefits of Proper Analysis:**
-- **Safe, reliable structures** with appropriate safety factors
-- **Material optimization** through accurate critical section identification
-- **Foundation for advanced analysis** including stress and deflection prediction
-
-## Fundamental Theory: Shear Force and Bending Moment
+## Fundamental Theory: Shear force and bending moment
 
 <InArticleAd />
 
 
-### Basic Beam Concepts
+### Basic beam concepts
 
-Before analyzing shear forces and bending moments, it's essential to understand how beams are supported. The type of support determines which movements and rotations are allowed or prevented, directly affecting the reaction forces and internal stresses.
+A support holds a beam by stopping some of its movements. For each movement it stops, the support must push back with a force or a moment, called a reaction. So the type of support tells you how many unknown reactions the beam has.
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Beam Support Types Comparison](https://cdn.siliconwit.com/education/solid-mechanics/support-comparison.gif)
+    ![Animation of three beams, each pushed up at its free end by a force P. The beam on a pinned support turns about the pin. The beam on a roller support turns and also moves sideways. The beam in a fixed support does not turn and does not move](https://cdn.siliconwit.com/education/solid-mechanics/support-comparison.gif)
   </TailwindWrapper>
 </div>
 
-**Common Support Types:**
-
-1. **Pinned Support (Hinge)**
+1. **Pinned support (hinge)**, like a door hinge
    - ✅ Allows rotation at the connection
-   - ❌ Prevents translation (both horizontal and vertical movement)
-   - **Reactions:** Provides both vertical and horizontal reaction forces (2 unknowns: R<sub>x</sub>, R<sub>y</sub>)
-   - **Common applications:** Used in joints of robotic arms, mechanical linkages, and hinged enclosures where controlled rotation is needed
+   - Stops movement up, down and sideways
+   - **Reactions:** a vertical force and a horizontal force (2 unknowns: $R_x$, $R_y$)
 
-2. **Roller Support**
+2. **Roller support**, like a beam end resting on a wheel
    - ✅ Allows rotation at the connection
-   - ✅ Allows translation in one direction (typically horizontal)
-   - **Reactions:** Provides only vertical reaction force (1 unknown: R<sub>y</sub>)
-   - **Common applications:** Found in systems like conveyor supports, linear guides, and structures accommodating thermal or mechanical expansion
+   - ✅ Allows movement in one direction, usually along the beam, so the beam can grow when it warms
+   - **Reactions:** one force, at right angles to the surface it rolls on (1 unknown: $R_y$)
 
-3. **Fixed Support (Built-in/Clamped)**
-   - ❌ Prevents rotation at the connection
-   - ❌ Prevents translation (both horizontal and vertical movement)
-   - **Reactions:** Provides vertical force, horizontal force, and moment (3 unknowns: R<sub>x</sub>, R<sub>y</sub>, M)
-   - **Common applications:** Used in cantilevered robotic arms, rigidly mounted machine bases, and firmly fixed electronic equipment supports
+3. **Fixed support (built-in or clamped)**, like a shelf bracket screwed to a wall
+   - Stops rotation and stops movement in every direction
+   - **Reactions:** a vertical force, a horizontal force, and a moment (3 unknowns: $R_x$, $R_y$, $M$)
 
-:::tip[Support Selection Guidelines]
-- Use **fixed supports** when you need maximum rigidity (e.g., cantilever robotic arms)
-- Use **pinned + roller** combination for simply supported beams to allow thermal expansion
-- The choice of support affects the internal force distribution and maximum bending moments
-- Fixed supports create the most statically indeterminate systems but provide the strongest connection
-:::
+A beam on one pin and one roller is called simply supported. A beam with one fixed end and one free end is a cantilever. For both, the two equilibrium rules give every reaction: the forces add up to zero, and the moments about any point add up to zero.
 
-When a beam is loaded transversely, internal forces develop to maintain equilibrium:
+### Shear force and bending moment at a cut
 
-**Shear Force (V):** Internal force that resists sliding <br/>
-**Bending Moment (M):** Internal moment that resists rotation <br/>
-**Normal Force (N):** Internal axial force (usually zero in pure bending)
+Cut the beam in your mind at a distance $x$ from its left end and keep only the left part. The left part must still be in balance, so the cut face must supply whatever the loads and reactions on that part do not balance among themselves. It supplies two things:
 
-### Sign Conventions
+- **Shear force $V$**, in newtons (N): the force across the beam at the cut. It stops the left part from sliding up or down past the right part.
+- **Bending moment $M$**, in newton metres (N·m): the turning effect at the cut. It stops the left part from rotating. A moment is a force multiplied by its distance from the cut.
 
-<Tabs>
-  <TabItem label="Shear Force Convention">
-    
-    **Positive Shear Force (+V):**
-    - Left side of cut pushed **up** ⬆️
-    - Right side of cut pushed **down** ⬇️
-    - Creates clockwise rotation tendency ↻
-    
-    **Negative Shear Force (-V):**
-    - Left side of cut pushed **down** ⬇️
-    - Right side of cut pushed **up** ⬆️
-    - Creates counterclockwise rotation tendency ↺
-    
-  </TabItem>
-  <TabItem label="Bending Moment Convention">
-    
-    **Positive Bending Moment (+M):**
-    - **Tension** on bottom fiber
-    - **Compression** on top fiber
-    - Beam curves upward (smile shape) 😊
-    
-    **Negative Bending Moment (-M):**
-    - **Compression** on bottom fiber
-    - **Tension** on top fiber  
-    - Beam curves downward (frown shape) 😞
-    
-  </TabItem>
-  <TabItem label="Load Directions">
-    
-    **Positive Load:**
-    - **Upward** point loads ⬆️
-    - **Upward** distributed loads ⬆️
-    - **Counterclockwise** applied moments ↺
-    
-    **Negative Load:**
-    - **Downward** point loads (most common) ⬇️
-    - **Downward** distributed loads (self-weight) ⬇️
-    - **Clockwise** applied moments ↻
-    
-  </TabItem>
-</Tabs>
+```text
+          400 N
+            │
+            ▼                 cut at x
+ ┌───────────────────────────┐┆
+ │     left part of beam     │┆  the cut face carries
+ └───────────────────────────┘┆  V (a force) and M (a moment)
+ ▲
+ │ 280 N from the support
+ │◄──────────── x ──────────►│
+```
 
-### Common Beam Equations
+Take a 2,000 mm beam on two supports with one 400 N box on it, 600 mm from the left support. The left support pushes up with 280 N (the live figure further down shows why). Cut the beam at $x = 1{,}000$ mm. On the left part the reaction is 1.0 m from the cut and the box is 0.4 m from it:
 
-The fundamental relationship between load, shear, and moment:
+$$V = 280 - 400 = -120\ \text{N}$$
 
-<Card title="📏 Beam Differential Equations" icon="document">
+$$M = 280 \times 1.0 - 400 \times 0.4 = 120\ \text{N}\cdot\text{m}$$
+
+Repeat this for every $x$, plot the two results along the beam, and you have the shear force diagram and the bending moment diagram.
+
+### Sign conventions
+
+Every worked step below keeps to one convention, with $x$ measured from the left end.
+
+- **$V$ is positive** when the forces on the left part add up to an upward push. An upward force to the left of the cut adds to $V$, and a downward load is subtracted.
+- **$M$ is positive** when it bends the beam into a sag: the bottom is stretched (tension) and the top is squeezed (compression). An upward force to the left of the cut gives a positive moment. A **negative** moment bends the beam into a hog, with the top stretched, as in a cantilever with a load on its tip.
+- **A distributed load $w$** is a load spread along the beam, in newtons per metre (N/m), such as the weight of the beam itself. It is a positive number when it acts downward.
+
+```text
+  Positive M: the beam sags      Negative M: the beam hogs
+
+  ╲     top squeezed     ╱           top stretched
+   ╲                    ╱         ╭──────────────────╮
+    ╰──────────────────╯         ╱                    ╲
+      bottom stretched          ╱   bottom squeezed    ╲
+   ▲                    ▲                  ▲
+   support        support               support
+```
+
+### Common beam equations
+
+Two rules link the load, the shear force and the bending moment. In words: as you move along the beam, the shear force falls at the rate of the load you pass, and the bending moment changes at a rate equal to the shear force.
+
+<Card title="Load, shear and moment" icon="document">
 $$\frac{dV}{dx} = -w(x)$$
 
 $$\frac{dM}{dx} = V(x)$$
 
-**Where:**
-- $w(x)$ = distributed load intensity (N/m)
-- $V(x)$ = shear force at position x (N)
-- $M(x)$ = bending moment at position x (N·m)
+Where:
+- $x$ = position along the beam, from the left end (m)
+- $w(x)$ = distributed load at $x$, positive downward (N/m)
+- $V(x)$ = shear force at $x$ (N)
+- $M(x)$ = bending moment at $x$ (N·m)
 
-**Physical Meaning:** These equations show how load affects shear force rate of change, and how shear force affects bending moment rate of change.
+$dV/dx$ is the slope of the shear diagram and $dM/dx$ is the slope of the moment diagram.
 </Card>
 
-<Card title="🛡️ Cantilever Beam (Fixed-Free)" icon="document">
+Think of the moment as the height of a path and the shear as its slope. While the shear is positive the path climbs, and while it is negative the path descends. Where the shear passes through zero the path is at a top or a bottom, so the moment is largest there. The comparison stops at a point load: there the slope changes suddenly, and the path has a corner.
+
+The cards below give $V(x)$ and $M(x)$ for the three beams of this lesson. $L$ is the length of the beam and $P$ is a point load in newtons.
+
+<Card title="Cantilever beam (fixed at one end, free at the other)" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-  ![Cantilever Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/cantilever_beam.svg)
+  ![A cantilever beam of length L, fixed in a wall at the left. A distributed load w presses down along the whole beam and a point load P presses down at the free tip. The wall pushes up with the reaction Ry. The position x is measured from the wall](https://cdn.siliconwit.com/education/solid-mechanics/cantilever_beam.svg)
 </div>
 
-**For cantilever with distributed load w and point load P at tip:**
+The beam carries a distributed load $w$ and a point load $P$ at the tip. Measure $x$ from the fixed support. The support pushes up with $R_y = wL + P$ and holds a moment $M_{base} = wL^2/2 + PL$.
 
-**Shear Force:**
-$$V(x) = -(wL + P) + w \cdot x$$
+Shear force:
 
-**Bending Moment:**
+$$V(x) = R_y - w \cdot x = (wL + P) - w \cdot x$$
+
+Bending moment:
+
 $$M(x) = -M_{base} + R_y \cdot x - w \cdot \frac{x^2}{2}$$
 
-**Key Characteristics:**
-- Maximum shear and moment at **fixed support**
-- Zero shear and moment at **free end**
-- Linear shear variation, parabolic moment variation
+The shear is positive and the moment is negative (hogging). Both are largest at the fixed support, and the moment is zero at the free end.
 </Card>
 
-<Card title="⚖️ Simply Supported Beam (Pin-Roller)" icon="document">
+<Card title="Simply supported beam (pin and roller)" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-  ![Simply Supported Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/simply_supported_beam.svg)
+  ![A beam of length L on a pinned support at the left end, with reaction RA, and a roller support at the right end, with reaction RB. One point load P presses down at the centre](https://cdn.siliconwit.com/education/solid-mechanics/simply_supported_beam.svg)
 </div>
 
-**For simply supported beam with central point load P:**
+The beam carries one point load $P$ at its centre, so each support carries $P/2$.
 
-**Shear Force:**
-$$V(x) = \frac{P}{2} \text{ (constant from 0 to L/2)}$$
+Shear force:
 
-**Bending Moment:**
-$$M(x) = \frac{P}{2} \cdot x \text{ (for 0 ≤ x ≤ L/2)}$$
+$$V(x) = \frac{P}{2} \quad \text{constant from } 0 \text{ to } L/2$$
 
-**Key Characteristics:**
-- Zero moment at **both supports** (pins/rollers cannot resist rotation)
-- Maximum moment at **center** (where shear = 0)
-- Symmetric shear and moment for symmetric loading
+Bending moment:
+
+$$M(x) = \frac{P}{2} \cdot x \quad \text{for } 0 \le x \le L/2$$
+
+The moment is zero at both supports, because a pin or a roller cannot resist rotation. It is largest at the centre, $PL/4$, where the shear changes sign to $-P/2$.
 </Card>
 
-<Card title="🔗 Overhanging Beam" icon="document">
+<Card title="Overhanging beam" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1rem' }}>
-  ![Overhanging Beam Diagram](https://cdn.siliconwit.com/education/solid-mechanics/overhanging_beam.svg)
+  ![A beam on a pinned support, reaction RA, and a roller support, reaction RB, with a distributed load w along its whole length. In this picture the beam reaches past both supports](https://cdn.siliconwit.com/education/solid-mechanics/overhanging_beam.svg)
 </div>
 
-**For overhanging beam with UDL across entire length:**
+The picture shows an overhang at both ends. The formulas below are for the simpler beam of Application 3: support A is at the left end ($x = 0$), support B is at $x = L_{span}$, and the beam reaches past B only. The load $w$ covers the whole length.
 
-**Shear Force:**
-- Between supports: $V(x) = R_A - w \cdot x$
-- Overhang region: $V(x) = R_A - w \cdot x + R_B$
+Shear force:
+- Between the supports: $V(x) = R_A - w \cdot x$
+- On the overhang: $V(x) = R_A - w \cdot x + R_B$
 
-**Bending Moment:**
-- Between supports: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2}$
-- Overhang region: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2} + R_B(x - L_{span})$
+Bending moment:
+- Between the supports: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2}$
+- On the overhang: $M(x) = R_A \cdot x - w \cdot \frac{x^2}{2} + R_B(x - L_{span})$
 
-**Key Characteristics:**
-
-- **Both positive and negative moments** occur
-- Maximum negative moment typically at **intermediate support**
-- Zero moment at pin/roller supports
+The moment is positive (sagging) in part of the span and negative (hogging) over support B, where it is usually largest.
 </Card>
 
-:::tip[Key Insights]
-1. **Slope of shear diagram = negative of applied load**
-2. **Slope of moment diagram = shear force value**
-3. **Maximum moment occurs where shear = 0**
-4. **Point loads cause jumps in shear diagrams**
-5. **Applied moments cause jumps in moment diagrams**
-:::
+### Quick sketching techniques
 
-### Quick Sketching Techniques
+The two rules $dV/dx = -w$ and $dM/dx = V$ hold for every beam. With them you can sketch both diagrams before you calculate anything, and catch a wrong calculation afterwards.
 
-The differential equations $\frac{dV}{dx} = -w(x)$ and $\frac{dM}{dx} = V(x)$ provide exact mathematical relationships for **all beam types**. While the equations above show specific formulas for cantilever, simply supported, and overhanging beams, engineers can use these fundamental differential relationships to **quickly sketch** approximate shear force and bending moment diagrams for any beam configuration before performing detailed calculations.
-
-#### Rule 1: Integration Pattern (from dV/dx = -w and dM/dx = V)
-
-Since shear "integrates" from loading ($\frac{dV}{dx} = -w$) and moment "integrates" from shear ($\frac{dM}{dx} = V$), the diagram shapes follow an **integration-like pattern** for **any beam type**:
+#### Rule 1: each diagram is one step more curved than the one above it
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Integration Pattern Rule](https://cdn.siliconwit.com/education/solid-mechanics/sketching_integration_pattern.svg)
+    ![Three columns, each with a load, the shape of its shear diagram and the shape of its moment diagram. A point load gives a level shear line and a straight sloping moment line. A uniformly distributed load gives a straight sloping shear line and a curved moment line. A triangular load gives a curved shear line and a more strongly curved moment line](https://cdn.siliconwit.com/education/solid-mechanics/sketching_integration_pattern.svg)
   </TailwindWrapper>
 </div>
 
-**Pattern Recognition:**
-- **Point load** (vertical line) → **Constant shear** (horizontal) → **Linear moment** (slope)
-- **UDL** (uniform arrows) → **Linear shear** (slope) → **Parabolic moment** (curve)
-- **Triangular load** (varying) → **Parabolic shear** (curve) → **Cubic moment** (S-curve)
+- Between **point loads** the shear is constant, so the moment is a straight sloping line.
+- Under a **uniformly distributed load (UDL)**, with the same $w$ all along, the shear is a straight sloping line, so the moment is a parabola.
 
-**Why this works:** Just like integrating $y = 5$ gives $5x$, then $\frac{5x^2}{2}$, each integration "steps up" curve complexity by one order. This directly follows from $\frac{dV}{dx} = -w(x)$ and $\frac{dM}{dx} = V(x)$.
+#### Rule 2: the shear is the slope of the moment diagram
 
-#### Rule 2: Slope Direction → Curve Shape (from dM/dx = V)
-
-When sketching moment diagrams from shear diagrams, the **slope direction** in the shear plot tells you the **curvature** in the moment plot:
+Where the shear is far from zero, the moment diagram is steep. Where the shear is near zero, it is nearly flat. Where the shear is positive the moment rises to the right, and where it is negative the moment falls.
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-    ![Slope Direction Guide](https://cdn.siliconwit.com/education/solid-mechanics/sketching_slope_direction_guide.svg)
+    ![Two pairs of sketches. In each pair a sloping shear line is drawn above a curved moment line. The ends of the shear line are labelled Fast where the shear is far from zero and Slow where it is near zero, and the moment curve is steep at the Fast end and nearly flat at the Slow end. A small car sits on each moment curve](https://cdn.siliconwit.com/education/solid-mechanics/sketching_slope_direction_guide.svg)
   </TailwindWrapper>
 </div>
 
-**The "Inverted Road" Analogy:**
+This picture draws positive moment downward, the opposite of every other plot in this lesson, and both of its shear lines are below zero. Use it for one thing only: the moment curve is steep at the end marked Fast and nearly flat at the end marked Slow.
 
-Imagine an **inverted car** (shown in diagrams) rolling on an **inverted road** representing the moment curve. The shear slope tells you how the "car" accelerates:
+#### Rule 3: checks at the ends, the supports and the loads
 
-- **Right slope ``/" (positive shear slope):** Moment change starts **slow**, ends **fast**
-  - Moment curve must be **flat on left, steep on right** → **Concave up** parabola
-  - Think: car needs gentle start, steep finish
+1. **Free end:** $M = 0$. The shear equals the point load on the tip, or zero if there is none.
+2. **Pin or roller at the end of a beam:** $M = 0$, because the support cannot resist rotation.
+3. **Fixed support:** $V$ equals the reaction force and $M$ equals the reaction moment.
+4. **Point load $P$:** the shear jumps by $P$. The moment does not jump, but its diagram has a corner there.
+5. **Shear passes through zero:** the moment has a local largest or smallest value there.
 
-- **Left slope ``\\" (negative shear slope):** Moment change starts **fast**, ends **slow**
-  - Moment curve must be **steep on left, flat on right** → **Concave down** parabola
-  - Think: car needs steep start, gentle finish
+To sketch a beam: calculate the reactions, draw the shear from left to right (up at each upward force, down at each load), then draw the moment with a slope equal to the shear, and check it against Rule 3.
 
-**Practical Application:** Mark calculated moment values at critical points, then connect them with curves matching the shear slope direction.
-
-#### Rule 3: Essential Boundary Conditions
-
-Use these instant checks derived from support types and equilibrium:
-
-**Support Behavior:**
-1. **Cantilever Free End:** V = 0 **and** M = 0 (no loads or constraints at tip)
-2. **Simple Supports (Pin/Roller):** M = 0 (cannot resist rotation, only vertical force)
-3. **Fixed Support:** Both V ≠ 0 **and** M ≠ 0 (resists shear force and rotation)
-
-**Loading Effects:**
-1. **Point Load:** Shear **jumps** by magnitude P; moment remains **continuous** (no slope discontinuity)
-2. **Applied Moment:** Moment **jumps** by M₀; shear remains **continuous**
-3. **Zero Shear Point:** Indicates **local maximum or minimum** in moment diagram (since dM/dx = V = 0)
-
-:::tip[Rapid Sketching Workflow]
-1. **Sketch supports** and identify boundary conditions (M = 0 at pins/rollers, both V and M at fixed)
-2. **Calculate** critical reaction forces and at least one key shear/moment value
-3. **Apply integration pattern** to determine curve type (point load → horizontal → slope; UDL → slope → parabola)
-4. **Use slope direction rule** for moment curve shape (right slope → concave up; left slope → concave down)
-5. **Verify** boundary conditions are satisfied and shear jumps occur at point loads
-:::
-
-## Application 1: Semi-Automatic Robotic Arm Cantilever Analysis (Mechatronics)
+## Application 1: Semi-automatic robotic arm cantilever analysis (mechatronics)
 
 <InArticleAd />
 
 
-A material handling robotic arm is modeled as a cantilever beam carrying both its own weight and a payload at the tip.
+A material handling robotic arm is bolted to a column at one end and carries a payload at its free tip. It is modeled as a cantilever beam that carries its own weight along its length and the payload at the tip.
 
 :::note[System Problem Statement]
-- **Loading condition:** Uniformly distributed load (UDL) + one point load (actuator force)
-- **Support configuration:** Cantilever beam (fixed at base)
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Semi-Automatic Robotic Arm Cantilever](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-cantilever.png)
-  </TailwindWrapper>
-</div>
-**What we need to analyze:**
-1. **Support reaction forces** under combined loading
-2. **Shear force and bending moment diagrams** across the entire beam
-3. Locate **maximum bending moment** locations
+- **Loading:** the weight of the arm, a uniformly distributed load (UDL), and the payload, one point load at the tip
+- **Support:** cantilever, fixed at the base
+- **Find:** the reactions at the fixed support, then the shear force and bending moment diagrams
 
 **Key Question:** What are the maximum shear force and bending moment for this robotic arm?
 :::
@@ -354,50 +272,50 @@ Build this beam in the simulator and watch its shear-force and bending-moment di
   <LinkButton href="/product-development/beam-analysis-simulator/" target="_blank" variant="primary">Open the Beam Analysis Simulator</LinkButton>
 </div>
 
-<Card title="🔧 Equivalent System Model" icon="document">
+<Card title="Equivalent system model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Robotic Arm Segment Under Load](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-segment-under-load.png)
+	![A cantilever beam fixed in a wall at its left end, point 0, and free at its right end, point L. A distributed load, labelled W in the picture, presses down along the whole length and a point load P presses down at the free end](https://cdn.siliconwit.com/education/solid-mechanics/robotic-arm-segment-under-load.png)
   </TailwindWrapper>
 </div>
-**Given:**
-- Cantilever arm length: L = 2.5 m
-- Distributed load: w = 75 N/m (arm self-weight)  
-- Point load at tip: P = 1200 N (payload)
-- Cross-section: 80 mm × 10 mm (rectangular aluminum bar, I = 5.33×10⁶ mm⁴, c = 40 mm)
-- Material: Aluminum alloy (σ\_yield = 275 MPa)
+**Given** (the picture labels the distributed load W; the text calls it $w$):
+- Cantilever arm length: $L = 2.5\ \text{m}$
+- Distributed load: $w = 75\ \text{N/m}$ (weight of the arm)
+- Point load at the tip: $P = 1200\ \text{N}$ (payload)
+- Cross-section: $80\ \text{mm} \times 10\ \text{mm}$ (rectangular aluminum bar, $I = 10 \times 80^3/12 = 4.27 \times 10^5\ \text{mm}^4$ with the 80 mm side vertical, $c = 40\ \text{mm}$)
+- Material: aluminum alloy ($\sigma_{\text{yield}} = 275\ \text{MPa}$)
+
+The cross-section and the material are not used for the diagrams. They are used when the stress in the arm is checked, which is the subject of the lesson on bending stresses.
 </Card>
 
-### Step 1: Calculate Reaction Forces
+### Step 1: Calculate reaction forces
 
 <details>
 <summary>**Click to reveal reaction force calculations**</summary>
 
 <Steps>
 
-1. **Sum of vertical forces (↑ positive):**
+1. **Sum of vertical forces (↑ positive).** The support reaction $R_y$ must balance the two downward loads:
    
    $$\sum F_y = 0: R_y - 75(2.5) - 1200 = 0$$
    
-   **Reasoning:** 
    - $R_y$ = upward reaction (positive)
-   - $75(2.5) = 187.5\ N$ = total distributed load (downward, negative) ✅
-   - $1200\ N$ = point load (downward, negative) ✅
+   - $75\ \text{N/m} \times 2.5\ \text{m} = 187.5\ \text{N}$ = total distributed load (downward, negative) ✅
+   - $1200\ \text{N}$ = point load (downward, negative) ✅
    
    $$R_y = 187.5 + 1200 = 1387.5 \text{ N (upward)}$$ ✅
 
-2. **Sum of moments about base (counterclockwise positive):**
+2. **Sum of moments about the base (counterclockwise positive).** The whole distributed load acts as if it sat at the middle of the arm, 1.25 m from the base. The payload is 2.5 m from the base:
    
    $$\sum M_{base} = 0: M_{base} - 75(2.5)(1.25) - 1200(2.5) = 0$$
    
-   **Reasoning:** 
-   - $M_{base}$ = base reaction moment (counterclockwise, positive)
-   - $75(2.5)(1.25) = 234.375\ N·m$ = distributed load moment (clockwise, negative) ✅
-   - $1200(2.5) = 3000\ N·m$ = point load moment (clockwise, negative) ✅
+   - $M_{base}$ = reaction moment at the base (counterclockwise, positive)
+   - $187.5\ \text{N} \times 1.25\ \text{m} = 234.375\ \text{N}\cdot\text{m}$ = moment of the distributed load (clockwise, negative) ✅
+   - $1200\ \text{N} \times 2.5\ \text{m} = 3000\ \text{N}\cdot\text{m}$ = moment of the point load (clockwise, negative) ✅
    
    $$M_{base} = 234.375 + 3000 = 3234.375 \text{ N·m (counterclockwise)}$$ ✅
 
-3. **Verify equilibrium:**
+3. **Check the balance:**
    
    Forces: ↑1387.5 N = ↓(187.5 + 1200) N ✅
    Moments: 3234.375 N·m = 3234.375 N·m ✅
@@ -406,353 +324,312 @@ Build this beam in the simulator and watch its shear-force and bending-moment di
 
 </details>
 
-### Step 2: Construct Shear Force Diagram
+### Step 2: Construct shear force diagram
 
 <details>
 <summary>**Click to reveal shear force analysis**</summary>
 
-**Method:** Cut the beam at distance x from base and analyze equilibrium.
+Cut the arm at a distance $x$ from the base and keep the left part. On it act the reaction $R_y$, upward, and the weight of $x$ metres of arm, $75x$, downward.
 
-**For 0 ≤ x ≤ 2.5 m:**
+For $0 \le x \le 2.5\ \text{m}$:
 
-**Applying the cantilever shear force equation (see theory section):**
-$$V(x) = -(75 \times 2.5 + 1200) + 75x = -1387.5 + 75x$$
+$$V(x) = R_y - wx = 1387.5 - 75x \quad \text{(N, with } x \text{ in m)}$$
 
-**Key points:**
-- At x = 0: V(0) = -1387.5 N (negative, as expected for downward loads) ✅
-- At x = 2.5 m: V(2.5) = -1387.5 + 75(2.5) = -1200 N ✅
+Values at the two ends:
+- At $x = 0$: $V(0) = +1387.5\ \text{N}$ (positive: the support reaction pushes the left part up) ✅
+- At $x = 2.5\ \text{m}$: $V(2.5) = 1387.5 - 75(2.5) = +1200\ \text{N}$ ✅
 
-**Jump at tip from point load:** <br/>
-Just before tip: V = -1200 N <br/>
-Just after tip: V = -1200 + 1200 = 0 N ✅
+At the tip the payload makes the shear jump: <br/>
+Just before the tip: $V = +1200\ \text{N}$ <br/>
+Just after the tip: $V = 1200 - 1200 = 0\ \text{N}$ ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Semi-Automatic Robotic Arm Shear Force Plot](https://cdn.siliconwit.com/education/solid-mechanics/robotic_arm_shear_diagram.svg)
+	![Shear force along the robotic arm against the distance from the fixed support. A straight line runs from 1.39 kN at the support to 1.20 kN at the tip, 2.5 m away. The plot shows both values as negative](https://cdn.siliconwit.com/education/solid-mechanics/robotic_arm_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
-:::tip[Shear Force Diagram Characteristics]
-- **Negative values throughout** due to downward loading
-- **Linear increase** (becomes less negative) due to distributed load being "taken up"
-- **Sudden jump up** of 1200 N at the tip due to payload
-- **Maximum |shear|** occurs at the fixed support (1387.5 N)
-:::
+**Note on the plot:** it was drawn with the opposite shear sign. Read its values as $+1.39\ \text{kN}$ and $+1.20\ \text{kN}$ to match the convention of this lesson.
+
+The shear falls by 75 N for each metre ($dV/dx = -w$) and is largest at the fixed support.
 
 </details>
 
-### Step 3: Construct Bending Moment Diagram
+### Step 3: Construct bending moment diagram
 
 <details>
 <summary>**Click to reveal bending moment analysis**</summary>
 
-**Method:** Integrate shear force or use moment equilibrium.
+Take moments about the cut for the same left part. Three things act on it: the base moment, which hogs the arm (negative); the reaction $R_y$ at a distance $x$ (positive); and the weight $75x$ at a distance $x/2$ (negative).
 
-**For 0 ≤ x ≤ 2.5 m:**
+For $0 \le x \le 2.5\ \text{m}$:
 
-**Applying the cantilever bending moment equation (see theory section):**
-$$M(x) = -3234.375 + 1387.5x - 37.5x^2$$
+$$M(x) = -3234.375 + 1387.5x - 75x \cdot \frac{x}{2} = -3234.375 + 1387.5x - 37.5x^2 \quad \text{(N·m)}$$
 
-**Key points:**
-- At x = 0: M(0) = -3234.375 N·m (negative = sagging moment at fixed end) ✅
-- At x = 2.5 m: M(2.5) = -3234.375 + 1387.5(2.5) - 37.5(2.5)² = -3234.375 + 3468.75 - 234.375 = 0 N·m ✅
+Check with the slope rule: $dM/dx = 1387.5 - 75x = V(x)$ ✅
+
+Values at the two ends:
+- At $x = 0$: $M(0) = -3234.375\ \text{N}\cdot\text{m}$ (negative = hogging moment at the fixed end, tension on the top face) ✅
+- At $x = 2.5\ \text{m}$: $M(2.5) = -3234.375 + 1387.5(2.5) - 37.5(2.5)^2 = -3234.375 + 3468.75 - 234.375 = 0\ \text{N}\cdot\text{m}$ ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Semi-Automatic Robotic Arm Moment Plot](https://cdn.siliconwit.com/education/solid-mechanics/robotic_arm_moment_diagram.svg)
+	![Bending moment along the robotic arm against the distance from the fixed support. The curve starts at -3.23 kN·m at the support, the largest value, and rises to 0 kN·m at the free end, 2.5 m away](https://cdn.siliconwit.com/education/solid-mechanics/robotic_arm_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
-**Free end boundary condition:**
-At the free end (x = 2.5 m), the internal moment must be zero since there are no applied moments. Our equation gives M(2.5) = 0, confirming equilibrium at the tip ✅
+**Check at the free end:**
+Nothing applies a moment at the free end ($x = 2.5\ \text{m}$), so the moment there must be zero. The equation gives $M(2.5) = 0$ ✅
 
 </details>
 
-### Step 4: Summary of Critical Values
+### Step 4: Summary of critical values
 
 <details>
 <summary>**Click to reveal summary of maximum shear and moment**</summary>
 
 <Steps>
 
-1. **Maximum shear force location:**
+1. **Largest shear force:**
 
-   Maximum |V| = 1387.5 N at x = 0 (fixed support) ✅
+   Maximum $|V| = 1387.5\ \text{N}$ at $x = 0$ (fixed support) ✅
 
-2. **Maximum bending moment location:**
+2. **Largest bending moment.** Every load on a cantilever has its longest lever arm about the fixed support, so the moment is largest there:
 
-   For cantilever beams with downward loading, the maximum moment occurs at the **fixed support**:
+   - At $x = 0$ (support): $|M(0)| = 3234.375\ \text{N}\cdot\text{m}$ ✅
+   - At $x = 2.5\ \text{m}$ (tip): $M(2.5) = 0\ \text{N}\cdot\text{m}$ ✅
 
-   - At x = 0 (support): |M(0)| = 3234.375 N·m ✅
-   - At x = 2.5 m (tip): M(2.5) = 0 N·m ✅
+   **Maximum |M|** = 3234.375 N·m at $x = 0$ (fixed support) ✅
 
-   **Maximum |M|** = 3234.375 N·m at x = 0 (fixed support) ✅
+3. **What the diagrams say:**
 
-3. **Key observations:**
-
-   - **Shear force** varies linearly from -1387.5 N to -1200 N
-   - **Bending moment** varies parabolically with maximum magnitude at the fixed end
-   - Both maximum shear and moment occur at the **fixed support** (x = 0)
-   - The free end has zero moment, as expected (no applied moment there)
+   - The bending moment follows a parabola. The payload supplies 3000 of the 3234 N·m at the base, so the curve looks almost straight.
+   - The fixed support is the critical section: it carries the largest shear and the largest moment, and it is the first place to fail if the arm is overloaded.
 
 </Steps>
 
-:::note[Engineering Insight]
-The maximum bending moment at the fixed support makes this the **critical location** for structural design. This location experiences the highest internal stresses and would be the first point to fail under overloading. In future lessons, we'll learn how to calculate the actual stresses and check if the beam can safely carry these loads.
-:::
-
 </details>
 
-## Application 2: Conveyor Roller Support Beam (Electromechanical)
+## Application 2: Conveyor roller support beam (electromechanical)
 
 <InArticleAd />
 
 
-A conveyor beam supports five equally spaced boxes during material handling operations.
+A conveyor beam rests on a support at each end and carries five equally spaced boxes.
 
 :::note[System Problem Statement]
-- **Loading condition:** Multiple point loads (boxes on conveyor)
-- **Support configuration:** Simply supported (pinned + roller)
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Conveyor Beam with Multiple Loads](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-loads.png)
-  </TailwindWrapper>
-</div>
-**What we need to analyze:**
-1. **Support reaction forces** under multiple concentrated loads
-2. **Shear force and bending moment diagrams** with multiple discontinuities
-3. Compare **maximum moments** at load points vs. midspan locations
-4. Determine **critical design section** for beam sizing
+- **Loading:** five point loads (the boxes on the conveyor)
+- **Support:** simply supported (a pin at one end, a roller at the other)
+- **Find:** the reactions, the two diagrams, and the critical section, which is the one that sizes the beam
 
 **Key Question:** What are the maximum shear force, bending moment, and critical design location?
 :::
 
-<Card title="🔧 Equivalent System Model" icon="document">
+<Card title="Equivalent system model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Loaded Conveyor Beam Support Equivalent System Model](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
+	![A beam of length L on a pinned support A at the left end and a roller support B at the right end. Five equal point loads, P1 to P5, press down on it at equal spacing](https://cdn.siliconwit.com/education/solid-mechanics/conveyor-beam-supports-spaced-boxes.png)
   </TailwindWrapper>
 </div>
 **Given:**
-- Beam length: L = 2000 mm
-- Support conditions: Simply supported at both ends
-- Load configuration: 5 boxes, each P = 400 N
-- Load spacing: 400 mm intervals (at x = 200, 600, 1000, 1400, 1800 mm)
-- Cross-section: Hollow rectangular steel 60×40×4 mm (I = 3.1×10⁶ mm⁴, c = 30 mm)
-- Material: Steel (σ_yield = 250 MPa)
+- Beam length: $L = 2000\ \text{mm}$
+- Supports: simply supported at both ends
+- Loads: 5 boxes, each $P = 400\ \text{N}$
+- Load spacing: 400 mm (boxes at $x = 200, 600, 1000, 1400, 1800\ \text{mm}$)
+- Cross-section: hollow rectangular steel 60×40×4 mm ($I = 3.45 \times 10^5\ \text{mm}^4$ with the 60 mm side vertical, $c = 30\ \text{mm}$)
+- Material: steel ($\sigma_{\text{yield}} = 250\ \text{MPa}$)
 </Card>
 
-### Step 1: Calculate Reaction Forces
+### Step 1: Calculate reaction forces
 
 <details>
 <summary>**Click to reveal reaction force calculations**</summary>
 
 <Steps>
 
-1. **Sum of vertical forces (↑ positive):**
+1. **Sum of vertical forces (↑ positive).** The two reactions together carry the five boxes:
 
    $$\sum F_y = 0: R_A + R_B - (5 \times 400) = 0$$
 
    $$R_A + R_B = 2000 \text{ N}$$ ✅
 
-2. **Sum of moments about A (counterclockwise positive):**
+2. **Sum of moments about A (counterclockwise positive).** Each box is multiplied by its distance from A, in N and mm:
 
    $$\sum M_A = 0: R_B(2000) - 400(200 + 600 + 1000 + 1400 + 1800) = 0$$
 
-   $$R_B(2000) = 400(5000) = 2,000,000$$
+   $$R_B(2000) = 400(5000) = 2{,}000{,}000\ \text{N}\cdot\text{mm}$$
 
-   $$R_B = \frac{2,000,000}{2000} = 1000 \text{ N}$$ ✅
+   $$R_B = \frac{2{,}000{,}000}{2000} = 1000 \text{ N}$$ ✅
 
-3. **Calculate R_A:**
+3. **Calculate $R_A$:**
 
    $$R_A = 2000 - 1000 = 1000 \text{ N}$$ ✅
 
-4. **Verify by symmetry:**
+4. **Check by symmetry:**
 
-   Since loads are symmetric about centerline (x = 1000 mm), reactions are equal: $R_A = R_B = 1000$ N ✅
+   The loads are placed symmetrically about the centre ($x = 1000\ \text{mm}$), so the reactions are equal: $R_A = R_B = 1000$ N ✅
 
 </Steps>
 
 </details>
 
-### Step 2: Construct Shear Force Diagram
+### Step 2: Construct shear force diagram
 
 <details>
 <summary>**Click to reveal shear force analysis**</summary>
 
-**Method:** Track cumulative loads from left support.
+Start at the left support with $V = R_A$ and move to the right. Between boxes nothing changes. At each box the shear drops by 400 N.
 
-**Key regions and jumps:**
-
-**For 0 ≤ x < 200 mm:**
+**For $0 \le x < 200\ \text{mm}$:**
 $$V(x) = R_A = 1000 \text{ N}$$ ✅
 
-**At x = 200 mm (first load):**
-Jump down by 400 N: V = 1000 - 400 = 600 N ✅
+**At $x = 200\ \text{mm}$ (first load):**
+Jump down by 400 N: $V = 1000 - 400 = 600\ \text{N}$ ✅
 
-**For 200 < x < 600 mm:**
+**For $200 < x < 600\ \text{mm}$:**
 $$V(x) = 600 \text{ N}$$ ✅
 
-**At x = 600 mm (second load):**
-Jump down by 400 N: V = 600 - 400 = 200 N ✅
+**At $x = 600\ \text{mm}$ (second load):**
+Jump down by 400 N: $V = 600 - 400 = 200\ \text{N}$ ✅
 
-**For 600 < x < 1000 mm:**
+**For $600 < x < 1000\ \text{mm}$:**
 $$V(x) = 200 \text{ N}$$ ✅
 
-**At x = 1000 mm (center load):**
-Jump down by 400 N: V = 200 - 400 = -200 N ✅
+**At $x = 1000\ \text{mm}$ (center load):**
+Jump down by 400 N: $V = 200 - 400 = -200\ \text{N}$ ✅
 
-**For 1000 < x < 1400 mm:**
+**For $1000 < x < 1400\ \text{mm}$:**
 $$V(x) = -200 \text{ N}$$ ✅
 
-**At x = 1400 mm (fourth load):**
-Jump down by 400 N: V = -200 - 400 = -600 N ✅
+**At $x = 1400\ \text{mm}$ (fourth load):**
+Jump down by 400 N: $V = -200 - 400 = -600\ \text{N}$ ✅
 
-**For 1400 < x < 1800 mm:**
+**For $1400 < x < 1800\ \text{mm}$:**
 $$V(x) = -600 \text{ N}$$ ✅
 
-**At x = 1800 mm (fifth load):**
-Jump down by 400 N: V = -600 - 400 = -1000 N ✅
+**At $x = 1800\ \text{mm}$ (fifth load):**
+Jump down by 400 N: $V = -600 - 400 = -1000\ \text{N}$ ✅
 
-**For 1800 < x ≤ 2000 mm:**
+**For $1800 < x \le 2000\ \text{mm}$:**
 $$V(x) = -1000 \text{ N}$$ ✅
 
-**Maximum shear force:** |V_max| = 1000 N at both supports ✅
+**Maximum shear force:** $|V_{max}| = 1000\ \text{N}$ at both supports ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Conveyor Beam with Multiple Loads Shear Force Plot](https://cdn.siliconwit.com/education/solid-mechanics/conveyor_beam_shear_diagram.svg)
+	![Shear force along the conveyor beam against the distance from the left support. The line is a staircase: +1.00 kN, +0.60 kN, +0.20 kN, then -0.20 kN, -0.60 kN and -1.00 kN, with a drop of 0.40 kN at each of the five boxes. It crosses zero at 1.0 m, under the middle box](https://cdn.siliconwit.com/education/solid-mechanics/conveyor_beam_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
-:::tip[SFD Characteristics for Multiple Point Loads]
-- **Constant** between loads (no distributed loads)
-- **Sharp downward jumps** at each load point
-- **Symmetric pattern** due to symmetric loading
-- **Maximum shear** occurs at supports
-:::
-
 </details>
 
-### Step 3: Construct Bending Moment Diagram
+### Step 3: Construct bending moment diagram
 
 <details>
 <summary>**Click to reveal bending moment analysis**</summary>
 
-**Method:** Integrate shear force or use equilibrium of cut sections.
+Cut the beam at $x$ and take moments about the cut for the left part. The reaction $R_A$ is at a distance $x$. Each box to the left of the cut is at a distance ($x$ minus its position). Here $x$ is in mm and $M$ is in N·mm.
 
-**For 0 ≤ x ≤ 200 mm:**
+**For $0 \le x \le 200\ \text{mm}$:**
 $$M(x) = R_A \cdot x = 1000x$$
 
-**For 200 ≤ x ≤ 600 mm:**
-$$M(x) = 1000x - 400(x - 200) = 600x + 80,000$$
+**For $200 \le x \le 600\ \text{mm}$:**
+$$M(x) = 1000x - 400(x - 200) = 600x + 80{,}000$$
 
-**For 600 ≤ x ≤ 1000 mm:**
-$$M(x) = 1000x - 400(x - 200) - 400(x - 600) = 200x + 320,000$$
+**For $600 \le x \le 1000\ \text{mm}$:**
+$$M(x) = 1000x - 400(x - 200) - 400(x - 600) = 200x + 320{,}000$$
 
-**For 1000 ≤ x ≤ 1400 mm:**
-$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) = -200x + 720,000$$
+**For $1000 \le x \le 1400\ \text{mm}$:**
+$$M(x) = 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) = -200x + 720{,}000$$
 
-**For 1400 ≤ x ≤ 1800 mm:**
+**For $1400 \le x \le 1800\ \text{mm}$:**
 $$
 \begin{aligned}
 M(x) &= 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) \\
-     &= -600x + 1,280,000
+     &= -600x + 1{,}280{,}000
 \end{aligned}
 $$
 
-**For 1800 ≤ x ≤ 2000 mm:**
+**For $1800 \le x \le 2000\ \text{mm}$:**
 $$
 \begin{aligned}
 M(x) &= 1000x - 400(x - 200) - 400(x - 600) - 400(x - 1000) - 400(x - 1400) - 400(x - 1800) \\
-     &= -1000x + 2,000,000
+     &= -1000x + 2{,}000{,}000
 \end{aligned}
 $$
 
-**Maximum bending moment:** M_max = 520,000 N·mm = 520 N·m at x = 1000 mm (center) ✅
+**Maximum bending moment:** $M_{max} = 200(1000) + 320{,}000 = 520{,}000\ \text{N}\cdot\text{mm} = 520\ \text{N}\cdot\text{m}$ at $x = 1000\ \text{mm}$ (center) ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Conveyor Beam with Multiple Loads Bending Moment Plot](https://cdn.siliconwit.com/education/solid-mechanics/conveyor_beam_moment_diagram.svg)
+	![Bending moment along the conveyor beam against the distance from the left support. Straight pieces rise from 0 at the left support through 0.20 and 0.44 kN·m to the largest value, 0.52 kN·m at the centre, then fall in the same way to 0 at the right support](https://cdn.siliconwit.com/education/solid-mechanics/conveyor_beam_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
 </details>
 
-### Step 4: Critical Section Analysis
+### Step 4: Critical section analysis
 
 <details>
 <summary>**Click to reveal critical analysis and design recommendations**</summary>
 
 <Steps>
 
-1. **Maximum moment location:**
+1. **Where the moment is largest:**
 
-   **Center (x = 1000 mm):** M = 520 N·m ✅
-   **Under loads (x = 600, 1400 mm):** M = 440 N·m ✅
+   **Center ($x = 1000\ \text{mm}$):** $M = 520\ \text{N}\cdot\text{m}$ ✅
+   **Under the neighboring boxes ($x = 600, 1400\ \text{mm}$):** $M = 600(600) + 80{,}000 = 440{,}000\ \text{N}\cdot\text{mm} = 440\ \text{N}\cdot\text{m}$ ✅
 
-   **Critical location:** Center of beam (midspan) despite no load at this point ✅
+   **Critical location:** the center of the beam (midspan), under the middle box, where the shear changes sign from $+200\ \text{N}$ to $-200\ \text{N}$ ✅
 
-2. **Engineering insight - Midspan vs Under-Load Comparison:**
+2. **Why midspan is critical:**
 
-   **Why midspan is critical:**
-   - In simply supported beams with multiple point loads, moment builds up between loads
-   - **Midspan moment (520 N·m) > Under-load moment (440 N·m)**
-   - This occurs because the center experiences cumulative effect of loads on both sides
+   - The moment keeps rising while the shear is positive, so it grows from each box to the next up to $x = 1000\ \text{mm}$.
+   - With point loads only, the largest moment is always under a load: the one where the shear changes sign.
 
-   **Design recommendation:** Size beam based on midspan moment, not just load locations ✅
+   **Design recommendation:** size the beam for the moment under the middle box, where the shear changes sign ✅
 
-3. **Practical implications:**
+3. **What follows from this:**
 
-   - **Deflection** will also be maximum at center
-   - **Lateral-torsional buckling** check needed at center span
-   - Consider **intermediate supports** if moment is excessive
+   - The beam also sags most at the center.
+   - If the moment is too large for the section, add a support between the two ends.
 
 </Steps>
 
 </details>
 
-## Application 3: Solar Tracker Arm (Electronics/Mechatronics)
+## Application 3: Solar tracker arm (electronics/mechatronics)
 
 <InArticleAd />
 
 
-A solar tracker support beam adjusts panel orientation to track the sun, experiencing combined self-weight, wind loading, and equipment forces.
+A solar tracker arm turns a row of panels to follow the sun. The arm rests on two supports and reaches 0.5 m past the second one. It carries the weight of the panels and the wind along its whole length, and the weight of a clamp mechanism at its tip.
 
 :::note[System Problem Statement]
-- **Loading condition:** UDL (self-weight + wind) + concentrated clamp force
-- **Support configuration:** Overhanging simply supported beam
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-  <TailwindWrapper>
-	![Solar Tracker Overhanging Beam](https://cdn.siliconwit.com/education/solid-mechanics/solar-panel-tracking-system-mounting-rack-for-single-axis-solar-tracker.png)
-  </TailwindWrapper>
-</div>
-**What we need to analyze:**
-1. **Support reaction forces** for overhanging beam configuration
-2. **Shear force and bending moment diagrams** across entire beam length
-3. **Maximum positive and negative bending moments** and their locations
-4. **Critical section assessment** for bending stress design
+- **Loading:** a uniformly distributed load (panel weight and wind) and one point load at the tip (the clamp)
+- **Support:** simply supported beam with an overhang
+- **Find:** the reactions, the two diagrams, and the largest sagging and hogging moments
 
 **Key Question:** What are the maximum positive and negative bending moments, and which section is most critical?
 :::
 
-<Card title="🔧 Equivalent System Model" icon="document">
+<Card title="Equivalent system model" icon="document">
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Parameters](https://cdn.siliconwit.com/education/solid-mechanics/solar-tracker-arm-loading-diagram.png)
+	![A beam on a pinned support A at its left end and a roller support B part of the way along, so the right end of the beam reaches past B. A distributed load, labelled W in the picture, presses down along the whole length, and a point load P1 presses down at the free right end](https://cdn.siliconwit.com/education/solid-mechanics/solar-tracker-arm-loading-diagram.png)
   </TailwindWrapper>
 </div>
-**Given:**
-- Total beam length: 3.0 m (2.5 m span + 0.5 m overhang)
-- Support A (pinned): at x = 0
-- Support B (roller): at x = 2.5 m
-- Uniformly distributed load: W = 300 N/m across entire length (panel weight + wind)
-- Point load at tip: P1 = 600 N at x = 3.0 m (clamp mechanism)
-- Cross-section: Structural steel I-beam (I = 6.8×10⁶ mm⁴, c = 40 mm)
-- Material: Structural steel (σ_yield = 250 MPa)
+**Given** (the picture labels the distributed load W and marks the total length as L; the text calls the load $w$ and the tip load $P$):
+- Total beam length: $L_{total} = 3.0\ \text{m}$ (2.5 m span + 0.5 m overhang)
+- Support A (pinned): at $x = 0$
+- Support B (roller): at $x = 2.5\ \text{m}$
+- Uniformly distributed load: $w = 300\ \text{N/m}$ across the entire length (panel weight + wind)
+- Point load at the tip: $P = 600\ \text{N}$ at $x = 3.0\ \text{m}$ (clamp mechanism)
+- Cross-section: structural steel I-beam ($I = 6.8 \times 10^6\ \text{mm}^4$, $c = 40\ \text{mm}$)
+- Material: structural steel ($\sigma_{\text{yield}} = 250\ \text{MPa}$)
 </Card>
 
-### Step 1: Calculate Reaction Forces
+### Step 1: Calculate reaction forces
 
 <details>
 <summary>**Click to reveal reaction force calculations**</summary>
@@ -765,29 +642,28 @@ A solar tracker support beam adjusts panel orientation to track the sun, experie
 
    $$R_A + R_B = 300 \times 3.0 + 600 = 900 + 600 = 1500 \text{ N}$$ ✅
 
-2. **Sum of moments about A (counterclockwise positive):**
+2. **Sum of moments about A (counterclockwise positive).** The whole distributed load, 900 N, acts at the middle of the beam, 1.5 m from A. The clamp is 3.0 m from A:
 
    $$\sum M_A = 0: R_B(2.5) - w \cdot L_{total} \cdot \frac{L_{total}}{2} - P(3.0) = 0$$
 
    $$R_B(2.5) = 300 \times 3.0 \times 1.5 + 600 \times 3.0$$
 
-   $$R_B(2.5) = 1350 + 1800 = 3150$$
+   $$R_B(2.5) = 1350 + 1800 = 3150\ \text{N}\cdot\text{m}$$
 
    $$R_B = \frac{3150}{2.5} = 1260 \text{ N}$$ ✅
 
-3. **Calculate R_A:**
+3. **Calculate $R_A$:**
 
    $$R_A = 1500 - 1260 = 240 \text{ N}$$ ✅
 
-4. **Verification by moments about B:**
+4. **Check with moments about B.** The loads to the right of B turn the beam the opposite way to the loads on the span, so their terms have the opposite sign:
 
    $$\sum M_B = 0: R_A(2.5) - w(2.5)(1.25) + w(0.5)(0.25) + P(0.5) = 0$$
 
-   **Breaking down each term:**
-   - Moment from R_A: +240(2.5) = +600 N·m
-   - Moment from UDL on span (0 to 2.5 m): -300(2.5)(1.25) = -937.5 N·m
-   - Moment from UDL on overhang (2.5 to 3.0 m): +300(0.5)(0.25) = +37.5 N·m
-   - Moment from P at tip: +600(0.5) = +300 N·m
+   - Moment of $R_A$: $+240(2.5) = +600\ \text{N}\cdot\text{m}$
+   - Moment of the distributed load on the span (0 to 2.5 m): $-300(2.5)(1.25) = -937.5\ \text{N}\cdot\text{m}$
+   - Moment of the distributed load on the overhang (2.5 to 3.0 m): $+300(0.5)(0.25) = +37.5\ \text{N}\cdot\text{m}$
+   - Moment of $P$ at the tip: $+600(0.5) = +300\ \text{N}\cdot\text{m}$
 
    $$\sum M_B = 600 - 937.5 + 37.5 + 300 = 0$$ ✅
 
@@ -795,151 +671,122 @@ A solar tracker support beam adjusts panel orientation to track the sun, experie
 
 </details>
 
-### Step 2: Construct Shear Force Diagram
+### Step 2: Construct shear force diagram
 
 <details>
 <summary>**Click to reveal shear force analysis**</summary>
 
-**Method:** Track loads from left support, accounting for distributed load accumulation.
+Move from the left support to the right. The distributed load takes 300 N from the shear for each metre. At support B the reaction $R_B$ lifts the shear by 1260 N.
 
-**For 0 ≤ x ≤ 2.5 m (between supports):**
+**For $0 \le x \le 2.5\ \text{m}$ (between the supports):**
 $$V(x) = R_A - wx = 240 - 300x$$
 
-**For 2.5 < x ≤ 3.0 m (overhang region):**
+**For $2.5 < x \le 3.0\ \text{m}$ (on the overhang):**
 $$V(x) = R_A - wx + R_B = 240 - 300x + 1260 = 1500 - 300x$$
 
-**Key points:**
-- At x = 0: V(0) = 240 N ✅
-- At x = 0.8 m: V(0.8) = 240 - 300(0.8) = 0 N ✅ (zero shear point)
-- Just before support B (x = 2.5⁻): V(2.5⁻) = 240 - 300(2.5) = -510 N ✅
-- Just after support B (x = 2.5⁺): V(2.5⁺) = -510 + 1260 = 750 N ✅
-- At tip before point load (x = 3.0⁻): V(3.0⁻) = 1500 - 300(3.0) = 600 N ✅
-- At tip after point load (x = 3.0⁺): V(3.0⁺) = 600 - 600 = 0 N ✅
+**Values at the points that matter:**
+- At $x = 0$: $V(0) = 240\ \text{N}$ ✅
+- At $x = 0.8\ \text{m}$: $V(0.8) = 240 - 300(0.8) = 0\ \text{N}$ ✅ (zero shear point)
+- Just before support B ($x = 2.5^-$): $V(2.5^-) = 240 - 300(2.5) = -510\ \text{N}$ ✅
+- Just after support B ($x = 2.5^+$): $V(2.5^+) = -510 + 1260 = 750\ \text{N}$ ✅
+- At tip before point load ($x = 3.0^-$): $V(3.0^-) = 1500 - 300(3.0) = 600\ \text{N}$ ✅
+- At tip after point load ($x = 3.0^+$): $V(3.0^+) = 600 - 600 = 0\ \text{N}$ ✅
 
 **Maximum shear forces:**
-- **Positive:** V_max = 750 N just after support B ✅
-- **Negative:** V_min = -510 N just before support B ✅
+- **Positive:** $V_{max} = 750\ \text{N}$ just after support B ✅
+- **Negative:** $V_{min} = -510\ \text{N}$ just before support B ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Overhanging Beam Shear Force Plot](https://cdn.siliconwit.com/education/solid-mechanics/solar_tracker_arm_shear_diagram.svg)
+	![Shear force along the solar tracker arm against the distance from the left support. A straight line falls from +0.24 kN at support A through zero at 0.8 m to -0.51 kN just before support B at 2.5 m. There it jumps up to +0.75 kN, then falls to +0.60 kN at the tip at 3.0 m](https://cdn.siliconwit.com/education/solid-mechanics/solar_tracker_arm_shear_diagram.svg)
   </TailwindWrapper>
 </div>
 
-:::tip[SFD Characteristics for Overhanging Beams]
-- **Linear variation** due to uniform distributed load
-- **Sharp jump** at intermediate support (upward by R_B)
-- **Zero shear** at x = 0.8 m indicates maximum moment location
-- **Overhang region** experiences positive shear until tip load
-:::
-
 </details>
 
-### Step 3: Construct Bending Moment Diagram
+### Step 3: Construct bending moment diagram
 
 <details>
 <summary>**Click to reveal bending moment analysis**</summary>
 
-**Method:** Integrate shear force or use moment equilibrium of cut sections.
+The moment is found here by integrating the shear, which is the rule $dM/dx = V$ used backward. Each integration leaves a constant, $C_1$ or $C_2$, which is fixed by a place where the moment is already known.
 
-**For 0 ≤ x ≤ 2.5 m:**
+**For $0 \le x \le 2.5\ \text{m}$:**
 $$M(x) = \int V(x)dx = \int(240 - 300x)dx = 240x - 150x^2 + C_1$$
 
-With boundary condition M(0) = 0: C₁ = 0
+The moment is zero at the pin, $M(0) = 0$, so $C_1 = 0$:
 $$M(x) = 240x - 150x^2$$
 
-**For 2.5 < x ≤ 3.0 m:**
+**For $2.5 < x \le 3.0\ \text{m}$:**
 $$M(x) = \int(1500 - 300x)dx = 1500x - 150x^2 + C_2$$
 
-With continuity at x = 2.5 m: M(2.5) = 240(2.5) - 150(2.5)² = -337.5 N·m
+The moment does not jump at support B, so both formulas must give the same value at $x = 2.5\ \text{m}$: $M(2.5) = 240(2.5) - 150(2.5)^2 = -337.5\ \text{N}\cdot\text{m}$
 $$C_2 = -337.5 - 1500(2.5) + 150(2.5)^2 = -337.5 - 3750 + 937.5 = -3150$$
 $$M(x) = 1500x - 150x^2 - 3150$$
 
-**Key moment values:**
-- At x = 0: M(0) = 0 N·m ✅
-- At x = 0.8 m (zero shear): M(0.8) = 240(0.8) - 150(0.8)² = 192 - 96 = 96 N·m ✅ **← Max positive**
-- At x = 2.5 m (support B): M(2.5) = 240(2.5) - 150(2.5)² = 600 - 937.5 = -337.5 N·m ✅ **← Max negative**
-- At x = 3.0 m (tip): M(3.0) = 1500(3.0) - 150(3.0)² - 3150 = 4500 - 1350 - 3150 = 0 N·m ✅
+**Moment values at the points that matter:**
+- At $x = 0$: $M(0) = 0\ \text{N}\cdot\text{m}$ ✅
+- At $x = 0.8\ \text{m}$ (zero shear): $M(0.8) = 240(0.8) - 150(0.8)^2 = 192 - 96 = 96\ \text{N}\cdot\text{m}$ ✅ **← Max positive**
+- At $x = 2.5\ \text{m}$ (support B): $M(2.5) = 240(2.5) - 150(2.5)^2 = 600 - 937.5 = -337.5\ \text{N}\cdot\text{m}$ ✅ **← Max negative**
+- At $x = 3.0\ \text{m}$ (tip): $M(3.0) = 1500(3.0) - 150(3.0)^2 - 3150 = 4500 - 1350 - 3150 = 0\ \text{N}\cdot\text{m}$ ✅
 
 **Maximum moments:**
-- **Positive:** M_max = +96 N·m at x = 0.8 m ✅
-- **Negative:** M_min = -337.5 N·m at support B (x = 2.5 m) ✅
+- **Positive:** $M_{max} = +96\ \text{N}\cdot\text{m}$ at $x = 0.8\ \text{m}$ ✅
+- **Negative:** $M_{min} = -337.5\ \text{N}\cdot\text{m}$ at support B ($x = 2.5\ \text{m}$) ✅
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
-	![Solar Tracker Overhanging Beam Bending Moment Plot](https://cdn.siliconwit.com/education/solid-mechanics/solar_tracker_arm_moment_diagram.svg)
+	![Bending moment along the solar tracker arm against the distance from the left support. The curve rises from 0 at support A to a small positive peak at 0.8 m, crosses zero near 1.6 m, falls to its largest negative value at support B at 2.5 m, and returns to 0 at the tip at 3.0 m](https://cdn.siliconwit.com/education/solid-mechanics/solar_tracker_arm_moment_diagram.svg)
   </TailwindWrapper>
 </div>
 
+The plot rounds its labels to one decimal place: its +0.1 kN·m is the 96 N·m found above, and its -0.3 kN·m is -337.5 N·m.
+
 </details>
 
-### Step 4: Critical Section Analysis
+### Step 4: Critical section analysis
 
 <details>
 <summary>**Click to reveal critical bending stress assessment**</summary>
 
 <Steps>
 
-1. **Maximum moment comparison:**
+1. **Compare the two largest moments:**
 
-   **Positive moment:** M_max = +96 N·m at x = 0.8 m ✅
-   **Negative moment:** |M_min| = 337.5 N·m at support B ✅
+   **Positive moment:** $M_{max} = +96\ \text{N}\cdot\text{m}$ at $x = 0.8\ \text{m}$ ✅
+   **Negative moment:** $|M_{min}| = 337.5\ \text{N}\cdot\text{m}$ at support B ✅
 
-   **Critical location:** Support B due to larger moment magnitude ✅
+   **Critical location:** support B, because the moment there is larger in size ✅
 
-2. **Engineering assessment - Positive vs Negative Moment Regions:**
+2. **Why support B is the critical section:**
 
-   **Why support B is most critical:**
-   - **Negative moment (337.5 N·m) >> Positive moment (96 N·m)**
-   - Support experiences both high shear force and maximum negative moment
-   - **Design implication:** Beam capacity controlled by support B, not midspan
+   - The hogging moment at B (337.5 N·m) is 3.5 times the sagging moment in the span (96 N·m).
+   - The shear is also largest at B.
+   - So support B sizes the beam, and the span does not.
 
-   **Stress distribution at critical section:**
-   - **Top fiber:** Tension (negative moment causes beam to curve upward)
-   - **Bottom fiber:** Compression
-   - **Design consideration:** Check lateral-torsional buckling of compression flange
+   At support B the moment is negative, so the arm hogs over the support: the top face is in tension and the bottom face is in compression.
 
-3. **Practical design recommendations:**
-
-   - **Reinforce support B region** with stiffeners or larger section
-   - **Consider moment redistribution** with semi-rigid connections
-   - **Check fatigue** due to cyclic wind loading and tracking motion
-   - **Verify deflection limits** especially in overhang region
+3. **What a designer does next:** strengthen the arm near support B, and check fatigue, because wind and tracking motion load the arm again and again.
 
 </Steps>
 
 </details>
 
 :::tip[Instrument it]
-The bending moment at any section is something you can read off a beam in service. Bond a strain gauge to the top or bottom fibre where the moment is largest; the surface strain times Young's modulus times the section modulus gives the bending moment there, and a few gauges spaced along the span reconstruct the whole moment diagram. Read them with a quarter-bridge into an HX711 or an instrumentation amplifier and an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/), and you can [watch the live moment on siliconwit.io](https://siliconwit.io) and catch an overload before the beam yields.
+You can read the bending moment from a beam in service. Bond a strain gauge to the top or bottom face where the moment is largest. The surface strain, multiplied by Young's modulus and by the section modulus of the beam, gives the bending moment at that section, and a few gauges along the span give the whole moment diagram. Read them with a quarter-bridge into an HX711 or an instrumentation amplifier and an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/), and you can [watch the live moment on siliconwit.io](https://siliconwit.io) and catch an overload before the beam yields.
 :::
 
-## Summary and Next Steps
+## Summary and next steps
 
 <InArticleAd />
 
 
-In this lesson, you learned to:
+- Cut the beam, keep the left part, and ask what the cut face must carry: a shear force $V$ and a bending moment $M$.
+- $dV/dx = -w(x)$: the shear falls at the rate of the load. It jumps at a point load.
+- $dM/dx = V(x)$: the shear is the slope of the moment diagram. The moment is largest where the shear passes through zero, or at a fixed support.
+- Largest moment: at the fixed support of a cantilever, under the load where the shear changes sign on a simply supported beam, and often at the support next to an overhang.
 
-1. **Construct** shear force diagrams using equilibrium (V = ΣF_y) and differential relationships (dV/dx = -w)
-2. **Build** bending moment diagrams using integration (dM/dx = V) and moment equilibrium principles
-3. **Identify** critical sections with maximum shear and moment values
-4. **Analyze** cantilever, simply supported, and overhanging beam configurations
-5. **Determine** reaction forces for fixed, pinned, and roller supports
-
-**Key Design Insights:**
-- Cantilever beams: Maximum moment at fixed support
-- Simply supported beams: Maximum moment often at midspan
-- Overhanging beams: Critical section at intermediate support
-- Shear jumps at point loads, moment jumps at applied moments
-- Distributed loads create linear shear and parabolic moment curves
-
-**Critical Relationships:**
-- **Load-Shear:** dV/dx = -w(x)
-- **Shear-Moment:** dM/dx = V(x)
-- **Maximum moment:** Occurs where V(x) = 0
-
-**Coming Next**: In Lesson 2.2, we'll calculate bending stresses using the flexure formula σ = My/I to determine if beam designs can safely support operational loads.
+**Coming next:** the largest bending moment is the input to the flexure formula $\sigma = My/I$, which gives the bending stress and tells you if the beam can carry its load. That is the subject of [bending stresses in simple beams](/education/mechanics-of-materials/bending-stresses-simple-beams/).
 
 
 

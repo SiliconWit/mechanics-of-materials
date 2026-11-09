@@ -38,13 +38,13 @@ The theory behind these experiments is in [Thin-Walled Pressure Vessels](/educat
 
 | Term | Meaning |
 |------|---------|
-| **Hoop stress (sigma_h)** | Circumferential wall stress in a cylinder, sigma_h = p r / t; governs the design because it is the larger principal stress |
-| **Longitudinal stress (sigma_l)** | Axial wall stress in a cylinder, sigma_l = p r / (2t); exactly half the hoop stress |
-| **Sphere membrane stress** | Wall stress in a spherical vessel, sigma = p r / (2t) in every direction; equal to the cylinder longitudinal stress |
-| **Thin-wall assumption** | Valid when r/t >= 10; below that ratio the stress gradient across the thickness is significant and thick-wall (Lame) equations are needed |
-| **von Mises equivalent stress** | The scalar svm = sqrt(s1^2 - s1 s2 + s2^2) that collapses the biaxial state to a single number for comparison with yield strength |
-| **Safety factor (SF)** | SF = yield / svm; the margin between the operating stress and first yield |
-| **t_req** | Minimum wall thickness for a given SF computed via the von Mises path: t_req = sqrt(0.75) * p * r / (yield / SF) for a cylinder |
+| **Hoop stress ($\sigma_h$)** | Circumferential wall stress in a cylinder, $\sigma_h = pr/t$; governs the design because it is the larger principal stress |
+| **Longitudinal stress ($\sigma_l$)** | Axial wall stress in a cylinder, $\sigma_l = pr/(2t)$; exactly half the hoop stress |
+| **Sphere membrane stress** | Wall stress in a spherical vessel, $\sigma = pr/(2t)$ in every direction; equal to the cylinder longitudinal stress |
+| **Thin-wall assumption** | Valid when $r/t \geq 10$; below that ratio the stress gradient across the thickness is significant and thick-wall (Lame) equations are needed |
+| **von Mises equivalent stress** | The scalar $\sigma_{\text{vm}} = \sqrt{\sigma_1^2 - \sigma_1 \sigma_2 + \sigma_2^2}$ that collapses the biaxial state to a single number for comparison with yield strength |
+| **Safety factor (SF)** | $\text{SF} = \sigma_{\text{yield}} / \sigma_{\text{vm}}$; the margin between the operating stress and first yield |
+| **$t_{\text{req}}$** | Minimum wall thickness for a given $\text{SF}$ computed via the von Mises path: $t_{\text{req}} = \sqrt{0.75}\, p r / (\sigma_{\text{yield}} / \text{SF})$ for a cylinder |
 
 ### Experiment Workflow
 
@@ -68,7 +68,7 @@ flowchart TD
 </FileTree>
 
 :::tip[Instrument it]
-You cannot read a wall stress directly, but two inexpensive sensors together give you everything. A pressure transducer on the inlet reads the internal gauge pressure p. A foil strain gauge bonded circumferentially reads the hoop strain; dividing by Young's modulus gives the hoop stress, which should match p r / t from the formula. A second gauge oriented axially should read exactly half the hoop value, confirming the 2:1 prediction experimentally. Wire both gauges into a Wheatstone bridge and have an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample the channels continuously. That board can [stream the live stress state](https://siliconwit.io) and trigger an alert well before the von Mises equivalent stress reaches the yield limit.
+You cannot read a wall stress directly, but two inexpensive sensors together give you everything. A pressure transducer on the inlet reads the internal gauge pressure $p$. A foil strain gauge bonded circumferentially reads the hoop strain; dividing by Young's modulus gives the hoop stress, which should match $pr/t$ from the formula. A second gauge oriented axially should read exactly half the hoop value, confirming the 2:1 prediction experimentally. Wire both gauges into a Wheatstone bridge and have an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample the channels continuously. That board can [stream the live stress state](https://siliconwit.io) and trigger an alert well before the von Mises equivalent stress reaches the yield limit.
 :::
 
 ---
@@ -86,16 +86,16 @@ For the air-tank preset, compute the hoop and longitudinal stresses from the for
 
 <Steps>
 1. **Configure the simulator**
-   Open the simulator and select the **air-tank** preset (p = 1.0 MPa, d = 400 mm, t = 4 mm, yield = 250 MPa, cylinder). Confirm the vessel type shows "cylinder".
+   Open the simulator and select the **air-tank** preset ($p = 1.0\ \text{MPa}$, $d = 400\ \text{mm}$, $t = 4\ \text{mm}$, $\sigma_{\text{yield}} = 250\ \text{MPa}$, cylinder). Confirm the vessel type shows "cylinder".
 
 2. **Predict**
-   Before reading the panel, calculate by hand: r = d/2 = 200 mm, sigma_hoop = p r / t, sigma_long = p r / (2t). Write down your predicted ratio.
+   Before reading the panel, calculate by hand: $r = d/2 = 200\ \text{mm}$, $\sigma_{\text{hoop}} = pr/t$, $\sigma_{\text{long}} = pr/(2t)$. Write down your predicted ratio.
 
 3. **Read the simulator**
-   Read sigma_hoop and sigma_long from the output panel. Confirm the ratio. Also note the von Mises equivalent stress and safety factor.
+   Read $\sigma_{\text{hoop}}$ and $\sigma_{\text{long}}$ from the output panel. Confirm the ratio. Also note the von Mises equivalent stress and safety factor.
 
 4. **Vary the thickness**
-   Switch to Custom and change t to 8 mm (doubling it). Note that both stresses halve while the ratio stays at 2. Then try t = 2 mm and confirm both stresses double.
+   Switch to Custom and change $t$ to $8\ \text{mm}$ (doubling it). Note that both stresses halve while the ratio stays at 2. Then try $t = 2\ \text{mm}$ and confirm both stresses double.
 
 5. **Save data**
    Create `data/exp1_hoop_long.csv` with columns: p_MPa, d_mm, t_mm, r_mm, sigma_hoop, sigma_long, ratio.
@@ -153,7 +153,7 @@ plt.show()
 
 ### Expected Results
 
-For the air-tank preset (p = 1.0 MPa, r = 200 mm, t = 4 mm):
+For the air-tank preset ($p = 1.0\ \text{MPa}$, $r = 200\ \text{mm}$, $t = 4\ \text{mm}$):
 
 ```
 t =  2 mm: sigma_hoop = 100.00 MPa, sigma_long = 50.00 MPa, ratio = 2.00, svm = 86.60 MPa, SF = 2.89
@@ -161,7 +161,7 @@ t =  4 mm: sigma_hoop =  50.00 MPa, sigma_long = 25.00 MPa, ratio = 2.00, svm = 
 t =  8 mm: sigma_hoop =  25.00 MPa, sigma_long = 12.50 MPa, ratio = 2.00, svm = 21.65 MPa, SF = 11.55
 ```
 
-The ratio is exactly 2.00 for every wall thickness because sigma_hoop / sigma_long = (p r / t) / (p r / (2t)) = 2, with p, r, and t all cancelling. Changing only t scales both stresses together without touching the ratio. The von Mises equivalent at t = 4 mm is 43.30 MPa, giving a safety factor of 5.77 against a 250 MPa yield strength.
+The ratio is exactly 2.00 for every wall thickness because $\sigma_{\text{hoop}} / \sigma_{\text{long}} = (pr/t) / (pr/(2t)) = 2$, with $p$, $r$, and $t$ all cancelling. Changing only $t$ scales both stresses together without touching the ratio. The von Mises equivalent at $t = 4\ \text{mm}$ is $43.30\ \text{MPa}$, giving a safety factor of 5.77 against a $250\ \text{MPa}$ yield strength.
 
 ### Design Question
 
@@ -177,21 +177,21 @@ A cylinder and a sphere are both designed to hold the same internal pressure. Th
 Knowing the stresses is the first step; sizing the wall so the stresses stay within an acceptable safety margin is the design step. This experiment works from a target safety factor back to a minimum wall thickness, then checks the pipeline preset to see how the designed wall compares with the one that was actually built.
 
 :::note[Objective]
-For the pipeline preset, compute the actual von Mises safety factor of the existing wall, then find the minimum wall thickness that satisfies a required SF = 2.5, and confirm both values with the simulator.
+For the pipeline preset, compute the actual von Mises safety factor of the existing wall, then find the minimum wall thickness that satisfies a required $\text{SF} = 2.5$, and confirm both values with the simulator.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **pipeline** preset (p = 8 MPa, d = 600 mm, t = 10 mm, yield = 360 MPa, cylinder).
+   Select the **pipeline** preset ($p = 8\ \text{MPa}$, $d = 600\ \text{mm}$, $t = 10\ \text{mm}$, $\sigma_{\text{yield}} = 360\ \text{MPa}$, cylinder).
 
 2. **Read the existing state**
-   Record sigma_hoop, sigma_long, svm, and SF from the panel. Note whether the existing wall already meets SF = 2.5.
+   Record $\sigma_{\text{hoop}}$, $\sigma_{\text{long}}$, $\sigma_{\text{vm}}$, and $\text{SF}$ from the panel. Note whether the existing wall already meets $\text{SF} = 2.5$.
 
-3. **Size for SF = 2.5**
-   For a cylinder the von Mises equivalent is svm = sqrt(0.75) * p r / t. Setting svm = yield / SF and solving gives t_min = sqrt(0.75) * p * r / (yield / SF). Compute t_min for SF = 2.5.
+3. **Size for $\text{SF} = 2.5$**
+   For a cylinder the von Mises equivalent is $\sigma_{\text{vm}} = \sqrt{0.75}\, pr/t$. Setting $\sigma_{\text{vm}} = \sigma_{\text{yield}} / \text{SF}$ and solving gives $t_{\min} = \sqrt{0.75}\, p r / (\sigma_{\text{yield}} / \text{SF})$. Compute $t_{\min}$ for $\text{SF} = 2.5$.
 
 4. **Confirm in the simulator**
-   Switch to Custom, keep p, d, and yield at the pipeline values, and enter your computed t_min. The safety factor readout should be very close to 2.5.
+   Switch to Custom, keep $p$, $d$, and yield at the pipeline values, and enter your computed $t_{\min}$. The safety factor readout should be very close to 2.5.
 
 5. **Save data**
    Create `data/exp2_sizing.csv` with columns: p_MPa, d_mm, t_mm, svm_MPa, SF_actual, SF_target, t_min_mm.
@@ -250,11 +250,11 @@ Pipeline preset: p = 8 MPa, r = 300 mm, t = 10 mm, yield = 360 MPa
   t_min for SF = 3.0: sigma_allow_vm = 120.00 MPa, t_min = 17.3205 mm
 ```
 
-The existing 10 mm wall gives a von Mises safety factor of only 1.73, which is below the target of 2.5. Achieving SF = 2.5 requires a minimum wall of 14.43 mm. The formula for t_min comes from setting svm = sqrt(0.75) * p r / t equal to yield / SF and solving: t_min = sqrt(0.75) * p * r * SF / yield. Note that t_min scales linearly with both p and r and inversely with yield strength, so the three levers for meeting a safety factor target are reducing pressure, reducing radius, or upgrading to a higher-yield material.
+The existing 10 mm wall gives a von Mises safety factor of only 1.73, which is below the target of 2.5. Achieving $\text{SF} = 2.5$ requires a minimum wall of $14.43\ \text{mm}$. The formula for $t_{\min}$ comes from setting $\sigma_{\text{vm}} = \sqrt{0.75}\, pr/t$ equal to $\sigma_{\text{yield}} / \text{SF}$ and solving: $t_{\min} = \sqrt{0.75}\, p r\, \text{SF} / \sigma_{\text{yield}}$. Note that $t_{\min}$ scales linearly with both $p$ and $r$ and inversely with yield strength, so the three levers for meeting a safety factor target are reducing pressure, reducing radius, or upgrading to a higher-yield material.
 
 ### Design Question
 
-The pipeline is upgraded to a higher-grade steel with yield = 500 MPa. Keeping SF = 2.5, what is the new t_min, and by what percentage has the required wall thickness decreased compared with the 360 MPa grade?
+The pipeline is upgraded to a higher-grade steel with $\sigma_{\text{yield}} = 500\ \text{MPa}$. Keeping $\text{SF} = 2.5$, what is the new $t_{\min}$, and by what percentage has the required wall thickness decreased compared with the $360\ \text{MPa}$ grade?
 
 ---
 
@@ -266,21 +266,21 @@ The pipeline is upgraded to a higher-grade steel with yield = 500 MPa. Keeping S
 A sphere uses less wall material than a cylinder at the same pressure and radius. That is a known result, but the exact numbers from the simulator make the trade-off tangible and set up a comparison that engineers making a vessel shape decision actually do.
 
 :::note[Objective]
-Using the sphere-tank preset as the sphere case and an equivalent cylinder at the same p, r, t, and yield, compute both wall stresses and safety factors, confirm the 2:1 hoop-stress advantage of the sphere, and compare the minimum wall thickness each shape needs for SF = 1 via von Mises.
+Using the sphere-tank preset as the sphere case and an equivalent cylinder at the same $p$, $r$, $t$, and yield, compute both wall stresses and safety factors, confirm the 2:1 hoop-stress advantage of the sphere, and compare the minimum wall thickness each shape needs for $\text{SF} = 1$ via von Mises.
 :::
 
 <Steps>
 1. **Configure the simulator for the sphere**
-   Select the **sphere-tank** preset (p = 3 MPa, d = 2000 mm, t = 15 mm, yield = 300 MPa, sphere). Record sigma_h, sigma_l, svm, and SF.
+   Select the **sphere-tank** preset ($p = 3\ \text{MPa}$, $d = 2000\ \text{mm}$, $t = 15\ \text{mm}$, $\sigma_{\text{yield}} = 300\ \text{MPa}$, sphere). Record $\sigma_h$, $\sigma_l$, $\sigma_{\text{vm}}$, and $\text{SF}$.
 
 2. **Switch to the equivalent cylinder**
-   Keep all parameters identical but change the vessel type to cylinder. Record the new sigma_hoop, sigma_long, svm, and SF.
+   Keep all parameters identical but change the vessel type to cylinder. Record the new $\sigma_{\text{hoop}}$, $\sigma_{\text{long}}$, $\sigma_{\text{vm}}$, and $\text{SF}$.
 
 3. **Compute the minimum walls**
-   The simulator reports t_req, which is the minimum t for SF = 1 via von Mises (the physics lower bound). Record t_req for both shapes.
+   The simulator reports $t_{\text{req}}$, which is the minimum $t$ for $\text{SF} = 1$ via von Mises (the physics lower bound). Record $t_{\text{req}}$ for both shapes.
 
 4. **Compare**
-   Confirm: sphere svm = 100 MPa, cylinder svm = 173.21 MPa at the same t = 15 mm. The sphere SF is 3.00; the cylinder SF is 1.73.
+   Confirm: sphere $\sigma_{\text{vm}} = 100\ \text{MPa}$, cylinder $\sigma_{\text{vm}} = 173.21\ \text{MPa}$ at the same $t = 15\ \text{mm}$. The sphere $\text{SF}$ is 3.00; the cylinder $\text{SF}$ is 1.73.
 
 5. **Save data**
    Create `data/exp3_cyl_vs_sphere.csv` with columns: vessel, p, d, t, sh, sl, svm, SF, t_req.
@@ -366,7 +366,7 @@ Cylinder svm / sphere svm = 1.7321
 Cylinder t_req / sphere t_req = 1.7321
 ```
 
-The sphere wall stress is exactly 100 MPa (equal in both directions, sh = sl = p r / (2t)), giving SF = 3.00. The cylinder hoop stress at the same conditions is 200 MPa, raising svm to 173.21 MPa and dropping SF to 1.73. The minimum-wall-thickness ratio comes out sqrt(3) = 1.7321, which differs from the factor of 2 quoted in the [pressure vessels lesson](/education/mechanics-of-materials/thin-walled-pressure-vessels). The difference is the failure criterion, not an error: the lesson sizes the cylinder on its peak hoop stress (t = p r / sigma_allow, against the sphere's p r / (2 sigma_allow), a clean ratio of 2), while this simulator sizes on the von Mises equivalent stress. Because the cylinder's biaxial 2:1 state has a von Mises value of only sqrt(0.75) times its hoop stress, the cylinder requirement drops and the ratio falls to sqrt(3). Both criteria agree the sphere is far more material-efficient; they differ only in by how much, with von Mises being the less conservative choice for the cylinder. The same 15 mm wall that leaves the cylinder at SF = 1.73 gives the sphere SF = 3.00.
+The sphere wall stress is exactly $100\ \text{MPa}$ (equal in both directions, $\sigma_h = \sigma_l = pr/(2t)$), giving $\text{SF} = 3.00$. The cylinder hoop stress at the same conditions is $200\ \text{MPa}$, raising $\sigma_{\text{vm}}$ to $173.21\ \text{MPa}$ and dropping $\text{SF}$ to 1.73. The minimum-wall-thickness ratio comes out $\sqrt{3} = 1.7321$, which differs from the factor of 2 quoted in the [pressure vessels lesson](/education/mechanics-of-materials/thin-walled-pressure-vessels). The difference is the failure criterion, not an error: the lesson sizes the cylinder on its peak hoop stress ($t = pr / \sigma_{\text{allow}}$, against the sphere's $pr / (2 \sigma_{\text{allow}})$, a clean ratio of 2), while this simulator sizes on the von Mises equivalent stress. Because the cylinder's biaxial 2:1 state has a von Mises value of only $\sqrt{0.75}$ times its hoop stress, the cylinder requirement drops and the ratio falls to $\sqrt{3}$. Both criteria agree the sphere is far more material-efficient; they differ only in by how much, with von Mises being the less conservative choice for the cylinder. The same $15\ \text{mm}$ wall that leaves the cylinder at $\text{SF} = 1.73$ gives the sphere $\text{SF} = 3.00$.
 
 ### Design Question
 
@@ -379,24 +379,24 @@ A designer proposes using a hemispherical end cap on a cylindrical pressure vess
 <InArticleAd />
 
 
-The thin-wall formulas are simple and widely used, but they are only accurate when the wall is genuinely thin relative to the radius. Below the r/t = 10 threshold the stress varies across the thickness, the inner surface carries significantly more stress than the outer, and the simple formulas give a result that is optimistic and unconservative. This experiment maps exactly where that boundary falls.
+The thin-wall formulas are simple and widely used, but they are only accurate when the wall is genuinely thin relative to the radius. Below the $r/t = 10$ threshold the stress varies across the thickness, the inner surface carries significantly more stress than the outer, and the simple formulas give a result that is optimistic and unconservative. This experiment maps exactly where that boundary falls.
 
 :::note[Objective]
-Sweep the radius-to-thickness ratio from 4 to 25, compute the thin-wall hoop stress at each point, identify the r/t = 10 boundary that the simulator enforces, and quantify how much the simple formula underestimates the inner-surface stress below that boundary.
+Sweep the radius-to-thickness ratio from 4 to 25, compute the thin-wall hoop stress at each point, identify the $r/t = 10$ boundary that the simulator enforces, and quantify how much the simple formula underestimates the inner-surface stress below that boundary.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Set p = 1.0 MPa. Use Custom mode and set d = 200 mm (r = 100 mm). Start with t = 25 mm (r/t = 4) and step t downward to 4 mm (r/t = 25).
+   Set $p = 1.0\ \text{MPa}$. Use Custom mode and set $d = 200\ \text{mm}$ ($r = 100\ \text{mm}$). Start with $t = 25\ \text{mm}$ ($r/t = 4$) and step $t$ downward to $4\ \text{mm}$ ($r/t = 25$).
 
 2. **Observe the warning**
-   At r/t below 10 the simulator flags the thin-wall assumption as invalid. Note the exact thickness where the flag appears.
+   At $r/t$ below 10 the simulator flags the thin-wall assumption as invalid. Note the exact thickness where the flag appears.
 
 3. **Record both the thin-wall result and the error**
-   For each r/t, record sigma_hoop from the thin-wall formula. For the thick-wall correction (Lame equation), the hoop stress at the inner surface is p (r_o^2 + r_i^2) / (r_o^2 - r_i^2), where r_i = r and r_o = r + t. Compute both for the r/t values below 10.
+   For each $r/t$, record $\sigma_{\text{hoop}}$ from the thin-wall formula. For the thick-wall correction (Lame equation), the hoop stress at the inner surface is $p (r_o^2 + r_i^2) / (r_o^2 - r_i^2)$, where $r_i = r$ and $r_o = r + t$. Compute both for the $r/t$ values below 10.
 
 4. **Compare**
-   At r/t = 4 (t = 25 mm), by how many percent does the thin-wall formula understate the true inner-surface hoop stress?
+   At $r/t = 4$ ($t = 25\ \text{mm}$), by how many percent does the thin-wall formula understate the true inner-surface hoop stress?
 
 5. **Save data**
    Create `data/exp4_thinwall.csv` with columns: r_mm, t_mm, rt_ratio, sh_thinwall, sh_lame_inner, error_pct, valid.
@@ -471,21 +471,21 @@ plt.show()
 
 ```
 r/t  t(mm)   sh_thin(MPa)  sh_Lame_inner(MPa)  error(%)  valid
-   4  25.00          4.00               5.67      29.4  NO
-   6  16.67          6.00               7.40      18.9  NO
-   8  12.50          8.00               9.14      12.5  NO
-  10  10.00         10.00              11.00       9.1  YES
-  12   8.33         12.00              12.92       7.1  YES
-  15   6.67         15.00              15.97       6.1  YES
-  20   5.00         20.00              20.97       4.6  YES
-  25   4.00         25.00              25.96       3.7  YES
+   4  25.00          4.00               4.56      12.2  NO
+   6  16.67          6.00               6.54       8.2  NO
+   8  12.50          8.00               8.53       6.2  NO
+  10  10.00         10.00              10.52       5.0  YES
+  12   8.33         12.00              12.52       4.2  YES
+  15   6.67         15.00              15.52       3.3  YES
+  20   5.00         20.00              20.51       2.5  YES
+  25   4.00         25.00              25.51       2.0  YES
 ```
 
-At r/t = 4 the thin-wall formula underestimates the true inner-surface hoop stress by 29 percent, which is a dangerously unconservative error. At the threshold r/t = 10 the error is still about 9 percent. Above r/t = 20 the error drops below 5 percent, where the thin-wall formula is generally considered engineering-accurate. The simulator flags the state as invalid below r/t = 10 precisely because the 9-percent error at that boundary can consume most of a typical safety factor.
+At $r/t = 4$ the thin-wall formula underestimates the true inner-surface hoop stress by 12 percent, which is an unconservative error. At the threshold $r/t = 10$ the error is still about 5 percent. Above $r/t = 20$ the error drops below 2.5 percent, where the thin-wall formula is generally considered engineering-accurate. The simulator flags the state as invalid below $r/t = 10$ because the error grows quickly below that boundary, from 5 percent at $r/t = 10$ to 12 percent at $r/t = 4$, and it always makes the stress look lower than it is.
 
 ### Design Question
 
-A hydraulic cylinder operates at 35 MPa with a bore of 80 mm (r = 40 mm) and a wall of 15 mm (r/t = 2.7). Is the thin-wall formula appropriate here? If not, what does the Lame inner-surface stress give, and how does it compare with the thin-wall prediction?
+A hydraulic cylinder operates at $35\ \text{MPa}$ with a bore of $80\ \text{mm}$ ($r = 40\ \text{mm}$) and a wall of $15\ \text{mm}$ ($r/t = 2.7$). Is the thin-wall formula appropriate here? If not, what does the Lame inner-surface stress give, and how does it compare with the thin-wall prediction?
 
 ---
 
@@ -494,24 +494,24 @@ A hydraulic cylinder operates at 35 MPa with a bore of 80 mm (r = 40 mm) and a w
 <InArticleAd />
 
 
-A pressure vessel wall is in a biaxial stress state: sigma_hoop as the first principal stress, sigma_long as the second, and approximately zero through the thin wall (the third principal). Checking failure means collapsing that state to a single equivalent stress and comparing it with the yield strength, exactly what the von Mises criterion does. This experiment works through that check for the boiler preset and shows how much more conservative the result is than a single-axis check.
+A pressure vessel wall is in a biaxial stress state: $\sigma_{\text{hoop}}$ as the first principal stress, $\sigma_{\text{long}}$ as the second, and approximately zero through the thin wall (the third principal). Checking failure means collapsing that state to a single equivalent stress and comparing it with the yield strength, exactly what the von Mises criterion does. This experiment works through that check for the boiler preset and compares it with a single-axis check that looks only at the largest stress. For this wall the von Mises check is the less conservative of the two: it gives the higher safety factor (2.31 against 2.00). The reason is that hoop and axial stress are both tensile. Yielding is driven by the differences between the principal stresses, and a second tension of the same sign makes those differences smaller, not larger.
 
 :::note[Objective]
-For the boiler preset, compute the von Mises equivalent stress for the biaxial wall state (sigma_hoop, sigma_long, 0), find the safety factor, and compare it with the naive single-axis check that looks only at sigma_hoop.
+For the boiler preset, compute the von Mises equivalent stress for the biaxial wall state $(\sigma_{\text{hoop}}, \sigma_{\text{long}}, 0)$, find the safety factor, and compare it with the naive single-axis check that looks only at $\sigma_{\text{hoop}}$.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **boiler** preset (p = 2 MPa, d = 1500 mm, t = 12 mm, yield = 250 MPa, cylinder).
+   Select the **boiler** preset ($p = 2\ \text{MPa}$, $d = 1500\ \text{mm}$, $t = 12\ \text{mm}$, $\sigma_{\text{yield}} = 250\ \text{MPa}$, cylinder).
 
 2. **Read the state**
-   Record sigma_hoop, sigma_long, svm, and SF from the panel.
+   Record $\sigma_{\text{hoop}}$, $\sigma_{\text{long}}$, $\sigma_{\text{vm}}$, and $\text{SF}$ from the panel.
 
 3. **Check by hand**
-   The von Mises formula for plane stress (third principal = 0) is svm = sqrt(s1^2 - s1 s2 + s2^2), with s1 = sigma_hoop and s2 = sigma_long. Compute svm by hand and confirm it matches the panel.
+   The von Mises formula for plane stress (third principal $= 0$) is $\sigma_{\text{vm}} = \sqrt{\sigma_1^2 - \sigma_1 \sigma_2 + \sigma_2^2}$, with $\sigma_1 = \sigma_{\text{hoop}}$ and $\sigma_2 = \sigma_{\text{long}}$. Compute $\sigma_{\text{vm}}$ by hand and confirm it matches the panel.
 
 4. **Compare single-axis and biaxial checks**
-   The single-axis check uses only sigma_hoop / yield. Compare that result with the von Mises SF to see how much the biaxial state degrades the apparent margin.
+   The single-axis check uses only $\sigma_{\text{hoop}} / \sigma_{\text{yield}}$. Compare that result with the von Mises $\text{SF}$ to see how the second tensile stress changes the margin. Expect the von Mises $\text{SF}$ to be the higher one.
 
 5. **Save data**
    Create `data/exp5_failure.csv` with columns: p_MPa, d_mm, t_mm, sh, sl, svm, SF_vm, SF_singleaxis.
@@ -568,14 +568,14 @@ print(f"  SF Tresca       = {sf_tresca:.4f}")
 print(f"  tmax in-plane   = {tmax_ip:.4f} MPa")
 print(f"  tmax absolute   = {tmax_abs:.4f} MPa")
 print()
-print("Von Mises is more conservative than the single-axis check by factor "
-      f"{sf_single / sf_vm:.4f} (i.e. {100*(sf_single/sf_vm - 1):.1f}% lower SF).")
+print("Von Mises is less conservative than the single-axis check: its SF is higher by factor "
+      f"{sf_vm / sf_single:.4f} (i.e. {100*(sf_vm/sf_single - 1):.1f}% higher SF).")
 ```
 
 ### Expected Results
 
 ```
-Boiler preset: p = 2 MPa, r = 750 mm, t = 12 mm, yield = 250 MPa
+Boiler preset: p = 2.0 MPa, r = 750 mm, t = 12 mm, yield = 250.0 MPa
   sigma_hoop  = 125.0000 MPa
   sigma_long  = 62.5000 MPa
   svm (von Mises) = 108.2532 MPa
@@ -585,14 +585,14 @@ Boiler preset: p = 2 MPa, r = 750 mm, t = 12 mm, yield = 250 MPa
   tmax in-plane   = 31.2500 MPa
   tmax absolute   = 62.5000 MPa
 
-Von Mises is more conservative than the single-axis check by factor 0.8660 (i.e. -13.4% lower SF).
+Von Mises is less conservative than the single-axis check: its SF is higher by factor 1.1547 (i.e. 15.5% higher SF).
 ```
 
-The von Mises svm = 108.25 MPa, not 125 MPa (hoop alone) and not 62.5 MPa (long alone). Von Mises gives SF = 2.31, which is actually higher than the single-axis check's SF = 2.00. In the specific 2:1 biaxial ratio of a cylinder the von Mises criterion is less severe than the Tresca criterion: Tresca uses the maximum shear, which equals sigma_hoop / 2, leading to Tresca equivalent = sigma_hoop = 125 MPa and SF_Tresca = 2.00. The key result is that the von Mises equivalent for a cylinder is sqrt(0.75) * sigma_hoop = 0.866 * sigma_hoop, so von Mises always gives a higher (less conservative) safety factor than Tresca for a cylindrical vessel in this biaxial state.
+The von Mises $\sigma_{\text{vm}} = 108.25\ \text{MPa}$, not $125\ \text{MPa}$ (hoop alone) and not $62.5\ \text{MPa}$ (long alone). Von Mises gives $\text{SF} = 2.31$, which is higher than the single-axis check's $\text{SF} = 2.00$. Both wall stresses are tensile, so the axial stress reduces the stress differences that cause yielding, and the equivalent stress falls below the hoop stress. In the specific 2:1 biaxial ratio of a cylinder the von Mises criterion is less severe than the Tresca criterion: Tresca uses the maximum shear, which equals $\sigma_{\text{hoop}} / 2$, leading to Tresca equivalent $= \sigma_{\text{hoop}} = 125\ \text{MPa}$ and $\text{SF}_{\text{Tresca}} = 2.00$. The key result is that the von Mises equivalent for a cylinder is $\sqrt{0.75}\, \sigma_{\text{hoop}} = 0.866\, \sigma_{\text{hoop}}$, so von Mises always gives a higher (less conservative) safety factor than Tresca for a cylindrical vessel in this biaxial state.
 
 ### Design Question
 
-For a pure pressure vessel wall (sigma_hoop = 2 sigma_long, sigma_3 = 0), prove algebraically that svm = sqrt(0.75) * sigma_hoop and that the Tresca equivalent stress equals sigma_hoop. Which criterion is more conservative for this state, and by what percentage?
+For a pure pressure vessel wall ($\sigma_{\text{hoop}} = 2 \sigma_{\text{long}}$, $\sigma_3 = 0$), prove algebraically that $\sigma_{\text{vm}} = \sqrt{0.75}\, \sigma_{\text{hoop}}$ and that the Tresca equivalent stress equals $\sigma_{\text{hoop}}$. Which criterion is more conservative for this state, and by what percentage?
 
 ---
 
@@ -604,21 +604,21 @@ For a pure pressure vessel wall (sigma_hoop = 2 sigma_long, sigma_3 = 0), prove 
 A pressure vessel does not always operate at its design pressure. Understanding how stresses and safety factors change across the full pressure range tells you where the working limit sits, how much headroom remains at the design point, and what the true burst pressure would be if yield is the failure criterion.
 
 :::note[Objective]
-For the scuba cylinder preset, sweep internal pressure from 5 MPa to 23 MPa, compute sigma_hoop, sigma_long, svm, and SF at each step, and identify the maximum allowable working pressure for a required SF = 2.0.
+For the scuba cylinder preset, sweep internal pressure from $5\ \text{MPa}$ to $23\ \text{MPa}$, compute $\sigma_{\text{hoop}}$, $\sigma_{\text{long}}$, $\sigma_{\text{vm}}$, and $\text{SF}$ at each step, and identify the maximum allowable working pressure for a required $\text{SF} = 2.0$.
 :::
 
 <Steps>
 1. **Configure the simulator**
-   Select the **scuba** preset (p = 23 MPa, d = 170 mm, t = 6 mm, yield = 500 MPa, cylinder). Note r = 85 mm and r/t = 14.17, so the thin-wall assumption is valid.
+   Select the **scuba** preset ($p = 23\ \text{MPa}$, $d = 170\ \text{mm}$, $t = 6\ \text{mm}$, $\sigma_{\text{yield}} = 500\ \text{MPa}$, cylinder). Note $r = 85\ \text{mm}$ and $r/t = 14.17$, so the thin-wall assumption is valid.
 
 2. **Read the full-pressure state**
-   At p = 23 MPa record sigma_hoop, sigma_long, svm, and SF from the panel.
+   At $p = 23\ \text{MPa}$ record $\sigma_{\text{hoop}}$, $\sigma_{\text{long}}$, $\sigma_{\text{vm}}$, and $\text{SF}$ from the panel.
 
 3. **Sweep the pressure**
-   Switch to Custom and step p down from 23 MPa to 5 MPa in steps of about 3 MPa. Record sigma_hoop, svm, and SF at each step.
+   Switch to Custom and step $p$ down from $23\ \text{MPa}$ to $5\ \text{MPa}$ in steps of about $3\ \text{MPa}$. Record $\sigma_{\text{hoop}}$, $\sigma_{\text{vm}}$, and $\text{SF}$ at each step.
 
 4. **Find the allowable working pressure**
-   The allowable working pressure for SF = 2.0 is p_allow = (yield / (SF * sqrt(0.75))) * (t / r). Compute this value and confirm by entering it in the simulator and reading SF = 2.0.
+   The allowable working pressure for $\text{SF} = 2.0$ is $p_{\text{allow}} = \dfrac{\sigma_{\text{yield}}}{\text{SF} \sqrt{0.75}} \cdot \dfrac{t}{r}$. Compute this value and confirm by entering it in the simulator and reading $\text{SF} = 2.0$.
 
 5. **Save data**
    Create `data/exp6_sweep.csv` with columns: p_MPa, sh_MPa, sl_MPa, svm_MPa, SF.
@@ -724,11 +724,11 @@ Allowable working pressure for SF = 2.5: p_allow = 16.302 MPa
 Allowable working pressure for SF = 3.0: p_allow = 13.585 MPa
 ```
 
-At the rated fill pressure of 23 MPa, SF = 1.77, which means the vessel is below an SF = 2.0 design target at full charge. The maximum allowable working pressure for SF = 2.0 is 20.38 MPa. This is consistent with real scuba cylinder practice: high-pressure steel cylinders rated at 230 bar (23 MPa) working pressure are tested hydrostatically at 1.65 times working pressure and must meet yield-based margins that effectively limit the true working pressure to something below the rated fill. Stresses scale exactly linearly with pressure, so the SF vs p curve is a hyperbola and the allowable pressure scales inversely with SF.
+At the rated fill pressure of $23\ \text{MPa}$, $\text{SF} = 1.77$, which means the vessel is below an $\text{SF} = 2.0$ design target at full charge. The maximum allowable working pressure for $\text{SF} = 2.0$ is $20.38\ \text{MPa}$. Real gas cylinders are not sized for $\text{SF} = 2.0$ on yield at working pressure. They are proof tested with water, typically at about 1.5 times the working pressure, and the wall must stay below yield during that test. For this cylinder the test pressure would be about $34.5\ \text{MPa}$, which gives $\sigma_{\text{vm}} = 423\ \text{MPa}$ and $\text{SF} = 1.18$, so the wall stays elastic. Stresses scale exactly linearly with pressure, so the $\text{SF}$ vs $p$ curve is a hyperbola and the allowable pressure scales inversely with $\text{SF}$.
 
 ### Design Question
 
-The cylinder is to be redesigned to achieve SF = 2.0 at p = 23 MPa while keeping the same diameter (d = 170 mm) and the same yield-strength steel (yield = 500 MPa). What new wall thickness is required, and by what percentage does the vessel mass increase compared with the current 6 mm wall (assume mass is proportional to wall cross-sectional area, approximately 2 pi r t per unit length)?
+The cylinder is to be redesigned to achieve $\text{SF} = 2.0$ at $p = 23\ \text{MPa}$ while keeping the same diameter ($d = 170\ \text{mm}$) and the same yield-strength steel ($\sigma_{\text{yield}} = 500\ \text{MPa}$). What new wall thickness is required, and by what percentage does the vessel mass increase compared with the current $6\ \text{mm}$ wall (assume mass is proportional to wall cross-sectional area, approximately $2 \pi r t$ per unit length)?
 
 ---
 
@@ -737,7 +737,7 @@ The cylinder is to be redesigned to achieve SF = 2.0 at p = 23 MPa while keeping
 <InArticleAd />
 
 
-Across the six experiments you confirmed the 2:1 hoop-to-longitudinal ratio from first principles, sized a wall thickness back from a safety factor target, showed that the sphere needs less than a cylinder by a factor of sqrt(3) rather than the intuitive 2, mapped where the thin-wall assumption breaks down and by how much, evaluated the biaxial von Mises failure check for the specific 2:1 state of a cylinder, and found the allowable working pressure from a pressure sweep. Those six operations cover the practical core of every thin-wall pressure vessel calculation. Carry them into [Thin-Walled Pressure Vessels](/education/mechanics-of-materials/thin-walled-pressure-vessels), where the same formulas are applied to three worked problems, and to the [Solid Mechanics Analyzer](/product-development/solid-mechanics-analyzer/), where the other simulator tools extend these ideas to beams, shafts, and combined loading.
+Across the six experiments you confirmed the 2:1 hoop-to-longitudinal ratio from first principles, sized a wall thickness back from a safety factor target, showed that the sphere needs less than a cylinder by a factor of $\sqrt{3}$ rather than the intuitive 2, mapped where the thin-wall assumption breaks down and by how much, evaluated the biaxial von Mises failure check for the specific 2:1 state of a cylinder, and found the allowable working pressure from a pressure sweep. Those six operations cover the practical core of every thin-wall pressure vessel calculation. Carry them into [Thin-Walled Pressure Vessels](/education/mechanics-of-materials/thin-walled-pressure-vessels), where the same formulas are applied to three worked problems, and to the [Solid Mechanics Analyzer](/product-development/solid-mechanics-analyzer/), where the other simulator tools extend these ideas to beams, shafts, and combined loading.
 
 
 
