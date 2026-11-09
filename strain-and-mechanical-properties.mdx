@@ -44,13 +44,13 @@ This lesson pairs with the [Axial Loading Simulator](/product-development/axial-
 <InArticleAd />
 
 
-In a CNC machine (a computer-controlled machine tool) the Z-axis actuator moves the tool up and down. Its shaft carries the cutting force. If the shaft stretches under that force, the tool is no longer where the program says it is, and the part is cut to the wrong size.
+In a CNC machine (a computer-controlled machine tool) the Z-axis actuator moves the tool up and down, and its shaft carries the cutting force. If the shaft stretches, the tool is not where the program says, and the part is cut to the wrong size.
 
 ### The shaft selection problem
 
 > **Engineering Question:** Which material and which shaft diameter keep the stretch of the shaft within 0.05 mm under an axial load of 5,000 N?
 
-Two separate checks answer this. The strength check: the stress must stay below the stress that the design allows. The stiffness check: the stretch must stay within the limit. Each check gives a smallest diameter, and the larger of the two is the design.
+Two checks answer this: strength (the stress stays below the stress the design allows) and stiffness (the stretch stays within the limit). Each gives a smallest diameter, and the larger of the two is the design.
 
 ## Fundamental Theory: Strain, Hooke's law, and the stress-strain curve
 
@@ -61,7 +61,7 @@ Two separate checks answer this. The strength check: the stress must stay below 
 
 ### Axial strain and deformation
 
-Strain is the change in length of a bar divided by its original length. A rubber band 100 mm long that is pulled to 110 mm has a strain of 0.1. While a material is elastic (it returns when the load is removed), stress and strain rise together: $\sigma = E\epsilon$, which is Hooke's law. $E$ is Young's modulus, the stiffness of the material. The two give the stretch of a bar.
+Strain is the change in length of a bar divided by its original length: a 100 mm rubber band pulled to 110 mm has a strain of 0.1. While a material is elastic (it returns when the load is removed), stress and strain rise together, $\sigma = E\epsilon$ (Hooke's law), where $E$, Young's modulus, is the stiffness of the material. Hang the same weight on a rubber band and on a steel wire: the band stretches far, the wire hardly at all. That difference is $E$.
 
 <Card title="Axial strain and deflection" icon="document">
 $$\epsilon = \frac{\delta}{L_0}, \qquad \delta = \frac{F L_0}{A E}$$
@@ -174,13 +174,11 @@ A hanging bar carries its own weight. The integral is the same, but now $N(x)$ c
 
 ### The stress-strain curve
 
-Bend a paper clip a little and it springs back. Bend it far and it stays bent. The first behaviour is elastic and the second is plastic. A tensile test finds the stress at which a metal passes from one to the other.
-
-The test pulls a standard test piece, called a coupon, until it breaks. The force divided by the original area is the stress, and the stretch divided by the original length is the strain. The plot of one against the other is the stress-strain curve.
+Bend a paper clip a little and it springs back (elastic); bend it far and it stays bent (plastic). A tensile test finds the stress at which a metal passes from one to the other. It pulls a standard test piece, a coupon, until it breaks. Force over the original area is the stress, stretch over the original length is the strain, and the plot of one against the other is the stress-strain curve.
 
 ![Panel (a): the complete stress-strain curve of a steel. It rises steeply, bends over, reaches a peak marked ultimate tensile strength, then falls through a part marked necking to the fracture point. Panel (b): the first small part of the same curve, magnified. A straight elastic line of slope E ends at the proportional limit. A parallel line that starts at a strain of 0.002 meets the curve at the yield strength](./images/stress-strain-offset-construction.svg)
 
-The two panels show the same curve at two scales. The elastic part, which decides every stretch calculated in this lesson, is so narrow in panel (a) that it looks vertical, so panel (b) magnifies it. The axes have no numbers, because metals share the shape and not the values. Application 3 gives the values for one steel.
+The two panels show one curve at two scales. The elastic part, which decides every stretch in this lesson, looks vertical in panel (a), so panel (b) magnifies it. The axes have no numbers: metals share the shape, not the values. Application 3 gives the values for one steel.
 
 <Card title="Key points on the curve" icon="document">
 - **Elastic line:** the straight first part. Its slope is Young's modulus $E$. Remove the load here and the coupon returns to its first length.
@@ -213,7 +211,7 @@ For a metal that stretches far before it breaks, the elastic triangle is hundred
 
 ### Shear modulus
 
-Put a thick book on a table and push its top cover sideways. The pages slide over each other and the book leans. This is shear. The shear strain $\gamma$ (gamma) is the sideways movement of the top divided by the thickness of the book. The shear modulus $G$ is the stiffness in shear, as $E$ is the stiffness in tension. It follows from $E$ and Poisson's ratio $\nu$, the ratio that says how much a bar thins as it stretches.
+Push the top cover of a thick book sideways: the pages slide over each other and the book leans. This is shear. The shear strain $\gamma$ (gamma) is the sideways movement of the top divided by the thickness of the book. The shear modulus $G$ is the stiffness in shear, as $E$ is in tension, and it follows from $E$ and Poisson's ratio $\nu$ (how much a bar thins as it stretches).
 
 <Card title="Shear modulus and its relation to E and Poisson's ratio" icon="document">
 $$G = \frac{E}{2(1 + \nu)}$$
@@ -234,8 +232,6 @@ For metals, $G$ is between $0.38E$ and $0.40E$. For rubber, with $\nu \approx 0.
 
 <InArticleAd />
 
-
-The CNC Z-axis shaft must carry an axial force of up to 5,000 N and stretch no more than 0.05 mm over its 400 mm length.
 
 :::note[System Problem Statement]
 - **Component:** CNC Z-axis actuator shaft, circular cross-section
@@ -259,7 +255,7 @@ The CNC Z-axis shaft must carry an axial force of up to 5,000 N and stretch no m
       stretch allowed: 0.05 mm at most
 ```
 
-Run the steel and the aluminum shaft as the A and B states in the simulator and compare the deflection directly:
+Run the steel and aluminum shafts as the simulator's A and B states to compare their deflection:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/axial-loading-simulator/" target="_blank" variant="primary">Open the Axial Loading Simulator</LinkButton>
@@ -365,7 +361,7 @@ A steel shaft sized for strength alone, 6 mm, would be safe, and it would stretc
 <InArticleAd />
 
 
-A pull-rod is held at one end and pulled at the other, and it moves with the machine axis, so every kilogram of it slows the axis. A taper saves mass. The rod has the shape drawn in Case A, with the sizes below.
+A pull-rod, held at one end and pulled at the other, moves with the machine axis, so every kilogram slows the axis. A taper saves mass. The rod has the Case A shape, with the sizes below.
 
 :::note[System Problem Statement]
 - **Component:** steel pull-rod, circular section, tapering linearly
@@ -449,7 +445,7 @@ A pull-rod is held at one end and pulled at the other, and it moves with the mac
 
    $$A_{mid} = \frac{\pi (37.5)^2}{4} = 1{,}104.5 \text{ mm}^2, \qquad \sigma_{mid} = \frac{25{,}000}{1{,}104.5} = 22.64 \text{ MPa}$$ ✅
 
-3. **Notice that it is not the average.** The mid-length stress (22.64 MPa) is well below the average of the end stresses ($(50.93 + 12.73)/2 = 31.83$ MPa). Stress goes as $1/d^2$, so it stays low over most of the rod and rises steeply only near the small end. This is why a taper wastes little: only a small part of the rod is highly stressed. ✅
+3. **Notice that it is not the average.** The mid-length stress (22.64 MPa) is well below the average of the end stresses ($(50.93 + 12.73)/2 = 31.83$ MPa). Stress goes as $1/d^2$: it stays low over most of the rod and rises steeply only near the small end, so only a small part of the rod is highly stressed. ✅
 
 4. **Local strain.** $\epsilon = \sigma/E$ gives $2.55 \times 10^{-4}$ at the small end and $6.37 \times 10^{-5}$ at the large end. The strain changes along the rod, and this is why the extension needed an integral. ✅
 
@@ -667,7 +663,7 @@ The yield strength in every design calculation comes from a tensile test. Here i
 <InArticleAd />
 
 
-An anti-vibration mount is a layer of rubber (an elastomer) bonded between two metal plates. When the machine on top moves sideways, the rubber is sheared, as the book was. Its softness in shear keeps the vibration of the machine from the floor.
+An anti-vibration mount is a layer of rubber (an elastomer) bonded between two metal plates. When the machine on top moves sideways the rubber is sheared, like the book, and its softness in shear keeps the vibration from the floor.
 
 :::note[System Problem Statement]
 - **Component:** bonded natural-rubber anti-vibration mount
@@ -700,7 +696,7 @@ An anti-vibration mount is a layer of rubber (an elastomer) bonded between two m
 
    $$G = \frac{E}{2(1 + \nu)} = \frac{4 \text{ MPa}}{2(1 + 0.49)} = \frac{4}{2 \times 1.49} = \frac{4}{2.98} = 1.342 \text{ MPa}$$ ✅
 
-2. **Context.** Rubber keeps almost the same volume when it is squeezed, so its $\nu$ is close to $0.50$. Then $2(1+\nu)$ is close to $3$, and $G \approx E/3$. The real difference is in size: the $E$ of rubber, 4 MPa, is 50,000 times smaller than the $E$ of steel. ✅
+2. **Context.** Rubber keeps almost the same volume when squeezed, so its $\nu$ is close to $0.50$, $2(1+\nu)$ is close to $3$, and $G \approx E/3$. The real difference is in size: the $E$ of rubber, 4 MPa, is 50,000 times smaller than that of steel. ✅
 
 </Steps>
 

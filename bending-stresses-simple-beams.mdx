@@ -65,9 +65,9 @@ The lesson on [shear force and bending moment](/education/mechanics-of-materials
 
 ### The flexural formula
 
-Draw straight lines across the side of a rubber eraser and bend it. On the outside of the bend the lines move apart: the material there is stretched. On the inside they move together: the material there is squeezed. Between the two there is one layer whose length does not change. It is called the **neutral axis**.
+Draw straight lines across the side of a rubber eraser and bend it. On the outside of the bend the lines move apart (stretched); on the inside they move together (squeezed). Between the two, one layer keeps its length: the **neutral axis**.
 
-The stretch grows in proportion to the distance from the neutral axis, and by Hooke's law the stress does the same. An eraser bends much farther than a metal beam: the formula below holds only for small bending, with the material below its yield strength.
+The stretch grows in proportion to the distance from the neutral axis, and by Hooke's law so does the stress. An eraser bends much farther than a metal beam: the formula below holds only for small bending, below the yield strength.
 
 ```text
   cross-section      stress over the depth (sagging beam)
@@ -81,7 +81,7 @@ The stretch grows in proportion to the distance from the neutral axis, and by Ho
   └─────────┘ bottom             ├──────────►  largest tension
 ```
 
-In words: the bending stress at a point is the bending moment, multiplied by the distance of the point from the neutral axis, divided by a number that describes the shape of the cross-section.
+In words: the bending stress at a point is the bending moment times the distance of the point from the neutral axis, divided by a number for the shape of the cross-section.
 
 <Card title="Flexural formula: bending stress" icon="document">
 $$\sigma = \frac{My}{I}$$
@@ -134,7 +134,7 @@ The stress is zero at the neutral axis and largest at the top and bottom faces. 
 
 ### Second moment of area for common shapes
 
-The second moment of area $I$ measures how far the material of a cross-section lies from the neutral axis. Each small piece of area counts by the square of its distance, so material far from the neutral axis counts much more than material near it. The unit is mm⁴.
+The second moment of area $I$ (mm⁴) measures how far the material of a cross-section lies from the neutral axis. Each small piece of area counts by the square of its distance, so material far from the axis counts much more than material near it.
 
 **Rectangular section** (width $b$, depth $h$ in the direction of the load):
 $$I = \frac{bh^3}{12} \qquad S = \frac{I}{h/2} = \frac{bh^2}{6}$$
@@ -150,14 +150,14 @@ $$I = \frac{\pi (D^4 - d^4)}{64}$$
 - Lying flat ($b = 60$, $h = 20$): $S = 60 \times 20^2/6$ = 4,000 mm³, so the largest stress is 720,000 ÷ 4,000 = 180 MPa.
 - On edge ($b = 20$, $h = 60$): $S = 20 \times 60^2/6$ = 12,000 mm³, so the largest stress is 720,000 ÷ 12,000 = 60 MPa.
 
-The same bar carries the same moment at one third of the stress. This is the ruler on its edge, and it is why an I-beam puts most of its metal in two flanges, far from the neutral axis. The rule has a limit: a section that is very deep and very thin twists and falls sideways before it reaches this stress.
+The same bar carries the same moment at one third of the stress. This is the ruler on its edge, and why an I-beam puts most of its metal in two flanges, far from the neutral axis. The limit: a very deep, very thin section twists and falls sideways before it reaches this stress.
 
 ## Application 1: Pantograph arm of electric train (electromechanical)
 
 <InArticleAd />
 
 
-A pantograph is the folding arm on the roof of an electric train that presses a contact strip up against the overhead wire. The arm turns about a pin joint at its base, and a spring pushes it up so that it follows the wire as the wire height changes.
+A pantograph is the folding arm on the roof of an electric train that presses a contact strip up against the overhead wire. It turns about a pin joint at its base, and a spring pushes it up so it follows the wire as the wire height changes.
 
 :::note[System Problem Statement]
 - **Support:** a pin joint at A. It lets the arm rotate and gives a vertical reaction only.
@@ -173,7 +173,7 @@ A pantograph is the folding arm on the roof of an electric train that presses a 
 **Key Question:** Where does maximum bending stress occur in this pin-supported beam with spring loading, and does the design provide adequate safety margin for dynamic railway operations?
 :::
 
-Set this beam and section in the simulator and read the maximum bending stress directly:
+Set this beam and section in the simulator to read the maximum bending stress:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/beam-analysis-simulator/" target="_blank" variant="primary">Open the Beam Analysis Simulator</LinkButton>
@@ -436,7 +436,7 @@ The moment is negative along the whole arm, so the arm hogs: **tension on the to
 <InArticleAd />
 
 
-The jib of a crane is the beam that carries the hoist. This jib rests on two supports and reaches 1 m past the second one. It carries its own weight, one hoist load in the span and one at the end of the overhang, so it sags in the span and hogs over the support.
+The jib of a crane is the beam that carries the hoist. This one rests on two supports, reaches 1 m past the second, and carries its own weight, one hoist load in the span and one at the end of the overhang, so it sags in the span and hogs over the support.
 
 :::note[System Problem Statement]
 - **Loading:** a uniformly distributed load (UDL), which is the same load on every metre of the beam, and two point loads
@@ -653,7 +653,7 @@ Cut the beam at each point and add the moments, about the cut, of all forces to 
 <InArticleAd />
 
 
-The gantry rail of a 3D printer carries the print head across the build platform. The load is the weight of the print head, and it moves along the rail during a print. Which position of the print head gives the largest bending stress?
+The gantry rail of a 3D printer carries the print head, whose weight moves along the rail during a print. Which position of the print head gives the largest bending stress?
 
 :::note[System Problem Statement]
 - **Support:** simply supported at both ends
@@ -870,7 +870,7 @@ The largest stress is $\sigma_{max} = M/S$, with $M$ in N·mm and $S = 88{,}000\
 ---
 
 :::tip[Instrument it]
-You cannot see bending stress, but you can measure the strain that comes with it. Bond a foil strain gauge to the extreme fibre on the tension face, at the section where the moment is largest. The strain multiplied by Young's modulus is the bending stress you calculated from $Mc/I$. A quarter-bridge read by an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) gives a measured value that you can [trend on siliconwit.io](https://siliconwit.io) and compare with the allowable stress before the part bends permanently.
+You cannot see bending stress, but you can measure the strain that comes with it. Bond a foil strain gauge to the extreme fibre on the tension face, where the moment is largest; the strain times Young's modulus is the bending stress you calculated from $Mc/I$. A quarter-bridge read by an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) gives a measured value that you can [trend on siliconwit.io](https://siliconwit.io) and compare with the allowable stress before the part bends permanently.
 :::
 
 ## Summary and next steps

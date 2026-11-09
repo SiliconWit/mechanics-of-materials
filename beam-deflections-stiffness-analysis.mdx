@@ -46,7 +46,7 @@ This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-a
 
 ### The universal deflection challenge
 
-Strength and stiffness are two different properties. **Strength** is the load at which a part yields or breaks. **Stiffness** is how little the part moves under a load that is far below that. A fishing rod is strong and not stiff. The [lesson on bending stresses](/education/mechanics-of-materials/bending-stresses-simple-beams/) checks strength. This lesson checks stiffness, and for a precise machine it is usually stiffness that decides the size of a beam.
+**Strength** is the load at which a part yields or breaks; **stiffness** is how little it moves under a load far below that. A fishing rod is strong and not stiff. The [lesson on bending stresses](/education/mechanics-of-materials/bending-stresses-simple-beams/) checks strength. This lesson checks stiffness, which usually decides the size of a beam in a precise machine.
 
 > **Engineering Question:** How far does a beam bend under its load, is that inside the limit for its job, and what is the cheapest way to make it stiffer?
 
@@ -57,7 +57,7 @@ Strength and stiffness are two different properties. **Strength** is the load at
 
 ### The elastic curve equation
 
-A loaded beam bends into a curve called the **elastic curve**. Elastic means that the beam returns to straight when the load is removed. The distance that a point of the beam moves from its unloaded position is its **deflection** $y$, measured at a position $x$ along the beam. This lesson counts $y$ positive upward, so a beam that sags has a negative $y$. The size of the largest deflection is written $\delta$ (delta), a positive number.
+A loaded beam bends into the **elastic curve** (elastic: it returns to straight when the load is removed). The distance a point at position $x$ moves from its unloaded position is its **deflection** $y$, counted positive upward, so a sagging beam has a negative $y$. The size of the largest deflection is $\delta$ (delta), a positive number.
 
 ```text
  unloaded   ▲────────────────────────────────▲
@@ -98,7 +98,7 @@ $$\frac{d^2y}{dx^2} = \frac{M(x)}{EI}$$
 
 ### Double integration method
 
-The elastic curve equation gives the curvature. Integrate it once and you have the slope of the beam. Integrate again and you have the deflection. Each integration leaves an unknown constant, and the supports supply the facts that fix the constants.
+The elastic curve equation gives the curvature. Integrate once for the slope and again for the deflection. Each integration leaves an unknown constant, which the supports fix.
 
 <Tabs>
   <TabItem label="Integration Steps">
@@ -179,7 +179,7 @@ The elastic curve equation gives the curvature. Integrate it once and you have t
 
 ### Superposition principle
 
-A real beam often carries several loads at once, such as its own weight and a load hung on it. No table has every combination, and none is needed.
+A real beam often carries several loads at once, such as its own weight and a hung load. No table has every combination, and none is needed.
 
 <Card title="Superposition for beam deflections" icon="document">
 
@@ -199,7 +199,7 @@ Three rules:
 </Card>
 
 :::tip[Instrument it]
-A calculated deflection is a prediction until you measure it on the real beam. A dial indicator or an LVDT (a sensor that turns a small movement into a voltage) reads the deflection directly. A foil strain gauge bonded to the surface, read through an HX711 or an instrumentation amplifier, gives the strain and so the stress at that point. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) reads the gauge and [logs it](https://siliconwit.io), so you can confirm that the beam behaves as the theory says before you trust it under load.
+A calculated deflection is a prediction until you measure it. A dial indicator or an LVDT (a sensor that turns a small movement into a voltage) reads the deflection directly; a foil strain gauge on the surface, read through an HX711 or an instrumentation amplifier, gives the strain and so the stress there. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) reads the gauge and [logs it](https://siliconwit.io), so you can confirm that the beam behaves as the theory says before you trust it under load.
 :::
 
 ## Application 1: PCB sagging in rack (electronics)
@@ -207,7 +207,7 @@ A calculated deflection is a prediction until you measure it on the real beam. A
 <InArticleAd />
 
 
-A printed circuit board (PCB) is screwed down at two opposite edges in an electronics rack. The weight of the components on it makes it sag between the screws, and a board that bends strains its solder joints.
+A printed circuit board (PCB) screwed down at two opposite edges in a rack sags between the screws under the weight of its components, and the bending strains its solder joints.
 
 :::note[System Problem Statement]
 - **Loading:** uniformly distributed load (UDL), the weight of the components spread along the board
@@ -408,7 +408,7 @@ The board already passes. These four changes show what each one buys if a strict
 <InArticleAd />
 
 
-A mobile C-arm is an X-ray machine used during surgery. Fluoroscopy means live X-ray video. A C-shaped arm reaches out from a column and holds the X-ray source at one end and the detector at the other. The weight of the two bends the arm, and if the arm droops, the source and the detector no longer line up and the image is blurred.
+A mobile C-arm is an X-ray machine used during surgery for fluoroscopy (live X-ray video). A C-shaped arm reaches out from a column and holds the X-ray source at one end and the detector at the other. Their weight bends the arm; if it droops, source and detector no longer line up and the image blurs.
 
 :::note[System Problem Statement]
 - **Loading:** one load at the tip, the weight of the X-ray source and the detector
@@ -641,7 +641,7 @@ A mobile C-arm is an X-ray machine used during surgery. Fluoroscopy means live X
 <InArticleAd />
 
 
-A CNC (computer numerical control) router or laser cutter moves its tool on a gantry, a bridge that rides on a rail. The rail is held at its two ends. The weight of the gantry bends it, and every bit of sag moves the tool away from where the program expects it.
+A CNC (computer numerical control) router or laser cutter moves its tool on a gantry, a bridge that rides on a rail held at its two ends. The gantry's weight bends the rail, and every bit of sag moves the tool away from where the program expects it.
 
 :::note[System Problem Statement]
 - **Loading:** one point load at the centre, the gantry at midspan, which is the position that sags most

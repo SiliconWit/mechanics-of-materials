@@ -44,7 +44,7 @@ This lesson pairs with the [Thermal Stress Simulator](/product-development/therm
 <InArticleAd />
 
 
-In the heated head of a 3D printer or an injection moulding machine, a piston slides in a cylinder while both are hot. The two parts are often different metals, so they grow by different amounts. If the gap between them closes, the piston locks in the bore.
+In the heated head of a 3D printer or an injection moulding machine, a piston slides in a hot cylinder. The two parts are often different metals that grow by different amounts, and if the gap between them closes, the piston locks in the bore.
 
 ### The thermal challenge
 
@@ -84,7 +84,7 @@ A member with nothing to stop it grows by $\delta_T$ and has zero stress.
 
 ### Fully restrained member: thermal stress
 
-Now fix both ends of the bar to rigid walls and heat it. Think of it in two steps. First let the bar grow freely by $\delta_T$. Then push it back to its old length, as you would compress a stiff spring. The stress in the bar is the stress of that push. The strain you pushed out is $\delta_T / L = \alpha \Delta T$, and Hooke's law (stress = $E$ × strain) gives the stress:
+Now fix both ends of the bar to rigid walls and heat it. Think of two steps: let the bar grow freely by $\delta_T$, then push it back to its old length, as you would compress a stiff spring. The stress in the bar is the stress of that push. The strain pushed out is $\delta_T / L = \alpha \Delta T$, and Hooke's law (stress = $E$ × strain) gives the stress:
 
 <Card title="Thermal stress in a fully restrained member" icon="document">
 $$\sigma_T = E \, \alpha \, \Delta T$$
@@ -98,7 +98,7 @@ Where:
 The length is not in the formula. A long bar grows further, but that growth is spread over more length, so the strain is the same.
 </Card>
 
-The spring picture has two limits. Real walls and clamps give way a little, so the real stress is somewhat lower than the formula. And the formula holds only while the stress is below the yield strength, the stress at which the material starts to deform permanently.
+The spring picture has two limits. Real walls and clamps give way a little, so the real stress is somewhat lower. And the formula holds only below the yield strength, the stress at which the material starts to deform permanently.
 
 :::note[A gap before the wall]
 If the member can grow by a gap $g$ before it touches a rigid wall, only the growth beyond the gap is prevented:
@@ -112,7 +112,7 @@ If $\alpha L \Delta T \leq g$ the member does not reach the wall and the thermal
 
 ### Compound (bimetallic) assembly: compatibility
 
-A compound or bimetallic assembly is two materials joined so that they must change length together. When it is heated, the material with the larger $\alpha$ tries to grow more, and the joint does not let it. The two parts settle at one common length between their two free lengths.
+A compound or bimetallic assembly is two materials joined so that they change length together. When heated, the material with the larger $\alpha$ tries to grow more, the joint stops it, and the two settle at one common length between their free lengths.
 
 ![Three panels. Panel 1: bars A and B grow freely by different amounts when heated, A more than B. Panel 2: the mismatch between the two free ends, equal to the difference of the alpha values times L times delta T. Panel 3: a compressive force P in bar A and an equal tensile force P in bar B bring both to a common final length. The compatibility equation and the formula for P are written below](./images/thermal-compatibility-superposition.svg)
 
@@ -137,7 +137,7 @@ Then $\sigma_A = P / A_A$ (compression) and $\sigma_B = P / A_B$ (tension).
 <InArticleAd />
 
 
-A heated 3D printer extruder has a steel piston that slides in an aluminum cylinder. Neither part is held, so both grow freely. The clearance is the gap between the bore and the piston, measured on the diameter. The question is whether that gap opens or closes when both parts are hot, and what stress would appear if the parts were locked.
+A heated 3D printer extruder has a steel piston sliding in an aluminum cylinder. Neither part is held, so both grow freely. The clearance is the gap between bore and piston, measured on the diameter. Does it open or close when both are hot, and what stress would appear if the parts were locked?
 
 ```text
         aluminum cylinder (grows more)
@@ -154,7 +154,7 @@ A heated 3D printer extruder has a steel piston that slides in an aluminum cylin
      both heated from 20 °C to 200 °C
 ```
 
-A hole in a heated part grows as if it were filled with the same material. It does not close. So the bore diameter grows by $D \alpha \Delta T$, in the same way as the piston diameter.
+A hole in a heated part grows as if it were filled with the same material; it does not close. So the bore diameter grows by $D \alpha \Delta T$, like the piston diameter.
 
 :::note[System Problem Statement]
 - **Aluminum cylinder:** inner diameter $D_{Al} = 20.00$ mm, length 100 mm, material Al 6061 ($\alpha_{Al} = 23.6 \times 10^{-6}$ /°C, $E_{Al} = 70$ GPa, $\sigma_{yield,Al} = 270$ MPa)
@@ -214,7 +214,7 @@ A hole in a heated part grows as if it were filled with the same material. It do
    - Aluminum: 297 MPa compared with $\sigma_{yield} = 270$ MPa. Would yield if fully constrained. ✅
    - Steel: 432 MPa compared with $\sigma_{yield} = 530$ MPa. Would remain elastic. ✅
 
-   These stresses would exist only if neither part could move at all. Here both parts grow freely, so neither has them. The calculation is a warning: do not bolt or press a material with a high $\alpha$ into a place where it cannot grow. ✅
+   These stresses exist only if neither part can move. Here both grow freely, so neither has them. The calculation is a warning: do not bolt or press a material with a high $\alpha$ into a place where it cannot grow. ✅
 
 </Steps>
 
@@ -252,7 +252,7 @@ In any heated sliding fit, first ask which part has the higher $\alpha$. If it i
 <InArticleAd />
 
 
-A steel actuator rod is clamped rigidly at both ends inside a housing. While the machine warms up, the rod becomes 60 °C hotter than when it was clamped, and the housing does not let it grow. A compressive stress appears in the rod.
+A steel actuator rod is clamped rigidly at both ends inside a housing. As the machine warms up, the rod becomes 60 °C hotter than when it was clamped, the housing stops it growing, and a compressive stress appears.
 
 :::note[System Problem Statement]
 - **Component:** steel actuator rod, length $L = 500$ mm, cross-sectional area $A = 200$ mm²
@@ -263,7 +263,7 @@ A steel actuator rod is clamped rigidly at both ends inside a housing. While the
 **Key Question:** What compressive stress develops in the rod, what would the free expansion have been, and is the rod safe against yield?
 :::
 
-Clamp a steel bar in the simulator and raise the temperature to watch the thermal stress rise toward yield:
+In the simulator, clamp a steel bar and raise the temperature to see the stress rise toward yield:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/thermal-stress-simulator/" target="_blank" variant="primary">Open the Thermal Stress Simulator</LinkButton>
@@ -322,7 +322,7 @@ Clamp a steel bar in the simulator and raise the temperature to watch the therma
 
    $$\text{SF} = \frac{\sigma_{yield}}{\sigma_T} = \frac{250 \text{ MPa}}{144 \text{ MPa}} = 1.74$$ ✅
 
-2. **Interpret the result.** A safety factor of 1.74 is a small margin. At a rise of 90 °C the stress would be $200{,}000 \times 12 \times 10^{-6} \times 90 = 216$ MPa, with $SF = 1.16$. At a rise of 104 °C the rod would yield. A rod that has yielded in compression is permanently shorter, so when it cools it is pulled in tension. Each further cycle of heating and cooling can add more permanent deformation, until the rod or its clamps fail. ✅
+2. **Interpret the result.** 1.74 is a small margin. At a rise of 90 °C the stress would be $200{,}000 \times 12 \times 10^{-6} \times 90 = 216$ MPa, with $SF = 1.16$; at 104 °C the rod would yield. A rod that has yielded in compression is permanently shorter, so it is pulled in tension when it cools, and each further heating and cooling cycle can add permanent deformation until the rod or its clamps fail. ✅
 
    A rod that must stay elastic over its whole temperature range needs a material with a higher yield strength, or a mounting that lets one end slide. ✅
 
@@ -339,7 +339,7 @@ Length sets how far the rod would have grown, not the stress. A long held rail i
 <InArticleAd />
 
 
-An aluminum rod sits inside a steel tube, and the two are pinned together at both ends, so they must change length together. When the assembly is heated, the aluminum tries to grow more than the steel. One internal force compresses the aluminum and stretches the steel.
+An aluminum rod sits inside a steel tube, pinned together at both ends so they change length together. When heated, the aluminum tries to grow more than the steel, and one internal force compresses the aluminum and stretches the steel.
 
 ```text
   pin                                   pin
@@ -377,7 +377,7 @@ An aluminum rod sits inside a steel tube, and the two are pinned together at bot
 
    $$\delta_{st,free} = \alpha_{st} \, L \, \Delta T = (12 \times 10^{-6})(200)(80) = 0.192 \text{ mm}$$ ✅
 
-3. **Compatibility gap.** If free, the aluminum would be 0.3776 mm longer and the steel only 0.192 mm longer. The pins hold them at the same length, so this mismatch must be closed:
+3. **Compatibility gap.** Free, the aluminum would grow 0.3776 mm and the steel only 0.192 mm. The pins hold them at one length, so this mismatch must be closed:
 
    $$\Delta \delta_{free} = 0.3776 - 0.192 = 0.1856 \text{ mm}$$ ✅
 

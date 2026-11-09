@@ -51,20 +51,20 @@ A vessel under pressure stores energy, and a vessel filled with gas stores far m
 <InArticleAd />
 
 
-Pneumatic actuators move grippers, clamps, slides and valves in automated machines. The cylindrical casing holds air under pressure whenever the machine works, so an error in the wall stress is a safety matter.
+Pneumatic actuators move grippers, clamps, slides and valves in automated machines. Their cylindrical casing holds air under pressure whenever the machine works, so an error in the wall stress is a safety matter.
 
 ### The pressure vessel problem
 
 > **Engineering Question:** How do we determine the minimum wall thickness for a pneumatic actuator casing operating at 0.6 MPa gauge pressure, and what stresses does that wall actually carry?
 
-Gauge pressure is the pressure above the surrounding atmosphere. It is the pressure difference that the wall must carry. With a stress model you can choose the wall thickness, say how the vessel would fail (a split along its length, not an end that blows off), and see what the rules of a pressure vessel code are built on.
+Gauge pressure is the pressure above the surrounding atmosphere: the difference the wall must carry. A stress model lets you choose the wall thickness, say how the vessel would fail (a split along its length, not an end that blows off), and see what the rules of a pressure vessel code are built on.
 
 ## Fundamental Theory: Pressure Vessel Mechanics
 
 <InArticleAd />
 
 
-A wooden barrel is held together by steel hoops. The liquid pushes the staves outward, and each hoop is pulled in tension around the circle. The wall of a pressure vessel does the work of those hoops, and the stress around the circle is named the hoop stress. The barrel picture stops there: a closed vessel also has ends, the pressure pushes them apart, and the wall must hold them too. That gives a second stress along the length, the longitudinal stress.
+A wooden barrel is held together by steel hoops: the liquid pushes the staves outward, and each hoop is pulled in tension around the circle. The wall of a pressure vessel does the work of those hoops, so the stress around the circle is the hoop stress. The barrel picture stops there: a closed vessel also has ends that the pressure pushes apart, and the wall must hold them too. That gives a second stress along the length, the longitudinal stress. A sausage in boiling water shows which is larger: it splits along its length, never around it.
 
 <Card title="Thin-wall assumption" icon="document">
 The formulas of this lesson treat the stress as even through the thickness of the wall. That is close to true when the internal radius $r$ is at least ten times the wall thickness $t$:
@@ -76,7 +76,7 @@ In a thicker wall the inner surface carries more stress than the outer surface, 
 
 ![Three free-body diagrams. Panel (a): half of a cylinder cut lengthwise. Pressure p acts on the flat area 2rL and the two cut wall faces of area tL resist, which gives the hoop stress pr/t. Panel (b): a cylinder cut across its axis. Pressure acts on the end area pi r squared and the cut ring of wall of area 2 pi r t resists, which gives the longitudinal stress pr/2t. Panel (c): half of a sphere, which gives pr/2t in every direction](./images/pressure-vessel-fbd.svg)
 
-Each formula below is one of these cuts. Cut the vessel, ask what area the pressure pushes on and what area of wall resists, and balance the two forces. Pressure on a curved surface pushes in many directions, but the sideways parts cancel, so the net push on a cut half is the pressure times the flat area of the opening.
+Each formula below is one of these cuts: cut the vessel, find the area the pressure pushes on and the area of wall that resists, and balance the two forces. On a curved surface the sideways parts of the push cancel, so the net push on a cut half is the pressure times the flat area of the opening.
 
 <Card title="Hoop (circumferential) stress in a cylinder" icon="document">
 Cut the cylinder lengthwise through a diameter. The pressure $p$ pushes on the flat area $2rL$. Two cut faces of wall resist, each of area $tL$. So $p \, (2rL) = \sigma_{hoop} \, (2tL)$, and:
@@ -103,7 +103,7 @@ For the same pressure, radius and wall thickness, the sphere wall carries half t
 </Card>
 
 <Card title="Strains and change in dimensions" icon="document">
-A wall that is stretched in one direction becomes a little narrower in the direction across it. Poisson's ratio $\nu$ (about 0.3 for steel, no unit) is the size of that effect. The wall is pulled in two directions at once, so each strain is its own stress over Young's modulus $E$ (MPa), less the Poisson effect of the other stress:
+A wall stretched in one direction becomes a little narrower across it, by Poisson's ratio $\nu$ (about 0.3 for steel, no unit). The wall is pulled two ways at once, so each strain is its own stress over Young's modulus $E$ (MPa), less the Poisson effect of the other stress:
 
 $$\varepsilon_{hoop} = \frac{\sigma_{hoop} - \nu\,\sigma_{long}}{E}, \qquad \varepsilon_{long} = \frac{\sigma_{long} - \nu\,\sigma_{hoop}}{E}$$
 
@@ -131,7 +131,7 @@ Here $\sigma_{UTS}$ is the ultimate tensile strength, the largest stress the mat
 <InArticleAd />
 
 
-The casing of a small pneumatic gripper is a cylinder that must hold the working pressure and stay light, because a robot arm carries it.
+The casing of a small pneumatic gripper must hold the working pressure and stay light, because a robot arm carries it.
 
 :::note[System Problem Statement]
 - **Component:** aluminum 6061-T6 pneumatic actuator casing (cylindrical)
@@ -197,9 +197,9 @@ The casing of a small pneumatic gripper is a cylinder that must hold the working
 
 <Steps>
 
-1. **Why is the margin so large?** The calculated minimum is 0.44 mm, and the 3.0 mm wall is 6.8 times thicker. The extra wall is there for practical reasons: threads for the ports, handling, corrosion, and the stress around a port hole, which is 2 to 4 times the stress in the plain wall. ✅
+1. **Why is the margin so large?** The 3.0 mm wall is 6.8 times the calculated 0.44 mm, for practical reasons: port threads, handling, corrosion, and the stress around a port hole, which is 2 to 4 times the stress in the plain wall. ✅
 
-2. **What the numbers confirm.** The hoop stress governs (10.0 MPa against 5.0 MPa longitudinal), so the casing would split lengthwise before an end came off. The margin for a steady pressure is large. A casing that is pressurized and released many times also needs a separate fatigue check. ✅
+2. **What the numbers confirm.** The hoop stress governs (10.0 MPa against 5.0 MPa longitudinal), so the casing would split lengthwise before an end came off. The margin for steady pressure is large; a casing pressurized and released many times also needs a separate fatigue check. ✅
 
 </Steps>
 
@@ -214,7 +214,7 @@ The calculated minimum is what the pressure alone requires. The chosen thickness
 <InArticleAd />
 
 
-A compressed-air receiver is the tank between a compressor and the air lines of a workshop. It is a plain cylinder at a higher pressure than a pneumatic actuator, so the stress in the plain wall is the main calculation.
+A compressed-air receiver, the tank between a compressor and the workshop air lines, is a plain cylinder at a higher pressure than an actuator, so the plain-wall stress is the main calculation.
 
 :::note[System Problem Statement]
 - **Component:** steel receiver tank (cylindrical pressure vessel)
@@ -227,7 +227,7 @@ A compressed-air receiver is the tank between a compressor and the air lines of 
 **Key Question:** Is the 10 mm wall adequately safe, and how thin could the wall theoretically be at this pressure?
 :::
 
-Set this cylinder in the simulator and read the hoop and longitudinal stresses and the safety factor:
+Set this cylinder in the simulator to read both stresses and the safety factor:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/pressure-vessel-simulator/" target="_blank" variant="primary">Open the Pressure Vessel Simulator</LinkButton>
@@ -299,7 +299,7 @@ Set this cylinder in the simulator and read the hoop and longitudinal stresses a
 </details>
 
 :::note[Engineering Insight]
-A safety factor of 10.9 against yield is not waste on a receiver. A receiver works for decades. The pressure rises and falls each time the compressor loads and unloads, water collects inside and rusts the wall, and the pressure sometimes rises above the working value. Each of these reduces the real margin.
+A safety factor of 10.9 against yield is not waste on a receiver, which works for decades. The pressure cycles each time the compressor loads and unloads, water collects inside and rusts the wall, and the pressure sometimes rises above the working value. Each reduces the real margin.
 :::
 
 ## Application 3: Spherical Gas Storage Vessel
@@ -307,7 +307,7 @@ A safety factor of 10.9 against yield is not waste on a receiver. A receiver wor
 <InArticleAd />
 
 
-Large gas stores at refineries and gas terminals are often spheres. The reason is mechanical: at the same pressure and radius, the wall stress in a sphere is half the hoop stress in a cylinder, so the wall can be about half as thick. On a vessel of hundreds of tonnes that is a large saving.
+Large gas stores at refineries and terminals are often spheres: at the same pressure and radius, the wall stress of a sphere is half the hoop stress of a cylinder, so the wall can be about half as thick, a large saving on a vessel of hundreds of tonnes.
 
 :::note[System Problem Statement]
 - **Component:** spherical pressure vessel (for example a gas storage sphere)
@@ -354,7 +354,7 @@ Large gas stores at refineries and gas terminals are often spheres. The reason i
 
    $$SF = \frac{\sigma_{yield}}{\sigma_{sphere}} = \frac{350 \text{ MPa}}{16.0 \text{ MPa}} = 21.9$$ ✅
 
-   With the same 10 mm wall, the safety factor of the sphere against yield is 21.9, against 10.9 for the cylinder. So the sphere can have a thinner wall for the same safety factor. ✅
+   With the same 10 mm wall, the sphere has 21.9 against 10.9 for the cylinder, so it can have a thinner wall for the same safety factor. ✅
 
 </Steps>
 
@@ -384,7 +384,7 @@ Large gas stores at refineries and gas terminals are often spheres. The reason i
 </details>
 
 :::note[Engineering Insight]
-The advantage of the sphere comes from its shape alone. A sphere curves equally in every direction, so every direction shares the pressure equally. A cylinder is curved around and straight along, so the wall is loaded twice as hard around the circle as along the length. A sphere is harder and more costly to make, which is why most small vessels are cylinders.
+The advantage comes from shape alone. A sphere curves equally in every direction, so every direction shares the pressure equally. A cylinder is curved around and straight along, so its wall is loaded twice as hard around the circle. A sphere is harder and costlier to make, which is why most small vessels are cylinders.
 :::
 
 ## Application 4: Steam Drum Strains, Volume Change, and a Riveted Seam
@@ -392,7 +392,7 @@ The advantage of the sphere comes from its shape alone. A sphere curves equally 
 <InArticleAd />
 
 
-A steam drum is the cylinder at the top of a boiler where steam separates from water. It adds two questions. How far does the drum stretch under pressure? That sets clearances, the alignment of the connected pipes, and the volume it holds. And is it the seam, not the solid plate, that decides the wall thickness?
+A steam drum, the cylinder at the top of a boiler where steam separates from water, adds two questions. How far does it stretch under pressure (which sets clearances, the alignment of connected pipes, and the volume it holds)? And does the seam, not the solid plate, decide the wall thickness?
 
 ```text
               seam around the circle
@@ -493,7 +493,7 @@ The wall is pulled around the circle by the hoop stress, and that pull acts acro
 </details>
 
 :::note[Engineering Insight]
-The strains are small: a fifth of a millimetre on an 800 mm diameter. They still open gaps at flanges, move connected pipes and change the volume, so a design allows for them. The joint efficiency raised the required wall by a third here. A vessel that passes the solid plate formula can still fail at the seam, and this is why a pressure vessel code rates the joint separately.
+The strains are small, a fifth of a millimetre on an 800 mm diameter, but they open gaps at flanges, move connected pipes and change the volume, so a design allows for them. The joint efficiency raised the required wall by a third. A vessel that passes the solid plate formula can still fail at the seam, which is why a pressure vessel code rates the joint separately.
 :::
 
 ## Design Guidelines for Thin-Walled Pressure Vessels

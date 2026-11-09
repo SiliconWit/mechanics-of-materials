@@ -66,7 +66,7 @@ Each experiment is one short sitting: set the stress state in the simulator, pre
 </FileTree>
 
 :::tip[Instrument it]
-You cannot read a stress directly, but you can read the strain that goes with it, with a strain gauge rosette bonded to the free surface at the critical point. A rectangular 0/45/90 rosette gives three surface strains. From them you compute the principal strains, their direction and, through Hooke's law, the principal stresses. Wire each gauge into a Wheatstone bridge with an instrumentation amplifier, and let an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample the three channels. On a running machine that board can [log the principal stress and its direction](/education/iot-systems/) and [warn when either moves toward the yield limit](https://siliconwit.io).
+You cannot read a stress directly, but a strain gauge rosette bonded to the free surface at the critical point reads the strain that goes with it. A rectangular 0/45/90 rosette gives three surface strains, and from them the principal strains, their direction and, through Hooke's law, the principal stresses. Wire each gauge into a Wheatstone bridge with an instrumentation amplifier, and let an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) sample the three channels. On a running machine that board can [log the principal stress and its direction](/education/iot-systems/) and [warn when either moves toward the yield limit](https://siliconwit.io).
 :::
 
 ---
@@ -76,7 +76,7 @@ You cannot read a stress directly, but you can read the strain that goes with it
 <InArticleAd />
 
 
-A stress report gives three numbers for a point: $\sigma_x$, $\sigma_y$ and $\tau_{xy}$. None of them is the largest stress at the point. To find it, turn the three numbers into a circle and read where it crosses the horizontal axis.
+A stress report gives three numbers for a point, $\sigma_x$, $\sigma_y$ and $\tau_{xy}$, and none of them is the largest stress there. To find it, turn the three into a circle and read where it crosses the horizontal axis.
 
 :::note[Objective]
 For a general plane-stress state, compute the circle centre and radius, the principal stresses $\sigma_1$ and $\sigma_2$, and the principal angle $\theta_p$, and confirm them against the simulator's diagram and readouts.
@@ -255,7 +255,7 @@ A rosette is bonded with its reference axis 30 degrees off the principal directi
 <InArticleAd />
 
 
-Ductile metals such as mild steel and aluminum yield by shear, so for them the plane of maximum shear is the plane where failure starts, and it is never the plane of maximum normal stress. This experiment finds $\tau_{\max}$, the plane it acts on, and the normal stress that acts on the same plane.
+Ductile metals such as mild steel and aluminum yield by shear, so failure starts on the plane of maximum shear, never the plane of maximum normal stress. This experiment finds $\tau_{\max}$, its plane, and the normal stress on that plane.
 
 :::note[Objective]
 Locate the maximum in-plane shear stress and the angle $\theta_s$ at which it acts, and show that the normal stress on the maximum-shear planes equals $\sigma_{\text{avg}}$, not zero.
@@ -325,7 +325,7 @@ For a shaft in pure torsion the normal stresses $\sigma_x$ and $\sigma_y$ are bo
 <InArticleAd />
 
 
-Twist a stick of chalk until it breaks, and it breaks on a spiral surface (a helix) at forty-five degrees. A steel shaft twisted until it breaks shears off flat. Both are in pure shear. The difference is the stress that each material is weak against.
+Twist a stick of chalk until it breaks and it breaks on a spiral surface (a helix) at forty-five degrees; a steel shaft twisted to failure shears off flat. Both are in pure shear. The difference is the stress each material is weak against.
 
 :::note[Objective]
 Set a pure-shear state and show that its principal stresses are equal and opposite at forty-five degrees, then connect that to why brittle materials in torsion fail on a forty-five-degree helix while ductile ones shear transversely.
@@ -400,7 +400,7 @@ Cast iron is roughly four times stronger in compression than in tension. Using t
 <InArticleAd />
 
 
-The force on a pulley bends its shaft, and the torque it transmits twists the shaft. The surface carries a normal stress from the bending and a shear stress from the torque at the same point, and neither alone is the stress that the shaft must survive. This experiment builds that state from the shaft loads and finds the principal stresses that govern the design.
+The force on a pulley bends its shaft and the torque it transmits twists it, so one surface point carries a normal stress from bending and a shear stress from torque, and neither alone is the stress the shaft must survive. This experiment builds that state from the shaft loads and finds the principal stresses that govern the design.
 
 :::note[Objective]
 Compute the surface stress state of a solid circular shaft under a bending moment $M$ and torque $T$, build its Mohr's circle, and find the principal stresses and maximum shear that a failure check will use.

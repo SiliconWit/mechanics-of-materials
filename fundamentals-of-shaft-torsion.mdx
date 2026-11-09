@@ -44,13 +44,13 @@ This lesson pairs with the [Shaft Torsion Simulator](/product-development/shaft-
 <InArticleAd />
 
 
-A Geneva mechanism turns steady rotation into motion in steps: a wheel with slots moves on by one slot, stops, and moves again. It is used in rotary indexing tables and assembly machines. The drive crankshaft turns all the time, and each time its pin enters a slot, the crankshaft carries a short peak of torque.
+A Geneva mechanism, used in rotary indexing tables and assembly machines, turns steady rotation into steps: a slotted wheel moves on by one slot, stops, and moves again. The drive crankshaft turns all the time, and each time its pin enters a slot it carries a short peak of torque.
 
 ### The torsional challenge
 
 > **Engineering Question:** How do we size the crankshaft so it can transmit peak torque without yielding, and keep the angular twist small enough to preserve timing accuracy?
 
-Both checks matter. A shaft that carries the stress but twists too far puts the wheel short of its position or past it. The mechanism then jams, or the machine works on the part in the wrong place.
+Both checks matter. A shaft that carries the stress but twists too far stops the wheel short of its position or past it, so the mechanism jams or the machine works on the part in the wrong place.
 
 ## Fundamental Theory: Torsional Mechanics
 
@@ -59,13 +59,13 @@ Both checks matter. A shaft that carries the stress but twists too far puts the 
 
 Torque, $T$, is a turning effort: a force times its distance from the axis, in N·m. A torque on a shaft makes each cross-section try to slide around the axis against the next one. The material resists that sliding with shear stress, $\tau$: a force that acts along a surface, divided by the area of the surface.
 
-The shear stress is not the same across the section. Think of a turning wheel: a point on the rim travels a long arc, a point near the hub travels a short one, and the centre does not move. A twisted shaft deforms in the same way. The material is distorted in proportion to its distance from the axis, so the stress is zero at the centre and largest at the surface. This holds for a round shaft that stays elastic. It does not hold for a square or open section.
+The shear stress is not the same across the section. On a turning wheel a point on the rim travels a long arc, a point near the hub a short one, and the centre does not move. A twisted shaft deforms the same way: draw straight lines along a rubber hose, twist it, and they slant most at the surface. The distortion grows with the distance from the axis, so the stress is zero at the centre and largest at the surface. This holds for a round shaft that stays elastic, not for a square or open section.
 
 ![Panel (a): a circular shaft cross-section with arrows for the shear stress, which rises in a straight line from zero at the centre to tau max at the outer surface. Panel (b): the same section with one thin ring at distance rho from the centre, of width d rho and area 2 pi rho d rho. Adding every ring times the square of its distance gives the polar second moment J, which is pi d to the fourth power over 32 for a solid shaft](./images/torsion-stress-and-polar-moment.svg)
 
 The picture writes $\rho$ for the distance from the centre and keeps $r$ for the outer radius. The formulas below write $r$ for both.
 
-Panel (b) shows where $J$ comes from. Each thin ring counts by its area times the square of its distance from the centre, so material near the surface counts far more than material near the centre. This is the reason that hollow shafts are efficient.
+Panel (b) shows where $J$ comes from: each thin ring counts by its area times the square of its distance from the centre, so material near the surface counts far more than material near the centre. That is why hollow shafts are efficient.
 
 <Card title="Torsional shear stress" icon="document">
 The stress at a point is the torque times the distance of the point from the centre, divided by $J$:
@@ -127,7 +127,7 @@ This lesson works in SI base units: torque in N·m, lengths in m, $G$ in Pa and 
 <InArticleAd />
 
 
-This is the crankshaft of the Geneva drive. Two questions are answered in order: is the 25 mm shaft strong enough, and does it twist little enough for the timing?
+Two questions, in order: is the 25 mm Geneva crankshaft strong enough, and does it twist little enough for the timing?
 
 ```text
   fixed end                        free end
@@ -228,7 +228,7 @@ The allowable shear stress, $\tau_{allow}$, is the largest shear stress the desi
 </details>
 
 :::note[Engineering Insight]
-The 25 mm crankshaft is strong enough ($SF = 3.7$) and a little too flexible (0.56° against a limit of 0.5°). Stiffness decides this design, not strength. That is usual for precise indexing mechanisms. One more millimetre of diameter brings the twist to 0.48° and adds little mass.
+The 25 mm crankshaft is strong enough ($SF = 3.7$) and a little too flexible (0.56° against a limit of 0.5°). Stiffness, not strength, decides this design, as is usual for precise indexing mechanisms. One more millimetre of diameter brings the twist to 0.48° and adds little mass.
 :::
 
 ## Application 2: Sizing a Power-Transmitting Motor Shaft
@@ -236,7 +236,7 @@ The 25 mm crankshaft is strong enough ($SF = 3.7$) and a little too flexible (0.
 <InArticleAd />
 
 
-A small conveyor drive has a 5 kW induction motor that runs at 960 rpm. A steel shaft 400 mm long joins the motor to a gearbox. A 20 mm solid shaft is proposed. The nameplate gives power and speed, so the torque must be found first.
+A small conveyor drive has a 5 kW induction motor at 960 rpm, joined to a gearbox by a proposed 20 mm solid steel shaft, 400 mm long. The nameplate gives power and speed, so the torque comes first.
 
 :::note[System Problem Statement]
 - **Component:** solid steel motor output shaft, $d$ = 20 mm, $L$ = 400 mm
@@ -247,7 +247,7 @@ A small conveyor drive has a 5 kW induction motor that runs at 960 rpm. A steel 
 **Key Question:** Does the 20 mm shaft keep shear stress within the 60 MPa allowable, and how many degrees does it twist over its 400 mm length?
 :::
 
-Enter the motor shaft in the simulator and read the peak shear stress and the angle of twist over its length:
+Enter the motor shaft in the simulator to read its peak shear stress and angle of twist:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/shaft-torsion-simulator/" target="_blank" variant="primary">Open the Shaft Torsion Simulator</LinkButton>
@@ -450,7 +450,7 @@ The two shafts are then compared by their cross-sectional area, which for one ma
 </details>
 
 :::note[Engineering Insight]
-The material near the centre of a solid shaft adds almost nothing to $J$, because its distance $r$ from the axis is small, and it still adds its full weight. Here the tube has nearly half the mass and a peak stress a little below that of the solid shaft. The cost is a larger outer diameter (32 mm against 26 mm). Robot arms, aircraft linkages and fast spindles accept that cost to save weight. The comparison has a limit: a tube with a very thin wall can buckle (its wall folds) before the shear stress reaches the allowable.
+Material near the centre of a solid shaft adds almost nothing to $J$, because its distance $r$ from the axis is small, yet it adds its full weight. Here the tube has about half the mass and a slightly lower peak stress. The cost is a larger outer diameter (32 mm against 26 mm), which robot arms, aircraft linkages and fast spindles accept to save weight. The limit: a tube with a very thin wall can buckle (its wall folds) before the shear stress reaches the allowable.
 :::
 
 ## Design Guidelines for Torsional Loading

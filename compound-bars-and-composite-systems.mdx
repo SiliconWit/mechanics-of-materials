@@ -44,7 +44,7 @@ This lesson pairs with the [Axial Loading Simulator](/product-development/axial-
 <InArticleAd />
 
 
-Machines combine materials on purpose. A steel core carries most of a load, and an aluminum tube around it adds area at low weight. A rod has a steel section where space is tight and an aluminum section where weight matters. A bar made of two or more materials is called a compound bar.
+Machines combine materials on purpose: a steel core carries most of a load while an aluminum tube around it adds area at low weight, or a rod is steel where space is tight and aluminum where weight matters. A bar of two or more materials is a compound bar.
 
 ### The compound bar problem
 
@@ -59,7 +59,7 @@ The answer depends on how the materials are joined: side by side (parallel) or e
 
 **What this lesson takes from the earlier ones.** Stress is force over area, $\sigma = F/A$, in MPa. Strain $\varepsilon$ is change in length over length. Hooke's law, $\sigma = E\varepsilon$, links them through Young's modulus $E$, the stiffness of the material in GPa. A uniform bar changes length by $\delta = FL/(AE)$. The safety factor (SF), also called the factor of safety, is yield strength over stress. See [Fundamental Stress Concepts](/education/mechanics-of-materials/fundamental-stress-concepts/).
 
-Think of each bar as a stiff spring. Put two springs side by side under one plate and press. Both are squeezed by the same amount, and the stiffer spring pushes back harder, so it carries more of the load. Now join the two springs end to end and pull. The same force passes through both, and the softer spring stretches more. A compound bar behaves in the same way, as long as every material stays below its yield strength.
+Think of each bar as a stiff spring. Two springs side by side under one pressed plate are squeezed by the same amount, and the stiffer one pushes back harder, so it carries more of the load. Two springs joined end to end and pulled carry the same force, and the softer one stretches more. A compound bar behaves the same way while every material stays below its yield strength.
 
 ![Panel (a): a parallel compound bar. Two bars of different materials lie side by side between two rigid plates, and a load P presses on one plate. A cut through both bars shows the two internal forces F1 and F2, which add to P. Both bars shorten by the same delta. Panel (b): a series compound bar. Two segments are joined end to end, fixed at the left and pulled by F at the right. Cuts in both segments show the same internal force F, and the two deflections add](./images/compound-bar-parallel-series.svg)
 
@@ -67,7 +67,7 @@ For each panel, ask two questions: what is the same in both materials, and what 
 
 ### Case 1: Parallel arrangement (equal deformation)
 
-A steel rod inside an aluminum sleeve, both squeezed between the same two rigid end plates, is the usual example. The plates stay flat, so neither material can shorten more than the other. This condition, that the parts must deform so that they still fit together, is called compatibility of deformation. The second condition is equilibrium: the forces in the two materials must add up to the applied load.
+The usual example is a steel rod inside an aluminum sleeve, squeezed between the same two rigid end plates. The plates stay flat, so neither material can shorten more than the other. This condition, that the parts still fit together after they deform, is compatibility of deformation. The second condition is equilibrium: the forces in the two materials add up to the applied load.
 
 <Card title="Parallel: compatibility and load split" icon="document">
 Compatibility: both materials shorten by $\delta$ (mm) over the same length $L$ (mm), so they have the same strain:
@@ -95,7 +95,7 @@ With $E = 200$ GPa for steel and $E = 70$ GPa for aluminum, a steel bar carries 
 
 ### Case 2: Series arrangement (equal force)
 
-In a series compound bar the segments are joined end to end. Cut the bar anywhere between the loads: the part on one side of the cut is held in balance only by the force on the cut face, so that force equals the applied force $F$. It is the same in every segment. Each segment stretches by its own amount, and the stretches add.
+In a series compound bar the segments are joined end to end. Cut the bar anywhere between the loads: the part on one side is held in balance only by the force on the cut face, so that force equals the applied force $F$ in every segment. Each segment stretches by its own amount, and the stretches add.
 
 <Card title="Series: same force, deflections add" icon="document">
 For each segment $i$ with length $L_i$, area $A_i$, and modulus $E_i$, the stress is force over area and the stretch is the uniform-bar formula:
@@ -112,7 +112,7 @@ The force is the same in every segment, but each segment has its own stress, bec
 </Card>
 
 :::tip[Checking which case applies]
-Are the two materials fixed at both ends to the same rigid plates, so that neither can shorten more than the other? Then the arrangement is parallel. Is one material joined to the end of the other, so that the load passes through one and then the other? Then it is series.
+Both materials fixed at both ends to the same rigid plates, so that neither can shorten more than the other: parallel. One material joined to the end of the other, so that the load passes through one and then the other: series.
 :::
 
 ## Application 1: Linear actuator rod with steel and aluminum sections
@@ -120,7 +120,7 @@ Are the two materials fixed at both ends to the same rigid plates, so that neith
 <InArticleAd />
 
 
-The rod of a linear actuator is made in two sections joined end to end: a short steel section at the end where space is tight, and a longer aluminum section that saves weight. One end is held and the other is pulled, so the same force passes through both sections. This is a series arrangement.
+A linear actuator rod has two sections joined end to end: a short steel section where space is tight and a longer aluminum section that saves weight. One end is held and the other pulled, so the same force passes through both: a series arrangement.
 
 :::note[System Problem Statement]
 - Steel section: length $L_1 = 200$ mm, diameter $d_1 = 25$ mm, Steel 1045, $E_1 = 200$ GPa, $\sigma_{y1} = 530$ MPa
@@ -174,7 +174,7 @@ The rod of a linear actuator is made in two sections joined end to end: a short 
 
 2. **Load in each section.** Cut the rod in either section. The part to the right of the cut is pulled by 20,000 N, so the cut face carries 20,000 N:
 
-   Because this is a series arrangement, $F_1 = F_2 = 20{,}000$ N. In series, the stiffnesses do not share the force. They decide how the stretch is shared: the section with the smaller $k$ stretches more. ✅
+   In series, $F_1 = F_2 = 20{,}000$ N. The stiffnesses do not share the force; they share the stretch, and the section with the smaller $k$ stretches more. ✅
 
 </Steps>
 
@@ -239,7 +239,7 @@ In an actuator that must position its load closely, 0.16 mm of stretch matters, 
 <InArticleAd />
 
 
-A column is made of a solid steel rod inside an aluminum tube. Both are squeezed between the same two rigid end plates, so both shorten by the same amount. This is a parallel arrangement, and the load is shared by axial stiffness.
+A column is a solid steel rod inside an aluminum tube, both squeezed between the same two rigid end plates, so both shorten by the same amount: a parallel arrangement, with the load shared by axial stiffness.
 
 :::note[System Problem Statement]
 - Steel solid rod: diameter $d_s = 30$ mm, $E_s = 200$ GPa, $\sigma_{ys} = 350$ MPa
@@ -262,7 +262,7 @@ A column is made of a solid steel rod inside an aluminum tube. Both are squeezed
   └──────────────────────────────┘  rigid end plate
 ```
 
-Load a compound steel-and-aluminum bar in the simulator and watch the stiffer steel take more of the load than its share of the area:
+In the simulator, a compound steel-and-aluminum bar shows the stiffer steel taking more than its share of the area:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/axial-loading-simulator/" target="_blank" variant="primary">Open the Axial Loading Simulator</LinkButton>
@@ -388,7 +388,7 @@ The aluminum here has a safety factor of 7.38 and could be thinner. But a thinne
 <InArticleAd />
 
 
-A stepped tie rod carries one tensile force through two segments of different material and diameter. It is a series arrangement: the force is the same in both segments, the stresses differ because the areas differ, and the total elongation is the sum of the two.
+A stepped tie rod carries one tensile force through two segments of different material and diameter: a series arrangement. The force is the same in both, the stresses differ with the areas, and the total elongation is the sum of the two.
 
 :::note[System Problem Statement]
 - Steel segment: diameter $d_s = 20$ mm, length $L_s = 300$ mm, $E_s = 200$ GPa, $\sigma_{ys} = 350$ MPa
@@ -488,7 +488,7 @@ The aluminum segment gives 63 percent of the total elongation with 57 percent of
 3. Check each material against its own yield strength. The critical one is not always the one with the highest stress.
 
 :::tip[Instrument it]
-You cannot see how a parallel system shares its load, but you can measure it. Bond a strain gauge (a thin resistor whose resistance changes when it is stretched) to each material. Both must read the same strain. Multiply that strain by each $EA$, and you have the force in each material. Read the gauges with an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [watch the split live on siliconwit.io](https://siliconwit.io). Two readings that differ tell you that the end plates are not seating flat.
+You cannot see how a parallel system shares its load, but you can measure it. Bond a strain gauge (a thin resistor whose resistance changes when it is stretched) to each material; both must read the same strain. That strain times each $EA$ is the force in each material. Read the gauges with an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) and you can [watch the split live on siliconwit.io](https://siliconwit.io). Two readings that differ tell you that the end plates are not seating flat.
 :::
 
 ## Summary and Next Steps

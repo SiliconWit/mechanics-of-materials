@@ -68,7 +68,7 @@ A beam is a long part that carries loads which act across its length. Three beam
 
 ### Basic beam concepts
 
-A support holds a beam by stopping some of its movements. For each movement it stops, the support must push back with a force or a moment, called a reaction. So the type of support tells you how many unknown reactions the beam has.
+A support holds a beam by stopping some of its movements, and for each movement it stops it pushes back with a force or a moment, called a reaction. So the type of support tells you how many unknown reactions the beam has.
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
@@ -94,7 +94,7 @@ A beam on one pin and one roller is called simply supported. A beam with one fix
 
 ### Shear force and bending moment at a cut
 
-Cut the beam in your mind at a distance $x$ from its left end and keep only the left part. The left part must still be in balance, so the cut face must supply whatever the loads and reactions on that part do not balance among themselves. It supplies two things:
+Cut the beam in your mind at a distance $x$ from its left end and keep only the left part. It must still be in balance, so the cut face supplies whatever the loads and reactions on that part do not balance among themselves: two things.
 
 - **Shear force $V$**, in newtons (N): the force across the beam at the cut. It stops the left part from sliding up or down past the right part.
 - **Bending moment $M$**, in newton metres (N·m): the turning effect at the cut. It stops the left part from rotating. A moment is a force multiplied by its distance from the cut.
@@ -140,7 +140,7 @@ Every worked step below keeps to one convention, with $x$ measured from the left
 
 ### Common beam equations
 
-Two rules link the load, the shear force and the bending moment. In words: as you move along the beam, the shear force falls at the rate of the load you pass, and the bending moment changes at a rate equal to the shear force.
+Two rules link load, shear force and bending moment: along the beam, the shear force falls at the rate of the load you pass, and the bending moment changes at a rate equal to the shear force.
 
 <Card title="Load, shear and moment" icon="document">
 $$\frac{dV}{dx} = -w(x)$$
@@ -156,7 +156,7 @@ Where:
 $dV/dx$ is the slope of the shear diagram and $dM/dx$ is the slope of the moment diagram.
 </Card>
 
-Think of the moment as the height of a path and the shear as its slope. While the shear is positive the path climbs, and while it is negative the path descends. Where the shear passes through zero the path is at a top or a bottom, so the moment is largest there. The comparison stops at a point load: there the slope changes suddenly, and the path has a corner.
+Think of the moment as the height of a path and the shear as its slope: the path climbs while the shear is positive and descends while it is negative. Where the shear passes through zero the path is at a top or a bottom, so the moment is largest there. The comparison stops at a point load, where the slope changes suddenly and the path has a corner.
 
 The cards below give $V(x)$ and $M(x)$ for the three beams of this lesson. $L$ is the length of the beam and $P$ is a point load in newtons.
 
@@ -216,7 +216,7 @@ The moment is positive (sagging) in part of the span and negative (hogging) over
 
 ### Quick sketching techniques
 
-The two rules $dV/dx = -w$ and $dM/dx = V$ hold for every beam. With them you can sketch both diagrams before you calculate anything, and catch a wrong calculation afterwards.
+The rules $dV/dx = -w$ and $dM/dx = V$ hold for every beam. With them you can sketch both diagrams before calculating, and catch a wrong calculation afterwards.
 
 #### Rule 1: each diagram is one step more curved than the one above it
 
@@ -231,7 +231,7 @@ The two rules $dV/dx = -w$ and $dM/dx = V$ hold for every beam. With them you ca
 
 #### Rule 2: the shear is the slope of the moment diagram
 
-Where the shear is far from zero, the moment diagram is steep. Where the shear is near zero, it is nearly flat. Where the shear is positive the moment rises to the right, and where it is negative the moment falls.
+Where the shear is far from zero the moment diagram is steep; near zero it is nearly flat. Where the shear is positive the moment rises to the right; where it is negative the moment falls.
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <TailwindWrapper>
@@ -256,7 +256,7 @@ To sketch a beam: calculate the reactions, draw the shear from left to right (up
 <InArticleAd />
 
 
-A material handling robotic arm is bolted to a column at one end and carries a payload at its free tip. It is modeled as a cantilever beam that carries its own weight along its length and the payload at the tip.
+A material handling robotic arm, bolted to a column at one end with a payload at its free tip, is modeled as a cantilever carrying its own weight along its length and the payload at the tip.
 
 :::note[System Problem Statement]
 - **Loading:** the weight of the arm, a uniformly distributed load (UDL), and the payload, one point load at the tip
@@ -266,7 +266,7 @@ A material handling robotic arm is bolted to a column at one end and carries a p
 **Key Question:** What are the maximum shear force and bending moment for this robotic arm?
 :::
 
-Build this beam in the simulator and watch its shear-force and bending-moment diagrams form:
+Build this beam in the simulator to see both diagrams form:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/beam-analysis-simulator/" target="_blank" variant="primary">Open the Beam Analysis Simulator</LinkButton>
@@ -285,7 +285,7 @@ Build this beam in the simulator and watch its shear-force and bending-moment di
 - Cross-section: $80\ \text{mm} \times 10\ \text{mm}$ (rectangular aluminum bar, $I = 10 \times 80^3/12 = 4.27 \times 10^5\ \text{mm}^4$ with the 80 mm side vertical, $c = 40\ \text{mm}$)
 - Material: aluminum alloy ($\sigma_{\text{yield}} = 275\ \text{MPa}$)
 
-The cross-section and the material are not used for the diagrams. They are used when the stress in the arm is checked, which is the subject of the lesson on bending stresses.
+The cross-section and material are not used for the diagrams, only for the stress check in the lesson on bending stresses.
 </Card>
 
 ### Step 1: Calculate reaction forces
@@ -603,7 +603,7 @@ $$
 <InArticleAd />
 
 
-A solar tracker arm turns a row of panels to follow the sun. The arm rests on two supports and reaches 0.5 m past the second one. It carries the weight of the panels and the wind along its whole length, and the weight of a clamp mechanism at its tip.
+A solar tracker arm turns a row of panels to follow the sun. It rests on two supports, reaches 0.5 m past the second, and carries the panel weight and wind along its whole length and a clamp mechanism at its tip.
 
 :::note[System Problem Statement]
 - **Loading:** a uniformly distributed load (panel weight and wind) and one point load at the tip (the clamp)
@@ -773,7 +773,7 @@ The plot rounds its labels to one decimal place: its +0.1 kN·m is the 96 N·m f
 </details>
 
 :::tip[Instrument it]
-You can read the bending moment from a beam in service. Bond a strain gauge to the top or bottom face where the moment is largest. The surface strain, multiplied by Young's modulus and by the section modulus of the beam, gives the bending moment at that section, and a few gauges along the span give the whole moment diagram. Read them with a quarter-bridge into an HX711 or an instrumentation amplifier and an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/), and you can [watch the live moment on siliconwit.io](https://siliconwit.io) and catch an overload before the beam yields.
+You can read the bending moment from a beam in service. Bond a strain gauge to the top or bottom face where the moment is largest: the surface strain times Young's modulus times the section modulus is the bending moment there, and a few gauges along the span give the whole moment diagram. Read them with a quarter-bridge into an HX711 or an instrumentation amplifier and an [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/), and you can [watch the live moment on siliconwit.io](https://siliconwit.io) and catch an overload before the beam yields.
 :::
 
 ## Summary and next steps

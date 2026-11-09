@@ -143,7 +143,7 @@ By the end of this lab you can:
 
 ### The engineering worry
 
-The forearm of a material handling robot carries the gripper and payload at its tip and is bolted to the elbow joint at the other end. A beam held at one end only is a cantilever. If the arm yields at the elbow (it bends and stays bent), the robot loses its accuracy permanently. A thicker arm is not a free answer, because every gram needs more motor torque.
+The forearm of a material handling robot carries the gripper and payload at its tip and is bolted to the elbow joint at the other end: a cantilever (a beam held at one end only). If the arm yields at the elbow (bends and stays bent), the robot loses its accuracy permanently. A thicker arm is not free, because every gram needs more motor torque.
 
 ### Problem statement
 
@@ -371,7 +371,7 @@ In the sketch, horizontal is the Y-axis and vertical is the Z-axis. The Pad tool
 </div>
 
 :::tip[Instrument it]
-On the real arm you would measure the bending stress. A foil strain gauge bonded at the section of largest moment, read through an HX711 or an instrumentation amplifier, gives the strain, and the strain times Young's modulus is the stress. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) reads the gauge and [logs the readings](https://siliconwit.io).
+On the real arm you would measure the bending stress: a foil strain gauge at the section of largest moment, read through an HX711 or an instrumentation amplifier, gives the strain, and strain times Young's modulus is the stress. An [ESP32 or STM32](/education/sensor-actuator-interfacing-stm32/) reads the gauge and [logs the readings](https://siliconwit.io).
 :::
 
 ### Design question
@@ -414,7 +414,7 @@ By the end of this lab you can:
 
 ### The engineering worry
 
-The print head of a desktop 3D printer moves along a horizontal rail, the gantry. Its weight is a point load that changes position all the time. If the rail bends too much, the layers of the print do not line up, and if the stress is too high, the rail fails after many cycles. The printer needs a positioning accuracy of $\pm 0.05\ \text{mm}$ and a light rail, so that the head can move fast.
+The print head of a desktop 3D printer moves along a horizontal rail, the gantry, so its weight is a point load that keeps changing position. If the rail bends too much the print layers do not line up; if the stress is too high the rail fails after many cycles. The printer needs a positioning accuracy of $\pm 0.05\ \text{mm}$ and a light rail, so that the head can move fast.
 
 ### Problem statement
 
@@ -741,7 +741,7 @@ By the end of this lab you can:
 
 ### The engineering worry
 
-Each arm of a quadcopter drone holds a motor and a propeller at its tip. The thrust bends the arm up, air drag bends it sideways, and the spinning propeller twists it. A carbon fiber tube is strong along its fibers and weak in shear, so a stress that looks small can be the one that breaks the arm. An arm that fails in flight destroys the drone, and every gram that is not needed shortens the flight. The target is a safety factor of 3.0 with the lightest tube.
+Each arm of a quadcopter drone holds a motor and propeller at its tip: thrust bends the arm up, air drag bends it sideways, and the spinning propeller twists it. A carbon fiber tube is strong along its fibers and weak in shear, so a stress that looks small can be the one that breaks the arm. An arm that fails in flight destroys the drone, and every gram that is not needed shortens the flight. The target is a safety factor of 3.0 with the lightest tube.
 
 ### Problem statement
 

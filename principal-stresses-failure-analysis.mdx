@@ -46,7 +46,7 @@ By the end of this lesson, you will be able to:
 <InArticleAd />
 
 
-A universal joint lets a drive shaft turn through an angle. Each shaft ends in a fork, and a cross-shaped pin joins the two forks. The pin carries three loads at once: the torque of the drive twists it, the angle of the joint bends it, and the bearings press on its surface.
+A universal joint lets a drive shaft turn through an angle: each shaft ends in a fork, and a cross-shaped pin joins the two forks. The pin carries three loads at once: the drive torque twists it, the joint angle bends it, and the bearings press on its surface.
 
 ```text
            bearing presses on the surface: 50 MPa
@@ -66,9 +66,7 @@ A universal joint lets a drive shaft turn through an angle. Each shaft ends in a
 
 ### The stress at a point depends on the cut
 
-Glue two pieces of wood end to end and pull them. If the joint is cut square, the glue is only pulled. If the joint is cut at a slant, the same pull also tries to slide one piece along the other, so the glue carries tension and shear together. The load did not change, only the direction of the cut.
-
-A glued joint is one real cut. A solid part must survive on every cut that can be imagined.
+Glue two pieces of wood end to end and pull them. With the joint cut square, the glue is only pulled. With the joint cut at a slant, the same pull also tries to slide one piece along the other, so the glue carries tension and shear together. Only the direction of the cut changed. A glued joint is one real cut; a solid part must survive every cut that can be imagined.
 
 To describe the stress at a point, imagine a very small square of material around it, with faces along x and y. Three numbers act on its faces:
 
@@ -78,7 +76,7 @@ To describe the stress at a point, imagine a very small square of material aroun
 
 ### Principal stress theory
 
-Turn the square and the three numbers change. At one angle the shear stress becomes zero. The two normal stresses at that angle are the principal stresses: $\sigma_1$ is the largest normal stress at the point and $\sigma_2$ is the smallest. No cut carries more tension than $\sigma_1$.
+Turn the square and the three numbers change. At one angle the shear stress is zero, and the two normal stresses there are the principal stresses: $\sigma_1$, the largest normal stress at the point, and $\sigma_2$, the smallest. No cut carries more tension than $\sigma_1$.
 
 <Tabs>
   <TabItem label="Principal stress equations">
@@ -116,7 +114,7 @@ $$\tau_{\text{abs},\max} = \frac{\sigma_1 - \sigma_3}{2}$$
 
 ### Mohr's circle construction
 
-Plot each cut as one point: its normal stress across and its shear stress up. As the cut turns, the point moves on a circle. This is Mohr's circle, and two numbers define it.
+Plot each cut as one point, normal stress across and shear stress up. As the cut turns, the point moves on a circle, like the hand of a dial: Mohr's circle, defined by two numbers.
 
 <Card title="Mohr's circle parameters" icon="document">
 The centre $C$ is on the horizontal axis, at the average normal stress:
@@ -138,7 +136,7 @@ Turn the square yourself in the simulator:
 
 ### Failure theories
 
-A tension test gives one number for a metal, the yield strength $\sigma_{yield}$: the stress at which it stops springing back. A real part has two or three principal stresses. A failure theory turns them into one number to compare with $\sigma_{yield}$.
+A tension test gives one number for a metal, the yield strength $\sigma_{yield}$ (the stress at which it stops springing back). A real part has two or three principal stresses; a failure theory turns them into one number to compare with $\sigma_{yield}$.
 
 - **Maximum normal stress theory.** Compare $\sigma_1$ alone with the strength. It suits brittle materials such as cast iron, which crack under tension. It misses yielding that shear causes, so do not use it for ductile metals (metals that stretch before they break).
 - **Maximum shear stress theory (Tresca).** A ductile metal yields when $\tau_{\max}$ reaches $\sigma_{yield}/2$, the shear stress at yield in a tension test. This is the cautious choice.
@@ -146,7 +144,7 @@ A tension test gives one number for a metal, the yield strength $\sigma_{yield}$
 
 $$\sigma_{\text{eq}} = \sqrt{\sigma_1^2 - \sigma_1\sigma_2 + \sigma_2^2}$$
 
-Equal pressure from all sides squeezes a metal but does not make it yield. Unequal stresses change its shape, and that causes yielding. The von Mises stress measures this difference, so it is one number for how close the point is to yielding. The safety factor (SF) is $\sigma_{yield}/\sigma_{\text{eq}}$.
+Equal pressure from all sides squeezes a metal but does not make it yield; unequal stresses change its shape, and that causes yielding. The von Mises stress measures this difference: one number for how close the point is to yielding. The safety factor (SF) is $\sigma_{yield}/\sigma_{\text{eq}}$.
 
 ## Application: Universal joint pin analysis
 

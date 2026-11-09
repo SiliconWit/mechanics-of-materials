@@ -44,7 +44,7 @@ This lesson pairs with the [Beam Analysis Simulator](/product-development/beam-a
 <InArticleAd />
 
 
-The bed of a CNC machine carries the cutting forces. It must bend very little, or the cut is not accurate. A common design casts aluminum around a steel I-beam, a beam with a section shaped like the letter I: two horizontal plates (the flanges) joined by a vertical plate (the web). The aluminum gives the mounting surfaces and keeps the weight low, and the steel adds stiffness.
+The bed of a CNC machine carries the cutting forces and must bend very little, or the cut is not accurate. A common design casts aluminum around a steel I-beam (a section shaped like the letter I: two horizontal flanges joined by a vertical web). The aluminum gives the mounting surfaces and keeps the weight low; the steel adds stiffness.
 
 ```text
    ◄────────── 300 mm ──────────►
@@ -69,13 +69,13 @@ The bed of a CNC machine carries the cutting forces. It must bend very little, o
 
 ### Same strain, different stress
 
-Press two springs side by side through the same distance, one stiff and one soft. The stiff spring pushes back harder. Two bonded materials in a beam do the same. The bond makes them stretch together, so at the bond line the strain (the stretch for each unit of length) is the same in both. Stress is strain times the elastic modulus $E$, the stiffness of the material in GPa, so the stiffer material carries more stress.
+Press a stiff spring and a soft spring side by side through the same distance: the stiff one pushes back harder. Two bonded materials in a beam do the same. The bond makes them stretch together, so at the bond line the strain (stretch per unit length) is the same in both. Stress is strain times the elastic modulus $E$ (the stiffness of the material, GPa), so the stiffer material carries more stress.
 
-Unlike the springs, a beam does not stretch evenly: the strain is zero at the neutral axis and grows with the distance from it. And all of this needs a perfect bond. If the materials slip, they bend separately and the results below no longer hold.
+Unlike the springs, a beam does not stretch evenly: the strain is zero at the neutral axis and grows with the distance from it. All of this needs a perfect bond; if the materials slip, they bend separately and the results below no longer hold.
 
 ### The transformed section method
 
-The bending formula $\sigma = My/I$ is for one material. So the real section is replaced by an imaginary section of one material, the reference material, that bends in the same way. A part made of the other material is $n$ times as stiff, so it is drawn $n$ times as wide. Its height and position do not change.
+The bending formula $\sigma = My/I$ is for one material, so the real section is replaced by an imaginary section of one material (the reference material) that bends the same way. A part of the other material is $n$ times as stiff, so it is drawn $n$ times as wide; its height and position do not change.
 
 <Card title="Transformation ratio" icon="document">
 $$n = \frac{E_{other}}{E_{reference}}$$
@@ -146,7 +146,7 @@ To forget the factor $n$ is the most common mistake in this method.
 **Key Question:** What is the largest bending stress in the aluminum and in the steel, and does each material have a safety factor of at least 2?
 :::
 
-See how the section sets the bending stress and deflection in the simulator:
+See in the simulator how the section sets the bending stress and deflection:
 
 <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '0.5rem 0 1rem' }}>
   <LinkButton href="/product-development/beam-analysis-simulator/" target="_blank" variant="primary">Open the Beam Analysis Simulator</LinkButton>
