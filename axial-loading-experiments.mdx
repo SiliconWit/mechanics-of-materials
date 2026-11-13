@@ -175,7 +175,7 @@ The bar must fit inside a housing that limits the diameter to 12 mm. The load re
 <InArticleAd />
 
 
-A steel rod and an aluminium tube bolted between the same end plates form a parallel compound bar. The steel is stiffer ($E = 200\ \text{GPa}$ vs $69\ \text{GPa}$) but here the aluminium member is larger in diameter. The question is which effect wins, and by how much the stiffer material outperforms its area fraction.
+A steel rod and an aluminium rod bolted between the same end plates form a parallel compound bar. The steel is stiffer ($E = 200\ \text{GPa}$ vs $69\ \text{GPa}$) but here the aluminium member is larger in diameter. The question is which effect wins, and by how much the stiffer material outperforms its area fraction.
 
 :::note[Objective]
 For a parallel steel-aluminium compound bar, compute the stiffness of each member, the common deflection, the force each member carries, the stress in each, and the safety factor on each. Confirm that the load split follows the stiffness ratio, not the area ratio.
@@ -599,7 +599,7 @@ For the steel-titanium compound bar (steel-ti preset), compute the load carried 
    Confirm the forces, stresses, and safety factors from the panel. Note the governing member indicator.
 
 4. **Assess the design**
-   For a design target of $\text{SF} \geq 3.0$, state whether the compound bar passes. If it does not, propose the smallest increase in $d_1$ or $d_2$ that brings the governing $\text{SF}$ to exactly 3.0.
+   For a design target of $\text{SF} \geq 3.0$, state whether the compound bar passes. If it passes with margin, find the smallest $d_1$ that still gives the governing $\text{SF}$ exactly 3.0 (the script solves this).
 
 5. **Save data**
    Create `data/exp6_design.csv` with columns: member, material, d_mm, A_mm2, k_N_per_mm, F_N, sigma_MPa, yield_MPa, SF, governs.
